@@ -1,0 +1,268 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>HTML5 Contact Form With File Upload - reusable form</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <style>
+
+/*General */
+
+body
+{
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+}
+
+#feedback-page{
+    text-align:center;
+}
+
+#form-main{
+    width:100%;
+    float:left;
+    padding-top:0px;
+}
+
+#form-div {
+    background-color:rgba(72,72,72,0.4);
+    padding-left:35px;
+    padding-right:35px;
+    padding-top:35px;
+    padding-bottom:50px;
+    width: 450px;
+    float: left;
+    left: 50%;
+    position: absolute;
+  margin-top:30px;
+    margin-left: -260px;
+  border-radius: 7px;
+  
+}
+
+.montform .feedback-input {
+    color:#3c3c3c;
+    font-family: Helvetica, Arial, sans-serif;
+  font-weight:500;
+    font-size: 18px;
+    border-radius: 0;
+    line-height: 22px;
+    background-color: #fbfbfb;
+    padding: 13px 13px 13px 54px;
+    margin-bottom: 10px;
+    width:100%;
+    box-sizing: border-box;
+    border: 3px solid rgba(0,0,0,0);
+}
+/*Inputs styles*/
+.montform .feedback-input:focus{
+    background: #fff;
+    border: 3px solid #3498db;
+    color: #3498db;
+    outline: none;
+  padding: 13px 13px 13px 54px;
+}
+
+
+/* Icons ---------------------------------- */
+.montform  #name{
+    background-size: 30px 30px;
+    background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #name:focus{
+    background-size: 30px 30px;
+    background-position: 8px 5px;
+  background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #email{
+    background-size: 30px 30px;
+    background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #email:focus{
+    background-size: 30px 30px;
+  background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #comment{
+    background-size: 30px 30px;
+    background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  textarea {
+    width: 100%;
+    height: 150px;
+    line-height: 150%;
+    resize:vertical;
+}
+
+.montform  input:hover, .montform  textarea:hover,
+.montform  input:focus, .montform  textarea:focus {
+    background-color:#e6e6e6;
+}
+
+.button-blue{
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    float:left;
+    width: 100%;
+    border: #fbfbfb solid 4px;
+    cursor:pointer;
+    background-color: #3498db;
+    color:white;
+    font-size:24px;
+    padding-top:22px;
+    padding-bottom:22px;
+    transition: all 0.3s;
+  margin-top:-4px;
+  font-weight:700;
+}
+
+.button-blue:hover{
+    background-color: rgba(0,0,0,0);
+    color: #0493bd;
+}
+    
+.montform  .submit:hover {
+    color: #3498db;
+}
+    
+.ease {
+    width: 0px;
+    height: 74px;
+    background-color: #fbfbfb;
+    transition: .3s ease;
+}
+
+.submit:hover .ease{
+  width:100%;
+  background-color:white;
+}
+
+/*Styles for small screens*/
+
+@media  only screen and (max-width: 580px) {
+    #form-div{
+        left: 3%;
+        margin-right: 3%;
+        width: 88%;
+        margin-left: 0;
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+}
+
+
+        </style>
+        <script src="form.js"></script>
+    </head>
+    <body >
+        <div class="container">
+            <div id="form-main">
+                <div id="form-div">
+                    <form class="montform" id="reused_form" enctype=&quot;multipart/form-data&quot; >
+                        <p class="name">
+							Tên sản phẩm
+                            <input name="name" type="text" class="feedback-input" required placeholder="Name" id="name" />
+                        </p>
+                        
+                        <p class="text">
+							Đặc tả chi tiết sản phẩm
+                            <textarea name="message" class="feedback-input" id="comment" placeholder="Message"></textarea>
+                        </p>
+                        <p class="file">
+                            <input name="image" type="file" id="file" class="feedback-input">
+                        </p>
+                        <div class="submit">
+                            <button type="submit" class="button-blue">SUBMIT</button>
+                            <div class="ease"></div>
+                        </div>
+                    </form>
+                    <div id="error_message" style="width:100%; height:100%; display:none; ">
+                        <h4>
+                            Error
+                        </h4>
+                        Sorry there was an error sending your form. 
+                    </div>
+                    <div id="success_message" style="width:100%; height:100%; display:none; "> <h2>Success! Your Message was Sent Successfully.</h2> </div>
+                </div>
+            </div>
+        </div>
+         <script type="text/javascript">
+                $(function()
+                {
+                    function after_form_submitted(data) 
+                    {
+                        if(data.result == 'success')
+                        {
+                            $('form#reused_form').hide();
+                            $('#success_message').show();
+                            $('#error_message').hide();
+                        }
+                        else
+                        {
+                            $('#error_message').append('<ul></ul>');
+
+                            jQuery.each(data.errors,function(key,val)
+                            {
+                                $('#error_message ul').append('<li>'+key+':'+val+'</li>');
+                            });
+                            $('#success_message').hide();
+                            $('#error_message').show();
+
+                            //reverse the response on the button
+                            $('button[type="button"]', $form).each(function()
+                            {
+                                $btn = $(this);
+                                label = $btn.prop('orig_label');
+                                if(label)
+                                {
+                                    $btn.prop('type','submit' ); 
+                                    $btn.text(label);
+                                    $btn.prop('orig_label','');
+                                }
+                            });
+                            
+                        }//else
+                    }
+
+                    $('#reused_form').submit(function(e)
+                      {
+                        e.preventDefault();
+
+                        $form = $(this);
+                        //show some response on the button
+                        $('button[type="submit"]', $form).each(function()
+                        {
+                            $btn = $(this);
+                            $btn.prop('type','button' ); 
+                            $btn.prop('orig_label',$btn.text());
+                            $btn.text('Sending ...');
+                        });
+                        
+
+                          var formdata = new FormData(this);
+                            $.ajax({
+                                type: "POST",
+                                url: 'handler.php',
+                                data: formdata,
+                                success: after_form_submitted,
+                                dataType: 'json' ,
+                                processData: false,
+                                contentType: false,
+                                cache: false        
+                            });
+                        
+                      });   
+                });
+
+         </script>
+    </body>
+</html>

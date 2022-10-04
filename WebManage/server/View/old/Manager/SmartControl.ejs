@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+<title>The Man in Blue &gt; Experiments &gt; widgEditor</title>
+
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<meta name="author" content="The Man in Blue" />
+<meta name="robots" content="all" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+<style type="text/css" media="all">
+	@import "/webTool/css/info.css";
+	@import "/webTool/css/main.css";
+	@import "/webTool/css/widgEditor.css";
+</style>
+<script language="JavaScript" src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="/webTool/scripts/widgEditor.js"></script>
+
+</head>
+
+
+
+<body>
+    <div>khu vực
+        <select id="selectLocation" >
+            <option value="newProduct"> nhà bếp</option>
+            <option value="product"> Nhà </option>
+            <option value="support">Sân thượng</option>
+        </select>
+        Thêm khu vực <input id="titleInput"/>   <button> Thêm </button>
+        </br>
+    </div>
+    <div>
+        Danh sách thiết bị
+    </div>
+    <div> 
+        trạng thái điều khiển
+        <br>
+        <div> <button> bật </button>  <button>Tắt </button>  </div>
+        <br> đặt lịch
+        giờ  <input type="time" id="appt" name="appt"/>
+        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+        <label for="vehicle1">j trong ngày  </label>    <br>
+        <input type="time" id="appt" name="appt"/>
+
+        <button> Gửi lệnh </button>
+        <button> Liên kết thiết bị </button>
+
+        <button> Tool hỗ trợ </button>
+
+
+    </div>
+<!-- END experimentInfo -->
+
+	
+<!-- END content -->
+</body>
+
+
+    <script type="text/javascript">
+        var mname = localStorage.getItem("tocken_LVC");
+        function onSelectClick(value){
+            console.log(value);
+            var group=$('#selectTable').val();
+            var title=$('#titleInput').val();
+            var titleBody=" du lieu";
+            var startHtml= "<html> <head><title>"+ title+"</title> </head><body> ";
+
+            var endHtml="</body></html";
+
+
+            var valueHtml=startHtml+value+endHtml;
+
+
+           
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: "http://localhost:3000/controlpage",
+                data: {
+                    content:valueHtml,
+                    title:title,
+                    group:group,
+		            maintitle:titleBody
+                 },
+                 beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                success: function (loadcofig) {
+                    console.log(loadcofig);
+                    var string ="Đăng bài ";
+                    if(loadcofig)  string+="thành công";
+                    else string+="thất bại";
+                    alert(string);
+                },
+                error: function (loadcofig) {
+                    console.log('error');
+                    alert("Lỗi  đăng bài");
+                   
+                }
+            });
+
+
+
+           // gotoCheckUser(stringvalue);
+
+        }
+
+
+    
+
+    </script>
+
+
+
+</html>

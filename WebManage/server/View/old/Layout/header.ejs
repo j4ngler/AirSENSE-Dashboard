@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<!--[if IE 9 ]> <html lang="en-US" class="ie9 loading-site no-js"> <![endif]-->
+<!--[if IE 8 ]> <html lang="en-US" class="ie8 loading-site no-js"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en-US" class="loading-site no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link rel="pingback" href="/old/resource/airsense.vn/xmlrpc.php" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+
+    <!-- <script src="/old/javascripts/chart.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="https://cdn.rawgit.com/chartjs/Chart.js/master/samples/utils.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.5/chartjs-plugin-annotation.js"></script>
+    <script src="/old/javascripts/utils.js"></script>
+    <style>
+        body {
+            font-size: 14px !important;
+        }
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Button used to open the chat form - fixed at the bottom of the page */
+        .open-button {
+            background-color: #555;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+            position: fixed;
+            bottom: 23px;
+            right: 28px;
+            width: 280px;
+        }
+
+        /* The popup chat - hidden by default */
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 15px;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 10px;
+            background-color: white;
+        }
+
+        /* Full-width textarea */
+        .form-container textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+            resize: none;
+            min-height: 200px;
+        }
+
+        /* When the textarea gets focus, do something */
+        .form-container textarea:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        /* Set a style for the submit/send button */
+        .form-container .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+            background-color: red;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover,
+        .open-button:hover {
+            opacity: 1;
+        }
+
+        .form-container {
+            width: 300px;
+            position: fixed;
+            bottom: 0;
+            right: 0px;
+            background: #fff;
+            border-radius: 3px;
+            z-index: 5000;
+            display: block;
+        }
+
+        .form-container .c_h {
+            cursor: pointer;
+            border-radius: 0px;
+            /*background:#c61432;*/
+            background: #2dc3e8;
+            line-height: 34px;
+        }
+
+        .form-container .left_c {
+            color: #ebebeb;
+            width: 150px;
+            font-size: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .form-container .right_c {
+            text-align: center;
+            /*background:#DE4A4A;*/
+            background: #ff8f32;
+            line-height: 36px;
+        }
+
+        .form-container .right_c a {
+            color: #ebebeb;
+            border-radius: 3px;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+            cursor: pointer !important;
+            font-size: 16px;
+            line-height: normal !important;
+            margin-top: 0 !important;
+            padding: 1px 0px !important;
+            text-align: center !important;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .chat_container {
+            /*		display:none;*/
+            padding: 5px 26px;
+        }
+
+        .chat_container .no_provider {
+            text-align: left;
+            color: #5E5652;
+            font-size: 12px;
+            width: 300px;
+            padding: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            margin-left: 5px;
+        }
+
+        .chat_container .footer_c {
+            text-align: left;
+            color: #5E5652;
+            font-size: 12px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .chat_container .footer_c a {
+            text-decoration: underline;
+            color: #777;
+            font-size: 11px;
+        }
+
+        .chat_container .chat_entry {
+            margin: 10px;
+            margin-top: 0px;
+        }
+
+        .chat_container .chat_entry p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chat_container .chat_entry h4 {
+            text-align: left;
+            color: #1A1A1A;
+            font-weight: 400;
+            font-size: 16px;
+            margin-top: 0px;
+        }
+
+        .chat_container .chat_entry input[type="text"] {
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+            color: #999;
+            font-size: 13px;
+            padding: 8px 8px;
+            margin-bottom: 5px;
+            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+            width: 100%;
+            /* 	height:30px; */
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .chat_container .chat_entry input[type="text"]:focus {
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            outline: 0 none;
+            border-color: #66afe9;
+        }
+
+        .chat_container .chat_entry input[type="submit"] {
+            padding: 5px 12px;
+            margin-bottom: 0;
+            font-size: 12px;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 0px;
+            color: #fff;
+            /*background-color: #DD4A4A;*/
+            background-color: #2dc3e8 !important;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .chat_container .chat_entry input[type="submit"]:hover {
+            background-color: #C64545;
+        }
+
+        .form-error {
+            display: none;
+        }
+
+        .chat_message {
+            height: 250px;
+            overflow-y: scroll;
+            padding: 10px;
+            border-bottom: 1px solid #222222;
+            padding-top: 10px;
+        }
+
+        .chat_message .message_contain {
+            margin: 5px;
+            background: #FCF8E2;
+            padding: 5px;
+        }
+
+        .chat_message .user_message {
+            background: #F5F5F5;
+        }
+
+        .chat_message .message_contain .header_image {
+            float: left;
+            width: 50px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .chat_message .message_contain .chat_mess {
+            font-size: 13px;
+            color: #444444;
+            margin-top: 0px;
+        }
+
+        .chat_message .message_contain .chat_date {
+            color: #777;
+            font-size: 11px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .chat_text_area {
+            margin: 5px;
+        }
+
+        .chat_text_area .messag_send {
+            width: 100%;
+            resize: none;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+            color: #555;
+            padding: 5px;
+            font-size: 13px;
+            height: 35px;
+        }
+
+        .chat_text_area .messag_send:focus {
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+            outline: 0 none;
+            border-color: #66afe9;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .left_icons {
+            width: 35px;
+            height: auto;
+            text-align: center;
+            color: #999;
+            /*background:#DE4A4A;*/
+            background: #ff8f32;
+            font-size: 15px;
+        }
+
+        .left_icons a {
+            color: #fff;
+            font-weight: normal;
+        }
+
+        .center_icons {
+            text-align: center;
+            padding: 2px 0px 0px 5px;
+        }
+
+        .logout img {
+            margin-top: 8px;
+        }
+
+        #datatable_wrapper {
+            width: 100%;
+        }
+
+        th {
+            font-size: 12px;
+        }
+
+        td {
+            font-size: 11px;
+        }
+
+        .nav-brand {
+            margin-top: 30px;
+        }
+
+        .table.dataTable tbody tr.selected {
+            background-color: #B0BED9 !important;
+        }
+    </style>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/old/training_library/style.css">
+    <link rel="stylesheet" href="/old/css/home.css">
+    <link rel="stylesheet" href="/old/css/common.css">
+    <script src="/old/training_library/js/jquery/jquery-2.2.4.min.js"></script>
+    <script language="JavaScript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script language="JavaScript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+    <!-- Active js -->
+    <script src="/old/training_library/js/active.js"></script>
+    <!-- Popper js -->
+    <script src="/old/training_library/js/bootstrap/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/old/training_library/js/bootstrap/bootstrap.min.js"></script>
+    <!-- All Plugins js -->
+    <script src="/old/training_library/js/plugins/plugins.js"></script>
+    <script src="/old/javascripts/dashboard.js"></script>
+    <script type="text/javascript" src="/old/javascripts/commonView.js"></script>
+    <script language="JavaScript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"
+        type="text/javascript"></script>
+
+    <!-- <script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/frozen.js"></script> -->
+
+    <script>(function (html) { html.className = html.className.replace(/\bno-js\b/, 'js') })(document.documentElement);</script>
+    <title>Airsense &#8211; Quan trắc chất lượng không khí</title>
+    <link rel='dns-prefetch' href='//s.w.org' />
+    <link rel="alternate" type="application/rss+xml" title="Airsense &raquo; Feed" href="/old/resource/airsense.vn/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Airsense &raquo; Comments Feed"
+        href="/old/resource/airsense.vn/comments/feed/" />
+    <script type="text/javascript">
+        window._wpemojiSettings = { "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/", "svgExt": ".svg", "source": { "concatemoji": "http:\/\/airsense.vn\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.3.4" } };
+        !function (e, a, t) { var r, n, o, i, p = a.createElement("canvas"), s = p.getContext && p.getContext("2d"); function c(e, t) { var a = String.fromCharCode; s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, e), 0, 0); var r = p.toDataURL(); return s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, t), 0, 0), r === p.toDataURL() } function l(e) { if (!s || !s.fillText) return !1; switch (s.textBaseline = "top", s.font = "600 32px Arial", e) { case "flag": return !c([127987, 65039, 8205, 9895, 65039], [127987, 65039, 8203, 9895, 65039]) && (!c([55356, 56826, 55356, 56819], [55356, 56826, 8203, 55356, 56819]) && !c([55356, 57332, 56128, 56423, 56128, 56418, 56128, 56421, 56128, 56430, 56128, 56423, 56128, 56447], [55356, 57332, 8203, 56128, 56423, 8203, 56128, 56418, 8203, 56128, 56421, 8203, 56128, 56430, 8203, 56128, 56423, 8203, 56128, 56447])); case "emoji": return !c([55357, 56424, 55356, 57342, 8205, 55358, 56605, 8205, 55357, 56424, 55356, 57340], [55357, 56424, 55356, 57342, 8203, 55358, 56605, 8203, 55357, 56424, 55356, 57340]) }return !1 } function d(e) { var t = a.createElement("script"); t.src = e, t.defer = t.type = "text/javascript", a.getElementsByTagName("head")[0].appendChild(t) } for (i = Array("flag", "emoji"), t.supports = { everything: !0, everythingExceptFlag: !0 }, o = 0; o < i.length; o++)t.supports[i[o]] = l(i[o]), t.supports.everything = t.supports.everything && t.supports[i[o]], "flag" !== i[o] && (t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && t.supports[i[o]]); t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && !t.supports.flag, t.DOMReady = !1, t.readyCallback = function () { t.DOMReady = !0 }, t.supports.everything || (n = function () { t.readyCallback() }, a.addEventListener ? (a.addEventListener("DOMContentLoaded", n, !1), e.addEventListener("load", n, !1)) : (e.attachEvent("onload", n), a.attachEvent("onreadystatechange", function () { "complete" === a.readyState && t.readyCallback() })), (r = t.source || {}).concatemoji ? d(r.concatemoji) : r.wpemoji && r.twemoji && (d(r.twemoji), d(r.wpemoji))) }(window, document, window._wpemojiSettings);
+    </script>
+    <style type="text/css">
+        img.wp-smiley,
+        img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            margin: 0 .07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+
+        .footable-loader {
+            display: none;
+        }
+    </style>
+    <link rel='stylesheet' id='wp-block-library-css'
+        href='/old/resource/airsense.vn/wp-includes/css/dist/block-library/style.min.css?ver=5.3.4' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='contact-form-7-css'
+        href='/old/resource/airsense.vn/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.1.5' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='flatsome-icons-css'
+        href='/old/resource/airsense.vn/wp-content/themes/flatsome/assets/css/fl-icons.css?ver=3.3' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='footable_styles-css'
+        href='/old/resource/airsense.vn/wp-content/plugins/ninja-tables/assets/css/ninjatables-public.css?ver=3.5.8'
+        type='text/css' media='all' />
+    <link rel='stylesheet' id='flatsome-main-css'
+        href='/old/resource/airsense.vn/wp-content/themes/flatsome/assets/css/flatsome.css?ver=3.5.3' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='flatsome-style-css'
+        href='/old/resource/airsense.vn/wp-content/themes/flatsome/style.css?ver=3.5.3' type='text/css' media='all' />
+    <script type='text/javascript' src='/resource/airsense.vn/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp'></script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+    <link rel='https://api.w.org/' href='/old/resource/airsense.vn/wp-json/' />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="/old/resource/airsense.vn/xmlrpc.php?rsd" />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/old/resource/airsense.vn/wp-includes/wlwmanifest.xml" />
+    <meta name="generator" content="WordPress 5.3.4" />
+    <link rel="canonical" href="/old/resource/airsense.vn/" />
+    <link rel='shortlink' href='/old/resource/airsense.vn/' />
+    <link rel="alternate" type="application/json+oembed"
+        href="/old/resource/airsense.vn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fairsense.vn%2F" />
+    <link rel="alternate" type="text/xml+oembed"
+        href="/old/resource/airsense.vn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fairsense.vn%2F&#038;format=xml" />
+    <style>
+        .bg {
+            opacity: 0;
+            transition: opacity 1s;
+            -webkit-transition: opacity 1s;
+        }
+
+        .bg-loaded {
+            opacity: 1;
+        }
+    </style>
+    <!--[if IE]><link rel="stylesheet" type="text/css" href="/old/resource/airsense.vn/wp-content/themes/flatsome/assets/css/ie-fallback.css"><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"></script><script>var head = document.getElementsByTagName('head')[0],style = document.createElement('style');style.type = 'text/css';style.styleSheet.cssText = ':before,:after{content:none !important';head.appendChild(style);setTimeout(function(){head.removeChild(style);}, 0);</script><script src="/old/resource/airsense.vn/wp-content/themes/flatsome/assets/libs/ie-flexibility.js"></script><![endif]-->
+    <script type="text/javascript">
+        WebFontConfig = {
+            google: { families: ["Montserrat:regular,700", "Montserrat:regular,regular", "Montserrat:regular,700", "Dancing+Script",] }
+        };
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })(); </script>
+    <link rel="icon" href="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed"
+        href="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-180x180.png" />
+    <meta name="msapplication-TileImage"
+        content="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-270x270.png" />
+    <style id="custom-css" type="text/css">
+        :root {
+            --primary-color: #446084;
+        }
+
+        /* Site Width */
+        .header-main {
+            height: 90px
+        }
+
+        #logo img {
+            max-height: 90px
+        }
+
+        #logo {
+            width: 200px;
+        }
+
+        .header-bottom {
+            min-height: 55px
+        }
+
+        .header-top {
+            min-height: 30px
+        }
+
+        .has-transparent+.page-title:first-of-type,
+        .has-transparent+#main>.page-title,
+        .has-transparent+#main>div>.page-title,
+        .has-transparent+#main .page-header-wrapper:first-of-type .page-title {
+            padding-top: 90px;
+        }
+
+        .header.show-on-scroll,
+        .stuck .header-main {
+            height: 70px !important
+        }
+
+        .stuck #logo img {
+            max-height: 70px !important
+        }
+
+        .header-bottom {
+            background-color: #f1f1f1
+        }
+
+        .stuck .header-main .nav>li>a {
+            line-height: 50px
+        }
+
+        @media (max-width: 549px) {
+            .header-main {
+                height: 70px
+            }
+
+            #logo img {
+                max-height: 70px
+            }
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif
+        }
+
+        body {
+            font-weight: 0
+        }
+
+        .nav>li>a {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .nav>li>a {
+            font-weight: 700;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .heading-font,
+        .off-canvas-center .nav-sidebar.nav-vertical>li>a {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .heading-font,
+        .banner h1,
+        .banner h2 {
+            font-weight: 700;
+        }
+
+        .alt-font {
+            font-family: "Dancing Script", sans-serif;
+        }
+
+        .label-new.menu-item>a:after {
+            content: "New";
+        }
+
+        .label-hot.menu-item>a:after {
+            content: "Hot";
+        }
+
+        .label-sale.menu-item>a:after {
+            content: "Sale";
+        }
+
+        .label-popular.menu-item>a:after {
+            content: "Popular";
+        }
+    </style>
+    <link rel="stylesheet" href="/old/css/blog.css">
+</head>
+
+
+<div id="snackbar" class="alert alert-success">Some text some message..</div>

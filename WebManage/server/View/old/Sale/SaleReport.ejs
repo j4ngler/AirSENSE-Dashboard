@@ -1,0 +1,547 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" http-equiv="Content-Type" >
+        <style>
+            body {font-family: Arial, Helvetica, sans-serif;}
+            
+            /* The Modal (background) */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1; /* Sit on top */
+                padding-top: 100px; /* Location of the box */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgb(0,0,0); /* Fallback color */
+                background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+            
+            /* Modal Content */
+            .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+            }
+            
+            /* The Close Button */
+            .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            }
+            
+            .close:hover,
+            .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+              
+            }
+        </style>
+      <script language="JavaScript" src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+      <script language="JavaScript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+      <script language="JavaScript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+      <script type="text/javascript" src="/old/javascripts/commonView.js"></script>
+    </head>
+    <body  onload="checkUserAuthenSecsion()">  
+
+      <h1> Choice Table </h1>
+      <select id="selectTable"  onchange="onSelectClick()" >
+            <option value="">none </option>
+            <option value="product"> Sản phẩm </option>
+            <option value="product_sale_support"> thêm mô tả sản phẩm</option>
+            <option value="product_content"> thêm bài viết về san phẩm</option>
+            
+            <option value="location_warehouse"> vị trí kho bãi </option>
+            <option value="warehouse_product"> nhập kho </option>
+            <option value="product_to_sale"> sản phẩm  sale</option>
+
+            <option value="product_sale_bill"> đặt hàng</option>
+            <option value="product_sale_bill_detail"> thêm giỏ hàng </option>
+            <option value="product_sale_km"> khuyến mại </option>
+
+            <option value="delivery_warehouse"> xuất hàng </option>
+            <option value="history_delivery_warehouse"> lịch sử đơn hàng</option>
+            <option value="customer_comfirm_delivery_warehouse"> kahchs hàng comfirm nhận hàng</option>
+            <option value="back_to_warehouse"> trả  kho </option>
+            <option value="customer_return_product"> khách hàng trả hàng </option>
+            <option value="history_delivery_warehouse_return"> lịch sủ trả hàng </option>
+            <option value="product_sale_bill_cancel"> hủy đơn hàng</option>
+            <option value="support">Sân thượng</option>
+      </select>
+
+      <br/>
+      <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Positionsczxczzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz</th>
+                <th>Officexzccccccccccccc</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salaryxzcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <br/>
+    <center> Tác vụ </center>
+    <br/>
+    <center>
+        <button onclick='actionData("add")'> Thêm </button>
+        <button onclick='actionData("edit")'> Sửa </button>
+        <button onclick='loaddingDeleteUser()'> Xóa </button>
+    </center>
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div id="ationSelect"> 
+
+          </div>
+        </div>
+    </div>
+
+
+    <div id="contentsuport" >
+    </div>
+
+    <div id="contentsuport1" >
+        <button onclick="gotoWritePage()"> thêm bài viết vể sản phẩm </button>
+        <button onclick='addDescriptionProduct()'> thêm mô tả </button>
+        <button onclick='addProductLocationWareHouse()'> thêm mô tả </button>
+        <button onclick='addProductWareHouse()'> thêm mô tả </button>
+
+        
+
+    </div>
+      
+    <script type="text/javascript">
+
+            var mname = localStorage.getItem("tocken_LVC");
+            function onSelectClick(){
+                var stringvalue=document.getElementById("selectTable").value;
+                console.log(stringvalue);
+                gotoCheckUser(stringvalue);
+
+            }
+
+            function gotoWritePage(){
+                window.open('http://localhost:3000/registerProductSale/'+dataClick.productid ,'_blank');
+
+            }
+
+            var actionDataSelect=null;
+            var dataSelectEdit=null;
+            var dataClick=null;
+            var selectitem=[];
+            var selectTable=null;
+            var checkItemEdit=null;
+            /*$(document).ready(function() {
+                $('#datatable').DataTable();
+                
+                gotoCheckUser();
+                
+            } ); */
+            
+// 0 là không cho hiện
+// 1 là chỉ quyền admin thì mới cho hiện
+// 2  không hiện
+// 3 hiện dữ liệu không cho chỉnh sửa trừ admin
+// 4 hiện dữ liệu cho chỉnh sửa
+            function assetDataBase(result){
+                actionDataSelect={dataTableTitle:result.dataReport.dataTableTitle,
+                                    titleDataBase:result.dataReport.titleDataBase};
+                $('#datatable').DataTable( { destroy: true } ).destroy();
+                var showData= '<thead> <tr>';
+                var columeShow=[];
+                for(var k in result.dataReport.dataTableTitle) {
+                    if(result.dataReport.titleDataBase[k]>2){
+                      showData+=result.dataReport.dataTableTitle[k]
+                      showData+='<th data-field="'+k+'">'+result.dataReport.dataTableTitle[k]+'</th>';
+                      columeShow.push({ data: k});
+                    }
+                }
+                showData += '</tr></thead>';
+                $('#datatable').html(showData);
+                var table = $('#datatable').DataTable ({"data" : result.result, columns: columeShow});
+                $('#datatable tbody').on( 'click', 'td',
+                    function ()
+                    {
+                        console.log(this);
+                        var idx = table.cell( this ).index().row;
+                        console.log(idx);
+                        var data = table.row( idx ).data();
+                        console.log(data);
+                        dataClick=data; 
+                        
+                        var showData1="";
+                        for(var k in actionDataSelect.dataTableTitle) {
+                        if(actionDataSelect.titleDataBase[k]>3){
+                            showData1+=actionDataSelect.dataTableTitle[k]
+                            showData1+=' : '+ dataClick[k]+'<br/>';
+                            }
+                        }
+                        console.log(showData1);
+                       // $('#contentsuport1').html(showData1);
+                        document.getElementById("contentsuport").innerHTML = showData1;
+
+                        var showData2='<button onclick="gotoWritePage()"'+
+                        '"'+"> thêm bài viết vể sản phẩm </button><button onclick='addDescriptionProduct1()'> thêm mô tả </button>";
+                        document.getElementById("contentsuport1").innerHTML = showData2;
+
+                    }
+                );
+
+                $('#datatable tr').click(function () {
+                        $(this).css('background-color', "#D6D5C3");
+                });
+
+            }
+
+            function uploadInfoData(){
+                var showData={};
+                for(var k=0; k< selectitem.length;k++) {
+                    var solidLution=selectitem[k];
+                    showData[solidLution] =null;
+                    if($('#'+solidLution).val()){
+                    showData[solidLution]=$('#'+solidLution).val();
+                    }
+                }
+                console.log("loadcofig  loaddingAddUser");
+                console.log(showData);
+                modal.style.display = "none";
+                showData["add_table"]=selectTable;
+                showData["action_table"]="add";
+                loaddingUser('http://localhost:3000/managerTable',showData);
+            }
+
+
+            function addDescriptionProduct(detailToSet){
+                var showData1='<table>  <tbody>';
+                selectitem=[];
+                selectTable=detailToSet.table;
+                checkItemEdit=detailToSet;
+                for(var k in detailToSet.showData) {
+                    showData1+="<tr> <th>"+ k+"</th><th>";
+                    showData1+='<input type="text" id="'+ k+'"  value="'+ detailToSet.showData[k]+'" ></th></tr>';
+                    selectitem.push(k);
+                    
+                }
+                if(detailToSet.hiddenData){
+                    for(var k in detailToSet.hiddenData) {
+                        showData1+="<tr> <th></th><th>";
+                        showData1+='<input type="hidden" id="'+ k+'"  value="'+ dataClick[k]+'" ></th></tr>';
+                        selectitem.push(k);
+                    }
+                }
+                if(detailToSet.tableSelection){
+                  //  for(var k in detailToSet.selectionData) {
+                        showData1+="<tr> <th>"+ detailToSet.selectionData +"</th><th>";
+                        showData1+='<input id="selectionData"  value="'+detailToSet.selectionData+'" ></th></tr>';
+                        selectitem.push("selectionData");
+                   // }
+                    for(var k in detailToSet.selectionDataField) {
+                        showData1+="<tr> <th>"+ k+"</th><th>";
+                        showData1+='<input id="'+ k+'"  value="" ></th></tr>';
+                        selectitem.push(k);
+                    }
+                    showData1+="<tr> <th></th><th>";
+                        showData1+='<input  type="hidden"  id="tableSelection"  value="'+ detailToSet.tableSelection+'" ></th></tr>';
+                        selectitem.push("tableSelection");
+                }
+                if(detailToSet.dropown){
+                    for(var k =0 ;k<detailToSet.dropown.length;k++) {
+                        showData1+="<tr> <th>"+ detailToSet.dropown[k].htmlLabelShow+"</th><th>";
+                        showData1+= " <select  id='"+ detailToSet.dropown[k].htmlSelect +"' name='inptPAN'> </select>"
+                        + '<input type="hidden"  id="'+ detailToSet.dropown[k].selectionId+'"  value="" ></th></tr>';
+                        selectitem.push(k);
+                    }
+                }
+               
+                //https://topdev.vn/blog/hoc-machine-learning/
+                
+                showData1+="</tbody></table> <br/>  <button onclick='uploadInfoData();'>upload </<button> ";
+
+                if(detailToSet.tableSelection){
+                    showData1 +='<table>  <tbody>';
+                }
+
+                $('#ationSelect').html(showData1);
+                    modal.style.display = "block";
+            }
+
+            function addProductLocationWareHouse(){
+                var actionDataSelect={ showData:{ content:"" },
+                                        selectionData:"id_adress",
+                                        selectionDataField:{name:"",contactPhoneNumber:"",
+                                                province:"",city:"",streetaddr:"",postCode:""},
+                                        tableSelection:"address",
+                                        table:"location_warehouse",
+                                        support:""
+
+                                    };
+                addDescriptionProduct(actionDataSelect);
+
+            }
+
+            function addProductWareHouse(){
+                var actionDataSelect={ showData:{ content:"" },
+                                        selectionData:"id_adress",
+                                        selectionDataField:{name:"",contactPhoneNumber:"",
+                                                province:"",city:"",streetaddr:"",postCode:""},
+                                        tableSelection:"address",
+                                        table:"warehouse_product",
+                                        dropown:[{selectionId:"id_adress",htmlSelect:"idDropdown1",htmlShow:"content",htmlLabelShow:"địa chỉ",tableFrom:"location_warehouse"  } ,
+                                                {selectionId:"productid",htmlSelect:"idDropdown2",htmlShow:"content",htmlLabelShow:"sản phẩm ",tableFrom:"product" }
+                                        ],
+                                        support:""
+
+                                    };
+
+
+
+                addDescriptionProduct(actionDataSelect);
+
+            }
+            
+            function addDescriptionProduct1(){
+                var actionDataSelect={showData:{ cost_add:0,content_sale_support:"",link_sale_suport:"" },
+                                        hiddenData:{productid:0},
+                                        selectionData:{idkm:0},
+                                        table:"location_warehouse"
+                                         };
+                addDescriptionProduct(actionDataSelect);
+
+            }
+            function addWareHouseProduct(){
+                var actionDataSelect={showData:{ cost_in:0,content:"",link_sale_suport:"" },
+                                        hiddenData:{productid:0,idkm:0 ,deviceid:0},
+                                        selectionData:{productid:0,id_user_send:0,id_adress:0},
+                                        table:"warehouse_product"
+                                         };
+            }
+
+            function productToSale(){
+                var actionDataSelect={showData:{ number:0,km:0,cost:0},
+                                        hiddenData:{customerid:0 ,deviceid:0},
+                                        selectionData:{productid:0,id_user_send:0,id_adress:0},
+                                        table:"product_to_sale"
+                                         };
+                
+            }
+
+
+            function productSaleBill(){
+                var actionDataSelect={showData:{ not:0},
+                                        hiddenData:{customerid:0 },
+                                        selectionData:{addrid:0,id_user_send:0,id_aproved:0},
+                                        table:"product_sale_bill"
+                                         };
+                
+            }
+
+
+            function productSaleBillDetail(){
+                var actionDataSelect={showData:{ value:0,cost:0},
+                                        hiddenData:{productid:0 ,idbill:0},
+                                        selectionData:{productid:0,id_costid:0},
+                                        table:"product_sale_bill_detail"
+                                         };
+                
+            }
+
+            function productSaleKM(){
+                var actionDataSelect={showData:{ cost_sub:0,cost_percent:0,content_km:""},
+                                        hiddenData:{customerid:0 ,deviceid:0},
+                                        selectionData:{productid:0,id_user_send:0,id_adress:0},
+                                        table:"product_sale_km"
+                                         };
+                
+            }
+
+
+           // gotoCheckUser();
+            function gotoCheckUser(tableSelect){  
+                if(tableSelect.length<1) return;
+                var Link='http://localhost:3000/report/'+tableSelect;
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        console.log('ssssssssssss');
+                        assetDataBase(loadcofig);
+                        
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+            }
+            var modal = document.getElementById("myModal");
+            // Get the button that opens the modal
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+            // When the user clicks the button, open the modal 
+            function actionData(varAction) {
+                var showData=" <table> ";
+                if(varAction==="add")
+                {
+                    for(var k in actionDataSelect.dataTableTitle) {
+                        if(actionDataSelect.titleDataBase[k]>3){
+                        showData+=" <tr> <th>"+ actionDataSelect.dataTableTitle[k]
+                        showData+='</th><th><input type="text" id="'+k+'"/> </th></tr>';
+                        }
+                    }
+                    showData+="</table> <br/> <button onclick='loaddingAddUser()'>Thêm </button>";
+                    console.log(showData);
+                    $('#ationSelect').html(showData);
+                    modal.style.display = "block";
+                }
+                else if(varAction==="edit")
+                {
+                    for(var k in actionDataSelect.dataTableTitle) {
+                        if(actionDataSelect.titleDataBase[k]>3){
+                        showData+=" <tr> <th>"+actionDataSelect.dataTableTitle[k]
+                        showData+='</th><th><input type="text" id="'+k+'" value="'+ dataClick[k]+'"" /></th> </tr>';
+                        }
+                    }
+                    showData+="</table> <br/> <button onclick='loaddingUppdateUser()'>Sửa </button>";
+                    console.log(showData);
+                    $('#ationSelect').html(showData);
+                    modal.style.display = "block";
+
+                }
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                //ationSelect
+                modal.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            function loaddingUser(linkUpdate,jsonValue){
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: linkUpdate,
+                    data: jsonValue,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                                success: function (loadcofig) {
+                        console.log(loadcofig);
+                        //location.reload();
+                        gotoCheckUser(document.getElementById("selectTable").value);
+                    },
+                    complete: function (loadcofig) {
+                        console.log(loadcofig.responseText);
+                        gotoCheckUser(document.getElementById("selectTable").value);
+                    },
+                    error: function (loadcofig) {
+                        console.log(loadcofig);
+                    }
+                });
+            }
+
+
+            function loadingTableActionSelect(linkUpdate,jsonValue){
+                var itemSelect = 'http://localhost:3000/scrollTable';
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: linkUpdate,
+                    data: jsonValue,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                                success: function (loadcofig) {
+                        console.log(loadcofig);
+                        //location.reload();
+                        gotoCheckUser(document.getElementById("selectTable").value);
+                    },
+                    complete: function (loadcofig) {
+                        console.log(loadcofig.responseText);
+                        gotoCheckUser(document.getElementById("selectTable").value);
+                    },
+                    error: function (loadcofig) {
+                        console.log(loadcofig);
+                    }
+                });
+            }
+
+
+            function loaddingAddUser(){
+                var showData={};
+                for(var k in actionDataSelect.dataTableTitle) {
+                      showData[k] =null;
+                      if($('#'+k).val()){
+                        showData[k]=$('#'+k).val();
+                      }
+                }
+                console.log("loadcofig  loaddingAddUser");
+                console.log(showData);
+                modal.style.display = "none";
+                var stringvalue=document.getElementById("selectTable").value;
+                showData["add_table"]=stringvalue;
+                showData["action_table"]="add";
+                loaddingUser('http://localhost:3000/managerTable',showData);
+            }
+            
+            function loaddingUppdateUser(){
+                var showData=dataClick;
+                for(var k in actionDataSelect.dataTableTitle) {
+                      if($('#'+k).val()){
+                        showData[k]=$('#'+k).val();
+                      }
+                }
+                var stringvalue=document.getElementById("selectTable").value;
+                showData["add_table"]=stringvalue;
+                showData["action_table"]="update";
+                modal.style.display = "none";
+                loaddingUser('http://localhost:3000/managerTable',showData);
+            }
+            function loaddingDeleteUser(){
+                var showData=dataClick;
+                var stringvalue=document.getElementById("selectTable").value;
+                showData["add_table"]=stringvalue;
+                showData["action_table"]="delete";
+                loaddingUser('http://localhost:3000/managerTable',showData);
+            }
+
+            
+        </script>
+    </body>
+</html>

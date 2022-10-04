@@ -1,0 +1,90 @@
+
+<% include ../Layout/header.ejs %>
+
+<body  onload="checkUserAuthenSecsion()">
+    
+    <section class="mag-posts-area d-flex flex-wrap">
+        <% include ../Layout/leftSideBar.ejs %>
+        <!-- content -->
+        <div class="mag-posts-content mt-30 mb-30 p-30 box-shadow">
+            <br/>
+            <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Mã trạm</th>
+                    <th>Thời gian</th>
+                    <th>Nội dung</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+            </table>
+        </div>
+     
+    </section>
+    <% include ../Layout/footer.ejs %>
+
+    <script type="text/javascript">
+        $('#datatable').dataTable( {
+            "language": {
+            "emptyTable": "No data available in table"
+            }
+        });
+        var mname = localStorage.getItem("tocken_LVC");
+        var lisItemStation="";
+		var tableReport='sparc_sensor_max_min';
+            //gotoCheckUser(tableReport);
+            gotoCheckUserStorage();
+
+        var actionDataSelect=null;
+        var dataSelectEdit=null;
+        var dataClick=null;
+
+        loadAllContent();
+        setInterval(function(){
+            loadAllContent();
+        }, 60000);
+        function assetDataBase(result){
+            console.log("assetDataBase")
+            $('#datatable').DataTable( { destroy: true } ).destroy();
+            var showData= '<thead> <tr> <th data-field="station_id">Mã trạm</th><th data-field="createat"> Thời gian</th><th data-field="content"> Nội dung</th>';
+            var columeShow=[ {data: "station_id"},  {data: "createat"}, {data: "content"}];
+
+            $('#datatable').html(showData);
+            var table = $('#datatable').DataTable ({"data" : result, columns: columeShow});
+            $('#datatable tbody').on( 'click', 'td',
+                function ()
+                {
+                    console.log(this);
+                    var idx = table.cell( this ).index().row;
+                    console.log(idx);
+                    var data = table.row( idx ).data();
+                    console.log(data);
+                    dataClick=data; 
+                }
+            );
+
+        }
+
+           
+        
+        function loadAllContent(){
+            var Link='http://localhost:3000/getAbnormalData';
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                    success: function (result) {  
+                        console.log('success')                   
+                        assetDataBase(result);
+                    }
+                });
+        }
+
+    </script>
+
+</body>

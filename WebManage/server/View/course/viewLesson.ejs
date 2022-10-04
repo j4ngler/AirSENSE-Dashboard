@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<% include ../Layout/header.ejs %>
+
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+      integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+    <style>
+      .content-playlist-heading-bold {
+        font-weight: 600;
+      }
+
+      .content-column p,
+      .playlist-column p {
+        margin: unset;
+      }
+
+      .unset-style-container {
+        max-width: 100% !important;
+        padding: 60px 0 0 !important;
+      }
+
+      :root {
+        --font-size-heading: 10px;
+      }
+
+      * {
+        box-sizing: inherit;
+      }
+
+      html {
+        font-size: 100%;
+        box-sizing: border-box;
+      }
+
+      body {
+        line-height: 1.4;
+        font-family: 'Poppins', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="defult-home">
+    <!-- Main content Start -->
+    <div class="main-content">
+      <!--Full width header Start-->
+      <div class="full-width-header home8-style4">
+        <!--Header Start-->
+        <% include ../Layout/topbar.ejs %>
+          <!--Header End-->
+      </div>
+      <!--Full width header End-->
+      <div class="main-page pt-100">
+        <div class="inner-content ">
+          <!-- About Section Start -->
+          <div class=" style9 md-pt-100">
+            <div class="container unset-style-container" style="padding-top: 100px">
+              <div class="playlist-content-wrapper">
+                <div class="content-column">
+                  <div class="video-content-wrapper">
+                    <div class="video-prev-btn">
+                      <i class="fas fa-chevron-left"></i>
+                    </div>
+                    <div class="video-content"></div>
+                    <div class="video-next-btn">
+                      <i class="fas fa-chevron-right"></i>
+                    </div>
+                  </div>
+                  <div class="lesson-overview">
+                    <h3 class="lesson-overview-heading content-playlist-heading-bold">Tổng quan</h3>
+                    <p class="lesson-overview-description">👉👉👉 Nội dung "Làm việc với JSX" chính xác là có 3 phần nhé
+                      anh em.
+                      Trong video này chúng ta cùng đi chữa bài tập ở video trước và học cách làm việc với DOM events
+                      nhé
+                      😍😍
+                    </p>
+                  </div>
+                  <div class="comment-content-wrapper">
+                    <h3 class="comment-content-heading content-playlist-heading-bold">Bình luận</h3>
+                    <div class="my-comment-wrapper">
+                      <img src="/img/avatar5.png" alt="" class="my-avatar">
+                      <input type="text" class="my-comment-box" placeholder="Viết bình luận của bạn..." required>
+                      <div class="comment-action-wrapper">
+                        <button class="comment-cancel-btn">Huỷ</button>
+                        <button class="comment-submit-btn">Bình luận</button>
+                      </div>
+                    </div>
+                    <div class="other-comment-list">
+                      <div class="other-comment-item">
+                        <img src="/img/avatar5.png" alt="" class="other-commnet-avatar">
+                        <div class="other-comment-body">
+                          <div class="other-comment-box">
+                            <h5 class="other-commnet-author content-playlist-heading-bold">Triệu Nguyễn</h5>
+                            <p class="other-comment-content">có chỗ nào thả tim cho video không ta? giá như like video ở
+                              đây thì video youtube cũng được like luôn. hic hic. như like video ở đây thì video
+                              youtube cũng được like luôn. hic hi </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="other-comment-item">
+                        <img src="/img/avatar5.png" alt="" class="other-commnet-avatar">
+                        <div class="other-comment-body">
+                          <div class="other-comment-box">
+                            <h5 class="other-commnet-author content-playlist-heading-bold">Triệu Nguyễn</h5>
+                            <p class="other-comment-content">có chỗ nào thả tim cho video không ta? giá như like video ở
+                              đây thì video youtube cũng được like luôn. hic hic. như like video ở đây thì video
+                              youtube cũng được like luôn. hic hi </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="other-comment-item">
+                        <img src="/img/avatar5.png" alt="" class="other-commnet-avatar">
+                        <div class="other-comment-body">
+                          <div class="other-comment-box">
+                            <h5 class="other-commnet-author content-playlist-heading-bold">Triệu Nguyễn</h5>
+                            <p class="other-comment-content">có chỗ nào thả tim cho video không ta? giá như like video ở
+                              đây thì video youtube cũng được like luôn. hic hic. như like video ở đây thì video
+                              youtube cũng được like luôn. hic hi </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="other-comment-item">
+                        <img src="/img/avatar5.png" alt="" class="other-commnet-avatar">
+                        <div class="other-comment-body">
+                          <div class="other-comment-box">
+                            <h5 class="other-commnet-author content-playlist-heading-bold">Triệu Nguyễn</h5>
+                            <p class="other-comment-content">có chỗ nào thả tim cho video không ta? giá như like video ở
+                              đây thì video youtube cũng được like luôn. hic hic. như like video ở đây thì video
+                              youtube cũng được like luôn. hic hi </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="other-comment-item">
+                        <img src="/img/avatar5.png" alt="" class="other-commnet-avatar">
+                        <div class="other-comment-body">
+                          <div class="other-comment-box">
+                            <h5 class="other-commnet-author content-playlist-heading-bold">Triệu Nguyễn</h5>
+                            <p class="other-comment-content">có chỗ nào thả tim cho video không ta? giá như like video ở
+                              đây thì video youtube cũng được like luôn. hic hic. như like video ở đây thì video
+                              youtube cũng được like luôn. hic hi </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="other-comment-item">
+                        <img src="/img/avatar5.png" alt="" class="other-commnet-avatar">
+                        <div class="other-comment-body">
+                          <div class="other-comment-box">
+                            <h5 class="other-commnet-author content-playlist-heading-bold">Triệu Nguyễn</h5>
+                            <p class="other-comment-content">có chỗ nào thả tim cho video không ta? giá như like video ở
+                              đây thì video youtube cũng được like luôn. hic hic. như like video ở đây thì video
+                              youtube cũng được like luôn. hic hi </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="playlist-column">
+                  <div class="playlist-header">
+                    <h1 class="playlist-heading content-playlist-heading-bold">Javascript Cơ Bản</h1>
+                    <p class="playlist-course-info">Hoàn thành <strong>114/120</strong> bài học (<strong>95%</strong>)
+                    </p>
+                  </div>
+                  <div class="playlist-section-list">
+                    <div class="playlist-section-item">
+                      <div class="section-title-wrapper">
+                        <div>
+                          <h3 class="section-title content-playlist-heading-bold">Phần 1: GIới thiệu</h3>
+                          <p class="section-completed-wrapper">
+                            <span class="section-completed">2/2</span>
+                            <span class="section-time">6:28</span>
+                          </p>
+                        </div>
+                        <i class="section-title-icon-up fas fa-chevron-up"></i>
+                      </div>
+                      <div class="learn-list">
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">17. JSX là gì? Tại sao cần JSX? Quy ước
+                              đặt tên components</h3>
+                            <p class="learn-description">
+                              <i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing icon-not-playing fas fa-play-circle"></i>15:59
+                            </p>
+                          </div>
+                        </div>
+                        <div class="learn-item learning">
+                          <div class="learn-status not-complete">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="playlist-section-item">
+                      <div class="section-title-wrapper">
+                        <div>
+                          <h3 class="section-title content-playlist-heading-bold">Phần 1: GIới thiệu</h3>
+                          <p class="section-completed-wrapper">
+                            <span class="section-completed">2/2</span>
+                            <span class="section-time">6:28</span>
+                          </p>
+                        </div>
+                        <i class="section-title-icon-up fas fa-chevron-up"></i>
+                      </div>
+                      <div class="learn-list">
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">17. JSX là gì? Tại sao cần JSX? Quy ước
+                              đặt tên components</h3>
+                            <p class="learn-description">
+                              <i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing icon-not-playing fas fa-play-circle"></i>15:59
+                            </p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status not-complete">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="playlist-section-item">
+                      <div class="section-title-wrapper">
+                        <div>
+                          <h3 class="section-title content-playlist-heading-bold">Phần 1: GIới thiệu</h3>
+                          <p class="section-completed-wrapper">
+                            <span class="section-completed">2/2</span>
+                            <span class="section-time">6:28</span>
+                          </p>
+                        </div>
+                        <i class="section-title-icon-up fas fa-chevron-up"></i>
+                      </div>
+                      <div class="learn-list">
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">17. JSX là gì? Tại sao cần JSX? Quy ước
+                              đặt tên components</h3>
+                            <p class="learn-description">
+                              <i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing icon-not-playing fas fa-play-circle"></i>15:59
+                            </p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status not-complete">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="playlist-section-item">
+                      <div class="section-title-wrapper">
+                        <div>
+                          <h3 class="section-title content-playlist-heading-bold">Phần 1: GIới thiệu</h3>
+                          <p class="section-completed-wrapper">
+                            <span class="section-completed">2/2</span>
+                            <span class="section-time">6:28</span>
+                          </p>
+                        </div>
+                        <i class="section-title-icon-up fas fa-chevron-up"></i>
+                      </div>
+                      <div class="learn-list">
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">17. JSX là gì? Tại sao cần JSX? Quy ước
+                              đặt tên components</h3>
+                            <p class="learn-description">
+                              <i class="icon-not-playing fas fa-play-circle"></i>15:59
+                            </p>
+                          </div>
+                        </div>
+                        <div class="learn-item">
+                          <div class="learn-status not-complete">
+                            <i class="fas fa-check"></i>
+                          </div>
+                          <div class="learn-info">
+                            <h3 class="learn-name">1. JSX là gì? Tại sao cần JSX?</h3>
+                            <p class="learn-description"><i class="icon-playing fas fa-compact-disc"></i><i
+                                class="icon-not-playing fas fa-play-circle"></i>15:59</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row blog-content" style="display: flex; flex-direction: column" id="htmlToView">
+
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>
+        <!-- About Section End -->
+      </div>
+      <% include ../Layout/footer.ejs %>
+
+        <!-- Categories Section End -->
+    </div>
+    <!-- Main content End -->
+  </body>
+
+  <script type="text/javascript">
+
+    const myCommentBox = document.querySelector('.my-comment-box');
+    const commentActionWrapper = document.querySelector('.comment-action-wrapper');
+
+    myCommentBox.oninput = () => {
+      if (!!myCommentBox.value) {
+        commentActionWrapper.style = 'display:flex';
+      } else {
+        commentActionWrapper.style = 'display:none';
+      }
+    };
+    const sectionTitleWrapper = document.querySelectorAll('.section-title-wrapper');
+    const learnList = document.querySelectorAll('.learn-list');
+    const sectionTitleIcon = document.querySelectorAll('.section-title-icon-up');
+
+    sectionTitleWrapper.forEach((item, index) => {
+      sectionTitleWrapper[index].onclick = () => {
+        learnList[index].classList.toggle('learn-list--hidden');
+        sectionTitleIcon[index].classList.toggle(
+          'section-title-icon-up--rotate180deg'
+        );
+      };
+    });
+
+
+  </script>
+
+</html>

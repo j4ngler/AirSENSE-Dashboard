@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zxx"> 
+<% include ../Layout/header.ejs %>
+<head>
+    <style>
+        #space-report-station {
+        height: 60px;
+        display: block;
+    }
+    </style>
+
+    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    
+</head>
+<body class="home page-template page-template-page-home page-template-page-home-php page page-id-55 lightbox nav-dropdown-has-arrow">
+
+    <div id="wrapper">
+        <% include ../Layout/topBar.ejs %>
+        <div id="space-report-station"></div>
+        <main id="main-map" class="">
+            <div id="primary" class="content-area">
+                <main id="main" class="site-main" role="main">
+                    <section class="mag-posts-area d-flex flex-wrap">
+                        <h5>Hỗ trợ trích xuất dữ liệu trạm:</h5>
+                        <div class="mag-posts-content mt-30 mb-30 p-30 box-shadow">
+                            <div style=" width: 100%;" class="select-section">
+                
+                                <label class="label-header"> Danh sách trạm </label>  <select class="browser-default custom-select" id="selectTable" style="width: 200px;" onchange="onSelectClick()"  ></select>
+                    
+                                <label class="label-header">From</label> 
+                                <input type="datetime-local" class="date-input" id="fromTime" >
+                                <label class="label-header">To </label>
+                                <input type="datetime-local" class="date-input" id="toTime">
+                                <button class="btn export-button" onclick='exportReport()'> Export Report </button>
+                            </div>
+                            
+                    
+                            <br/>
+                            <br/>
+                            <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                       <th>Tên trạm</th>
+                                       <th>Thời gian</th>
+                                       <th>PM2p5</th>
+                                       <th>PM10</th>
+                                       <th>PM1</th>
+                                       <th>Nhiệt độ</th>
+                                       <th>Độ ẩm</th>
+                                       <th>Pressure</th>
+                                       <th>SO2</th>
+                                       <th>NO2</th>
+                                       <th>CO2</th>
+                                       <th>CO</th>
+                                       <th>O3</th>
+                                       <th>NO2A</th>
+                                       <th>NO2W</th>
+                                       <th>O3W</th>
+                                       <th>O3A</th>
+                                       <th>COW</th>
+                                       <th>COA</th>
+                                       <th>SO2W</th>
+                                       <th>SO2A</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                            <br/>
+                        </div>
+                        
+                    </section>
+
+
+                    <div class="container section-title-container">
+                        <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
+                                style="font-size:150%;">Bảng quy đổi giá trị AQI</span><b></b></h3>
+                    </div>
+                    <!-- .section-title -->
+                    <div class="row" id="row-850150603">
+                        <div class="col small-12 large-12">
+                            <div class="col-inner">
+                                <div id="footable_parent_64"
+                                    class="footable_parent ninja_table_wrapper loading_ninja_table wp_table_data_press_parent semantic_ui ">
+                                    <table data-ninja_table_instance="ninja_table_instance_0" data-footable_id="64"
+                                        data-filter-delay="500" id="footable_64"
+                                        class="foo-table ninja_footable foo_table_64 ui table  nt_type_ajax_table selectable striped vertical_centered footable-paging-right ninja_table_search_disabled footable footable-1 breakpoint-lg"
+                                        style="display: table;">
+                                        <thead>
+                                            <tr class="footable-header">
+                                                <th class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    scope="col" style="display: table-cell;">Giá trị AQI</th>
+                                                <th class="ninja_column_1 ninja_clmn_nm_danh_gia" scope="col"
+                                                    style="display: table-cell;">Đánh giá</th>
+                                                <th class="ninja_column_2 ninja_clmn_nm_anh_huong" scope="col"
+                                                    style="display: table-cell;">Ảnh hưởng tới sức khỏe</th>
+                                                <th class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    scope="col" style="display: table-cell;">Màu sắc</th>
+                                            </tr>
+                                        </thead>
+                                        <colgroup>
+                                            <col class="ninja_column_0 ">
+                                            <col class="ninja_column_1 ">
+                                            <col class="ninja_column_2 ">
+                                            <col class="ninja_column_3 ">
+                                        </colgroup>
+                                        <tbody>
+                                            <tr class="ninja_table_row_0 nt_row_id_1">
+                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    style="display: table-cell;">0-50</td>
+                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
+                                                    style="display: table-cell;">TỐT</td>
+                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
+                                                    style="display: table-cell;">Chất lượng không khí tốt, không ảnh
+                                                    hưởng tới sức khỏe.</td>
+                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    style="display: table-cell;">
+                                                    <div id="thupa_xanh" class="color">XANH</div>
+                                                </td>
+                                            </tr>
+                                            <tr class="ninja_table_row_1 nt_row_id_2">
+                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    style="display: table-cell;">51-100</td>
+                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
+                                                    style="display: table-cell;">TRUNG BÌNH</td>
+                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
+                                                    style="display: table-cell;">Chất lượng không khí ở mức chấp nhận
+                                                    được. Tuy nhiên, một số ít người nhạy cảm với ô nhiễm không khí có
+                                                    thể chịu những tác động nhất định tới sức khỏe.</td>
+                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    style="display: table-cell;">
+                                                    <div id="thupa_vang" class="color">VÀNG</div>
+                                                </td>
+                                            </tr>
+                                            <tr class="ninja_table_row_2 nt_row_id_3">
+                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    style="display: table-cell;">101-150</td>
+                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
+                                                    style="display: table-cell;">KÉM</td>
+                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
+                                                    style="display: table-cell;">Những người nhạy cảm có thể gặp phải
+                                                    các vấn đề về sức khỏe. Những người bình thường ít có khả năng bị
+                                                    ảnh hưởng.</td>
+                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    style="display: table-cell;">
+                                                    <div id="thupa_da_cam" class="color">DA CAM</div>
+                                                </td>
+                                            </tr>
+                                            <tr class="ninja_table_row_3 nt_row_id_4">
+                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    style="display: table-cell;">151-200</td>
+                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
+                                                    style="display: table-cell;">XẤU</td>
+                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
+                                                    style="display: table-cell;">Những người bình thường bắt đầu có các
+                                                    ảnh hưởng tới sức khỏe. Những người nhạy cảm có thể gặp những vấn đề
+                                                    sức khỏe nghiêm trọng hơn.</td>
+                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    style="display: table-cell;">
+                                                    <div id="thupa_do" class="color">ĐỎ</div>
+                                                </td>
+                                            </tr>
+                                            <tr class="ninja_table_row_4 nt_row_id_5">
+                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    style="display: table-cell;">201-300</td>
+                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
+                                                    style="display: table-cell;">RẤT XẤU</td>
+                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
+                                                    style="display: table-cell;">Cảnh báo hưởng tới sức khỏe: mọi người
+                                                    có thể bị ảnh hưởng tới sức khỏe nhiều hơn.</td>
+                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    style="display: table-cell;">
+                                                    <div id="thupa_tim" class="color">TÍM</div>
+                                                </td>
+                                            </tr>
+                                            <tr class="ninja_table_row_5 nt_row_id_6">
+                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
+                                                    style="display: table-cell;">Từ 301</td>
+                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
+                                                    style="display: table-cell;">NGUY HẠI</td>
+                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
+                                                    style="display: table-cell;">Cảnh báo khẩn cấp về sức khỏe: Mọi
+                                                    người có thể bị ảnh hưởng nghiêm trọng tới sức khỏe.</td>
+                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
+                                                    style="display: table-cell;">
+                                                    <div id="thupa_nau" class="color">NÂU</div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="gap-element" style="display:block; height:auto; padding-top:20px" class="clearfix">
+                    </div>
+                    
+
+                    <div class="gap-element" style="display:block; height:auto; padding-top:20px" class="clearfix">
+                    </div>
+                    <div class="container section-title-container">
+                        <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
+                                style="font-size:150%;">Đối tác</span><b></b></h3>
+                    </div><!-- .section-title -->
+
+                    <!-- Section Partner-->
+                    <div class="section-partner-container">
+                        <div class="row line-1">
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/US.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/alumi.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/Screen-Shot-2020-05-02-at-8.50.46-PM.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/Screen-Shot-2020-05-02-at-8.52.33-PM.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row line-2">
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/Hust.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/logo_set.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/SAMI.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row line-3">
+                            <div class="col-4 text-center my-auto">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/live_learn-1024x241.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/THX.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/USAID_Horiz_Vietnamese_RGB_2-Color-1024x396.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row line-4">
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/CENSTED.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/cpas.jpg" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/VEFFA-logo3.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/aseanstem_240.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gap-element" style="display:block; height:auto; padding-top:40px" class="clearfix">
+                    </div>
+                </main>
+
+            </div>
+
+
+
+
+        </main><!-- #main -->
+
+        <% include ../Layout/footer.ejs %>
+
+    </div>
+
+    <script>
+        const beamsClient = new PusherPushNotifications.Client({
+          instanceId: '56d6812e-92af-4bfa-bd31-a1529229ddaf',
+        });
+      
+        beamsClient.start()
+          .then(() => beamsClient.addDeviceInterest('hello'))
+          .then(() => console.log('Successfully registered and subscribed!'))
+          .catch(console.error);
+      </script>
+
+    <script type="text/javascript">
+        // $('#datatable').dataTable( {
+        //     "language": {
+        //     "emptyTable": "No data available in table"
+        //     }
+        // });
+        const url = location.href;
+        const itemUrl = url.split('/');
+        const tokenAdmin = itemUrl[itemUrl.length-1];
+        var mname = 'no token';
+        var allInfoStation = null;
+        loadAllContent();
+        function loadAllContent(){
+            var Link='/api/social/getStationHome';
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        var showData='<option value="">None</option>';
+                        var groupID=[];
+                        var nameGroupID=[];
+                        allInfoStation=loadcofig.result;
+                        for(var k=0;k< loadcofig.result.length;k++) {
+                            let v=loadcofig.result[k];
+                            showData+='<option value="'+v.station_id+'">'+v.content +'</option>';
+                            if((v.id_group>0)&&(!groupID.includes(v.id_group)))
+                            {
+                                groupID.push(v.id_group);
+                                nameGroupID.push(v.name_group);
+                            }
+                            
+                        }
+
+                        for(var l=0;l< groupID.length;l++) {
+                            let dataChoice=groupID[l];
+                            var itemData="";
+                            for(var k=0;k< loadcofig.result.length;k++) {
+                                let v=loadcofig.result[k];
+                                if(v.id_group==dataChoice){
+                                    if(itemData.length>1) itemData+=","
+                                    itemData+="'"+v.station_id+"'";
+                                }   
+                            }
+                            showData+='<option value="('+itemData+')">'+nameGroupID[l] +'</option>';
+
+                        }
+                        $('#selectTable').html(showData);
+                        
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+        }
+
+
+            var lisItemStation="";
+		    var tableReport='sparc_sensor_max_min';
+            // gotoCheckUser(tableReport);
+
+
+            var actionDataSelect=null;
+            var dataSelectEdit=null;
+            var dataClick=null;
+
+        //     // gotoCheckUserStorage();
+        //     function onSelectClick(){
+        //         var stringvalue=document.getElementById("selectTable").value;
+        //         if(stringvalue.length>1)
+        //             gotoCheckData(stringvalue);
+        //     }
+        // function gotoCheckData(isShowLoader){  
+        //     console.log("go to check data");
+        //     var data=document.getElementById("selectTable").value;
+        //     var Link='/api/social/getdata';
+        //     var fromTime = new Date($('#fromTime').val());
+        //     var now = new Date().getTime()/1000;
+        //     if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
+        //         $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
+        //     }
+        //     var toTime = new Date($('#toTime').val());
+        //     if(isNaN(fromTime.getFullYear())) {
+        //         fromTime = undefined;
+        //     } else fromTime = fromTime.getTime()/1000;
+        //     if(isNaN(toTime.getFullYear())) {
+        //         toTime = undefined;
+        //     } else toTime = toTime.getTime()/1000;
+        //     if(isShowLoader != false) {
+        //         // showLoader();
+        //     }
+        //     // document.getElementsByClassName("dashboard")[0].style.display = "none";
+        //     $.ajax({    type: 'post',
+        //                 method: 'POST',
+        //                 url: Link,
+        //                 data: JSON.stringify( {data:data, fromTime: fromTime, toTime: toTime}), // body data type must match "Content-Type" header
+        //                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        //                 credentials: 'same-origin', // include, *same-origin, omit
+        //                 redirect: 'follow', // manual, *follow, error
+        //                 referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        //                 dataType: 'json',
+        //                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        //                 credentials: 'same-origin', // include, *same-origin, omit
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                     'Accept': 'application/json',
+        //                     'Content-Type': 'application/json',
+        //                     'Authorization': 'Beard ' + localStorage.getItem('LVC_tocken'),
+        //                     // 'Content-Type': 'application/x-www-form-urlencoded',
+        //                 },
+        //         success: function (loadcofig) {
+        //             // hideLoader();
+        //             document.getElementsByClassName("dashboard")[0].style.display = "block";
+        //             console.log('loadcofig: ',loadcofig);
+        //             // drawSensor(loadcofig);
+        //             assetDataBase(loadcofig);
+        //         },
+        //         error: function (loadcofig) {
+        //             hideLoader();
+        //             console.log('error');
+        //             console.log(loadcofig);
+        //         }
+        //     });
+        // }
+
+        //     function gotoCheckData(data){  
+        //         var Link='/api/social/getdata';
+        //         $.ajax({
+        //             type: 'post',
+        //             dataType: 'json',
+        //             url: Link,
+        //             data: {data:data },
+        //             beforeSend: function (xhr) {
+        //                 xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+        //             },
+        //             success: function (loadcofig) {
+        //                 console.log(loadcofig);
+        //                 assetDataBase(loadcofig);
+        //                 console.log('ssssssssssss');
+        //             },
+        //               error: function (loadcofig) {
+        //                 console.log('error');
+        //                   console.log(loadcofig);
+        //                   console.log('end error');
+        //               }
+        //         });
+        // }
+
+            function assetDataBase(result){
+               
+               var showData = `<thead>
+                    <tr>
+                       <th>Tên trạm</th>
+                       <th>Thời gian</th>
+                       <th>PM2p5</th>
+                       <th>PM10</th>
+                       <th>PM1</th>
+                       <th>Nhiệt độ</th>
+                       <th>Độ ẩm</th>
+                       <th>Pressure</th>
+                       <th>SO2</th>
+                       <th>NO2</th>
+                       <th>CO2</th>
+                       <th>CO</th>
+                       <th>O3</th>
+                       <th>NO2A</th>
+                       <th>NO2W</th>
+                       <th>O3W</th>
+                       <th>O3A</th>
+                       <th>COW</th>
+                       <th>COA</th>
+                       <th>SO2W</th>
+                       <th>SO2A</th>
+                    </tr>
+                </thead>
+                <tbody>`
+                result.map((item)=>{
+                    var d = new Date((item.Time) * 1000);
+                    var date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':00';
+                    showData+='<tr>';
+                    showData+='<td>'+item.station_id+'</td>'
+                    showData+='<td>'+date+'</td>'
+                    showData+='<td>'+item.PM2p5+'</td>'
+                    showData+='<td>'+item.PM10+'</td>'
+                    showData+='<td>'+item.PM1+'</td>'
+                    showData+='<td>'+item.Temperature+'</td>'
+                    showData+='<td>'+item.Humidity+'</td>'
+                    showData+='<td>'+item.Pressure+'</td>'
+                    showData+='<td>'+item.SO2+'</td>'
+                    showData+='<td>'+item.NO2+'</td>'
+                    showData+='<td>'+item.CO2+'</td>'
+                    showData+='<td>'+item.CO+'</td>'
+                    showData+='<td>'+item.O3+'</td>'
+                    showData+='<td>'+item.NO2A+'</td>'
+                    showData+='<td>'+item.NO2W+'</td>'
+                    showData+='<td>'+item.O3W+'</td>'
+                    showData+='<td>'+item.O3A+'</td>'
+                    showData+='<td>'+item.COW+'</td>'
+                    showData+='<td>'+item.COA+'</td>'
+                    showData+='<td>'+item.SO2W+'</td>'
+                    showData+='<td>'+item.SO2A+'</td>'
+                    showData+='</tr>'
+                });
+                $('#datatable').html(showData);
+                // $('#datatable').DataTable( { destroy: true } ).destroy();
+                // var showData= '<thead> <tr> <th data-field="time">Giờ cập nhật</th><th data-field="broad_temp"> nhiệt độ oC</th>'
+                //     +'<th data-field="ch1_temp">CH1 oC</th><th data-field="ch2_temp">CH2 oC</th>'
+                //     +'<th data-field="ch1_freq">CH1 Hz</th><th data-field="ch2_freq">CH2 Hz</th></tr></thead>';
+                // var columeShow=[ {data: "time"}, {data: "broad_temp"}, {data: "ch1_temp"}, {data: "ch2_temp"},
+                //              {data: "ch1_freq"}, {data: "ch2_freq"}];
+
+                // $('#datatable').html(showData);
+                // var table = $('#datatable').DataTable ({"data" : result, columns: columeShow});
+                // $('#datatable tbody').on( 'click', 'td',
+                //     function ()
+                //     {
+                //         console.log(this);
+                //         var idx = table.cell( this ).index().row;
+                //         console.log(idx);
+                //         var data = table.row( idx ).data();
+                //         console.log(data);
+                //         dataClick=data; 
+                //     }
+                // );
+
+            }
+
+       
+      
+
+        function exportReport() {
+            var fromTime = new Date($('#fromTime').val());
+            const getFromTime = fromTime.getTime();
+            var toTime = new Date($('#toTime').val());
+            const getToTime = toTime.getTime();
+            var station_id = document.getElementById("selectTable").value;
+            if(!station_id) {
+                alert("Vui lòng chọn trạm để xuất báo cáo");
+                return;
+            }
+            if(isNaN(fromTime.getFullYear())) {
+                fromTime = undefined;
+            } else fromTime = fromTime.getFullYear() +'-'+ fromTime.getMonth() +'-'+ fromTime.getDate() +' '+ fromTime.getHours() +':'+ fromTime.getMinutes() +':00';
+            if(isNaN(toTime.getFullYear())) {
+                toTime = undefined;
+            } else toTime = toTime.getFullYear() +'-'+ toTime.getMonth() +'-'+ toTime.getDate() +' '+ toTime.getHours() +':'+ toTime.getMinutes() +':00';            
+            var data = {'fromTime': fromTime, 'toTime': toTime, 'station_id': station_id};
+            var link = '/api/social/getReportStations';
+            console.log(data)
+            $.ajax({
+                    type: 'post',
+                    method: 'POST',
+                    url: link,
+                    data: JSON.stringify( {station_id: station_id, fromTime: fromTime, toTime: toTime, getFromTime: getFromTime, getToTime: getToTime}),
+                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        dataType: 'json',
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Beard ' + mname,
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    success: function(result) {
+                        // console.log(result.slice(8));
+                        console.log(result);
+                        const nameExcel = result.filePath.slice(8);
+                        assetDataBase(result.data)
+                        window.location = '' + nameExcel;
+
+                    }
+                })
+
+        }
+
+
+
+    </script>
+
+
+
+</body>
+
+</html>
+

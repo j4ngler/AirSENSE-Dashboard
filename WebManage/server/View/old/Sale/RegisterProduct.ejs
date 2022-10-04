@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+<title>The Man in Blue &gt; Experiments &gt; widgEditor</title>
+
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<meta name="author" content="The Man in Blue" />
+<meta name="robots" content="all" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link type="text/css" href="/tool_editor/sample/css/sample.css" rel="stylesheet" media="screen" />
+<script language="JavaScript" src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="/tool_editor/ckeditor.js"></script>
+
+</head>
+
+
+
+<body>
+    <h2>The three greatest things you learn from traveling</h2>
+<!-- END experimentInfo -->
+
+	<div id="content">
+        <div >
+            <div  style="width: 25%; float: left; box-sizing: border-box;">
+                <div>
+                    chuyên mục
+                    <select id="selectTable" >
+                        <option value="newProduct"> sản phẩm mới</option>
+                        <option value="product">  các sản phẩm   </option>
+                        <option value="support">Góc hỗ trợ</option>
+                        <option value="video">video</option>
+                        <option value="communicate">cộng đồng</option>
+                  </select>
+                
+                </br>
+                 Tiêu đề <input id="titleInput"/> 
+                </div>
+                <button onclick="onSelectClick1();"> up lpad</button>
+            </div>
+            <div  style="width: 75%; float: left; box-sizing: border-box;">
+                <main>
+                    <div class="centered">
+                        <div class="document-editor">
+                            <div class="toolbar-container"></div>
+                            <div class="content-container">
+                                <div id="editor">
+                                    <h2>The three greatest things you learn from traveling</h2>
+                        
+                                    <p>Going to a new place can be quite terrifying. While change and uncertainty makes us scared, traveling teaches us how ridiculous it is to be afraid of something before it happens. The moment you face your fear and see there was nothing to be afraid of, is the moment you discover bliss.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+               
+            </div>
+		
+	</div>
+<!-- END content -->
+</body>
+
+
+    <script type="text/javascript">
+        var dataJsonPage = "<%= dataPage %>";
+        var mname = localStorage.getItem("tocken_LVC");
+
+        class UploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+            upload() {
+
+                return this.loader.file
+            .then( file => new Promise( ( resolve, reject ) => {
+                const data = new FormData();
+                    data.append('resume', file);
+
+                    $.ajax({
+                        type: "POST",
+                        enctype: 'multipart/form-data',
+                        url: "http://localhost:3000/uploadimage",
+                        data: data,
+                        processData: false, //prevent jQuery from automatically transforming the data into a query string
+                        contentType: false,
+                        cache: false,
+                        success: (data1) => {
+                            console.log(data1);
+                            if (data1.filename) {  
+                                resolve({
+                                    default: 'http://localhost:3000/image/' +data1.filename
+                                });
+                            } else {
+                                reject(false);
+                            }
+                            
+                        },
+                        error: (e) => {
+                            console.log(e.responseText);
+                        }
+                    });
+            } ) );
+
+            }
+            abort() {
+            }
+        }
+    
+
+        DecoupledEditor
+            .create( document.querySelector( '#editor' ), {
+                // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+            } )
+            .then( editor => {
+                const toolbarContainer = document.querySelector( 'main .toolbar-container' );
+
+               toolbarContainer.prepend( editor.ui.view.toolbar.element );
+
+                window.editor = editor;
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader)=>{
+                    return new UploadAdapter(loader);
+                };
+            } )
+            .catch( err => {
+                console.error( err.stack );
+                console.log(err);
+            } );
+
+        function onSelectClick1(){
+            const editorData = editor.getData();
+            onSelectClick(editorData);
+        }
+
+        function onSelectClick(value){
+            console.log(value);
+            var title=$('#titleInput').val();
+            var startHtml= "<html> <head><title>"+ title+"</title> </head><body> ";
+            var endHtml="</body></html>";
+            var valueHtml=startHtml+value+endHtml;
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: "http://localhost:3000/uploadProduct",
+                data: {
+                    productid:dataJsonPage,
+                    title:title,
+                    content:valueHtml
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                },
+                success: function (loadcofig) {
+                    console.log(loadcofig);
+                    var string ="Đăng bài ";
+                    if(loadcofig)  string+="thành công";
+                    else string+="thất bại";
+                    alert(string);
+                },
+                error: function (loadcofig) {
+                    console.log('error');
+                    alert("Lỗi  đăng bài");
+                   
+                }
+            });
+        }
+    
+
+    </script>
+
+
+
+</html>

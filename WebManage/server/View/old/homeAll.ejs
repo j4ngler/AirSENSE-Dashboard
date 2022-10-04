@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>Quản lý Trạm</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/old/training_library/img/core-img/favicon.ico">
+    <title>Line Chart</title>
+
+    <!-- <script src="/old/javascripts/chart.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="https://cdn.rawgit.com/chartjs/Chart.js/master/samples/utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.5/chartjs-plugin-annotation.js"></script>
+    <script src="/old/javascripts/utils.js"></script>
+	<style>
+        canvas{
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+    /* Button used to open the chat form - fixed at the bottom of the page */
+        .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        bottom: 23px;
+        right: 28px;
+        width: 280px;
+        }
+
+        /* The popup chat - hidden by default */
+        .chat-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid #f1f1f1;
+        z-index: 9;
+        }
+
+        /* Add styles to the form container */
+        .form-container {
+        max-width: 300px;
+        padding: 10px;
+        background-color: white;
+        }
+
+        /* Full-width textarea */
+        .form-container textarea {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        border: none;
+        background: #f1f1f1;
+        resize: none;
+        min-height: 200px;
+        }
+
+        /* When the textarea gets focus, do something */
+        .form-container textarea:focus {
+        background-color: #ddd;
+        outline: none;
+        }
+
+        /* Set a style for the submit/send button */
+        .form-container .btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom:10px;
+        opacity: 0.8;
+        }
+
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+        background-color: red;
+        }
+
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+        opacity: 1;
+        }
+
+        .form-container {
+		width:300px;
+		position:fixed;
+		bottom:0;
+		right:0px;
+		background:#fff;
+		border-radius:3px;
+		z-index:5000;
+						display:block;
+					}
+	.form-container .c_h {
+		cursor:pointer;
+		border-radius:0px;
+				/*background:#c61432;*/
+        background: #2dc3e8;
+				line-height: 34px;
+	}
+	.form-container .left_c {
+		color:#ebebeb;
+		width:150px;
+		font-size:16px;
+		font-family:Arial, Helvetica, sans-serif;
+	}
+	.form-container .right_c {
+		text-align:center;
+		/*background:#DE4A4A;*/
+    background:#ff8f32;
+		line-height: 36px;
+	}
+	.form-container .right_c  a {
+		color:#ebebeb;
+		border-radius: 3px;
+		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+		cursor: pointer !important;
+		font-size: 16px;
+		line-height: normal !important;
+		margin-top: 0 !important;
+		padding: 1px 0px !important;
+		text-align: center !important;
+		text-decoration:none;
+		font-weight:600;
+	}
+	.clear {
+		clear:both;
+	}
+	.chat_container {
+		  /*		display:none;*/
+		  padding:5px 26px;
+         }
+	.chat_container .no_provider {
+		text-align:left;
+		color:#5E5652;
+		font-size:12px;
+		width:300px;
+		padding:5px;
+		font-family:Arial, Helvetica, sans-serif;
+		margin-left:5px;
+	}
+	.chat_container .footer_c {
+		text-align:left;
+		color:#5E5652;
+		font-size:12px;
+		margin-left:10px;
+		margin-bottom:10px;
+		font-family:Arial, Helvetica, sans-serif;
+	}
+	.chat_container .footer_c a {
+		text-decoration:underline;
+		color:#777;
+		font-size:11px;
+	}
+	.chat_container .chat_entry {
+		margin:10px;
+		margin-top:0px;
+	}
+	.chat_container .chat_entry p {
+		margin-top:10px;
+		margin-bottom:10px;
+	}
+	.chat_container .chat_entry h4 {
+		text-align:left;
+		color:#1A1A1A;
+		font-weight:400;
+		font-size:16px;
+		margin-top:0px;
+	}
+	.chat_container .chat_entry input[type="text"] {
+		background-color: #fff;
+		background-image: none;
+		border: 1px solid #ccc;
+		border-radius:2px;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+		color: #999;
+		font-size: 13px;
+		padding: 8px 8px;
+		margin-bottom:5px;
+		transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+		width:100%;
+ /* 	height:30px; */ 
+		font-family:Arial, Helvetica, sans-serif;
+	}
+	.chat_container .chat_entry input[type="text"]:focus {
+		box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+		-webkit-box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+		-moz-box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+		outline:0 none;
+		border-color:#66afe9;
+	}
+	.chat_container .chat_entry input[type="submit"]{
+		padding: 5px 12px;
+		margin-bottom: 0;
+		font-size: 12px;
+		font-weight: normal;
+		text-align: center;
+		vertical-align: middle;
+		-ms-touch-action: manipulation;
+		touch-action: manipulation;
+		cursor: pointer;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		background-image: none;
+		border: 1px solid transparent;
+		border-radius:0px;
+		color: #fff;
+		/*background-color: #DD4A4A;*/
+    background-color: #2dc3e8 !important;
+		font-family:Arial, Helvetica, sans-serif;    
+	}
+	.chat_container .chat_entry input[type="submit"]:hover {
+		background-color: #C64545;
+	}
+	.form-error {
+		display:none;
+	}
+	.chat_message {
+		height:250px;
+		overflow-y:scroll;
+		padding:10px;
+		border-bottom:1px solid #222222;
+		padding-top:10px;
+	}
+	.chat_message .message_contain {
+		margin:5px;
+		background:#FCF8E2;
+		padding:5px;
+	}
+	.chat_message .user_message {
+		background:#F5F5F5;
+	}
+	.chat_message .message_contain  .header_image {
+		float:left;
+		width:50px;
+		margin-top:0px;
+		margin-bottom:0px;
+	}
+	.chat_message .message_contain .chat_mess {
+		font-size:13px;
+		color:#444444;
+		margin-top:0px;
+	}
+	.chat_message .message_contain .chat_date {
+		color:#777;
+		font-size:11px;
+		margin-top:0px;
+		margin-bottom:0px;
+	}
+	.chat_text_area {
+		margin:5px;
+	}
+	.chat_text_area .messag_send {
+		width:100%;
+		resize:none;
+		background-color: #fff;
+		background-image: none;
+		border: 1px solid #ccc;
+		border-radius: 2px;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+		color: #555;
+		padding:5px;
+		font-size:13px;
+		height:35px;
+	}
+	.chat_text_area .messag_send:focus {
+		box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+		-moz-box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+		-webkit-box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+		outline:0 none;
+		border-color:#66afe9;
+	}
+	.left{
+		float:left;
+	}
+	.right{
+		float:right;
+	}
+	.left_icons{
+		width:35px;
+		height:auto;
+		text-align:center;
+		color:#999;
+		/*background:#DE4A4A;*/
+        background: #ff8f32;
+		font-size:15px;
+	}
+	.left_icons a{
+		color:#fff;
+		font-weight:normal;
+	}
+	.center_icons{
+		text-align:center;
+		padding:2px 0px 0px 5px;
+	}
+	.logout img{
+		margin-top:8px;
+	}
+	</style>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/old/training_library/style.css">
+    <link rel="stylesheet" href="/old/css/home.css">
+    <script src="/old/training_library/js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="/old/training_library/js/bootstrap/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/old/training_library/js/bootstrap/bootstrap.min.js"></script>
+    <!-- All Plugins js -->
+    <script src="/old/training_library/js/plugins/plugins.js"></script>
+    <script src="/old/javascripts/dashboard.js"></script>
+    <script type="text/javascript" src="/old/javascripts/commonView.js"></script>
+
+
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+
+    <!-- ##### Header Area Start ##### -->
+    <header class="header-area">
+
+        <!-- Navbar Area -->
+        <div class="mag-main-menu" id="sticker">
+            <div class="classy-nav-container breakpoint-off">
+                <!-- Menu -->
+                <nav class="classy-navbar justify-content-between" id="magNav">
+
+                    <!-- Nav brand -->
+                    <a href="#" class="nav-brand"><img src="/old/training_library/img/core-img/codexact.png" alt=""></a>
+
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    </div>
+
+                    <!-- Nav Content -->
+                    <div class="nav-content d-flex align-items-center">
+                        <div class="classy-menu">
+
+                            <!-- Close Button -->
+                            <div class="classycloseIcon">
+                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            </div>
+
+                            <!-- Nav Start -->
+                            <div class="classynav">
+                                <ul>
+                                    <li class="active"><a href="#">Dashboard </a></li>
+                                    <li class="active"><a href="./map">Bản đồ </a></li>
+                                    <li><a href="contact.html" id="managerAuthen" >Đăng nhập</a></li>
+                                    <li><a href="" id="managerLogout" >Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                            <!-- Nav End -->
+                        </div>
+
+                        <div class="top-meta-data d-flex align-items-center">
+                            <!-- Top Search Area -->
+                            <div class="top-search-area">
+                                
+                            </div>
+                            <!-- Submit Video -->
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+    <!-- ##### Mag Posts Area Start ##### -->
+
+            <div>
+                <div class="select-station">
+                    <label> Danh sách trạm </label>  <select id="selectTable"  onchange="onSelectClick()" style="width: 200px;" ></select>
+                </div>
+            </div>
+            
+          
+            <div class="no-data">Vui lòng chọn trạm để xem biểu đồ</div>
+            <div class="dashboard">
+                <div class="first-block margin-block">
+                    <div class="broad_temp block-chart">
+                        <canvas id="broad_temp" style="width: 100%;height: 100%;"></canvas>
+                    </div>
+                    <div class="vbat block-chart">
+                        <canvas id="vbat" style="width: 100%;height: 100%;"></canvas>
+                    </div>
+                </div>
+                <div class="second-block margin-block">
+                    <div class="ch1_freq block-chart">
+                        <canvas id="ch1_freq" style="width: 100%;height: 100%;"></canvas>
+                    </div>
+                    <div class="ch1_temp block-chart">
+                        <canvas id="ch1_temp" style="width: 100%;height: 100%;"></canvas>
+                    </div>
+                </div>
+                <div class="third-block margin-block ">
+                    <div class="ch2_freq block-chart">
+                        <canvas id="ch2_freq" style="width: 100%;height: 100%;"></canvas>
+                    </div>
+                    <div class="ch2_temp block-chart">
+                        <canvas id="ch2_temp" style="width: 100%;height: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- >>>>>>>>>>>>>>>>>>>>
+         Post Right Sidebar Area
+        <<<<<<<<<<<<<<<<<<<<< -->
+        <div class="chat-popup" id="formWarningAlert">
+            <div class="form-container">
+                <div class="left_c">
+                    <div class="left right_c left_icons"> 
+                           <a href="#" class="mini" style="font-size:23px;">-</a>
+                    </div>
+                    <div class="left center_icons"><!--center_icons-->
+                         Live help!
+                    </div><!--end center_icons-->        	
+                </div>
+                <div class="right right_c" style="width:35px;">
+                    <a href="#" class="logout" title="End chat" name="" style="display:none;"><img src="chat/logout.png"></a>        	
+                </div>
+                <div class="clear"></div>
+                <div>
+                    <label for="msg">Thông báo</label> <br/>
+                    <label for="msg">Thông báo</label>
+                </div>
+            </div>
+        </div>
+          
+
+    <!-- ##### Mag Posts Area End ##### -->
+
+    <!-- ##### Footer Area Start ##### -->
+  
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- ##### All Javascript Script ##### -->
+    <!-- jQuery-2.2.4 js -->
+   
+    <!-- Active js -->
+    <script src="/old/training_library/js/active.js"></script>
+    <script>
+        var url = location.href;
+        console.log('url is ' + url)
+        var mname = localStorage.getItem("tocken_LVC");
+        var allInfoStation=null;
+        gotoCheckUserStorage();
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+
+        function getConfig(arrayID,data,element,title,color) {
+
+            var itemDaraw=[];
+            for(var i=0;i<arrayID.length;i++){
+                let item=arrayID[i];
+                itemDaraw.push({
+                    label: data[item].nameStation,
+                    backgroundColor: color[i],
+                    borderColor: color[i],
+                    data: data[item].data,
+                    fill: false,
+                    showLine: true,
+                    borderWidth: 1,
+                });
+
+            }
+            var config = {
+                type: 'scatter',
+                data: {
+                    //labels: strtime,
+                    datasets: itemDaraw
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: title,
+                        position: 'top'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            distribution: 'linear',
+                            displayFormats: {
+                                quarter: 'MMM YYYY'
+                            }
+                        }],
+                        y: {
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: '%humi'
+                            },
+                        }
+                    },
+                    elements: {
+                        point:{
+                            radius: 0
+                        }
+                    },
+                    annotation: {
+                        annotations: [
+                            {
+                                drawTime: "afterDatasetsDraw",
+                                id: "up",
+                                type: "line",
+                                mode: "horizontal",
+                                scaleID: "y-axis-0",
+                                value: 20,
+                                borderColor: "red",
+                                borderWidth: 0,
+                                label: {
+                                    backgroundColor: "red",
+                                    content: "min",
+                                    enabled: false
+                                },
+                            },
+                            {
+                                drawTime: "afterDatasetsDraw",
+                                id: "low",
+                                type: "line",
+                                mode: "horizontal",
+                                scaleID: "y-axis-0",
+                                value: 10,
+                                borderColor: "blue",
+                                borderWidth: 0,
+                                label: {
+                                    backgroundColor: "red",
+                                    content: "max",
+                                    enabled: false
+                                },
+                            },
+                        ]
+                    }
+                },
+            };
+            return config;
+        }
+
+
+        var reset = 0;
+        function drawSensor(data){
+            $(".no-data").hide();
+            $(".dashboard").show();
+            var color=[];
+            if(data.result){
+                var arrayData={};
+                var arrayID=[];
+                for(var i=0;i<data.result.length;i++){
+                    let dataview=data.result[i];
+                    var stationid='station'+dataview.station_id;
+                    if(arrayData[stationid]) { // Covers 'undefined' as well
+                        
+                        arrayData[stationid].data.push(dataview);
+                    } else {
+                        var  nameStation="";
+                        for(var j=0;j<allInfoStation.length;j++){
+                            if(dataview.station_id===allInfoStation[j].station_id){
+                                nameStation=allInfoStation[j].content;
+                            }
+                        }
+                        color.push(getRandomColor());
+                        arrayID.push(stationid);
+                        arrayData[stationid]={nameStation:nameStation ,data:[]};
+                        arrayData[stationid].data.push(dataview);
+                    }   
+                }
+                console.log(arrayData);
+
+                drawSingleChart(arrayID,arrayData,'Broad Temperature','broad_temp',color);
+                drawSingleChart(arrayID,arrayData,'Broad vbat','vbat',color);
+                drawSingleChart(arrayID,arrayData,'CH1 Temperature','ch1_temp',color);
+                drawSingleChart(arrayID,arrayData,'CH2 Temperature','ch2_temp',color);
+                drawSingleChart(arrayID,arrayData,'CH1 Frequence','ch1_freq',color);
+                drawSingleChart(arrayID,arrayData,'CH2 Frequence','ch2_freq',color);
+                reset = 1;
+            }
+        }
+
+        function drawSingleChart(arrayID,data, title, property,color) {
+            var broad_data={};
+            for(var i=0;i<arrayID.length;i++){
+                let itemBroad=arrayID[i];
+                broad_data[itemBroad]={nameStation:data[itemBroad].nameStation ,data:[]};
+                broad_data[itemBroad].data = data[itemBroad].data.map(item => ({'x': new Date(item.timestampe), 'y': item[property]}));
+            }
+
+            var config = getConfig(arrayID,broad_data,element,title,color);
+            let max,min,max_enable=false, min_enable=false;
+
+            if(property === 'broad_temp') {
+                if(threshold.broad_temp_min_enanble === 1) {
+                    min_enable = true;
+                    min = threshold.broad_temp;
+                }
+                if(threshold.broad_temp_max_enanble === 1) {
+                    max_enable = true;
+                    max = threshold.broad_temp_min;
+                }
+            }
+            
+            if(property === 'vbat') {
+                if(threshold.vbat_min_enanble === 1) {
+                    min_enable = true;
+                    min = threshold.vbat_min;
+                }
+                if(threshold.vbat_max_enanble === 1) {
+                    max_enable = true;
+                    max = threshold.vbat_max;
+                }
+            }
+            if(property === 'ch1_freq') {
+                if(threshold.ch1_freq_min_enanble === 1) {
+                    min_enable = true;
+                    min = threshold.ch1_freq_min;
+                }
+                if(threshold.ch1_freq_max_enanble === 1) {
+                    max_enable = true;
+                    max = threshold.ch1_freq;
+                }
+            }
+            if(property === 'ch2_freq') {
+                if(threshold.ch2_freq_min_enanble === 1) {
+                    min_enable = true;
+                    min = threshold.ch2_freq_min;
+                }
+                if(threshold.ch2_freq_max_enanble === 1) {
+                    max_enable = true;
+                    max = threshold.ch2_freq;
+                }
+            }
+            if(property === 'ch1_temp') {
+                if(threshold.ch1_temp_min_enanble === 1) {
+                    min_enable = true;
+                    min = threshold.ch1_temp_min;
+                }
+                if(threshold.ch1_temp_max_enanble === 1) {
+                    max_enable = true;
+                    max = threshold.ch1_temp;
+                }
+            }
+            if(property === 'ch2_temp') {
+                if(threshold.ch2_temp_min_enanble === 1) {
+                    min_enable = true;
+                    min = threshold.ch2_temp_min;
+                }
+                if(threshold.ch2_temp_max_enanble === 1) {
+                    max_enable = true;
+                    max = threshold.ch2_temp;
+                }
+            }
+
+            if(min_enable) {
+                config.options.annotation.annotations[0].scaleID = 'y-axis-1';
+                config.options.annotation.annotations[0].value = min;
+            }
+            if(max_enable) {
+                config.options.annotation.annotations[1].scaleID = 'y-axis-1';
+                config.options.annotation.annotations[1].value = max;
+            }
+
+            var element = document.getElementById(property).getContext('2d');
+            if(reset==1) {
+                window[property].data.datasets = config.data.datasets;
+                window[property].update();
+            } else window[property] = new Chart(element, config);
+            
+        }
+
+
+
+
+
+        openForm();
+
+        function openForm() {
+            document.getElementById("formWarningAlert").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("formWarningAlert").style.display = "none";
+        }
+
+
+
+
+        function onSelectClick(){
+            var stringvalue=document.getElementById("selectTable").value;
+            if(stringvalue.length>1)
+                gotoCheckData(stringvalue);
+        }
+
+        loadAllContent();
+        function loadAllContent(){
+            var Link='/api/social/getStation';
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        var showData='<option value="">None</option>';
+                        var groupID=[];
+                        var nameGroupID=[];
+                        allInfoStation=loadcofig.result;
+                        for(var k=0;k< loadcofig.result.length;k++) {
+                            let v=loadcofig.result[k];
+                            showData+='<option value="'+v.station_id+'">'+v.content +'</option>';
+                            if((v.id_group>0)&&(!groupID.includes(v.id_group)))
+                            {
+                                groupID.push(v.id_group);
+                                nameGroupID.push(v.name_group);
+                            }
+                            
+                        }
+
+                        for(var l=0;l< groupID.length;l++) {
+                            let dataChoice=groupID[l];
+                            var itemData="";
+                            for(var k=0;k< loadcofig.result.length;k++) {
+                                let v=loadcofig.result[k];
+                                if(v.id_group==dataChoice){
+                                    if(itemData.length>1) itemData+=","
+                                    itemData+=""+v.station_id+"";
+                                }   
+                            }
+                            showData+='<option value="'+itemData+'">'+nameGroupID[l] +'</option>';
+
+                        }
+
+                        console.log(showData);
+                        $('#selectTable').html(showData);
+                        
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+        }
+
+        function gotoCheckData(data){  
+                var Link='/api/social/getdata';
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: Link,
+                    data: {data:data },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        drawSensor(loadcofig);
+                        console.log('ssssssssssss');
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+        }
+
+        var threshold;
+        getThreshold();
+        function getThreshold() {
+            var Link='/api/socialgetThreshold';
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: Link,
+                data: {},
+                success: function (result) {
+                    console.log('threshold: ',result);
+                    threshold = result;
+                },
+                error: function (err) {
+                    console.log('error: ',err);
+                }
+            });
+        }    
+    </script>
+
+</body>
+
+</html>

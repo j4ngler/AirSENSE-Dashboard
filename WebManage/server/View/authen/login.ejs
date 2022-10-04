@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/assets/css/authen/authen.css">
+        <title>Đăng nhập</title>
+         <!-- Latest jQuery form server -->
+        <script src="https://code.jquery.com/jquery.min.js"></script>
+    </head>
+<body>
+    <div class="authen-center">
+        <form >
+          <div class="authen-text-field">
+            <input type="text" id="mname" required>
+            <span></span>
+            <label>Email hoặc Số điện thoại</label>
+          </div>
+          <div class="authen-text-field">
+            <input type="password" id="mpass" required>
+            <span></span>
+            <label>Mật khẩu</label>
+          </div>
+        </form>
+          <div class="authen-pass"><a href="/api/auth/resetPassword">Quên mật khẩu?</a></div>
+          <input class="authen-submit-button" value="Đăng nhập" onclick="login()">
+          <div class="authen-signup-link">
+            <span>Hoặc đăng nhập với</span>
+          </div>
+          <div class="authen-signup">
+            <input class="authen-submit2" value ="FACEBOOK">
+            <input class="authen-submit2" value ="GOOGLE+">
+          </div>
+        </form>
+        </div>
+</body>
+
+<script>
+    function login(){
+                $.ajax({
+                        type: 'post',
+                        method: 'POST',
+                        url: '/api/auth/login',
+                     //   body: JSON.stringify({type:dataView}), // body data type must match "Content-Type" header
+                        data: JSON.stringify( {
+                            email: $("#mname").val(),
+                            password: $("#mpass").val()
+                        }), // body data type must match "Content-Type" header
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        dataType: 'json',
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Beard ' + localStorage.getItem('token'),
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+   
+   
+          success: function(loadcofig) {
+              console.log(loadcofig);
+              console.log(loadcofig);
+              if (loadcofig.tocken) {
+                  localStorage.setItem("tocken_AIRSENSE", loadcofig.tocken);
+                  localStorage.setItem("name_AIRSENSE", mname);
+                  localStorage.setItem("username_AIRSENSE", loadcofig.userName);
+                  window.location.href = "/";
+              } else {
+                  alert("Thông tin đăng nhập lỗi,Xin vui lòng thử lại");
+              }
+          },
+          complete: function(loadcofig) {
+              console.log(loadcofig.responseText);
+          },
+          error: function(loadcofig) {
+              console.log(loadcofig);
+          }
+      });
+      }
+</script>
+
+</html>

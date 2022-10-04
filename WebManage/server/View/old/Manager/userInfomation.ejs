@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="pixelhint.com">
+	<meta name="description" content=""/>
+	<link rel="stylesheet" type="text/css" href="/old/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="/old/js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="/old/js/main.js"></script>
+	<script type="text/javascript" src="/old/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="/old/js/dataTables.bootstrap.min.js"></script>
+
+	<style>
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content */
+		.modal-content {
+		  position: relative;
+		  background-color: #fefefe;
+		  margin: auto;
+		  padding: 0;
+		  border: 1px solid #888;
+		  width: 80%;
+		  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		  -webkit-animation-name: animatetop;
+		  -webkit-animation-duration: 0.4s;
+		  animation-name: animatetop;
+		  animation-duration: 0.4s
+		}
+
+		/* Add Animation */
+		@-webkit-keyframes animatetop {
+		  from {top:-300px; opacity:0} 
+		  to {top:0; opacity:1}
+		}
+
+		@keyframes animatetop {
+		  from {top:-300px; opacity:0}
+		  to {top:0; opacity:1}
+		}
+
+		/* The Close Button */
+		.close {
+		  color: white;
+		  float: right;
+		  font-size: 28px;
+		  font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+		  color: #000;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+
+		.modal-header {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+		.modal-body {padding: 2px 16px;}
+
+		.modal-footer {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+
+		* {box-sizing: border-box}
+
+		/* Set height of body and the document to 100% */
+		body, html {
+		  height: 100%;
+		  margin: 0;
+		  font-family: Arial;
+		}
+
+		/* Style tab links */
+		.tablink {
+		  background-color: #555;
+		  float: left;
+		  border: none;
+		  outline: none;
+		  cursor: pointer;
+		  padding: 14px 16px;
+		  font-size: 17px;
+		  width: 33%;
+		}
+
+		.tablink:hover {
+		  background-color: #777;
+		}
+
+		/* Style the tab content (and add height:100% for full page content) */
+		.tabcontent {
+		  	display: none;
+		  	padding: 100px 20px;
+		  	height: 100%;
+		}
+		.list_item {
+		    width: 100%;
+		    margin-bottom: 13px;
+		    padding-bottom: 13px;
+		    float: left;
+		}
+		.clearfix {
+		    clear: both;
+		}
+		.tabarticle {
+				  float: left;
+				  border: none;
+				  outline: none;
+				  cursor: pointer;
+
+				  padding: 10px 10px;
+				  width: 25%;
+				}
+		.tabmainarticle {
+				  float: left;
+				  border: none;
+				  outline: none;
+				  cursor: pointer;
+				   font-size: 15px;
+				  padding: 10px 10px;
+				  width: 70%;
+				}        
+		.thumb_100 {
+		    position: relative;
+		    margin-right: 10px;
+		    float: left;
+		    width: 100px;
+		}
+
+		.tabarticlereport {
+				  float: left;
+				  border: none;
+				  outline: none;
+				  cursor: pointer;
+				  padding: 10px 10px;
+				  width: 20%;
+				}
+		.tabmainarticlereport {
+				  float: left;
+				  border: none;
+				  outline: none;
+				  cursor: pointer;
+				   font-size: 12px;
+				  padding: 10px 10px;
+				  width: 79%;
+				}        
+		.thumb_20 {
+		    position: relative;
+		    margin-right: 0px;
+		    float: left;
+		    width: 50px;
+		}
+
+</style>
+
+</head>
+<body>
+
+
+	<button class="tablink" onclick="openPage('Home', this, 'red')">Tài khoản</button>
+	<button class="tablink" onclick="openPage('News', this, 'green')" id="defaultOpen">Bài đăng</button>
+	<button class="tablink" onclick="openPage('Contact', this, 'blue')">Thông báo</button>
+
+	<div id="News" class="tabcontent">
+	  	<div>
+	  		<center> </center> <h3>News</h3>
+	  		<br>
+	  		<article class="list_item clearfix">
+				 <img class="thumb_100 tabarticle" src="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" class="vne_lazy_image lazyInitial lazyLoaded" data-original="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" alt="Ra phường" title="Ra phường" data-was-processed="true">
+				 <div class="tabmainarticle">
+				 	<h1 ><a href="" title="">ssssssssssssssssssavdsvdsssss</a></h1>
+				     <p >xxxxxxxxxxxxxx</p>
+				   <p >xxxxxxxxxxxxxssssssssssssssssssssssssssssssssssssssssssssx</p>
+				    <p >xxxxxxxxxxxxsssssssssssssssxx</p>
+				     <p >xxxxxxxxxxxxxx</p>
+				 </div>
+			</article>
+
+			<article>
+				 <img class="thumb_100 tabarticle" src="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" class="vne_lazy_image lazyInitial lazyLoaded" data-original="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" alt="Ra phường" title="Ra phường" data-was-processed="true">
+				 <div class="tabmainarticle">
+				 	<h1 ><a href="" title="">sssssssssssssss</a></h1>
+				     <p >xxxxxxxxxxxxxx</p>
+				   <p >xxxxxxxxxxxxxx</p>
+				    <p >xxxxxxxxxxxxxx</p>
+				     <p >xxxxxxxxxxxxxx</p>
+				 </div>
+			</article>
+		</div>
+	</div>
+
+	<div id="Contact" class="tabcontent">
+		<div>
+	  		<h3>Thông báo</h3>
+	  		<article class="list_item clearfix">
+				 <img class="thumb_20 tabarticlereport" src="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" class="vne_lazy_image lazyInitial lazyLoaded" data-original="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" alt="Ra phường" title="Ra phường" data-was-processed="true">
+				 <div class="tabmainarticlereport">
+				 	<h1 ><a href="" title="">ssssssssssssssssssavdsvdsssss</a></h1>
+				     <p >xxxxxxxxxxxxxx</p>
+				   <p >xxxxxxxxxxxxxssssssssssssssssssssssssssssssssssssssssssssx</p>
+				    <p >xxxxxxxxxxxxsssssssssssssssxx</p>
+				     <p >xxxxxxxxxxxxxx</p>
+				 </div>
+			</article>
+
+			<article>
+				 <img class="thumb_20 tabarticlereport" src="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" class="vne_lazy_image lazyInitial lazyLoaded" data-original="https://i-vnexpress.vnecdn.net/2019/01/26/camhapng-1548479759_100x100.png" alt="Ra phường" title="Ra phường" data-was-processed="true">
+				 <div class="tabmainarticlereport">
+				 	<h1 ><a href="" title="">sssssssssssssss</a></h1>
+				     <p >xxxxxxxxxxxxxx</p>
+				   <p >xxxxxxxxxxxxxx</p>
+				    <p >xxxxxxxxxxxxxx</p>
+				     <p >xxxxxxxxxxxxxx</p>
+				 </div>
+			</article>
+		</div>
+	 
+	</div>
+	<div id="Home" class="tabcontent">
+	  <div class="container">
+			<div class="row">
+	       		<div class="col-md-7 ">
+				<div class="panel panel-default">
+				  	<div class="panel-heading">  <h4 >Thông tin người dùng</h4></div>
+				    <div class="panel-body"> 
+				    	<div class="box box-info">
+				            <div class="box-body">
+				                <div class="col-sm-6">
+				                <div  align="center"> <img alt="User Pic" src="https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg" id="profile-image1" class="img-circle img-responsive"> 	
+				                <input id="profile-image-upload" class="hidden" type="file">
+								
+								 <br>
+								 <div id="edit_info_user">  </div>    
+				    
+				              <!-- /input-group -->
+				            </div>
+				            
+				     	</div>
+				    </div>      
+				</div> 
+	        </div>
+		</div>
+	</div>
+
+	
+
+
+
+
+	
+
+<script>
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+
+
+	
+    <script>
+
+            $(function() {
+			    $('#profile-image1').on('click', function() {
+			        $('#profile-image-upload').click();
+			    });
+			});       
+    </script> 
+       
+       
+       
+       
+       
+       
+       
+       
+
+
+	<script type="text/javascript">
+	  		//https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal2
+	  			var dataShowadd='';
+	  			var modal = document.getElementById("myModal");
+	  			var span = document.getElementsByClassName("close")[0];
+	  			 var dataCheck =[];
+	  			  var stringdata='<center>';
+				gotoCheckUser();
+	  			function setupAddControl(data ){
+	  				var dataAcess= JSON.parse(data);
+	  				 console.log("setupAddControl ::"+ dataAcess);
+	  				dataShowadd='';
+	  				var dataCheck =[];
+	  				$.each(dataAcess[0],function(index, value){
+		                console.log("setupAddControl>>>>>>" +index);
+		                console.log("setupAddControl>>>>>>>>"  +value);
+		                if(!dataCheck.includes(index)){
+	 						console.log('addd');
+	 						 dataShowadd +='<br>'+index+' <input type="text" id="'+index+'" value="'+value+'">';
+	 						dataCheck.push(index);
+	 					}
+	 					 console.log("setupAddControl <<<<"  +dataCheck);
+	 					 console.log("setupAddControl<<<<<<<<<"  +dataShowadd);
+		            });
+	  				
+	  				console.log("dataShowadd"  +dataShowadd);
+		             $("#edit_info_user").html(dataShowadd);
+	  			}
+               	
+                function gotoCheckUser() {
+                     var mTockenData= localStorage.getItem("tocken_LVC");
+                     var userData = localStorage.getItem("name_LVC");
+                     
+                     console.log(mTockenData);
+                     $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url: 'http://localhost:3000/userdetail',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer '+mTockenData);
+                        },
+                        data: { },
+                        success: function (loadcofig) {
+                            /*console.log(loadcofig);
+                            console.log('ssssssssssss');
+                            if(loadcofig.length!=2){
+                              alert("Xin vui lòng thử lại");
+                            }
+                            else
+                            {
+                             
+                              alert("Bạn đã đăng xuât thành công");
+
+                            }*/
+                          
+                        },
+                         complete: function (loadcofig) {
+                           console.log('complete');
+                           setupAddControl(loadcofig.responseText);
+                            console.log(loadcofig.responseText);
+                            console.log('end complete');
+                            
+                          },
+                          error: function (loadcofig) {
+                            console.log('error');
+                              console.log(loadcofig);
+                              console.log('end error');
+                          }
+                        });
+                }
+                // When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+				  modal.style.display = "none";
+				}
+
+				// When the user clicks anywhere outside of the modal, close it
+				window.onclick = function(event) {
+				  if (event.target == modal) {
+				    modal.style.display = "none";
+				  }
+				}
+    </script>
+
+</body>
+</html>                                		                            

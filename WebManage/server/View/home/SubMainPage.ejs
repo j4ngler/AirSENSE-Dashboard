@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zxx">
+  <% include ../Layout/header.ejs %>
+  <body class="defult-home">
+    <!-- Main content Start -->
+    <div class="main-content">
+      <!--Full width header Start-->
+      <div class="full-width-header home8-style4">
+        <!--Header Start-->
+        <% include ../Layout/headerMenu.ejs %>
+        <!--Header End-->
+      </div>
+      <!--Full width header End-->
+      <div class="main-page">
+        <% include ../Layout/sideMenu.ejs %>
+        <div class="inner-content" id="htmlToView" >
+          <!-- About Section Start -->
+          <div class="rs-about style9 pt-20 md-pt-70">
+            <div class="container">
+                  <div style="font-size: 20px;">
+                    Chúng tôi là lab nghiên cứu trực thuộc trường Đại học bách khoa Hà Nội
+                  </div>
+                  <div class="row align-items-center">
+                    <div class="col-lg-3">
+                      <div class="img-part js-tilt">
+                        <img src="/sparc_landing_page/images/about/home9/about.jpg" alt="images" />
+                      </div>
+                    </div>
+                    <div class="col-lg-7">
+                      <div class="content">
+                        <p class="desc mb-50">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, eius to mod tempor
+                          incidi dunt ut labore et dolore magna aliqua. Ut enims ad minim veniam.Lorem
+                        </p>
+                        <div>
+                          nguoi dang
+                        </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rs-about style9 pt-40 md-pt-70">
+            <div class="container">
+                  <div style="font-size: 20px;">
+                    Chúng tôi là lab nghiên cứu trực thuộc trường Đại học bách khoa Hà Nội
+                  </div>
+                  <div class="row align-items-center">
+                    <div class="col-lg-3">
+                      <div class="img-part js-tilt">
+                        <img src="/sparc_landing_page/images/about/home9/about.jpg" alt="images" />
+                      </div>
+                    </div>
+                    <div class="col-lg-7">
+                      <div class="content">
+                        <p class="desc mb-50">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, eius to mod tempor
+                          incidi dunt ut labore et dolore magna aliqua. Ut enims ad minim veniam.Lorem
+                        </p>
+                        <div>
+                          nguoi dang
+                        </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <% include ../Layout/advertisement.ejs %>
+        <!-- About Section End -->
+      </div>
+      <% include ../Layout/footer.ejs %>
+
+      <!-- Categories Section End -->
+    </div>
+    <!-- Main content End -->
+  </body>
+  <script type="text/javascript">
+   // var dataView = 
+    
+   // document.getElementById("htmlToView").src = linkAcess;
+    var urlDetail= 'http://' + window.location.hostname +':' +window.location.port + '/';
+
+    $.ajax({
+         type: 'GET',
+         enctype: 'multipart/form-data',
+         url: '/api/document/document_detail/2,3,4,5',
+         data: {},
+         processData: false, //prevent jQuery from automatically transforming the data into a query string
+         contentType: false,
+         cache: false,
+         success: (data) => {
+         console.log(data);
+            var dataJson = JSON.parse(data);
+            console.log(dataJson);
+            var textHtml ="";
+            for(var i =0;i<dataJson.length;i++){
+
+              textHtml += setFormToShowPages(dataJson[i],urlDetail);
+            }
+            
+            $('#htmlToView').html(textHtml); //.replaceAll("</p>","<br/>").replaceAll("<p>","<br/>")
+         },
+         error: (e) => {
+         console.log(e.responseText);
+         },
+     });
+  </script>
+</html>
