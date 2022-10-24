@@ -2,80 +2,20 @@ var mqtt = require('mqtt')
 var events = require('events');
 emitter = new events.EventEmitter();
 const config = require('./config/default.json');
-var mysql = require('mysql');
+var data = require('./config/data.config');
+const mongoose = require('mongoose');
+var mongoConfig = require('./config/mongoConfig.js');
+const BlockMemory = require('./models/BlockMemory');
 
-var con = mysql.createConnection(config.database);
+// Connecting to the database
+mongoose.connect(mongoConfig.dbConfig, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+    console.log("Successfully connected to the database");
+}).catch(err => {
+    console.log('Could not connect to the database. Exiting now...', err);
+});
 
-var connectStatus = 'idle';
 
-class BlockMemory {
-    constructor() {
-        this.status = 'available'
-        this.memory = [];
-    }
 
-    add(record) {
-        this.memory.push(record);
-        try{
-            if (this.isFull()) this.saveAll();
-        }catch(e){}
-    }
-
-    isFull() {
-        return this.memory.length === config.maxItemMemory;
-    }
-
-    isAvailable() {
-        return !(this.isFull() || this.status == 'pending');
-    }
-
-    clearMemory() {
-        this.memory = []
-    }
-
-    saveAll() {
-        var self = this;
-        this.status = 'pending';
-        var columns = [], fields = [];
-        for(var field in config.fields) {
-            columns.push(field);
-        }
-        columns = '(' + columns.join() +')';
-        this.memory.map(record => {
-            var values = [];
-            for(field in record) {
-                if( record[field] ) {
-                    values.push(record[field]);
-                } else values.push('NULL');    
-            }
-            values = '(' + values.join() + ')';
-            fields.push(values);
-        })
-        fields = fields.join();
-        console.log(fields);
-        var sql = "INSERT INTO sparc_sensor_data "+ columns +" VALUES " + fields;
-        if (connectStatus === 'idle') {
-            connectStatus = 'busy';
-            con.query(sql, function (err, result) {
-                if (err) throw err;
-                connectStatus = 'idle'
-                self.clearMemory();
-            });
-        } else {
-            var saveInterval = setInterval(function () {
-                if (connectStatus === 'idle') {
-                    connectStatus = 'busy';
-                    con.query(sql, function (err, result) {
-                        if (err) throw err;
-                        connectStatus = 'idle'
-                        self.clearMemory();
-                    });
-                    clearInterval(saveInterval);
-                }
-            }, 1000)
-        }
-    }
-}
 
 var SaveFactory = (function(){
     class Save {
@@ -86,8 +26,10 @@ var SaveFactory = (function(){
     
         save(record) {
             if (this.memFirst.isAvailable()) {
+                console.log('a')
                 this.memFirst.add(record);
-            } else this.memSecond.add(record);
+            } 
+            else this.memSecond.add(record);
         }
     }
 
@@ -112,7 +54,7 @@ mqttConfig.map(config => {
     clients.push(client);
     client.on('connect', function () {
         console.log(config.port)
-        client.subscribe('/V3/3c610511', function (err) {
+        client.subscribe('#', function (err) {
             // console.log(config.port)
             if (!err) {
                 console.log("Connect mqtt successfully in port:", config.port);
@@ -127,31 +69,45 @@ mqttConfig.map(config => {
 var save = SaveFactory.getInstance();
 
 clients.map(client => {
-    console.log('hello');
+    // console.log('hello');
     client.on('message', function (topic, message, packet) {
         try{
             message = JSON.parse(message.toString('utf-8'));
-            // console.log(message);
-            var record = Object.assign({}, config.fields);
-            for(property in record) {
-                if(message[property] != undefined) {
-                    record[property] = message[property];
-                }
-            }
+            console.log(message);
+            // giang changes init
             var current = + new Date();
-            console.log(current);
-            current = current/1000;
-            //bo qua ban ghi co thoi gian lon hon thoi gian hien tai 24h
-            record.Time = record.Time - 7*60*60;
-            if(record.Time>(current+24*60*3600)) {
-                return;
+            current/=1000;
+            message.Time = message.Time - 7*60*60;
+            if(message.Time < current+24*60*3600 && message.station_id != null && message.station_id != '') {
+                let stationID = parseInt(message.station_id, 16);
+            var infoSave ={
+                topic:"/sensor/"+stationID,
+                time:message.Time,
+                content:{
+                    PM2p5:message.PM2p5,
+                    PM10: message.PM10,
+                    PM1:message.PM1,
+                    Temperature:message.Temperature,
+                    Humidity:message.Humidity,
+                    Pressure:message.Pressure,
+                    SO2:message.SO2,
+                    NO2:message.NO2,
+                    CO2:message.CO2,
+                    CO:message.CO,
+                    O3:message.O3,
+                    NO2W:message.NO2W,
+                    NO2A:message.NO2A,
+                    O3W:message.O3W,
+                    O3A:message.O3A,
+                    COW:message.COW,
+                    COA:message.COA,
+                    SO2W:message.SO2W,
+                    SO2A:message.SO2A
+                }
+              };
             }
-            // console.log(message)
-            if(message.station_id!=null && message.station_id != '' ) {
-                record.station_id = parseInt(message.station_id, 16);
-                console.log('ok',record);
-                save.save(record);
-            }
+            
+            save.save(infoSave);
         } catch(e) {
         }
     });

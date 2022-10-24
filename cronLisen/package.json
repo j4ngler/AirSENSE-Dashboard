@@ -1,0 +1,32 @@
+{
+  "name": "listen-and-save-module",
+  "version": "1.0.0",
+  "description": "NoSQL, MQTT",
+  "scripts": {
+    "start": "nodemon ListenAndSave.js"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Sample",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "events": "^3.3.0",
+    "mongoose": "^6.6.6",
+    "mqtt": "^4.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "husky": {},
+  "lint-staged": {
+    "./client/**/**/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --trailing-comma es5 --single-quote --write"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.9.0",
+    "npm": ">= 3.10.8"
+  }
+}
