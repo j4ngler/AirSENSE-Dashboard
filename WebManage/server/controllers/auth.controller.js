@@ -32,7 +32,7 @@ var authCtrl={};
   }
 
   User.query({
-    where: {email:email, deleteflag: 0}
+    where: {email:email, delete_flag: 0}
   })
     .fetch({ require: false })
     .then((user) => {

@@ -45,12 +45,11 @@ class PagesContent extends CommonModel {
       valueSetup: [
         "content_sub_id",
         "group_file",
-        "filesave",
+        "file_save",
         "title",
-        "content",
+        "description",
         "content_img",
-        "is_main_pages_id",
-        "set_to_fist",
+        "set_to_first",
       ],
     };
   }
@@ -63,13 +62,12 @@ class PagesContent extends CommonModel {
         "title",
         "content",
         "content_img",
-        "is_main_pages_id",
-        "set_to_fist",
+        "set_to_first",
         "created_at",
         "id_created",
       ],
       locationSelect: "content_page_id",
-      valueSelect: "deleteflag",
+      valueSelect: "delete_flag",
       userUpdate: "id_updated",
     };
   }
@@ -79,7 +77,7 @@ class PagesContent extends CommonModel {
     //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
   getJsonTofind() {
-    return ["content_sub_id", "is_main_pages_id"];
+    return ["content_sub_id"];
   }
 }
 

@@ -4,14 +4,9 @@ import React from 'react';
 import ManagerData from '../../actions/ManagerData.js'
 import {ActionControl ,TypeDialgueShow,SelectHTml} from '../../utils/commonUtil';
 
-class SparcLocationSensor  {
+class DeviceSensor  {
     getColumeShow=(callback)=>{
         const columns = [
-            {
-              field: 'idf',
-              headerName: 'stt',
-              width: 150,
-            },
             {
               field: 'mac',
               headerName: 'Mac',
@@ -23,28 +18,28 @@ class SparcLocationSensor  {
               width: 250,
             },
             {
-              field: 'location_lat',
+              field: 'latitude',
               headerName: 'Vĩ độ',
               width: 150,
             },
             {
-              field: 'location_long',
+              field: 'longtitude',
               headerName: 'Kinh độ',
               width: 150,
             },
             {
-              field: 'adress',
+              field: 'title',
+              headerName: 'Tên trạm',
+              width: 240,
+            },
+            {
+              field: 'address',
               headerName: 'Địa chỉ',
               width: 600,
             },
             {
-              field: 'content',
-              headerName: 'content',
-              width: 240,
-            },
-            {
-              field: 'id_group',
-              headerName: 'id_group',
+              field: 'type_sensor',
+              headerName: 'Loại trạm',
               width: 140,
             },
             {
@@ -143,4 +138,4 @@ class SparcLocationSensor  {
     }
 } 
 
-export default  SparcLocationSensor;
+export default  DeviceSensor;

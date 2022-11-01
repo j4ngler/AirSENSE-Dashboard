@@ -10,6 +10,7 @@ const {getRamdomData} = require('../utils/utilsString.js');
 const {mangerModelAdmin} = require('../models/database/managerAll.model.js');
 const ReportManager = require("../models/manager/ReportManager.js");
 const AQIManager = require("../models/manager/AQIManager");
+const DataSensor = require('../models/schemaMongo/dataSensor');
 
 var aqiManager = new AQIManager();
 const Excel = require('exceljs');
@@ -289,6 +290,13 @@ iotCtrl.savePost= function(request, response) {
     blogManager.savePost(post).then(function(result) {
         response.send(JSON.stringify(result));
     })
+}
+
+iotCtrl.getDataStation = async (req, res) => {
+    const { station_id, fromTime, toTime } = req.body;
+    const result = await DataSensor.find();
+    console.log(result);
+    res.send(JSON.stringify(result))
 }
 
 
