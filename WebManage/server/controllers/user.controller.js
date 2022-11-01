@@ -21,7 +21,9 @@ var userCtrl = {};
 userCtrl.getTableData = function (req, res) {
   var startPage = 0;
   if (!!req.body.startPage) startPage = req.body.startPage;
+  // console.log(req.body.table)
   var tableSelect = mangerModelAdmin(req.body.table);
+  console.log('current', req.currentUser);
   if (!!tableSelect) {
     if (
       !tableSelect.checkAcessGetDatabase(
@@ -35,6 +37,7 @@ userCtrl.getTableData = function (req, res) {
     startPage = startPage * 1000;
     var itemSelect = tableSelect.getValueToSelectToFind(req.body.dataFind);
     var dataTableSQL = tableSelect.getSQLReport(req.currentUser);
+    // console.log('cc', dataTableSQL)
     if (tableSelect.getFieldToDelete().valueSelect != "") {
       dataTableSQL =
         dataTableSQL +

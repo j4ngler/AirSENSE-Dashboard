@@ -3,6 +3,8 @@ const app = require('./config/express.js');
 const routes = require('./routes/index.route.js');
 const pagesRouters = require('./routes/pages.route.js');
 const express = require('express');
+const mongoose = require('mongoose');
+const mongoConfig = require('./config/mongoConfig.js');
 //const swagger = require('./config/swagger.js');
 
 // Swagger API documentation
@@ -12,6 +14,14 @@ const express = require('express');
 // const fileUpload = require('express-fileupload')
 // app.use(fileUpload());
 // app.use(express.static('public'));
+
+// Connecting to the database
+// mongoose.set('useCreateIndex', true);
+mongoose.connect(mongoConfig.dbConfig, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+    console.log("Successfully connected to the database");
+}).catch(err => {
+    console.log('Could not connect to the database. Exiting now...', err);
+});
 
 
 

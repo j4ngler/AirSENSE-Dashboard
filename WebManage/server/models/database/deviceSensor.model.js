@@ -1,14 +1,14 @@
 const TypeModel= require('../middlewareDatabase/TypeModel.js');
 const TableView= require('../middlewareDatabase/TableView.js');
 const TableManifest= require('../middlewareDatabase/TableManifest.js');
-const TABLE_NAME = 'sparc_posts';
+const TABLE_NAME = 'device_sensor';
 const CommonModel= require('../middlewareDatabase/CommonModel.js');
 const  defineManifest  = require('../../middlewares/CheckManifest.js');
 const CustomerAcess= require('../middlewareDatabase/CustomerAcess.js');
 /**
  * User model.
  */
-class SparcPosts extends CommonModel {
+class DeviceSensor extends CommonModel {
   /**
    * Get table name.
    */
@@ -35,29 +35,33 @@ class SparcPosts extends CommonModel {
   }
   getFieldToAdd(){
       return {
-          valueSetup: ["post_title","post_author","post_status","post_date"]
+          valueSetup: ["mac","station_id","longtitude","latitide","adsress","title","type_id"]
       };
   }
   getFieldToDelete(){
       return {
-          arrayCoppy:["post_title","post_author","post_status","post_date","created_at","id_created"],
-          locationSelect:"ID",
-          valueSelect:"deleteflag",
+          arrayCoppy:["mac","station_id","longtitude","latitude","address","title","type_id","created_at","id_created"],
+          locationSelect:"station_id",
+          valueSelect:"delete_flag",
           userUpdate:"id_updated"
       };
   }
   
   
   getSQLReport(currentUser){
-    console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ("SELECT sparc_posts.id as id, sparc_posts.post_title as post_title, sparc_posts.post_status as post_status, sparc_posts.post_date as post_date, u.fullname as post_author FROM sparc_posts LEFT JOIN users u ON u.userid=sparc_posts.post_author where sparc_posts.post_status = 'publish' AND (sparc_posts.post_title IS NOT NULL AND sparc_posts.post_title !='') AND sparc_posts.post_type = 'post'");
+    console.log("getSQLReport...2....... " ,currentUser); 
+      return ('SELECT device_sensor.station_id, device_sensor.mac, device_sensor.longtitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id');
        //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
-  }
+      }
   getJsonTofind(){
       return [];
+  }
+  getDairyChange(info) {
+    return "device_sensor.delete_flag=1";
+
   }
 
 
 }
 
-module.exports =  SparcPosts;
+module.exports =  DeviceSensor;

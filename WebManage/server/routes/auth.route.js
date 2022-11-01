@@ -85,17 +85,16 @@ router.route('/user').get(isAuthenticated, (req, res) => {
   User.query({
     where: { userid: req.currentUser.users_id },
     select: [
-      'userid',
-      'name',
+      'user_id',
+      'username',
       'fullname',
-      'phoneNumber',
+      'phone_number',
       'email',
       'password',
-      'fullname',
-      'contact',
-      'avartar',
+      'address',
+      'avatar',
       'note',
-      'manifestid'
+      'permission_id'
     ],
   })
   .fetch({ require: false })

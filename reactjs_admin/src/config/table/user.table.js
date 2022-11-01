@@ -7,14 +7,14 @@ class User_View  {
     getColumeShow=(callback)=>{
         const columns = [
             {
-              field: 'id',
-              headerName: 'stt',
-              width: 40,
+              field: 'fullname',
+              headerName: 'Họ và tên',
+              width: 200,
             },
             {
-              field: 'fullname',
-              headerName: 'Thông tin khách hàng',
-              width: 200,
+              field: 'username',
+              headerName: 'Username',
+              width: 150
             },
             {
               field: 'email',
@@ -22,14 +22,14 @@ class User_View  {
               width: 200,
             },
             {
-              field: 'phoneNumber',
+              field: 'phone_number',
               headerName: 'Số điện thoại',
-              width: 200,
+              width: 150,
             },
             {
               field: 'manifest_content',
               headerName: 'Quyền',
-              width: 200,
+              width: 150,
             },
             {
               field: 'action',
@@ -85,7 +85,7 @@ class User_View  {
             width: 200,
           },
           {
-            field: 'phoneNumber',
+            field: 'phone_number',
             headerName: 'Số điện thoại',
             width: 240,
           }
@@ -94,12 +94,11 @@ class User_View  {
     }
     
     getInfoToAdd(){
-      return  ["name","email","password","phoneNumber","avartar","fullname","manifestid","contact","note" ];
+      return  ["username","email","password","phone_number","avatar","fullname","permission_id","address" ];
     }
     getTitleToAdd(){
-      return  ["name","email","password","phoneNumber",
-                "avartar","fullname","manifestid","contact",
-                "note"];
+      return  ["name","email","password","phone_number",
+                "avatar","fullname","permission_id","address"];
     }
     getHtmlAdd(){
       return  [TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,
