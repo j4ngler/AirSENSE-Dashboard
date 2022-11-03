@@ -371,7 +371,7 @@ class RegisterExam extends Component {
                   variant="outlined"
                   component="label"
                   disableElevation
-                  style={{ width: 135, height: 70, color: 'blue' }}
+                  style={{ width: 135, height: 40, color: 'blue' }}
                   onClick={() => {
                     this.saveContentPageToDataBase();
                   }}

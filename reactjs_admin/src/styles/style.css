@@ -2,9 +2,8 @@
 @import 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
 @import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
-
 body {
-  margin: 0;
+  margin-top: 80px;
   padding: 0;
   font-family: 'Open Sans', sans-serif;
 }
@@ -139,6 +138,7 @@ h6 {
 }
 
 .new-user-data {
+  margin: 30px;
   background-color: #fff;
   padding: 20px;
   min-height: 400px;
@@ -188,7 +188,7 @@ h6 {
 }
 
 .register-button {
-  margin-left: 20px
+  margin-left: 20px;
 }
 
 .dp-i {
@@ -771,3 +771,66 @@ p.line {
   height: 400px;
 }
 
+/* Custom React-Admin */
+/* Sidebar */
+.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root {
+  width: 100%;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #222e25;
+}
+.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root:hover {
+  color: #27e450;
+}
+.MuiPaper-root.MuiDrawer-paper.RaSidebar-paper-14.MuiDrawer-paperAnchorLeft.RaSidebar-paperAnchorLeft-15.RaSidebar-drawerPaper-25.RaSidebar-drawerPaper-26.MuiDrawer-paperAnchorDockedLeft {
+  margin-left: 24px;
+}
+.MuiListItem-root {
+  padding: 10px 16px !important;
+}
+.MuiInputBase-root {
+  height: 40px;
+}
+.RaLayout-appFrame-2 {
+  margin-top: 74px !important;
+}
+.RaLayout-contentWithSidebar-3 {
+  margin-top: 0 !important;
+}
+.MuiDrawer-root.RaSidebar-root-12.MuiDrawer-docked.RaSidebar-docked-13 {
+  background-color: #fff;
+}
+#main-content {
+  background-color: #f6f9ff;
+}
+.register-button {
+  display: inline-flex;
+  height: 43px;
+}
+.user-control-btn {
+  display: inline-block;
+  margin-left: 8px;
+}
+.user-data {
+  padding: 20px 42px;
+  margin: 27px 27px 37px 64px;
+}
+.user-table-data {
+  padding: 16px 0;
+}
+.document-editor {
+  border: 2px solid #ccc;
+  border-radius: 2px;
+}
+.page-table .button-group {
+  margin-left: 60px;
+}
+.page-table .button-group button {
+  font-weight: 600;
+  margin-right: 16px;
+}
+.MuiPaper-root.MuiAppBar-root.MuiAppBar-positionFixed.MuiAppBar-colorPrimary {
+  margin-top: 80px;
+}
+/*  */

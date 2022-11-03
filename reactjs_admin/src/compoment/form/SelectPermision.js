@@ -25,7 +25,6 @@ const SelectPermision = ({ typePermision,onChange }) => {
             onChange={(event) => {
                 onChange(event);
             }}
-            label="Quyền"
             >
             {TypeSelection.map((vars) => (
                  vars.id<=ManagerData.saveInfoUser.permission_id?"":

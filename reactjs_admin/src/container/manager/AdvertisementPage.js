@@ -164,7 +164,7 @@ class AdvertisementPage extends Component {
             )}
             <div className="register-button">
               <Button
-                variant="outlined"
+                variant="contained"
                 component="label"
                 disableElevation
                 style={{ width: 200, color: 'blue' }}

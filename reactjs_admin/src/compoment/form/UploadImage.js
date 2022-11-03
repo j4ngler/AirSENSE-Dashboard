@@ -35,7 +35,6 @@ const UploadImage = ({ urlImage, uploadfileDataLink }) => {
                 <PublishIcon />
                 <label style={{fontSize:8,lineHeight: 1.6 ,height: 15}}>Upload Ảnh</label>  
                 <input type="file" 
-                        type="file"
                         name="fileUpload1"
                         id="fileUpload1"
                         accept=".png,.jpg,.jpeg"

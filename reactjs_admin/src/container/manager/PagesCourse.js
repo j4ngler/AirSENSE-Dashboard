@@ -62,7 +62,7 @@ class PagesCourse extends Component {
 
   render() {
     return (
-      <div>
+      <div className='page-table'>
         <TableDataView
           selectChange={(value) => {
             this.selectChangeValue(value);
@@ -93,7 +93,9 @@ class PagesCourse extends Component {
         )}
 
         <br />
-        <button
+       <div className='button-group'>
+       <button
+          className="btn btn-primary"
           onClick={() => {
             this.selectEditPages(true);
           }}
@@ -102,6 +104,7 @@ class PagesCourse extends Component {
           Edit Page{' '}
         </button>
         <button
+          className="btn btn-success"
           onClick={() => {
             this.selectPagesToTop();
           }}
@@ -109,6 +112,7 @@ class PagesCourse extends Component {
           {' '}
           Đưa bài lên top{' '}
         </button>
+       </div>
       </div>
     );
   }

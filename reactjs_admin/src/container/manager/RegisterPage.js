@@ -190,13 +190,13 @@ class RegisterPage extends Component {
                 this.choiceSubPages(value);
               }}
             />
-
             <div className={'register-button'}>
               <Button
-                variant="outlined"
+                color="primary"
+                variant="contained"
                 component="label"
                 disableElevation
-                style={{ width: 135, height: 70, color: 'blue' }}
+                style={{ width: 135, height: 40 }}
                 onClick={() => {
                   this.saveContentPageToDataBase();
                 }}

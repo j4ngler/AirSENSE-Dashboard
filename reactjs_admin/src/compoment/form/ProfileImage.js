@@ -36,14 +36,12 @@ const ProfileImage = ({ urlImage, uploadfileDataLink }) => {
                 {/* <PublishIcon /> */}
                 {/* <label style={{fontSize:8,lineHeight: 1.6 ,height: 15}}>Cập nhật</label>   */}
                 <input type="file" 
-                        type="file"
                         name="fileUpload1"
                         id="fileUpload1"
                         accept=".png,.jpg,.jpeg"
                         onChange={(event)=> {uploadImageData(event)}}
                         hidden />
-                <img  src={state.link} className='account-img' width="160px" height="160px" />
-                
+                <img  src={state.link} className='account-img' width="160px" height="160px" />   
             </Button>
         );
 }

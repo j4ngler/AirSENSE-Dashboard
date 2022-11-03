@@ -25,10 +25,9 @@ const DynamicForm = ({value, valueDetail,selectTabble ,onChange }) => {
     } else if(value.html==TypeDialgueShow.EDIT_TEXT){
         return(
             <TextField
-                className={'text-box1'}
                 variant="outlined"
                 label={value.title}
-                className="enterprise-form1"
+                className="enterprise-form1 text-box1"
                 value={valueDetail}
                 onChange={(event) => {
                     onChange(event);

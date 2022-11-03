@@ -65,7 +65,7 @@ import Header from './compoment/header/header.js';
 import StationMapManager from './container/station_map/stationMapManager';
 const App = () => {
   return (
-    <div>
+    <div className='container-app'>
       <Admin
         dataProvider={jsonServerProvider(HOST_HTTP)}
         authProvider={authProvider}
@@ -73,7 +73,7 @@ const App = () => {
         dashboard={Dashboard}
         customReducers={{ messageInfo }}
         layout={(props) => (
-          <Layout {...props} menu={TreeMenu} appBar={MenuHeader} />
+          <Layout {...props} menu={TreeMenu} appBar={MenuHeader} typography />
         )}
       >
         <Resource
