@@ -10,7 +10,7 @@ export default class Customer  {
         const columns = [
             {
               field: 'id',
-              headerName: 'stt',
+              headerName: 'STT',
               width: 140,
             },
             {
@@ -24,12 +24,7 @@ export default class Customer  {
               width: 200,
             },
             {
-              field: 'token_reset',
-              headerName: 'token_reset',
-              width: 240,
-            },
-            {
-              field: 'phone',
+              field: 'phone_number',
               headerName: 'phone',
               width: 240,
             },
@@ -39,8 +34,8 @@ export default class Customer  {
                 width: 240,
             },
             {
-                field: 'permission_id',
-                headerName: 'permission_id',
+                field: 'permission',
+                headerName: 'Phân quyền',
                 width: 240,
             },
             {
@@ -49,10 +44,10 @@ export default class Customer  {
                 width: 240,
             },
             {
-                field: 'note',
-                headerName: 'note',
-                width: 240,
-            },
+              field: 'contact',
+              headerName: 'Liên hệ',
+              width: 240,
+          },
             {
               field: 'action',
               headerName: 'Thao tác',

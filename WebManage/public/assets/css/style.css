@@ -77,6 +77,99 @@ h6 {
 }
 
 
+
+/* sweetalert2 css */
+
+.container-login {
+    background-color: white;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.login-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.login-header {
+    margin-bottom: 48px;
+}
+
+.login-header img {
+    width: 40%;
+}
+
+.login-heading, .sign-up, .login-term {
+    color: #2c4964;
+}
+
+.login-ways {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-item {
+    border-radius: 30px;
+    width: 380px;
+    margin-bottom: 12px;
+}
+
+.login-ad {
+    color: #090965;
+    border: 1px solid #090965;
+}
+
+.login-custom {
+    color: #5ab9ea;
+    border: 1px solid #5ab9ea;
+}
+
+.login-user {
+    color: #27e450;
+    border: 1px solid #27e450;
+}
+
+.sign-up_link {
+    color: #35414c;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-item {
+    align-items: center;
+    display: flex;
+}
+
+.login-item i {
+    margin-left: 20px;
+}
+
+.login-item p {
+    margin: 10px 0 10px 24px;
+}
+
+.login-item:hover {
+    background-color: #dde2e5;
+    cursor: pointer;
+}
+
+.sign-up {
+    margin: 28px 16px 0 16px;
+}
+
+.login-term {
+    font-size: 14px;
+    color: #35414c;
+    margin-top: 50px;
+    line-height: 1.5;
+    padding: 0 94px;
+}
+
+.term_link {
+    color: inherit;
+}
+
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/

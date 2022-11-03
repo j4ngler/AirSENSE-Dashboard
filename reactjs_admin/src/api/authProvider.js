@@ -8,7 +8,7 @@ export default {
         .then((value) => {
           console.log(value);
           localStorage.setItem('username', username);
-          // localStorage.setItem('tocken_LVC', token)
+          // localStorage.setItem('token_AirSENSE', token)
           resolve(value);
         })
         .catch((err) => {

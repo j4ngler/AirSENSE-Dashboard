@@ -1,0 +1,38 @@
+ {
+    "database": {
+        "host": "103.1.238.170",
+        "database": "admin_python",
+        "user": "sparclab",
+        "password": "LabSPARC"
+    },
+    "fields": {
+        "time": "",
+        "station_id": "",
+        "aqi":"",
+        "PM2p5_aqi": "",
+        "PM10_aqi": "",
+        "PM1_aqi": "",
+        "SO2_aqi": "",
+        "NO2_aqi": "",
+        "CO2_aqi": "",
+        "CO_aqi" : "",
+        "O3_aqi": "",
+        "aqi_category": ""
+    },
+    "average_fields": {
+        "time": "",
+        "station_id": "",
+        "NO2":"",
+        "O3": "",
+        "O3in8Hrs": "",
+        "CO": "",
+        "SO2": "",
+        "PM2p5": "",
+        "PM10": "",
+        "humidity":"",
+        "temperature": "",
+        "pressure": "",
+        "windSpeed": ""
+    },
+    "maxItemMemory": 1
+}

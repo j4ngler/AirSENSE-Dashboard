@@ -14,13 +14,8 @@ export default class GroupContentSub {
     const columns = [
       {
         field: 'id',
-        headerName: 'stt',
+        headerName: 'STT',
         width: 140,
-      },
-      {
-        field: 'content_group',
-        headerName: 'content_group',
-        width: 200,
       },
       {
         field: 'group_content_main',
@@ -28,8 +23,8 @@ export default class GroupContentSub {
         width: 200,
       },
       {
-        field: 'title',
-        headerName: 'title',
+        field: 'content',
+        headerName: 'Title',
         width: 240,
       },
 

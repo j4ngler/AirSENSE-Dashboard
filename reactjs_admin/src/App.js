@@ -76,14 +76,18 @@ const App = () => {
           <Layout {...props} menu={TreeMenu} appBar={MenuHeader} typography />
         )}
       >
-        <Resource
-          name="users"
+         <Resource
+          name="user"
           options={{ label: 'Tài khoản' }}
           icon={UserIcon}
           list={UserList}
         />
-
-        {/* bài báo*/}
+        <Resource
+          name="customer"
+          options={{ label: 'Khách hàng' }}
+          icon={TextFormat}
+          list={NomalTable}
+        />
         <Resource
           name="sPages"
           options={{ label: 'Nhóm bài báo', isMenuParent: true }}
@@ -108,85 +112,13 @@ const App = () => {
           icon={TextFormat}
           list={RegisterPage}
         />
-        {/* Khóa học */}
-        <Resource
-          name="groupCourses"
-          options={{ label: 'Khóa học', isMenuParent: true }}
-          icon={CollectionsBookmarkIcon}
-          list={LockScreen}
-        />
-        <Resource
-          name="group_course"
-          options={{ label: 'Nhóm khóa học', menuParent: 'groupCourses' }}
-          icon={ClassIcon}
-          list={NomalTable}
-        />
-        <Resource
-          name="course"
-          options={{ label: 'Khóa học', menuParent: 'groupCourses' }}
-          icon={ClassIcon}
-          list={NomalTable}
-        />
-        <Resource
-          name="managerCourse"
-          options={{ label: 'Quản lý khóa học', menuParent: 'groupCourses' }}
-          icon={Settings}
-          list={PagesCourse}
-        />
-        <Resource
-          name="registerCourse"
-          options={{
-            label: 'Đăng khóa học/bài học',
-            menuParent: 'groupCourses',
-          }}
-          icon={TextFormat}
-          list={RegisterCourse}
-        />
-
-        {/* Bài tập */}
-        <Resource
-          name="groupExam"
-          options={{ label: 'Bài tập', isMenuParent: true }}
-          icon={CollectionsBookmarkIcon}
-          list={LockScreen}
-        />
-        <Resource
-          name="exam"
-          options={{ label: 'Nhóm bài tập', menuParent: 'groupExam' }}
-          icon={ClassIcon}
-          list={NomalTable}
-        />
-        <Resource
-          name="managerExam"
-          options={{ label: 'Quản lý bài tập', menuParent: 'groupExam' }}
-          icon={Settings}
-          list={ExamDetail}
-        />
-        <Resource
-          name="registerExam"
-          options={{ label: 'Soạn bài tập', menuParent: 'groupExam' }}
-          icon={TextFormat}
-          list={RegisterExam}
-        />
-        {/* Trạm*/}
+        
         <Resource
           name="service_x"
           options={{ label: 'Trạm', isMenuParent: true }}
           icon={RoomServiceIcon}
           list={LockScreen}
         />
-        {/* <Resource
-          name="location"
-          options={{ label: 'Vị trí', menuParent: 'service_x' }}
-          icon={ListAltIcon}
-          list={NomalTable}
-        />
-        <Resource
-          name="sparc_access_location_sensor"
-          options={{ label: 'Vị trí quản lý sensor', menuParent: 'service_x' }}
-          icon={ReceiptIcon}
-          list={NomalTable}
-        /> */}
         <Resource
           name="sparc_group_location_sensor"
           options={{ label: 'Nhóm vị trí', menuParent: 'service_x' }}
@@ -194,17 +126,11 @@ const App = () => {
           list={NomalTable}
         />
         <Resource
-          name="sparc_location_sensor"
+          name="device_sensor"
           options={{ label: 'Vị trí của sensor', menuParent: 'service_x' }}
           icon={KeyboardReturnIcon}
           list={NomalTable}
         />
-        {/* <Resource
-          name="status_history_device"
-          options={{ label: 'Lịch sử thiết bị', menuParent: 'service_x' }}
-          icon={KeyboardReturnIcon}
-          list={NomalTable}
-        /> */}
         <Resource
           name="station_map"
           options={{
@@ -215,7 +141,6 @@ const App = () => {
           list={StationMapManager}
         />
 
-        {/* Giá trị sensor*/}
         <Resource
           name="products"
           options={{ label: 'sensor', isMenuParent: true }}
@@ -259,20 +184,13 @@ const App = () => {
           icon={AccountCircleIcon}
           list={InfoAccount}
         />
-        {/* <Resource
-          name="chatbox"
-          options={{ label: 'Nhắn tin' }}
-          icon={Send}
-          list={FormChatBox}
-        /> */}
         <Resource
           name="logout"
           options={{ label: 'Đăng xuất' }}
           icon={KeyboardBackspace}
           list={LogoutPage}
-        />
+        /> 
 
-        {/* <FooterChat /> */}
       </Admin>
     </div>
   );

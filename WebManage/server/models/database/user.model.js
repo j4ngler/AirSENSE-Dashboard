@@ -1,7 +1,7 @@
 const TypeModel= require('../middlewareDatabase/TypeModel.js');
 const TableView= require('../middlewareDatabase/TableView.js');
 const TableManifest= require('../middlewareDatabase/TableManifest.js');
-const TABLE_NAME = 'users';
+const TABLE_NAME = 'user';
 var squel = require("squel");
 const knex = require('../../config/knex.js');
 const CommonModel= require('../middlewareDatabase/CommonModel.js');
@@ -38,14 +38,14 @@ class User extends CommonModel {
   getFieldToAdd(){
       return {
 
-          valueSetup: ["name","fullname","phoneNumber","email","contact","addrid","avartar","note","manifestid" ]
+          valueSetup: ["username","fullname","phone_number","email","address","avatar","permission_id" ]
       };
   }
   getFieldToDelete(){
       return {
-          arrayCoppy:["name","fullname","phoneNumber","email","contact","addrid","avartar","note","manifestid","created_at","id_created"],
-          locationSelect:"userid",
-          valueSelect:"deleteflag",
+          arrayCoppy:["username","fullname","phone_number","email","address","avatar","permission_id","created_at","id_created"],
+          locationSelect:"user_id",
+          valueSelect:"delete_flag",
           userUpdate:"id_updated"
       };
   }
@@ -53,17 +53,17 @@ class User extends CommonModel {
   
   getSQLReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT users.userid,users.name,users.email,users.phoneNumber,users.avartar,users.fullname,users.manifestid,users.contact,users.note'
-      +',db.email  As name_create, dc.email  As name_update ,de.content As manifest_content FROM users LEFT JOIN users db ON db.userid=users.id_created LEFT JOIN users dc ON dc.userid=users.id_updated  LEFT JOIN manifest_authen de ON de.manifestid=users.manifestid');
+      return ('SELECT user.user_id,user.username,user.email,user.phone_number,user.avatar,user.fullname,user.permission_id,user.address'
+      +',db.email  As name_create, dc.email  As name_update ,de.role As manifest_content FROM user LEFT JOIN user db ON db.user_id=user.id_created LEFT JOIN user dc ON dc.user_id=user.id_updated  LEFT JOIN permission de ON de.permission_id=user.permission_id');
    //       + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
 
   getConditionManisfest(info){
-    return "users.deleteflag=0 AND users.manifestid>="+info.manifestid+ " ";
+    return "user.delete_flag=0 AND user.permission_id>="+info.manifestid+ " ";
   }
 
   getDairyChange(info) {
-    return "users.deleteflag=1 AND users.manifestid>="+info.manifestid+ " ";
+    return "user.delete_flag=1 AND user.permission_id>="+info.manifestid+ " ";
 
   }
 

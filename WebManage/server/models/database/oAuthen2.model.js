@@ -29,10 +29,10 @@ class Oauthen2 extends CommonModel {
   /**
    * Table has timestamps.
    */
-    checkInvalUserExistingTocken(tocken){
+    checkInvalUserExistingTocken(token){
         var authen = squel.select().from("oauthen2")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
+                        .where("token = '"+token+"'" )
+                        .where("delete_flag = 0")
                         .where("time_relase > NOW()");
         return new Promise( ( resolve, reject ) => {
             //console.log(authen.toString(),tocken);
@@ -47,20 +47,17 @@ class Oauthen2 extends CommonModel {
     }
     responseLogin(res,user){
         var dataTocken= getRamdomData(256);
-        var manifestid=user.get('manifestid');
-        var current_id=user.get('userid');
+        var manifestid=user.get('permission_id');
+        var current_id=user.get('user_id');
         var listDataContain="";
         var listDataEnterprise_id="";
         listDataContain+=current_id;
         var authen2 = squel.insert().into("oauthen2")
-                .set("manifestid",manifestid)
-                .set("userid",current_id)
-                .set("tocken",dataTocken)
-                .set("id_updated",current_id)
-                .set("id_created",current_id)
-                .set("deleteflag",0)
+                .set("permission_id",manifestid)
+                .set("user_id",current_id)
+                .set("token",dataTocken)
+                .set('delete_flag', 0)
                 .set("created_at",'NOW()',{dontQuote: true})
-                .set("updated_at",'NOW()',{dontQuote: true})
                 .set("time_relase",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
         console.log("<TableManifest.NEW_REGISTER",manifestid);
         if(manifestid<TableManifest.NEW_REGISTER) {
@@ -84,7 +81,7 @@ class Oauthen2 extends CommonModel {
         } 
         else 
         {
-            var sqlMain="SELECT users_id FROM users WHERE deleteflag=0 and id_created="+current_id;
+            var sqlMain="SELECT users_id FROM user WHERE delete_flag=0 and id_created="+current_id;
             if(manifestid<TableManifest.ADMIN)
             {
                     sqlMain +=" UNION "+ "SELECT id_member FROM decentralization_access WHERE id_admin="+current_id

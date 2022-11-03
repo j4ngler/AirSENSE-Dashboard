@@ -38,14 +38,14 @@ class Customer extends CommonModel {
   getFieldToAdd(){
       return {
 
-          valueSetup: ["name","fullname","phoneNumber","email","contact","addrid","avartar","note","manifestid" ]
+          valueSetup: ["username","fullname","phone_number","email","address","avatar","permission" ]
       };
   }
   getFieldToDelete(){
       return {
-          arrayCoppy:["name","fullname","phoneNumber","email","contact","addrid","avartar","note","manifestid","created_at","id_created"],
-          locationSelect:"userid",
-          valueSelect:"deleteflag",
+          arrayCoppy:["username","fullname","phone_number","email","address","avatar","permisson_id","created_at","id_created"],
+          locationSelect:"customer_id",
+          valueSelect:"delete_flag",
           userUpdate:"id_updated"
       };
   }
@@ -53,17 +53,17 @@ class Customer extends CommonModel {
   
   getSQLReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT users.userid,users.name,users.email,users.phoneNumber,users.avartar,users.fullname,users.manifestid,users.contact,users.note'
-      +',db.email  As name_create, dc.email  As name_update ,de.content As manifest_content FROM users LEFT JOIN users db ON db.userid=users.id_created LEFT JOIN users dc ON dc.userid=users.id_updated  LEFT JOIN manifest_authen de ON de.manifestid=users.manifestid');
+      return ('SELECT customer.customer_id,customer.username,customer.email,customer.phone_number,customer.avatar,customer.fullname,customer.permission_id,customer.contact, customer.address'
+      +',db.username  As name_create, dc.username  As name_update ,de.content As permission FROM customer LEFT JOIN user db ON db.user_id=customer.id_created LEFT JOIN user dc ON dc.user_id=customer.id_updated  LEFT JOIN permission de ON de.permission_id=customer.permission_id');
    //       + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
 
   getConditionManisfest(info){
-    return "users.deleteflag=0 AND users.manifestid>="+info.manifestid+ " ";
+    return "customer.delete_flag=0 AND customer.permission_id>="+info.manifestid+ " ";
   }
 
   getDairyChange(info) {
-    return "users.deleteflag=1 AND users.manifestid>="+info.manifestid+ " ";
+    return "customer.delete_flag=1 AND customer.permission_id>="+info.manifestid+ " ";
 
   }
 
@@ -72,7 +72,7 @@ class Customer extends CommonModel {
   }
 
   async checkValueEmailData(email){
-    var squelGet=squel.select().from('users').where('email="' + email +'"').where('deleteflag=0');
+    var squelGet=squel.select().from('customer').where('email="' + email +'"').where('delete_flag=0');
     var info= await knex.raw(squelGet.toString());
     if((info!=null)&&(info.length>0)) {
       return true;
@@ -81,8 +81,8 @@ class Customer extends CommonModel {
   }
 
   async checkInvalUserExistingToRegister(request) {
-      var checkInfo = squel.select().from("users").where(
-      squel.expr().and("phoneNumber='" + request["phoneNumber"] + "'").or("email='" + request["email"] + "'"));
+      var checkInfo = squel.select().from("customer").where(
+      squel.expr().and("phone_number='" + request["phone_number"] + "'").or("email='" + request["email"] + "'"));
       var info= await knex.raw(checkInfo.toString());
       if((info!=null)&&(info.length>0)) {
         return true;
