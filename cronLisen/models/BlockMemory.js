@@ -60,7 +60,7 @@ class BlockMemory {
         // console.log('sensor', sensor);
         if(this.memory.length>0){
             if(sensor.length>0){
-                console.log("Save data station");
+                console.log("Save data station", sensor);
                 data.insertMany(sensor, function (err, data) {
                     if (err) {
                         console.log("err",err);

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 let DataSensor = new Schema({
-    station_id: {
+    topic: {
         type: String
     },
     time: {

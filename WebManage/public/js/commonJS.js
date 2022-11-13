@@ -1,3 +1,44 @@
+  function selectLoginMethod() {
+    Swal.fire({
+            html: `
+            <div class="container-login">
+            <div class="login-content">
+                <div class="login-header">
+                    <img src="/resource/airsense/wp-content/img/airsense.jpg" alt="">
+                    <h1 class="login-heading">Đăng nhập vào Airsense</h1>
+                </div>
+                <div class="login-ways">
+                    <div class="login-item login-ad">
+                        <i class="fa-solid fa-user"></i>
+                        <p>Đăng nhập với tư cách Admin</p>
+                    </div>
+                    <div class="login-item login-custom">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <p>Đăng nhập với tư cách Customer</p>
+                    </div>
+                    <div class="login-item login-user">
+                        <i class="fa-regular fa-user"></i>
+                        <p>Đăng nhập với tư cách User</p>
+                    </div>
+                </div>
+                <div class="sign-up">
+                    Bạn chưa có tài khoản? <a href="" class="sign-up_link">Đăng ký</a>
+                </div>
+                <div class="login-term">
+                    Việc bạn tiếp tục sử dụng trang web này đồng nghĩa bạn đồng ý với <a href="" class="term_link">Điều khoản sử dụng</a> của chúng tôi
+                </div>
+            </div>
+            `,
+            showConfirmButton: false,
+            width: "700px",
+        })
+  }
+
+
+
+
+
+
 function getInfoData(urlLink, callBack) {
   $.ajax({
     type: "GET",
