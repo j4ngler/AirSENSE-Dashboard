@@ -1,14 +1,15 @@
-var mqtt = require('mqtt')
-var events = require('events');
+const mqtt = require('mqtt')
+const events = require('events');
 emitter = new events.EventEmitter();
 const config = require('./config/default.json');
 var data = require('./config/data.config');
 const mongoose = require('mongoose');
-var mongoConfig = require('./config/mongoConfig.js');
+const mongoConfig = require('./config/mongoConfig.js');
 const BlockMemory = require('./models/BlockMemory');
+require('dotenv').config();
 
 // Connecting to the database
-mongoose.connect(mongoConfig.dbConfig, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+mongoose.connect(mongoConfig.dbConfig,{user: mongoConfig.username, pass: mongoConfig.password, useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("Successfully connected to the database");
 }).catch(err => {
     console.log('Could not connect to the database. Exiting now...', err);
@@ -26,7 +27,6 @@ var SaveFactory = (function(){
     
         save(record) {
             if (this.memFirst.isAvailable()) {
-                console.log('a')
                 this.memFirst.add(record);
             } 
             else this.memSecond.add(record);
@@ -46,11 +46,11 @@ var SaveFactory = (function(){
 })();
 
 
-var mqttConfig = config.mqtt;
 var clients = [];
+const mqttConfig = require('./config/default.json').mqtt
 mqttConfig.map(config => {
     config.clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8);
-    var client = mqtt.connect('mqtt://103.1.238.175/', config);
+    var client = mqtt.connect(process.env.APP_MQTT, config);
     clients.push(client);
     client.on('connect', function () {
         console.log(config.port)
@@ -69,7 +69,6 @@ mqttConfig.map(config => {
 var save = SaveFactory.getInstance();
 
 clients.map(client => {
-    // console.log('hello');
     client.on('message', function (topic, message, packet) {
         try{
             message = JSON.parse(message.toString('utf-8'));
@@ -81,7 +80,7 @@ clients.map(client => {
             if(message.Time < current+24*60*3600 && message.station_id != null && message.station_id != '') {
                 let stationID = parseInt(message.station_id, 16);
             var infoSave ={
-                topic:"/sensor/"+stationID,
+                topic: 'sensor/' + stationID,
                 time:message.Time,
                 content:{
                     PM2p5:message.PM2p5,
@@ -106,8 +105,9 @@ clients.map(client => {
                 }
               };
             }
+            console.log(infoSave);
             
-            save.save(infoSave);
+            // save.save(infoSave);
         } catch(e) {
         }
     });

@@ -5,6 +5,7 @@ const pagesRouters = require('./routes/pages.route.js');
 const express = require('express');
 const mongoose = require('mongoose');
 const mongoConfig = require('./config/mongoConfig.js');
+const { password } = require('./config/mongoConfig.js');
 //const swagger = require('./config/swagger.js');
 
 // Swagger API documentation
@@ -17,9 +18,13 @@ const mongoConfig = require('./config/mongoConfig.js');
 
 // Connecting to the database
 // mongoose.set('useCreateIndex', true);
-mongoose.connect(mongoConfig.dbConfig, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+// mongodb://username:password@host:port/database
+
+mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:password}).then(() => {
     console.log("Successfully connected to the database");
 }).catch(err => {
+  console.log(mongoConfig.dbConfig)
+  console.log(mongoConfig.username,mongoConfig.password)
     console.log('Could not connect to the database. Exiting now...', err);
 });
 

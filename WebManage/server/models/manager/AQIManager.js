@@ -9,9 +9,9 @@ class AQIManager  {
 
     getCurrentAQIFromDb() {
         return new Promise((resolve,reject)=> {
-            var query = "SELECT a.station_id as station_id, a.aqi as aqi, l.location_lat as lat, l.location_long as lon, l.content as content FROM sparc_aqi a "+
-                        "JOIN sparc_location_sensor l "+
-                        "WHERE a.station_id = l.station_id AND time = (SELECT time FROM sparc_aqi ORDER BY time DESC LIMIT 1) AND l.deleteflag !=1";
+            var query = "SELECT a.station_id as station_id, a.aqi as aqi, l.latitude as lat, l.longtitude as lon, l.title as content FROM aqi_data a "+
+                        "JOIN device_sensor l "+
+                        "WHERE a.station_id = l.station_id AND time = (SELECT time FROM aqi_data ORDER BY time DESC LIMIT 1) AND l.delete_flag !=1";
             knex.raw(query.toString()).then((result)=> {
                 resolve(result);
             })
@@ -47,7 +47,7 @@ class AQIManager  {
                 values.push({time: time, station_id: station.stationId, aqi: station.aqi});
             })
             var query = squel.insert()
-                        .into("sparc_aqi")
+                        .into("aqi_data")
                         .setFieldsRows(values);
             knex.raw(query.toString());
             
@@ -255,11 +255,11 @@ class AQIManager  {
     getAqiData(stationId) {
         var currentTime = this.getCurrentTime();
         var fromTime = currentTime-24*3600;
-        var query = squel.select().from("sparc_aqi")
-        .where("Time > ?", fromTime)
-        .where("Time < ?", currentTime)
+        var query = squel.select().from("aqi_data")
+        .where("time > ?", fromTime)
+        .where("time < ?", currentTime)
         .where("station_id = ?", stationId);
-        console.log(query.toString());
+        // console.log(query.toString());
         return new Promise( ( resolve, reject ) => {
             knex.raw(query.toString()).then(function(result) {  
                 resolve( result);
@@ -276,7 +276,7 @@ class AQIManager  {
         .where("Time > ?", fromTime)
         .where("Time < ?", currentTime)
         .where("station_id = ?", stationId);
-        console.log(query.toString());
+        // console.log(query.toString());
         return new Promise( ( resolve, reject ) => {
             knex.raw(query.toString()).then(function(result) {  
                 resolve( result);

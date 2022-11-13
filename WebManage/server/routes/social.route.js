@@ -39,7 +39,8 @@ router.route('/getCurrentAQI').get( (req, res) => iotCtrl.getCurrentAQI(req, res
 router.route('/getAqiData').post( (req, res) => iotCtrl.getAqiData(req, res));//get aqi in recent 24h
 router.route('/getDataRecent').post( (req, res) => iotCtrl.getDataRecent(req, res));
 
-router.route('/dataSensor').get((req, res) => iotCtrl.getDataStation(req, res));
+router.route('/dataSensor').post((req, res) => iotCtrl.getDataStation(req, res));
+
 
 
 

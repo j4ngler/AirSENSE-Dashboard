@@ -129,11 +129,12 @@ iotCtrl.getStationServer = function(request, response) {
 
 iotCtrl.getStationHome = function(request, response) {
     //if (request.currentUser.manifestid < 4) {
-        var tableSelect = mangerModelAdmin("sparc_location_sensor");
+        var tableSelect = mangerModelAdmin("device_sensor");
         var dataTableSQL=tableSelect.getSQLReport(request.currentUser);
         //var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);  
         knex.raw(dataTableSQL)
         .then(result => {
+            console.log(result[0]);
             return returnOK(response,result[0]);
         }
         , error => {
@@ -262,40 +263,13 @@ iotCtrl.getDataRecent= function(request, response) {
 };
 
 
-
-
-
-
-iotCtrl.getTotalPosts = function(request, response) {
-    blogManager.getTotalPosts().then(function(result) {
-        response.send(JSON.stringify({total:result}));
-    })
-};
-iotCtrl.getPostsPagination = function(request, response) {
-    var pageSize = request.query.pageSize;
-    var pageNumber = request.query.pageNumber;
-    blogManager.getPostsPagination(pageSize, (pageNumber-1)*pageSize).then(function(result) {
-        response.send(JSON.stringify(result));
-    });
-};
-
-iotCtrl.getPosts= function(request, response) {
-    blogManager.getPosts().then(function(result) {
-        response.send(JSON.stringify(result));
-    })
-}
-
-iotCtrl.savePost= function(request, response) {
-    var post = request.body;
-    blogManager.savePost(post).then(function(result) {
-        response.send(JSON.stringify(result));
-    })
-}
-
 iotCtrl.getDataStation = async (req, res) => {
-    const { station_id, fromTime, toTime } = req.body;
-    const result = await DataSensor.find();
-    console.log(result);
+    const { stationID, fromTime, toTime } = req.body;
+    console.log(fromTime, toTime, stationID);
+    const stattionSelect = 'sensor/'+stationID;
+
+    const result = await DataSensor.find({"content.data": {$exists:true}, "topic": stattionSelect, "time": { $gt: fromTime}, "time": { $lt: toTime}});
+    // console.log(result);
     res.send(JSON.stringify(result))
 }
 
