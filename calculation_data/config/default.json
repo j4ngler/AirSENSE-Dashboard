@@ -1,7 +1,7 @@
  {
     "database": {
         "host": "103.1.238.170",
-        "database": "admin_python",
+        "database": "airsense",
         "user": "sparclab",
         "password": "LabSPARC"
     },

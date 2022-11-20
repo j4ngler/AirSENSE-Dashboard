@@ -141,7 +141,8 @@ h6 {
   margin: 30px;
   background-color: #fff;
   padding: 20px;
-  min-height: 400px;
+  min-height: 100vh;
+  overflow-y: auto;
   border-radius: 5px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }

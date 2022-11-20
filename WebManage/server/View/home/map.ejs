@@ -912,23 +912,23 @@
 
 
         var threshold = [];
-        getThreshold();
-        function getThreshold() {
-            var Link='/api/social/getThreshold';
-            $.ajax({
-                type: 'get',
-                dataType: 'json',
-                url: Link,
-                data: {},
-                success: function (result) {
-                    threshold = result;
-                    console.log('threshold: ', threshold);
-                },
-                error: function (err) {
-                    console.log('error: ',err);
-                }
-            });
-        }  
+        // getThreshold();
+        // function getThreshold() {
+        //     var Link='/api/social/getThreshold';
+        //     $.ajax({
+        //         type: 'get',
+        //         dataType: 'json',
+        //         url: Link,
+        //         data: {},
+        //         success: function (result) {
+        //             threshold = result;
+        //             console.log('threshold: ', threshold);
+        //         },
+        //         error: function (err) {
+        //             console.log('error: ',err);
+        //         }
+        //     });
+        // }  
 
         var selectedMarker = null;
         //map
@@ -992,8 +992,8 @@
                 $('#aqi-index').addClass(color);
                 $('.index-aqi').text(station.aqi);
                 drawAqiChart(station.station_id,'aqi-chart', 'Chỉ số AQI');
-                drawRightBarChart(station.station_id,'temp-chart', 'Nhiệt độ', 'Temperature');
-                drawRightBarChart(station.station_id,'humid-chart', 'Độ ẩm', 'Humidity');
+                drawRightBarChart(station.station_id,'temp-chart', 'Nhiệt độ', 'temperature');
+                drawRightBarChart(station.station_id,'humid-chart', 'Độ ẩm', 'humidity');
                 $('#selectTable').val(this.options.stationId);
                 
                 setTimeout(gotoCheckData(false),500);
@@ -1136,7 +1136,7 @@
                 url: link,
                 data: {},
                 success: function (stations) {
-                   
+                   console.log('xuz',stations)
                     stations.forEach(station => {
                         var latlon = [station.lat, station.lon];
                         createMaker(latlon,station);
@@ -1284,14 +1284,14 @@
                     // })
 
 
-                    if(field=='Temperature') {
-                        $("#current-temp").text(Math.round(result[result.length-1].Temperature));
+                    if(field=='temperature') {
+                        $("#current-temp").text(Math.round(result[result.length-1].temperature));
                     } 
-                    else $("#current-humid").text(Math.round(result[result.length-1].Humidity));
+                    else $("#current-humid").text(Math.round(result[result.length-1].humidity));
                     let datasets = [];
                     let data = [];
                     let getResult = result[0];
-                    getResult.map(item => data.push({x: new Date(item.Time*1000),y:item[field]}));
+                    getResult.map(item => data.push({x: new Date(item.time*1000),y:item[field]}));
 
                     datasets.push({
                         label: title,
@@ -1393,10 +1393,12 @@
                             // 'Content-Type': 'application/x-www-form-urlencoded',
                         },
                 success: function (result) {
-                    console.log('aqi data: ', result);
                     let datasets = [];
+                    console.log('aqi result',result)
                     let data = [];
                     result.map(item => data.push({x: new Date(item.time*1000),y:item.aqi}));
+                    console.log('aqi data: ', data);
+
                     datasets.push({
                         label: "AQI",
                         backgroundColor: 'green',
