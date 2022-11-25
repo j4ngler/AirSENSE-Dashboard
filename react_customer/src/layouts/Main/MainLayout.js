@@ -5,6 +5,7 @@ import HeaderCustomer from '../../components/Header';
 import { Breadcrumb, Layout } from 'antd';
 import MenuBar from '../../components/MenuBar';
 import { useNavigate } from 'react-router-dom';
+import "./MainLayout.css"
 const { Header, Content, Sider } = Layout;
 
 const checkRole = (permissions) => {
@@ -148,10 +149,10 @@ const MainLayout = () => {
   
   return (
   <Layout>
-    <Header className="header-customer ">
+    <Header className="header-customer">
       <HeaderCustomer />
     </Header>
-    <Layout>
+    <Layout >
       <Sider width={215} className="site-layout-background">
       <MenuBar  
       menuList={MenuList('admin')}
