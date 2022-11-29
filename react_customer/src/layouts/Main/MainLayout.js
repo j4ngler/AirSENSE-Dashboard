@@ -5,6 +5,7 @@ import { Breadcrumb, Layout } from "antd";
 import MenuBar from "../../components/MenuBar";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
+import ReBreadcrumb from "../../components/Breadcrumb";
 const { Header, Content, Sider } = Layout;
 
 const checkRole = (permissions) => {
@@ -158,11 +159,12 @@ const MainLayout = () => {
         </Sider>
 
         <Content className="customer-main-content">
-          <Breadcrumb style={{margin:"12px 20px"}}>
+          {/* <Breadcrumb style={{margin:"12px 20px"}}>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>List</Breadcrumb.Item>
             <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
+          <ReBreadcrumb menuList={MenuList}></ReBreadcrumb>
           <Outlet />
         </Content>
       </Layout>
