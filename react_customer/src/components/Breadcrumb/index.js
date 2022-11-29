@@ -5,6 +5,10 @@ import './breadcrumb.css';
 import routes from "../../configs/routes";
 
 const URLMapping = {
+    dashboard: {
+        title: "Dashboard",
+        url: "/dashboard"
+    },
     station: {
         title: "Quản lí trạm",
         url: "/manage_account"
@@ -12,8 +16,30 @@ const URLMapping = {
     data_station: {
         title: "Dữ liệu trạm",
         url: "/station/data_station"
+    },
+    list_station: {
+        title: "Danh sách trạm",
+        url: "/station/list_station"
+    },
+    user: {
+        title: "Người dùng",
+        url: "/station/user"
+    },
+    customer: {
+        title: "Khách hàng",
+        url: "/customer"
     }
+    ,
+    404: {
+        title: "",
+        url: "/customer/404"
+    },
+    account: {
+        title: "Tài khoản",
+        url: "/account"
+    },
 }
+
 const ReBreadcrumb = (menuList, url) => {
     let location = useLocation();
     console.log(location);
