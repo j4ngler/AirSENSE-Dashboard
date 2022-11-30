@@ -16,7 +16,6 @@ const routes = [
       { path: "404", element: <NotFoundPage /> },
       { path: "*", element: <Navigate to="/customer/404" /> },
       { path: "station/data_station", element: <DataSensor /> },
-      
     ],
   },
   {
