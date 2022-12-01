@@ -135,12 +135,12 @@ class CommonModel extends bookshelf.Model {
         var userid=req.currentUser.users_id;
         let dataUser=  this.getFieldToAdd();//  DataTableFieldAdd[table];
         var sqlQuery = squel.insert().into(this.getNameTable());
-        if(this.getNameTable()=='users'){
+        if(this.getNameTable()=='user' || this.getNameTable() == 'customer'){
             for(var i=0;i<dataUser.valueSetup.length;i++){
                 let item=dataUser.valueSetup[i];
                 if(!!!data[item]) sqlQuery.set(item,null);
                 else {
-                    if(item=="password"){
+                    if(item == "password"){
                         const salt = await bcrypt.genSalt(12);
                         // now we set user password to hashed password
                         var passwordData = await bcrypt.hash(data[item], salt);
@@ -168,8 +168,9 @@ class CommonModel extends bookshelf.Model {
         sqlQuery.set("id_created",userid).set("id_updated",userid)
             .set("created_at","NOW()",{dontQuote: true}) 
             .set("updated_at","NOW()",{dontQuote: true})
-            .set("deleteflag",0);
+            .set("delete_flag",0);
 
+        console.log(sqlQuery.toString())
         return sqlQuery.toString();
     }
     

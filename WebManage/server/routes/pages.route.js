@@ -6,6 +6,12 @@ router.get("/", (req, res) => {
   res.render("home/home", { route: "home" });
 });
 
+router.get("/register", (req, res) => {
+  res.render("authen/register", { route: "register" });
+});
+
+
+
 var arrayMenuPages = [
   {
     typePage: "Đào tạo",
