@@ -31,3 +31,39 @@ export const aqiToColor = (aqi) => {
     }
 };
 
+export const URLMapping = {
+    dashboard: {
+        title: "Dashboard",
+        url: "/dashboard"
+    },
+    station: {
+        title: "Quản lí trạm",
+        url: "/manage_account"
+    },
+    data_station: {
+        title: "Dữ liệu trạm",
+        url: "/station/data_station"
+    },
+    list_station: {
+        title: "Danh sách trạm",
+        url: "/station/list_station"
+    },
+    user: {
+        title: "Người dùng",
+        url: "/station/user"
+    },
+    customer: {
+        title: "Khách hàng",
+        url: "/customer"
+    }
+    ,
+    404: {
+        title: "",
+        url: "/customer/404"
+    },
+    account: {
+        title: "Tài khoản",
+        url: "/account"
+    },
+}
+
