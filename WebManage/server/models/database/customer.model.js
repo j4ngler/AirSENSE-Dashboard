@@ -38,12 +38,12 @@ class Customer extends CommonModel {
   getFieldToAdd(){
       return {
 
-          valueSetup: ["username","fullname","phone_number","email","address","avatar","permission" ]
+          valueSetup: ["username","fullname","phone_number","email","address","avatar", "contact", "password"]
       };
   }
   getFieldToDelete(){
       return {
-          arrayCoppy:["username","fullname","phone_number","email","address","avatar","permisson_id","created_at","id_created"],
+          arrayCoppy:["username","fullname","phone_number","email","address","avatar","created_at","id_created"],
           locationSelect:"customer_id",
           valueSelect:"delete_flag",
           userUpdate:"id_updated"
@@ -53,17 +53,17 @@ class Customer extends CommonModel {
   
   getSQLReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT customer.customer_id,customer.username,customer.email,customer.phone_number,customer.avatar,customer.fullname,customer.permission_id,customer.contact, customer.address'
-      +',db.username  As name_create, dc.username  As name_update ,de.content As permission FROM customer LEFT JOIN user db ON db.user_id=customer.id_created LEFT JOIN user dc ON dc.user_id=customer.id_updated  LEFT JOIN permission de ON de.permission_id=customer.permission_id');
+      return (' SELECT customer.customer_id,customer.username,customer.email,customer.phone_number,customer.avatar,customer.fullname,customer.contact, customer.address,' +
+  'db.username  As name_create, dc.username  As name_update FROM customer LEFT JOIN user db ON db.user_id=customer.id_created LEFT JOIN user dc ON dc.user_id=customer.id_updated');
    //       + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
 
   getConditionManisfest(info){
-    return "customer.delete_flag=0 AND customer.permission_id>="+info.manifestid+ " ";
+    return "customer.delete_flag=0";
   }
 
   getDairyChange(info) {
-    return "customer.delete_flag=1 AND customer.permission_id>="+info.manifestid+ " ";
+    return "customer.delete_flag=1";
 
   }
 
