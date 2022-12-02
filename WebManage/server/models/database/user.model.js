@@ -38,7 +38,7 @@ class User extends CommonModel {
   getFieldToAdd(){
       return {
 
-          valueSetup: ["username","fullname","phone_number","email","address","avatar","permission_id" ]
+          valueSetup: ["username","password","fullname","phone_number","email","address","avatar","permission_id" ]
       };
   }
   getFieldToDelete(){

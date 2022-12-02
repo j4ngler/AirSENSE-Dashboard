@@ -2,10 +2,10 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import React from 'react';
 import ManagerData from '../../actions/ManagerData.js'
-import {ActionControl ,TypeDialgueShow,SelectHTml} from '../../utils/commonUtil';
+import { ActionControl,TypeDialgueShow,SelectHTml } from '../../utils/commonUtil';
 
 export default class Customer  {
-    getColumeShow=(callback)=>{
+    getColumeShow=(callback) => {
         //"user_id","name","contactPhoneNumber","province","city","streetaddr","postCode"
         const columns = [
             {
@@ -31,11 +31,6 @@ export default class Customer  {
             {
                 field: 'avatar',
                 headerName: 'avatar',
-                width: 240,
-            },
-            {
-                field: 'permission',
-                headerName: 'Phân quyền',
                 width: 240,
             },
             {
@@ -111,11 +106,6 @@ export default class Customer  {
               width: 240,
           },
           {
-              field: 'permission_id',
-              headerName: 'permission_id',
-              width: 240,
-          },
-          {
               field: 'address',
               headerName: 'address',
               width: 240,
@@ -131,25 +121,25 @@ export default class Customer  {
     }
 
     getInfoToAdd(){
-      return ["username","email","password","token_reset","phone","avatar","fullname","permission_id","address","note"];
+      return ["username","email","password","phone_number","contact","fullname","address"];
     }
     getTitleToAdd(){
-      return ["username","email","password","token_reset","phone","avatar","fullname","permission_id","address","note"];
+      return ["Tên người dùng","email","Mật khẩu","Số điện thoại","Liên hệ","Họ và tên","Địa chỉ"];
     }
 
     getHtmlAdd(){
       return  [TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,
-              TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_CUSTOM,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT  ];
+              TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_CUSTOM,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT];
     }
     getTypeSelectToAdd(){
       return  [SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML
-                ,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.CUSTOMER_PERMISION,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML];
+                ,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML,SelectHTml.NOT_CHECK_HTML];
     }
     getTypeSelectTabbleToAdd(){
-      return  ["","","","","","","","","",""];
+      return  ["","","","","","","","","","", ""];
     }
     getColumeValidate(){
-      return ["leng6","email","password","","phone","","","","",""];
+      return ["leng6","email","password","phone","","","","",""];
     }
 } 
 
