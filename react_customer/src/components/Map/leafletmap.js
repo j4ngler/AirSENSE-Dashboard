@@ -1,14 +1,7 @@
 import React from 'react'
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
-import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import L from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
-
-let DefaultIcon = L.icon({
-    iconUrl: markerIconPng,
-});
-L.Marker.prototype.options.icon = DefaultIcon;
 
 const LeafletMap = () => {
     const position = [21.0057398, 105.8424833];
