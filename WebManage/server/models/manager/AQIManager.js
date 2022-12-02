@@ -13,6 +13,7 @@ class AQIManager  {
                         "JOIN device_sensor l "+
                         "WHERE a.station_id = l.station_id AND time = (SELECT time FROM aqi_data ORDER BY time DESC LIMIT 1) AND l.delete_flag !=1";
             knex.raw(query.toString()).then((result)=> {
+                // console.log(result)
                 resolve(result);
             })
         });
@@ -272,7 +273,7 @@ class AQIManager  {
     getFielDataRecent(stationId) {
         var currentTime = this.getCurrentTime();
         var fromTime = currentTime-24*3600;
-        var query = squel.select().from("sparc_sensor_data")
+        var query = squel.select().from("data_average")
         .where("Time > ?", fromTime)
         .where("Time < ?", currentTime)
         .where("station_id = ?", stationId);

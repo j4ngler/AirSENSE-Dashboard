@@ -1,0 +1,16 @@
+.dataSensor{
+    margin: 10px;
+    margin-left: 20px
+}
+.dataSensor-title{
+    font-size: 24px;
+    font-weight: 600;
+}
+.date-picker{
+    border: 1px solid #000;
+    color: #000;
+}
+.info-table{
+    margin-top: 15px;
+    border-top: 1px solid #999;
+}

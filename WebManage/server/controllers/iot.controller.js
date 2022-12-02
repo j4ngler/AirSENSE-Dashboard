@@ -252,7 +252,8 @@ iotCtrl.getCurrentAQI= function(request, response) {
 iotCtrl.getAqiData= function(request, response) {
     var stationId = request.body.stationId;
     aqiManager.getAqiData(stationId).then((result)=> {
-        response.send(JSON.stringify(result));
+        console.log('result', result)
+        response.send(JSON.stringify(result[0]));
     }) 
 };
 iotCtrl.getDataRecent= function(request, response) {
