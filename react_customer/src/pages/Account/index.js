@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import "./account.css";
 import { Button, Form, Input, Image } from "antd";
 import avatarDemo from "../../assets/icons/avatar.svg";
+import { useNavigate } from "react-router-dom";
+
 function Account() {
   const ItemLayout = {
     labelCol: {
@@ -12,6 +14,7 @@ function Account() {
       span: 10,
     },
   };
+  const navigate = useNavigate()
   return (
     <>
       <Col span={22} offset={1} className="account-app">
@@ -59,9 +62,18 @@ function Account() {
             </Col>
           </Row>
 
-          <Form.Item>
-            <Button type="primary">Submit</Button>
-          </Form.Item>
+          <Row>
+            <Col span={10}>
+              <Form.Item>
+                <Button type="primary">Submit</Button>
+              </Form.Item>
+            </Col>
+            <Col span={10} offset={2}>
+              <Form.Item>
+                <Button type="primary" className="Change-pass" onClick={()=> navigate("/change_password")}>Đổi mật khẩu</Button>
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Col>
     </>
