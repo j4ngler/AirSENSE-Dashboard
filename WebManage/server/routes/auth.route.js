@@ -12,9 +12,9 @@ const router = express.Router();
 
 // authen
 // login -> ok
-router.get('/login', (req, res) => {
-  res.render('authen/login', { route: 'login' });
-});
+// router.get('/login', (req, res) => {
+//   res.render('authen/login', { route: 'login' });
+// });
 
 
 router.get('/giang', (req, res) => {
