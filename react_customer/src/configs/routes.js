@@ -4,7 +4,8 @@ import NotFoundPage from "../pages/Error/NotFound";
 import LoginPage from "../pages/Auth/login";
 import Dashboard from "../pages/Dashboard";
 import Account from "../pages/Account";
-import DataSensor from "../pages/DataSensors"
+import DataSensor from "../pages/DataSensors";
+import News from "../pages/News";
 import GGMap from "../components/Map/ggmap";
 import LeafletMap from "../components/Map/leafletmap";
 
@@ -15,9 +16,13 @@ const routes = [
     children: [
       { path: "dashboard", element: <Dashboard /> },
       { path: "account", element: <Account /> },
+      { path: "station/data_station", element: <DataSensor /> },
+      {
+        path: "/station/user",
+        element: <News />,
+      },
       { path: "404", element: <NotFoundPage /> },
       { path: "*", element: <Navigate to="/customer/404" /> },
-      { path: "station/data_station", element: <DataSensor /> },
       { path: "station/list_station", element: <LeafletMap />}
     ],
   },
