@@ -330,6 +330,22 @@ class CommonModel extends bookshelf.Model {
         return this.getNameTable()  +".delete_flag=0 ";
     }
 
+
+    async getPermissionCustomer (user_id) {
+        let mysql = squel.select().field('value_id').field('manifest_id').from('ref_manifest').where('customer_id = ' + user_id);
+        console.log(mysql.toString())
+        let result = await knex.raw(mysql.toString());
+        if(!!result) {
+            let dataPermssion = '';
+            console.log(result[0])
+            result[0].map(obj => {
+                dataPermssion += obj.value_id + '/' + obj.manifest_id + ',';
+            })
+            return dataPermssion.slice(0, -1);
+        }
+        return '';
+    }
+
   }
 
   module.exports =  CommonModel;

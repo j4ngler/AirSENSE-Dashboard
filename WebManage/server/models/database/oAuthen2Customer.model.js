@@ -1,6 +1,6 @@
 const TypeModel= require('../middlewareDatabase/TypeModel.js');
 const TableView= require('../middlewareDatabase/TableView.js');
-const TABLE_NAME = 'oauthen2customer';
+const TABLE_NAME = 'oauthen2_customer';
 const TableManifest= require('../middlewareDatabase/TableManifest.js');
 const knex = require('../../config/knex.js');
 const CommonModel= require('../middlewareDatabase/CommonModel.js');
@@ -47,25 +47,21 @@ class oAuthen2Customer extends CommonModel {
         } );
     }
 
-    responseLogin(res,user){
-        var dataTocken= getRamdomData(256);
-        var permission_id=user.get('permission_id');
+    async responseLogin(res,user){
+        const dataTocken= getRamdomData(256);
+        const permission_id=user.get('permission_id');
         var current_id=user.get('customer_id');
-        var listDataContain="";
-        var listDataEnterprise_id="";
-        listDataContain+=current_id;
-        var authen2 = squel.insert().into("oauthen2customer")
-                .set("permission_id",permission_id)
+        const listDataRole = await this.getPermissionCustomer(current_id);
+        let listDataContain = '';
+        var authen2 = squel.insert().into("oauthen2_customer")
                 .set("customer_id",current_id)
-                .set("tocken",dataTocken)
-                .set("id_updated",current_id)
-                .set("id_created",current_id)
-                .set("deleteflag",0)
+                .set("token",dataTocken)
+                .set("delete_flag",0)
                 .set("created_at",'NOW()',{dontQuote: true})
-                .set("updated_at",'NOW()',{dontQuote: true})
-                .set("deleteflag",0)
+                .set("delete_flag",0)
                 .set("time_relase",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
         authen2.set("value_manifest",listDataContain);
+        authen2.set("value_service", listDataRole);
         knex.raw(authen2.toString()).then(function(x) {
             console.log(" knex err1 .....",x);
             return returnOKCustom(res,{success: true,token:dataTocken,email: user.get('email')});
@@ -101,7 +97,7 @@ class oAuthen2Customer extends CommonModel {
     
     
     getSQLReport(currentUser){
-        return ('SELECT oauthen2customer.* FROM oauthen2customer ');
+        return ('SELECT oauthen2_customer.* FROM oauthen2_customer ');
        // return 'SELECT oauthen2customer.*, db.username As namecreate ,dc.username As nameupdate ,dg.content as contentauthen,dn.username as userauthen FROM oauthen2 LEFT JOIN users db ON db.users_id=oauthen2.id_created LEFT JOIN users dc ON dc.users_id=oauthen2.id_updated LEFT JOIN permission dg ON dg.permission_id=oauthen2.permission_id LEFT JOIN users dn ON dn.users_id=oauthen2.userid';
     }
 
@@ -133,7 +129,7 @@ class oAuthen2Customer extends CommonModel {
     async checkUserInval(tocken){
             var authen = squel.select().from("oauthen2customer")
                         .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
+                        .where("delete_flag = 0")
                         .where("time_relase > NOW()");
             var infoUser= knex.raw(authen.toString());
             if ((infoUser!=null)&&(infoUser.length>0)) {
