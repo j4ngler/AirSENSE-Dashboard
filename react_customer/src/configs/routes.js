@@ -11,19 +11,17 @@ import LeafletMap from "../components/Map/leafletmap";
 
 const routes = [
   {
-    path: "/",
+    path: "customer",
     element: <MainLayout />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
+      { path: "newspaper", element: <News /> },
       { path: "account", element: <Account /> },
+      { path: "station/user", element: <DataSensor /> },
       { path: "station/data_station", element: <DataSensor /> },
-      {
-        path: "/station/user",
-        element: <News />,
-      },
+      { path: "station/list_station", element: <LeafletMap />},
       { path: "404", element: <NotFoundPage /> },
       { path: "*", element: <Navigate to="/customer/404" /> },
-      { path: "station/list_station", element: <LeafletMap />}
     ],
   },
   {

@@ -36,6 +36,10 @@ export const URLMapping = {
         title: "Dashboard",
         url: "/dashboard"
     },
+    newspaper: {
+        title: "Bài báo",
+        url: "/newspaper"
+    },
     station: {
         title: "Quản lí trạm",
         url: "/manage_account"
