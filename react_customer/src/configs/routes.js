@@ -6,6 +6,9 @@ import Dashboard from "../pages/Dashboard";
 import Account from "../pages/Account";
 import DataSensor from "../pages/DataSensors";
 import News from "../pages/News";
+import GGMap from "../components/Map/ggmap";
+import LeafletMap from "../components/Map/leafletmap";
+
 const routes = [
   {
     path: "/",
@@ -20,6 +23,7 @@ const routes = [
       },
       { path: "404", element: <NotFoundPage /> },
       { path: "*", element: <Navigate to="/customer/404" /> },
+      { path: "station/list_station", element: <LeafletMap />}
     ],
   },
   {

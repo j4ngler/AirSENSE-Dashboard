@@ -20,13 +20,13 @@ const { password } = require('./config/mongoConfig.js');
 // mongoose.set('useCreateIndex', true);
 // mongodb://username:password@host:port/database
 
-mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:password}).then(() => {
-    console.log("Successfully connected to the database");
-}).catch(err => {
-  console.log(mongoConfig.dbConfig)
-  console.log(mongoConfig.username,mongoConfig.password)
-    console.log('Could not connect to the database. Exiting now...', err);
-});
+// mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:password}).then(() => {
+//     console.log("Successfully connected to the database");
+// }).catch(err => {
+//   console.log(mongoConfig.dbConfig)
+//   console.log(mongoConfig.username,mongoConfig.password)
+//     console.log('Could not connect to the database. Exiting now...', err);
+// });
 
 
 

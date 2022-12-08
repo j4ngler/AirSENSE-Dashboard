@@ -31,30 +31,34 @@ var authCtrl={};
     return returnNotAuthen(res,{success: false,message: 'Bạn dang đăng nhập tài khoản hơn 2 lần trong 1s.'});
   }
 
+  console.log('email', email)
+
   User.query({
-    where: {email:email, delete_flag: 0}
+    where: {email: email, delete_flag: 0}
   })
     .fetch({ require: false })
     .then((user) => {
+      console.log(user)
       if (user) {
         lstLogin =lstLogin.filter(o=>o.email!=email);
         console.log(user);
-        const userPassword = user.get('password');
-        console.log("user Inval",userPassword);
-        if(password==userPassword) {
-          oauthen2.responseLogin(res,user); 
-        }
-        else{
+        bcrypt.compare(password,  user.get('password')).then(function(result) {
+          // console.log("user Inval",result);
+          if(result)
+            oauthen2.responseLogin(res,user);        
+          else
             return returnNotAuthen(res,{success: false,message:'Authentication failed. Invalid password'});
-        }
-
-      } 
-        else {
+        })
+        .catch(()=>{
+          return returnNotAuthen(res,{success: false,message:'Authentication failed. Invalid password'});
+        });
+      } else {
         lstLogin.push({email:email,count:1,time:Date.now()});
         return returnNotAuthen(res,{success: false,message:'Invalid username or password.'});
       }
     });
-}
+ }
+
 
 
 authCtrl.getTocken = function(req, res) {

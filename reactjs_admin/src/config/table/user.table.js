@@ -97,8 +97,8 @@ class User_View  {
       return  ["username","email","password","phone_number","avatar","fullname","permission_id","address" ];
     }
     getTitleToAdd(){
-      return  ["name","email","password","phone_number",
-                "avatar","fullname","permission_id","address"];
+      return  ["Tên hệ thống", "Email đăng nhập","Mật khẩu","Số điện thoại",
+                "avatar","Họ và tên","Phân quyền trong hệ thống","Địa chỉ liên hệ"];
     }
     getHtmlAdd(){
       return  [TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,TypeDialgueShow.EDIT_TEXT,

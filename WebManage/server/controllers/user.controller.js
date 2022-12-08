@@ -182,14 +182,16 @@ userCtrl.addDataToTable = async function (req, res) {
         message: "Tài khoản đã tồn tại hoặc chưa được cấp quyền cao hơn",
       });
     }
-    console.log("checkInaval", checkInaval);
+    // console.log("checkInaval", checkInaval);
 
     var sqlData = await tableSelect.checkSqlAddAdmin(req, data);
+    console.log(sqlData)
     knex.raw(sqlData).then(
       (result) => {
         return returnOK(res, result[0]);
       },
       (error) => {
+        console.log(error)
         return returnFalse(res, error);
       }
     );

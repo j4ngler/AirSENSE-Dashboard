@@ -1,11 +1,13 @@
 import React from "react";
-import { DatePicker, Button, Space , Table } from 'antd';
+import { DatePicker, Button, Space } from 'antd';
 import './dataSensor.css'
 import { Typography } from 'antd';
+import TableData from "../../components/Table/dataTable";
 
 const { Title } = Typography;
 
 const { RangePicker } = DatePicker;
+// data for table
 const columns = [
     {
       title: 'Sensor Name',
@@ -165,7 +167,7 @@ const DataSensor = () =>{
                 <RangePicker className="date-picker"/>
                 <Button type="primary">Show</Button>
             </Space>
-            <Table bordered columns={columns} dataSource={data} scroll={{ x: 1500, y: 300,}} />
+            <TableData data={data} columns={columns}/>
         </div>
     )
 }
