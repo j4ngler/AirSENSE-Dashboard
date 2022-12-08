@@ -5,7 +5,6 @@ import LoginPage from "../pages/Auth/login";
 import Dashboard from "../pages/Dashboard";
 import Account from "../pages/Account";
 import DataSensor from "../pages/DataSensors";
-import ChangePassword from "../pages/change-password";
 import News from "../pages/News";
 const routes = [
   {
@@ -15,7 +14,6 @@ const routes = [
       { path: "dashboard", element: <Dashboard /> },
       { path: "account", element: <Account /> },
       { path: "station/data_station", element: <DataSensor /> },
-      { path: "change_password", element: <ChangePassword /> },
       {
         path: "/station/user",
         element: <News />,
