@@ -1,12 +1,12 @@
 import { axiosMethod, axiosRequest } from '../../utils/handleApiRequest';
-
+import { API_URL } from '../../configs/config';
 class AuthApi {
   constructor() {
-    this.apiEndpoint = process.env.REACT_APP_API_ENDPOINT;
+    this.apiEndpoint = API_URL;
     this.loginApiEndpoint = this.apiEndpoint + '/user';
   }
   getAPILogin({ email, password }) {
-    return axiosRequest('http://airsense.vn/api/auth/login', axiosMethod.POST, null, {
+    return axiosRequest(this.apiEndpoint + 'auth/customer/login', axiosMethod.POST, null, {
       email,
       password
     });

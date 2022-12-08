@@ -96,24 +96,22 @@ authCtrl.loginCustomer = function(req, res) {
   }
 
   Customer.query({
-    where: {email:email, deleteflag: 0}
+    where: {email:email, delete_flag: 0}
   })
     .fetch({ require: false })
     .then((user) => {
       if (user) {
         lstLogin =lstLogin.filter(o=>o.email!=email);
-        console.log(user);
-        const userPassword = user.get('password');
-        console.log("user Inval",userPassword);
-        if(password==userPassword) {
-          oAuthen2Customer.responseLogin(res,user); 
-        }
-        else{
+        bcrypt.compare(password,  user.get('password')).then(function(result) {
+          if(result)
+            oAuthen2Customer.responseLogin(res,user);        
+          else
             return returnNotAuthen(res,{success: false,message:'Authentication failed. Invalid password'});
-        }
-
-      } 
-        else {
+        })
+        .catch(()=>{
+          return returnNotAuthen(res,{success: false,message:'Authentication failed. Invalid password'});
+        });
+      } else {
         lstLogin.push({email:email,count:1,time:Date.now()});
         return returnNotAuthen(res,{success: false,message:'Invalid username or password.'});
       }

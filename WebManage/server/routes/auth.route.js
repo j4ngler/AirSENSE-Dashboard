@@ -61,7 +61,7 @@ router.route('/login').post(validate(schema.login), (req, res) => {
   authCtrl.login(req, res);
 });
 
-router.route('/loginCustomer').post(validate(schema.login), (req, res) => {
+router.route('/customer/login').post(validate(schema.login), (req, res) => {
   authCtrl.loginCustomer(req, res);
 });
 
@@ -125,12 +125,11 @@ router.route('/user').get(isAuthenticated, (req, res) => {
       'customer_id',
       'username',
       'fullname',
-      'phone',
+      'phone_number',
       'email',
       'address',
       'avatar',
-      'note',
-      'permission_id'
+      'contact',
     ],
   })
   .fetch({ require: false })
