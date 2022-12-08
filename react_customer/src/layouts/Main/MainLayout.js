@@ -6,6 +6,7 @@ import MenuBar from "../../components/MenuBar";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import ReBreadcrumb from "../../components/Breadcrumb";
+import { Col } from "antd";
 const { Header, Content, Sider } = Layout;
 
 const checkRole = (permissions) => {
@@ -18,7 +19,7 @@ const MenuList = (permissions) => [
     title: "Dashboard",
     icon: <UserOutlined />,
     isHide: false,
-    url: "/dashboard",
+    url: "/customer/dashboard",
   },
   {
     id: "/manage_account",
@@ -30,19 +31,19 @@ const MenuList = (permissions) => [
         id: "manage_account/type_customer",
         title: "Người dùng",
         isHide: checkRole(permissions),
-        url: "/station/user",
+        url: "/customer/station/user",
       },
       {
         id: "/admin/manage-account/type-adminLocation",
         title: "Danh sách trạm",
         isHide: checkRole(permissions),
-        url: "/station/list_station",
+        url: "/customer/station/list_station",
       },
       {
         id: "/admin/manage-account/type-adminLocation",
         title: "Dữ liệu trạm",
         isHide: checkRole(permissions),
-        url: "/station/data_station",
+        url: "/customer/station/data_station",
       },
     ],
   },
@@ -56,13 +57,13 @@ const MenuList = (permissions) => [
         id: "manage_account/type_customer",
         title: "Bài báo của tôi",
         isHide: checkRole(permissions),
-        url: "/station/user",
+        url: "/customer/my_newspaper",
       },
       {
         id: "/admin/manage-account/type-adminLocation",
         title: "Viết bài",
         isHide: checkRole(permissions),
-        url: "/station/data_station",
+        url: "/customer/newspaper",
       },
     ],
   },
@@ -76,25 +77,25 @@ const MenuList = (permissions) => [
         id: "manage_account/type_customer",
         title: "Khóa học",
         isHide: checkRole(permissions),
-        url: "/station/user",
+        url: "/customer/courses",
       },
       {
         id: "/admin/manage-account/type-adminLocation",
         title: "Tạo khóa học",
         isHide: checkRole(permissions),
-        url: "/station/data_station",
+        url: "/customer/courses/create",
       },
       {
         id: "manage_account/type_customer",
         title: "Bài tập",
         isHide: checkRole(permissions),
-        url: "/station/user",
+        url: "/customer/courses/exercise",
       },
       {
         id: "/admin/manage-account/type-adminLocation",
         title: "Tạo bài tập",
         isHide: checkRole(permissions),
-        url: "/station/data_station",
+        url: "/customer/exercise/create",
       },
     ],
   },
@@ -108,7 +109,7 @@ const MenuList = (permissions) => [
         id: "manage_account/type_customer",
         title: "Thông tin đặt trạm",
         isHide: checkRole(permissions),
-        url: "/station/user",
+        url: "/customer/invoice/station_information",
       },
     ],
   },
@@ -117,21 +118,21 @@ const MenuList = (permissions) => [
     title: "Tài khoản",
     icon: <UserOutlined />,
     isHide: false,
-    url: "/account",
+    url: "/customer/account",
   },
   {
-    id: "/dashboard",
+    id: "/support",
     title: "Hỗ trợ",
     icon: <UserOutlined />,
     isHide: false,
-    url: "/dashboard",
+    url: "/customer/support",
   },
   {
-    id: "/dashboard",
+    id: "/setting",
     title: "Thiết lập",
     icon: <UserOutlined />,
     isHide: false,
-    url: "/dashboard",
+    url: "/customer/setting",
   },
 ];
 
@@ -149,7 +150,7 @@ const MainLayout = () => {
   ]);
 
   return (
-    <Layout style={{height:"100vh"}}>
+    <Layout style={{ height: "100vh" }}>
       <Header className="header-customer">
         <HeaderCustomer />
       </Header>
@@ -164,8 +165,10 @@ const MainLayout = () => {
             <Breadcrumb.Item>List</Breadcrumb.Item>
             <Breadcrumb.Item>App</Breadcrumb.Item>
           </Breadcrumb> */}
-          <ReBreadcrumb menuList={MenuList}></ReBreadcrumb>
-          <Outlet />
+          {/* <ReBreadcrumb menuList={MenuList}></ReBreadcrumb> */}
+          <Col span={22} offset={1} className="outlet-container">
+            <Outlet />
+          </Col>
         </Content>
       </Layout>
     </Layout>
