@@ -4,10 +4,9 @@ import './dataSensor.css'
 import { Typography } from 'antd';
 import TableData from "../../components/Table/dataTable";
 import LineChart from "../../components/Chart";
-
 const { Title } = Typography;
-
 const { RangePicker } = DatePicker;
+
 // data for table
 const columns = [
     {

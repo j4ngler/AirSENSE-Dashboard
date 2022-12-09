@@ -21,7 +21,7 @@ const LoginPage = () => {
   const navigate = useNavigate()
   useEffect(() => {
     if(!!username_gs)
-    navigate('/dashboard');
+    navigate('/customer/dashboard');
   }, [username_gs])
 
     return (
