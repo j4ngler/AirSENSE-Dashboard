@@ -13,7 +13,13 @@ import {
 
 import { Dropdown, Space } from "antd";
 import avatar from "../../assets/icons/avatar.svg";
+import { useDispatch } from "react-redux";
+import { logOutAction } from "../../features/Authen/AuthSlice";
 const Header = () => {
+  const dispatch = useDispatch();
+  const handleLogOut = () => {
+    dispatch(logOutAction());
+  };
   const items = [
     {
       label: (
@@ -35,7 +41,7 @@ const Header = () => {
     },
     {
       label: (
-        <a href="" style={{ display: "flex" }}>
+        <a href="" style={{ display: "flex" }} onClick={handleLogOut}>
           Sign out
         </a>
       ),

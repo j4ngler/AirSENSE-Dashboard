@@ -4,6 +4,7 @@ import "./account.css";
 import Edit from "./Edit";
 import { Col, Row } from "antd";
 import ChangePassword from "./ChangePassword";
+import Detail from "./Detail";
 const onChange = (key) => {
   console.log(key);
 };
@@ -16,7 +17,7 @@ const Account = () => (
         {
           label: `Thông tin chi tiết`,
           key: "1",
-          children:'',
+          children:<Detail/>,
         },
         {
           label: `Chỉnh sửa thông tin`,
