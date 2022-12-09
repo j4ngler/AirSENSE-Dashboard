@@ -11,6 +11,16 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
   }
 });
 
+export const getPersonalInformation = createAsyncThunk('auth/getInformationCustomer', async (params, { rejectWithValue }) => {
+  try {
+    const response = await AuthApi.getAPIInformationCustomer({ ...params });
+    return response.data;
+  } 
+  catch (error) {
+    return rejectWithValue(error?.response?.data?.message || error?.response || error);
+  }
+})
+
 
 const initialState = {
   username: null,
@@ -40,6 +50,9 @@ export const authSlice = createSlice({
         localStorage.setItem('username', action.payload.email);
         state.username = action.payload.email;
         state.token = action.payload.token;
+      })
+      .addCase(getPersonalInformation.fulfilled, (state, action) => {
+        state.userInformation = action.payload;
       })
 
      

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ringingIcon from "../../assets/icons/ringing.svg";
 import refreshIcon from "../../assets/icons/refresh.svg";
 import logo from "../../assets/images/logo/airsense.jpg";
-import { Input } from "antd";
+import { Input, Dropdown } from "antd";
 import "./header.css";
 import {
   SettingOutlined,
@@ -10,10 +10,17 @@ import {
   SearchOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-
-import { Dropdown, Space } from "antd";
 import avatar from "../../assets/icons/avatar.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { getPersonalInformation } from "../../features/Authen/AuthSlice";
 const Header = () => {
+  let customerInfo_gs = useSelector(state => state.authSlice.userInformation);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getPersonalInformation());
+  }, [dispatch])
+  console.log(customerInfo_gs)
+
   const items = [
     {
       label: (
