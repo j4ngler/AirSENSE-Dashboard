@@ -70,7 +70,7 @@ const MenuBar = ({ menuList, mode, className, ...props }) => {
             return (
               <Menu.SubMenu
               title={item.title}
-              key={item.key}
+              key={item.title}
               icon={item.icon}
               >
                 {

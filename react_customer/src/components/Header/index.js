@@ -13,6 +13,9 @@ import {
 import avatar from "../../assets/icons/avatar.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getPersonalInformation } from "../../features/Authen/AuthSlice";
+import { logOutAction } from "../../features/Authen/AuthSlice";
+
+
 const Header = () => {
   let customerInfo_gs = useSelector(state => state.authSlice.userInformation);
   const dispatch = useDispatch();
@@ -20,7 +23,10 @@ const Header = () => {
     dispatch(getPersonalInformation());
   }, [dispatch])
   console.log(customerInfo_gs)
-
+  
+  const handleLogOut = () => {
+    dispatch(logOutAction());
+  };
   const items = [
     {
       label: (
@@ -42,7 +48,7 @@ const Header = () => {
     },
     {
       label: (
-        <a href="" style={{ display: "flex" }}>
+        <a href="" style={{ display: "flex" }} onClick={handleLogOut}>
           Sign out
         </a>
       ),
