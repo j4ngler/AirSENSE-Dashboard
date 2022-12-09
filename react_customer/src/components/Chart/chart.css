@@ -1,0 +1,15 @@
+.chart{
+    position: relative;
+}
+.chart-graphic{
+    padding: 20px;
+}
+.x-Axis-Name{
+    position: absolute;
+    top: 0;
+}
+.y-Axis-Name{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

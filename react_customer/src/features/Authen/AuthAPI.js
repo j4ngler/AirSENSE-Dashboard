@@ -1,5 +1,7 @@
 import { axiosMethod, axiosRequest } from '../../utils/handleApiRequest';
 import { API_URL } from '../../configs/config';
+import { getLocalStorage } from '../../utils/storageUltils';
+
 class AuthApi {
   constructor() {
     this.apiEndpoint = API_URL;
@@ -10,6 +12,11 @@ class AuthApi {
       email,
       password
     });
+  }
+
+  getAPIInformationCustomer() {
+    const token = getLocalStorage('token_AirSENSE');
+    return axiosRequest(this.apiEndpoint + 'auth/customer', axiosMethod.GET, token, null);
   }
   getAPIChangePassword({ old_pass, new_pass }) {
     return axiosRequest(

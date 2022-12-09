@@ -3,6 +3,7 @@ import { DatePicker, Button, Space } from 'antd';
 import './dataSensor.css'
 import { Typography } from 'antd';
 import TableData from "../../components/Table/dataTable";
+import LineChart from "../../components/Chart";
 
 const { Title } = Typography;
 
@@ -167,6 +168,7 @@ const DataSensor = () =>{
                 <RangePicker className="date-picker"/>
                 <Button type="primary">Show</Button>
             </Space>
+            <LineChart />
             <TableData data={data} columns={columns}/>
         </div>
     )

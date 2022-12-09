@@ -30,18 +30,17 @@ class oAuthen2Customer extends CommonModel {
   /**
    * Table has timestamps.
    */
-    checkInvalUserExistingTocken(tocken){
-        var authen = squel.select().from("oauthen2customer")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
-                        .where("time_relase > NOW()");
+    checkInvalUserExistingTocken(token){
+        var authen = squel.select().from("oauthen2_customer")
+                        .where("token = '"+token+"'" )
+                        .where("delete_flag = 0")
+                        .where("time_release > NOW()");
         return new Promise( ( resolve, reject ) => {
-            console.log(authen.toString(),tocken);
             knex.raw(authen.toString()).then(function(result) {
                console.log("checkInvalUserExistingTocken ok",result[0]);
                 resolve( result[0] );
             }).catch(function(err){
-                console.log("checkInvalUserExistingTocken erro");
+                console.log("check Inval User Existing Token erro", token);
                 return reject(err);
             } )
         } );
@@ -49,7 +48,6 @@ class oAuthen2Customer extends CommonModel {
 
     async responseLogin(res,user){
         const dataTocken= getRamdomData(256);
-        const permission_id=user.get('permission_id');
         var current_id=user.get('customer_id');
         const listDataRole = await this.getPermissionCustomer(current_id);
         let listDataContain = '';
@@ -59,7 +57,7 @@ class oAuthen2Customer extends CommonModel {
                 .set("delete_flag",0)
                 .set("created_at",'NOW()',{dontQuote: true})
                 .set("delete_flag",0)
-                .set("time_relase",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
+                .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
         authen2.set("value_manifest",listDataContain);
         authen2.set("value_service", listDataRole);
         knex.raw(authen2.toString()).then(function(x) {
@@ -111,20 +109,7 @@ class oAuthen2Customer extends CommonModel {
         }
         return {newUser:newUser,token:token};
     }
-    checkInvalUserExistingTocken=(tocken)=>{
-        var authen = squel.select().from("oauthen2customer")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
-                        .where("time_relase > NOW()");
-        return new Promise( ( resolve, reject ) => {
-            knex.raw(authen.toString()).then(function(result) {
-                resolve( result[0] );
-            }).catch(function(err){
-                console.log("checkInvalUserExistingTocken erro");
-                return reject(err);
-            } )
-        });
-    }
+    
 
     async checkUserInval(tocken){
             var authen = squel.select().from("oauthen2customer")

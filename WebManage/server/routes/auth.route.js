@@ -9,6 +9,8 @@ const schema = require('../utils/validator.js');
 const User = require('../models/database/user.model.js');
 const Customer = require('../models/database/customer.model.js');
 const router = express.Router();
+const squel = require('squel');
+const knex = require('../config/knex')
 
 // authen
 // login -> ok
@@ -116,9 +118,8 @@ router.route('/user').get(isAuthenticated, (req, res) => {
 
 // router.route('/customer').get(isAuthenticated, (req, res) => {
   router.route('/customer').get(isAuthenticateCustomer, (req, res) => {
-
+    
   console.log("req.currentUser",req.currentUser)
-  console.log(isAuthenticateCustomer);
   Customer.query({
     where: { customer_id: req.currentUser.customer_id },
     select: [

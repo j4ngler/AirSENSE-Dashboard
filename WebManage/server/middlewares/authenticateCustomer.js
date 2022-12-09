@@ -21,9 +21,8 @@ module.exports =  (req, res, next) => {
   if (token) {
     oauthen2.checkInvalUserExistingTocken(token).then((user) => {
         req.currentUser = {
-          permission_id:user[0].permission_id,
           customer_id:user[0].customer_id,
-          enterprise_id:user[0].enterprise_id,
+          enterprise_id:user[0].value_service,
           value_manifest:user[0].value_manifest
         };
         next();
@@ -33,37 +32,7 @@ module.exports =  (req, res, next) => {
               error: 'No token provided',
             });
       });
-    /*jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
-      if (err) {
-        res
-          .status(HttpStatus.UNAUTHORIZED)
-          .json({ error: 'You are not authorized to perform this operation!' });
-      } else {
-        User.query({
-          where: { users_id: decoded.id },
-          select: [
-            'users_id',
-            'email',
-            'username',
-            'phone',
-            'avatar',
-            'fullname',
-            'birthday',
-            'passport',
-            'address',
-          ],
-        })
-          .fetch({ require: false })
-          .then((user) => {
-            if (!user) {
-              res.status(HttpStatus.NOT_FOUND).json({ error: 'No such user' });
-            } else {
-              req.currentUser = user;
-              next();
-            }
-          });
-      }
-    });*/
+    
   } else {
     res.status(HttpStatus.FORBIDDEN).json({
       error: 'No token False',
