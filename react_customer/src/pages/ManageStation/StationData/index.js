@@ -2,8 +2,8 @@ import React from "react";
 import { DatePicker, Button, Space } from 'antd';
 import './dataSensor.css'
 import { Typography } from 'antd';
-import TableData from "../../components/Table/dataTable";
-import LineChart from "../../components/Chart";
+import TableData from "../../../components/Table/dataTable";
+import LineChart from "../../../components/Chart";
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 

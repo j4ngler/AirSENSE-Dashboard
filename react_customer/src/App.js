@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Router, Routes, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import routes from "./configs/routes";
 import "./assets/styles/globalStyle.css";
 import { SpinLoading } from "./components/Spin/SpinLoading";
