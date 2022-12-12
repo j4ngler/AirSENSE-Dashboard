@@ -3,9 +3,12 @@ const multer = require("multer");
 const router = express.Router();
 const isAuthenticated = require("../middlewares/authenticate.js");
 const path = require('path');
-
+const { uploadFileS3 } = require("../models/S3UploadFile.js");
 const documentCtrl = require("../controllers/document.controller.js");
 const urlStaticLink = require("../config/urlSetting.js");
+const { returnFalse, returnOKCustom} = require('../utils/returnResponse.js')
+const WarningInfo = require('../utils/warningInfo.js')
+
 
 var detail_X = process.env.APP_PORT || 3000;
 var detailLink = process.env.APP_HOST + ":" + detail_X;
@@ -21,14 +24,11 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-router.post("/uploadimage", upload.single("resumeFileBrowser"), function (
-  req,
-  res
-) {
+router.post("/uploadimage", upload.single("resumeFileBrowser"), async function (req, res) {
   console.log("uploadimage", req);
-  req.file["urlAppend"] =
-    "http://" + urlStaticLink + "/img/" + req.file.filename;
-  res.send(req.file);
+  let url = await uploadFileS3(req.file.path, req.file.filename);
+  if(url!=null) returnOKCustom(res,{url:url});
+  else returnFalse(res,{error: true,data: { message: "Not upload file" } },WarningInfo.NOT_UPLOAD_FILE);
 });
 
 

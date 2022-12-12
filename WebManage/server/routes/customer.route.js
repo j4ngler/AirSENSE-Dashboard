@@ -46,9 +46,7 @@ router.route('/import-data').post(isAuthenticated, upload.single('file'), (req, 
 let uploadImage = multer({ storage: storage, fileFilter: files.imageFilter });
 
 router.route('/import-image').post(isAuthenticated, uploadImage.single('file'), (req, res) => {
-  res.send(JSON.stringify({path:req.file.path,
-                            file:req.file,
-                            url:urlStaticLink+ '/uploads/datas/'+ req.file.filename}));
+  customerCtrl.importDataInfo(req, res);
 });
 
 

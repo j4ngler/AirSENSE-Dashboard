@@ -33,7 +33,7 @@ class Oauthen2 extends CommonModel {
         var authen = squel.select().from("oauthen2")
                         .where("token = '"+token+"'" )
                         .where("delete_flag = 0")
-                        .where("time_relase > NOW()");
+                        .where("time_release > NOW()");
         return new Promise( ( resolve, reject ) => {
             //console.log(authen.toString(),tocken);
             knex.raw(authen.toString()).then(function(result) {
@@ -58,7 +58,7 @@ class Oauthen2 extends CommonModel {
                 .set("token",dataTocken)
                 .set('delete_flag', 0)
                 .set("created_at",'NOW()',{dontQuote: true})
-                .set("time_relase",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
+                .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
         console.log("<TableManifest.NEW_REGISTER",manifestid);
         if(manifestid<TableManifest.NEW_REGISTER) {
                 // authen2.set("value_manifest",listDataContain);
