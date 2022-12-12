@@ -1,8 +1,5 @@
 import { Button } from "antd";
-export const ButtonPrimary = () => {
-  return (
-    <Button type="primary">
-      Primary
-    </Button>
-  );
+const ButtonPrimary = ({children}) => {
+  return <Button type="primary">{children}</Button>;
 };
+export default ButtonPrimary;

@@ -1,8 +1,9 @@
 import { Button } from "antd";
-export const ButtonDanger = () => {
+const ButtonDanger = ({children}) => {
   return (
     <Button type="primary" style={{ backgroundColor: "#dc3545" }}>
-      Primary
+      {children}
     </Button>
   );
 };
+export default ButtonDanger
