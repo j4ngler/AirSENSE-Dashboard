@@ -72,7 +72,7 @@ clients.map(client => {
     client.on('message', function (topic, message, packet) {
         try{
             message = JSON.parse(message.toString('utf-8'));
-            console.log(message);
+            // console.log(message);
             // giang changes init
             var current = + new Date();
             current/=1000;
@@ -105,9 +105,9 @@ clients.map(client => {
                 }
               };
             }
-            console.log(infoSave);
+            // console.log(infoSave);
             
-            // save.save(infoSave);
+            save.save(infoSave);
         } catch(e) {
         }
     });
