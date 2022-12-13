@@ -1,9 +1,9 @@
  {
     "database": {
-        "host": "103.1.238.170",
-        "database": "airsense",
-        "user": "sparclab",
-        "password": "LabSPARC"
+        "host": "localhost",
+        "database": "new_airsense",
+        "user": "root",
+        "password": ""
     },
     "fields": {
         "time": "",
