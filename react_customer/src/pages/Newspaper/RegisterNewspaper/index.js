@@ -1,14 +1,19 @@
 import "./News.css";
-import React from "react";
+import React, { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Swal from "sweetalert2";
-import { Select, Input } from "antd";
+import { Select, Input, Modal, Upload, Button, message, Col, Row } from "antd";
 import { FormOutlined, UploadOutlined } from "@ant-design/icons";
-import { Col, Row } from "antd";
-import { Button, message, Upload } from "antd";
+import ButtonPrimary from "../../../components/Button/ButtonPrimary";
+import { PlusOutlined } from "@ant-design/icons";
+import {} from "antd";
 
 export default function News() {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList] = useState([]);
   const options = [
     {
       value: "zhejiang",
@@ -19,23 +24,37 @@ export default function News() {
       label: " Chuyên mục chính",
     },
   ];
-  const props = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-      authorization: "authorization-text",
-    },
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
   };
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
   const onChange = (value) => {
     console.log(value);
   };
@@ -46,10 +65,34 @@ export default function News() {
       </div>
       <Row>
         <Col span={10} offset={1}>
-          <p>Upload ảnh</p>
-          <Upload {...props} size="large">
-            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          <div>Ảnh bài báo</div>
+          <Upload
+            action="http://localhost:3006/customer/register_newspaper"
+            listType="picture-card"
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            beforeUpload={file=>{
+              console.log({file})
+              return false
+            }}
+          >
+            {fileList.length >= 1 ? null : uploadButton}
           </Upload>
+          <Modal
+            open={previewOpen}
+            title={previewTitle}
+            footer={null}
+            onCancel={handleCancel}
+          >
+            <img
+              alt="example"
+              style={{
+                width: "100%",
+              }}
+              src={previewImage}
+            />
+          </Modal>
         </Col>
       </Row>
       <Row>
@@ -123,6 +166,12 @@ export default function News() {
               }}
             />
           </div>
+        </Col>
+      </Row>
+      <br />
+      <Row>
+        <Col offset={1}>
+          <ButtonPrimary>Đăng bài</ButtonPrimary>
         </Col>
       </Row>
     </Col>

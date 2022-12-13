@@ -168,6 +168,7 @@ const DataSensor = () =>{
                 <Button type="primary">Show</Button>
             </Space>
             <LineChart />
+            <br/>
             <TableData data={data} columns={columns}/>
         </div>
     )

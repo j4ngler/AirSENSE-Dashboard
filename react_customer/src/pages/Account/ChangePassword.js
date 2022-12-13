@@ -4,19 +4,25 @@ import { Button, Form, Input, Image } from "antd";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
-  const handleNewPassord = (e) => {
-    setNewPassword(e.target.value);
-    console.log(newPassword);
+  const [oldPassword, setOldPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const handleConfirmPassword = (e) => {
+    setConfirmNewPassword(e.target.value);
   };
   return (
     <Col span={22} offset={1} className="change-password">
-      <h1>Change Password</h1>
       <br />
       <Form layout="vertical" action="/abc" method="get">
         <Row>
           <Col span={10}>
             <Form.Item label="Nhập mật khẩu cũ">
-              <Input name="old_pass_word" placeholder="Enter password" />
+              <Input
+                type="password"
+                name="old_pass_word"
+                placeholder="Enter password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -27,6 +33,8 @@ const ChangePassword = () => {
                 type="password"
                 name="new_pass_word"
                 placeholder="Enter password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
             </Form.Item>
           </Col>
@@ -39,8 +47,8 @@ const ChangePassword = () => {
                 name="confirm_new_pass_word"
                 id="display"
                 placeholder="Enter password"
-                value={newPassword}
-                onChange={(e) => handleNewPassord(e)}
+                value={confirmNewPassword}
+                onChange={(e) => handleConfirmPassword(e)}
               />
             </Form.Item>
           </Col>

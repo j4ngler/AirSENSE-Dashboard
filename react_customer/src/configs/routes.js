@@ -15,7 +15,8 @@ import CreateExercises from "../pages/Course/CreateExercises";
 import StationInformation from "../pages/Invoice/StationInformation";
 import Support from "../pages/Support";
 import Settings from "../pages/Settings";
-import LeafletMap from "../components/Map/leafletmap";
+
+import ListStation from "../pages/ManageStation/ListStation";
 
 const routes = [
   {
@@ -25,7 +26,7 @@ const routes = [
       { path: "dashboard", element: <Dashboard /> },
       { path: "station/user", element: <ManageUser /> },
       { path: "station/station_data", element: <StationData /> },
-      { path: "station/list_station", element: <LeafletMap /> },
+      { path: "station/list_station", element: <ListStation /> },
       { path: "my_newspaper", element: <MyNewSpaper /> },
       { path: "register_newspaper", element: <RegisterNewspaper /> },
       { path: "courses", element: <Courses /> },

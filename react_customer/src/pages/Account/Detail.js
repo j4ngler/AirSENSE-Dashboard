@@ -1,11 +1,16 @@
 import React from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Image } from "antd";
+import avatarDemo from "../../assets/icons/avatar.svg";
 export default function Detail() {
   return (
-    <div>
-      <h2>Thông tin chi tiết</h2>
+    <div style={{marginTop:"20px"}}>
+      <Col offset={1}>
+        <Row>
+          <Image width={100} src={avatarDemo}></Image>
+        </Row>
+      </Col>
       <br />
-      <div className="detail-container">
+      <Col offset={1} className="detail-container">
         <Row>
           <Col span={8} className="title">
             <p>Họ và tên</p>
@@ -46,7 +51,7 @@ export default function Detail() {
             <p>176, Ngọc Thụy, Long Biên, Hà Nội</p>
           </Col>
         </Row>
-      </div>
+      </Col>
     </div>
   );
 }
