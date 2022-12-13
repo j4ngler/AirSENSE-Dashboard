@@ -1,8 +1,9 @@
 import { Button } from "antd";
-export const ButtonSucess = () => {
+const ButtonSucess = ({ children }) => {
   return (
     <Button type="primary" style={{ backgroundColor: "#198754" }}>
-      Primary
+      {children}
     </Button>
   );
 };
+export default ButtonSucess;
