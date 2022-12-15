@@ -67,7 +67,7 @@ const LoginPage = () => {
       <div className="customer-login-overlay-panel customer-login-overlay-right">
         <h1>Hello, Friend!</h1>
         <p>Enter your personal details and start journey with us</p>
-        <button className="customer-login-ghost" id="customer-login-signUp">Sign Up</button>
+        <button className="customer-login-ghost" id="customer-login-signUp" onClick={()=>{navigate('/register')}}>Sign Up</button>
       </div>
     </div>
   </div>

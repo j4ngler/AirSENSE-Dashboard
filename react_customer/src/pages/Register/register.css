@@ -1,0 +1,29 @@
+.wrapper{
+  height: 100vh;
+}
+.register-form-container {
+  border: 1px solid #ccc;
+  padding: 30px;
+  border-radius: 10px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  overflow-y: scroll;
+  height: 90vh;
+}
+.register-form-container::-webkit-scrollbar {
+  display: none;
+  width: 10px;
+}
+.logo-form,.btn-submit-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+.back-to-login{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: underline;
+}

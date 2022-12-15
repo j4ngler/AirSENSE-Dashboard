@@ -17,6 +17,7 @@ import Support from "../pages/Support";
 import Settings from "../pages/Settings";
 
 import ListStation from "../pages/ManageStation/ListStation";
+import Register from "../pages/Register";
 
 const routes = [
   {
@@ -45,6 +46,7 @@ const routes = [
     path: "login",
     element: <LoginPage />,
   },
+  {path:"register",element:<Register/>},
 ];
 
 export default routes;

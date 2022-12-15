@@ -140,14 +140,14 @@ const MainLayout = () => {
   // const { authenticate, permissions, clearAuthenticate} = useUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token_AirSENSE");
-    const username = localStorage.getItem("username");
-    if (!token || !username) navigate("/login");
-  }, [
-    localStorage.getItem("token_AirSENSE"),
-    localStorage.getItem("username"),
-  ]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token_AirSENSE");
+  //   const username = localStorage.getItem("username");
+  //   if (!token || !username) navigate("/login");
+  // }, [
+  //   localStorage.getItem("token_AirSENSE"),
+  //   localStorage.getItem("username"),
+  // ]);
 
   return (
     <Layout style={{ height: "100vh" }}>
