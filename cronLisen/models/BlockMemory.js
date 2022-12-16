@@ -15,7 +15,6 @@ class BlockMemory {
 
     add(record) {
         this.memory.push(record);
-        console.log('a',this.memory)
         try{
             if(this.isFull())   this.saveAll();
         }
@@ -37,7 +36,7 @@ class BlockMemory {
     }
 
     saveAll() {
-        var self = this;
+        let self = this;
         this.status = 'pending';
         console.log("Save all...............");
         var sensor=[];
@@ -66,7 +65,6 @@ class BlockMemory {
                         console.log("err",err);
                     }
                     else{
-                        // console.log('anv')
                         sensor=[];
                         self.status= 'idle';
                         self.clearMemory();

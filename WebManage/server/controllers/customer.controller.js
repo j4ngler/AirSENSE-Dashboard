@@ -9,9 +9,22 @@ const {
   returnOK,
   returnFalse,
   returnNotFound,
+  returnOKCustom
 } = require("../utils/returnResponse.js");
+const { uploadFileS3} = require('../models/S3UploadFile.js')
+
 
 var customerCtrl = {};
+
+
+customerCtrl.importDataInfo  =async  function(req, res) {
+  console.log("importDataInfo",req.file);
+  var url= await uploadFileS3(req.file.path,req.file.filename);
+  console.log("importDataInfo s ==>",url);
+  if(url!=null) returnOKCustom(res,{url:url});
+  else returnNotFound(res,"Not upload file",WarningInfo.NOT_UPLOAD_FILE);
+}
+
 
 customerCtrl.importDataExel = async function (req, res) {
   res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

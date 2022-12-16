@@ -1,7 +1,11 @@
 import React from "react";
 import { Row, Col, Image } from "antd";
 import avatarDemo from "../../assets/icons/avatar.svg";
+import { useSelector } from "react-redux";
 export default function Detail() {
+  let customerInfo_gs = useSelector(state => state.authSlice.userInformation);
+
+  
   return (
     <div style={{marginTop:"20px"}}>
       <Col offset={1}>
@@ -16,7 +20,7 @@ export default function Detail() {
             <p>Họ và tên</p>
           </Col>
           <Col offset={1} span={12}>
-            <p>Phùng Bá Trường Giang</p>
+            <p>{customerInfo_gs.user.fullname}</p>
           </Col>
         </Row>
         <Row>
@@ -24,7 +28,7 @@ export default function Detail() {
             <p>Username</p>
           </Col>
           <Col offset={1} span={12}>
-            <p>Giang handsome</p>
+            <p>{customerInfo_gs.user.username}</p>
           </Col>
         </Row>
         <Row>
@@ -32,7 +36,7 @@ export default function Detail() {
             <p>Số điện thoại</p>
           </Col>
           <Col offset={1} span={12}>
-            <p>0836123318</p>
+            <p>{customerInfo_gs.user.phone_number}</p>
           </Col>
         </Row>
         <Row>
@@ -40,7 +44,7 @@ export default function Detail() {
             <p>Email</p>
           </Col>
           <Col offset={1} span={12}>
-            <p>sparc.hust@gmail.com</p>
+            <p>{customerInfo_gs.user.email}</p>
           </Col>
         </Row>
         <Row>
@@ -48,7 +52,15 @@ export default function Detail() {
             <p>Địa chỉ</p>
           </Col>
           <Col offset={1} span={12}>
-            <p>176, Ngọc Thụy, Long Biên, Hà Nội</p>
+            <p>{customerInfo_gs.user.address}</p>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={8} className="title">
+            <p>Liên hệ</p>
+          </Col>
+          <Col offset={1} span={12}>
+            <p>{customerInfo_gs.user.contact}</p>
           </Col>
         </Row>
       </Col>
