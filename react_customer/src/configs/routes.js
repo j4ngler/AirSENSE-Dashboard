@@ -15,7 +15,10 @@ import CreateExercises from "../pages/Course/CreateExercises";
 import StationInformation from "../pages/Invoice/StationInformation";
 import Support from "../pages/Support";
 import Settings from "../pages/Settings";
-import LeafletMap from "../components/Map/leafletmap";
+import ListStation from "../pages/ManageStation/ListStation";
+import Register from "../pages/Register";
+import EnterEmail from "../pages/ForgotPassword/EnterEmail";
+import EnterNewPassword from "../pages/ForgotPassword/EnterNewPassword";
 
 const routes = [
   {
@@ -25,7 +28,7 @@ const routes = [
       { path: "dashboard", element: <Dashboard /> },
       { path: "station/user", element: <ManageUser /> },
       { path: "station/station_data", element: <StationData /> },
-      { path: "station/list_station", element: <LeafletMap /> },
+      { path: "station/list_station", element: <ListStation /> },
       { path: "my_newspaper", element: <MyNewSpaper /> },
       { path: "register_newspaper", element: <RegisterNewspaper /> },
       { path: "courses", element: <Courses /> },
@@ -43,6 +46,15 @@ const routes = [
   {
     path: "login",
     element: <LoginPage />,
+  },
+  { path: "register", element: <Register /> },
+  {
+    path: "auth/reset_password",
+    element: <EnterEmail />,
+  },
+  {
+    path: "api/auth/reset_password/:user_id",
+    element: <EnterNewPassword />,
   },
 ];
 

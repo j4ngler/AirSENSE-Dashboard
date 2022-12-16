@@ -1,15 +1,20 @@
 import React from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Image } from "antd";
+import avatarDemo from "../../assets/icons/avatar.svg";
 import { useSelector } from "react-redux";
 export default function Detail() {
   let customerInfo_gs = useSelector(state => state.authSlice.userInformation);
 
   
   return (
-    <div>
-      <h2>Thông tin chi tiết</h2>
+    <div style={{marginTop:"20px"}}>
+      <Col offset={1}>
+        <Row>
+          <Image width={100} src={avatarDemo}></Image>
+        </Row>
+      </Col>
       <br />
-      <div className="detail-container">
+      <Col offset={1} className="detail-container">
         <Row>
           <Col span={8} className="title">
             <p>Họ và tên</p>
@@ -58,7 +63,7 @@ export default function Detail() {
             <p>{customerInfo_gs.user.contact}</p>
           </Col>
         </Row>
-      </div>
+      </Col>
     </div>
   );
 }

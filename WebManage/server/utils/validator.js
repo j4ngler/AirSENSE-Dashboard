@@ -1,9 +1,11 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
-module.exports =  {
+module.exports = {
   storeUser: Joi.object({
     fullname: Joi.string().min(6).required(),
-    phone: Joi.string().pattern(new RegExp('^(09|03|07|08|05)+([0-9]{8})$')).required(),
+    phone: Joi.string()
+      .pattern(new RegExp("^(09|03|07|08|05)+([0-9]{8})$"))
+      .required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
   }),
@@ -22,7 +24,7 @@ module.exports =  {
     fullname: Joi.string().required(),
     phone: Joi.string().required(),
     contact: Joi.string().required(),
-    avartar: Joi.string()
+    avartar: Joi.string(),
   }),
 
   changePassword: Joi.object({
@@ -43,7 +45,7 @@ module.exports =  {
     email: Joi.string().required(),
     contact: Joi.string().required(),
     phoneNumber: Joi.string().min(6).required(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(6).required(),
   }),
 
   storeEnterprise: Joi.object({
@@ -52,17 +54,26 @@ module.exports =  {
   }),
 
   resetPassword: Joi.object({
-    email: Joi.string().email().required()
+    email: Joi.string().email().required(),
   }),
 
   newResetPassword: Joi.object({
     password: Joi.string().required(),
     token: Joi.string().required(),
-    userId: Joi.string().required()
+    userId: Joi.string().required(),
   }),
 
   storeGroup: Joi.object({
     name: Joi.string().required(),
     enterprise_id: Joi.required(),
+  }),
+  registerCustomer: Joi.object({
+    fullName: Joi.string().required(),
+    password: Joi.string().min(6).required(),
+    email: Joi.string().email().required(),
+    address: Joi.string().required(),
+    phoneNumber: Joi.string().min(6).required(),
+    contact: Joi.string().required(),
+    username: Joi.string().required(),
   }),
 };

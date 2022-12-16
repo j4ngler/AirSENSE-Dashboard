@@ -3,7 +3,8 @@ import "./manageUser.css";
 import TableData from "../../../components/Table/dataTable";
 import { Link } from "react-router-dom";
 import { Input, Space } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { FloatButton } from "antd";
 import ButtonPrimary from "../../../components/Button/ButtonPrimary";
 const { Search } = Input;
 
@@ -13,34 +14,39 @@ const columns = [
     width: 10,
     dataIndex: "username",
     key: "username",
+    align: "center",
   },
   {
     title: "Họ tên",
     width: 10,
     dataIndex: "fullName",
     key: "fullname",
+    align: "center",
   },
   {
     title: "Số điện thoại",
     width: 10,
     dataIndex: "phone",
     key: "phone",
+    align: "center",
   },
   {
     title: "Email",
     width: 10,
     dataIndex: "email",
     key: "email",
+    align: "center",
   },
   {
     title: "Địa chỉ",
     width: 40,
     dataIndex: "address",
     key: "address",
+    align: "center",
   },
   {
     title: "Chức năng",
-    width: 40,
+    width: 20,
     dataIndex: "action",
     key: "action",
     fixed: "left",
@@ -49,6 +55,7 @@ const columns = [
         <Link>Xem chi tiết {record.fullName}</Link>
       </Space>
     ),
+    align: "center",
   },
 ];
 const data = [];
@@ -70,14 +77,23 @@ const ManageUser = () => {
     <>
       <div className="search-user">
         <Search
-          prefix={<SearchOutlined/>}
+          prefix={<SearchOutlined />}
           placeholder="Nhập tên người dùng"
           allowClear
-          enterButton="Search"
+          enterButton="Tìm kiếm"
           size="large"
           onSearch={onSearch}
         />
       </div>
+      <FloatButton
+        icon={<PlusCircleOutlined />}
+        type="default"
+        style={{
+          right: 110,
+          top: 120,
+        }}
+        tooltip={<div>Thêm mới người dùng</div>}
+      />
       <TableData columns={columns} data={data} />
     </>
   );

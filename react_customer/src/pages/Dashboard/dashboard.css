@@ -1,0 +1,15 @@
+.timeline-container {
+  padding: 20px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 15px rgba(25, 119, 204, 0.1);
+}
+.title{
+    display: flex;
+    margin-bottom: 20px;
+}
+.title>p{
+    line-height: 100%;
+    margin: 0;
+}
