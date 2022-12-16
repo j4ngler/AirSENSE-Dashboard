@@ -15,9 +15,10 @@ import CreateExercises from "../pages/Course/CreateExercises";
 import StationInformation from "../pages/Invoice/StationInformation";
 import Support from "../pages/Support";
 import Settings from "../pages/Settings";
-
 import ListStation from "../pages/ManageStation/ListStation";
 import Register from "../pages/Register";
+import EnterEmail from "../pages/ForgotPassword/EnterEmail";
+import EnterNewPassword from "../pages/ForgotPassword/EnterNewPassword";
 
 const routes = [
   {
@@ -46,7 +47,15 @@ const routes = [
     path: "login",
     element: <LoginPage />,
   },
-  {path:"register",element:<Register/>},
+  { path: "register", element: <Register /> },
+  {
+    path: "auth/reset_password",
+    element: <EnterEmail />,
+  },
+  {
+    path: "api/auth/reset_password/:user_id",
+    element: <EnterNewPassword />,
+  },
 ];
 
 export default routes;

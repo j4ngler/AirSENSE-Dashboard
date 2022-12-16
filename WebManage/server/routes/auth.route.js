@@ -187,44 +187,55 @@ router.route("/generateTocken").post((req, res) => {
 });
 
 //register customer user
-router.route("/customer_register").post(validate(schema.registerCustomer),(req, res) => {
-  const fullname = req.body.fullName ? req.body.fullName : null;
-  const email = req.body.email ? req.body.email : null;
-  const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
-  const username = req.body.username ? req.body.username : null;
-  const address = req.body.address ? req.body.address : null;
-  const password = req.body.password ? req.body.password : null;
-  const created_at = new Date();
-  const updated_at = new Date();
-  const id_created = 0;
-  const id_updated = 0;
-  const delete_flag = 0;
-
-  console.log(email);
-  knex("customer")
-    .insert({
-      fullname,
-      email,
-      phone_number,
-      username,
-      address,
-      password,
-      created_at,
-      updated_at,
-      id_created,
-      id_updated,
-      delete_flag,
-    })
-    .then(() => {
-      console.log("Sucessfully");
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.json({
-        success: false,
-        message: "An error occurred, please try again later.",
+router
+  .route("/customer_register")
+  .post(validate(schema.registerCustomer), async (req, res, next) => {
+    const fullname = req.body.fullName ? req.body.fullName : null;
+    const email = req.body.email ? req.body.email : null;
+    const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
+    const username = req.body.username ? req.body.username : null;
+    const address = req.body.address ? req.body.address : null;
+    const password = req.body.password ? req.body.password : null;
+    const created_at = new Date();
+    const updated_at = new Date();
+    const id_created = 0;
+    const id_updated = 0;
+    const delete_flag = 0;
+    await knex
+      .raw("select * from customer where email= ?", [email])
+      .then(async (user) => {
+        if (user[0].length > 0) {
+          return res.status(208).json({ message: "Email này đã tồn tại" });
+        } else {
+          await knex("customer")
+            .insert({
+              fullname,
+              email,
+              phone_number,
+              username,
+              address,
+              password,
+              created_at,
+              updated_at,
+              id_created,
+              id_updated,
+              delete_flag,
+            })
+            .then(() => {
+              return res.status(200).json({ message: "Đăng ký thành công" });
+            })
+            .catch((err) => {
+              console.error(err);
+              return res.status(500).json({
+                success: false,
+                message: "An error occurred, please try again later.",
+              });
+            });
+        }
       });
-    });
-});
+  });
+//reset password customer
+router.route("/reset_password").post(authCtrl.resetPassword);
+router.route("/new_password").post(authCtrl.newPassword);
 
 module.exports = router;

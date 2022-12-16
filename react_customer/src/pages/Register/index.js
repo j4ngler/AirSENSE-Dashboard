@@ -7,7 +7,6 @@ import "./register.css";
 const Register = () => {
   const navigate = useNavigate();
   const onFinish = async (values) => {
-    console.log("Success:", values);
     const {
       username,
       email,
@@ -20,9 +19,8 @@ const Register = () => {
       ...values,
     };
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/customer_register",
-        {
+      await axios
+        .post("http://localhost:3000/api/auth/customer_register", {
           username,
           email,
           password,
@@ -30,11 +28,18 @@ const Register = () => {
           phoneNumber,
           address,
           contact,
-        }
-      );
-      return response.data;
+        })
+        .then((res) => {
+          alert(res.data.message);
+          if (res.status === 208) {
+            return;
+          } else {
+            window.location.assign("/login");
+          }
+        });
     } catch (error) {
-      console.log(error);
+      // Handle error
+      console.log(error.message);
     }
   };
   const onFinishFailed = (err) => {
