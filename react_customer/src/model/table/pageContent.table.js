@@ -2,7 +2,7 @@
 
 
 
-class AQIData {
+class pageContent {
     getColumnShow() {
         const columns = [
             {
@@ -61,4 +61,4 @@ class AQIData {
     }
 }
 
-export default AQIData;
+export default pageContent;

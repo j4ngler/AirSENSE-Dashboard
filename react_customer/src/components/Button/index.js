@@ -1,15 +1,22 @@
 import { Button } from "antd";
 
-
-let TypeButtonEnum = {
-    
-}
-
-
-export const ButtonSucess = ({type, size, clx, title}) => {
+const ButtonComponent = ({type = 'primary', size = 'default', clx = null, content, danger = null, handle = null}) => {
   return (
-    <Button type={type} className={clx} size={size} >
-      {title}
+    <>
+    {
+      !!danger?(
+        <Button type={type} danger className={clx} size={size} onClick={handle}>
+      {content}
     </Button>
+      ):
+      (
+        <Button type={type} className={clx} size={size} onClick={handle} >
+      {content}
+    </Button>
+      )
+    }
+    </>
   );
 };
+
+export default ButtonComponent;

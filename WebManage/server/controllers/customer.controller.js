@@ -41,35 +41,29 @@ customerCtrl.importData = function (req, res) {
 };
 
 customerCtrl.getTableData = function (req, res) {
+  console.log(req.body)
   var startPage = 0;
   if (!!req.body.startPage) startPage = req.body.startPage;
   var tableSelect = mangerModelUser(req.body.table);
   if (!!tableSelect) {
     if (
-      !tableSelect.checkAcessGetDatabase(
-        req.currentUser.manifestid,
+      !tableSelect.checkCustomerAccess(
+        req.currentUser.enterprise_id,
+        req.currentUser.value_manifest,
         tableSelect.getTypeTable()
       )
     ) {
-      return returnNotFound(res, { message: "Database inval" });
+      return returnNotFound(res, { message: "No permission to access" });
     }
-    var checkInaval = tableSelect.checkManifestSpecialCustomer("view");
-    if (!checkInaval) {
-      return returnNotFound(res, { message: "Database Not Acess 2" });
-    }
+    // var checkInaval = tableSelect.checkManifestSpecialCustomer("view");
+    // if (!checkInaval) {
+    //   return returnNotFound(res, { message: "Database Not Acess 2" });
+    // }
 
     startPage = startPage * 1000;
     var itemSelect = tableSelect.getValueToSelectToFind(req.body.dataFind);
     var dataTableSQL =
-      tableSelect.getSQLReport(req.currentUser) +
-      " WHERE " +
-      tableSelect.getNameTable() +
-      ".deleteflag=0 " +
-      itemSelect +
-      " LIMIT " +
-      startPage +
-      "," +
-      (startPage + 1000);
+      tableSelect.getSQLCustomer(req.currentUser);
     knex.raw(dataTableSQL).then(
       (result) => {
         return returnOK(res, result[0]);

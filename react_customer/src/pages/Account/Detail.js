@@ -4,7 +4,6 @@ import avatarDemo from "../../assets/icons/avatar.svg";
 import { useSelector } from "react-redux";
 export default function Detail() {
   let customerInfo_gs = useSelector(state => state.authSlice.userInformation);
-
   
   return (
     <div style={{marginTop:"20px"}}>

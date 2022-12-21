@@ -24,6 +24,10 @@ class CommonModel extends bookshelf.Model {
         }
     }
 
+    checkCustomerAccess(service, manifest, type) {
+        return true;
+    }
+
     checkAcessGetDatabase(permission_id,type){
         console.log("dataTableSQL   ",permission_id,type);
         if(permission_id==TableManifest.MASTER){
