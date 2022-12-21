@@ -33,9 +33,10 @@ module.exports =  (req, res, next) => {
             });
       });
     
-  } else {
+  } 
+  else {
     res.status(HttpStatus.FORBIDDEN).json({
-      error: 'No token False',
+      error: 'No token False', 
     });
   }
 };

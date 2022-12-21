@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { Input, Space } from "antd";
 import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { FloatButton } from "antd";
-import ButtonPrimary from "../../../components/Button/ButtonPrimary";
 const { Search } = Input;
 
 const columns = [

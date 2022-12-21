@@ -1,24 +1,33 @@
-var events = require('events');
-emitter = new events.EventEmitter();
-const config = require('./config/default.json');
-var mysql = require('mysql');
+const {CronJob: cronJob} = require('cron');
+const {appConstant} = require('./constant');
+const BlockMemory = require('./model/blockMemory.js');
+const mongoose = require('mongoose');
+const mongoConfig = require('./config/configMongo');
 
-var con = mysql.createConnection(config.database);
 
 
+// Connecting to the database
+mongoose.connect(mongoConfig.dbConfig,{user: mongoConfig.username, pass: mongoConfig.password, useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+    console.log("Successfully connected to the database");
+}).catch(err => {
+    console.log('Could not connect to the database. Exiting now...', err);
+});
 
 
 var SaveFactory = (function(){
     class Save {
         constructor() {
-            this.memFirst = new BlockMemory();
-            this.memSecond = new BlockMemory();
+            this.memo = new BlockMemory();
         }
     
-        save(record) {
-            if (this.memFirst.isAvailable()) {
-                this.memFirst.add(record);
-            } else this.memSecond.add(record);
+        updateHourly() {
+            if (this.memo.isAvailable()) {           
+            this.memo.updateHourly();
+            }
+
+            else {
+                console.log('An error occured, please check the system');
+            }
         }
     }
 
@@ -35,39 +44,21 @@ var SaveFactory = (function(){
 })();
 
 
-
-var save = SaveFactory.getInstance();
-
-clients.map(client => {
-    console.log('hello');
-    client.on('message', function (topic, message, packet) {
-        try{
-            message = JSON.parse(message.toString('utf-8'));
-            // console.log(message);
-            var record = Object.assign({}, config.fields);
-            for(property in record) {
-                if(message[property] != undefined) {
-                    record[property] = message[property];
-                }
-            }
-            var current = + new Date();
-            console.log(current);
-            current = current/1000;
-            //bo qua ban ghi co thoi gian lon hon thoi gian hien tai 24h
-            record.Time = record.Time - 7*60*60;
-            if(record.Time>(current+24*60*3600)) {
-                return;
-            }
-            // console.log(message)
-            if(message.station_id!=null && message.station_id != '' ) {
-                record.station_id = parseInt(message.station_id, 16);
-                console.log('ok',record);
-                save.save(record);
-            }
-        } catch(e) {
-        }
-    });
-})
+var task = SaveFactory.getInstance();
 
 
-
+new cronJob(appConstant.EVERY_HOUR, 
+    async () => {
+    console.log('=========================Hourly view update started=======================')
+    try {
+        task.updateHourly();            
+    }
+    catch (e) {
+        console.log('update hourly error ' , e)
+    }
+    console.log('=========================Hourly view update finished======================')
+},
+null,   //when job strp
+true,    //auto start
+'Asia/Ho_Chi_Minh'
+)

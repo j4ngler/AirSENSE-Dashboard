@@ -2,10 +2,9 @@ import "./News.css";
 import React, { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import Swal from "sweetalert2";
 import { Select, Input, Modal, Upload, Button, message, Col, Row } from "antd";
 import { FormOutlined, UploadOutlined } from "@ant-design/icons";
-import ButtonPrimary from "../../../components/Button/ButtonPrimary";
+import ButtonComponent from "../../../components/Button";
 import { PlusOutlined } from "@ant-design/icons";
 import {} from "antd";
 
@@ -171,7 +170,7 @@ export default function News() {
       <br />
       <Row>
         <Col offset={1}>
-          <ButtonPrimary>Đăng bài</ButtonPrimary>
+          <ButtonComponent content={'Đăng bài'} />
         </Col>
       </Row>
     </Col>

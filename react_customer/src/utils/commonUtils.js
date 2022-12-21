@@ -20,6 +20,8 @@ export const ActionControl = {
   ACTION_ADD: 1,
   ACTION_UPDATE: 2,
   ACTION_DELETE: 3,
+  ACTION_VIEW: 4 ,
+  ACTION_REPORT: 5
 };
 
 export const TypeDialgueShow = {

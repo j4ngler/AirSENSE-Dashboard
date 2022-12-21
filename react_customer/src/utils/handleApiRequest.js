@@ -17,10 +17,9 @@ export const axiosRequest = (url, method, token, data) => {
     axiosConfig.headers['Content-Type'] = `application/json`;
   }
   if (token) {
-    axiosConfig.headers['Authorization'] = `Bearer ${token}`;
+    axiosConfig.headers['authorization'] = `Bearer ${token}`;
     axiosConfig.headers['X-XSRF-TOKEN'] = token;
   }
   axiosConfig.data = data;
-  // console.log(axiosConfig);
   return axios(axiosConfig);
 };

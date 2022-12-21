@@ -12,26 +12,7 @@ function getRndInteger(min, max) {
 
 new cronJob(appConstant.EVERY_10S, () => {
     console.log('=======================Inserting data into MongoDB======================');
-    // let dummyData = {
-    //     time: Math.round(new Date()/1000),
-    //     station_id: '1012991249',
-    //     aqi: Math.random() * 100,
-    //     SO2_aqi: Math.random() * 1000,
-    //     PM2p5_aqi: Math.random() * 500.5,
-    //     PM10_aqi: Math.random() * 605,
-    //     NO2_aqi: Math.random() * 2050,
-    //     PM1_aqi: Math.random() * 605,
-    //     CO_aqi: Math.random() * 50.5 * 1000,
-    //     O3_aqi: Math.random() * 605,
-    //     CO2_aqi: Math.random() * 605, 
-    // }
-
-    // const sql = `INSERT INTO aqi_data (time, station_id, aqi, SO2_aqi, PM2p5_aqi, PM10_aqi, NO2_aqi, PM1_aqi, CO_aqi, O3_aqi, CO2_aqi) VALUES (${dummyData.time}, ${dummyData.station_id}, ${dummyData.aqi}, ${dummyData.SO2_aqi}, ${dummyData.PM2p5_aqi}, ${dummyData.PM10_aqi}, ${dummyData.NO2_aqi}, ${dummyData.PM1_aqi}, ${dummyData.CO_aqi}, ${dummyData.O3_aqi}, ${dummyData.CO2_aqi})`;
-    // console.log(sql);
-    // con.query(sql, function (err, result) {
-    //     if (err) throw err;
-        
-    // });
+    
 
     let dummyAver = {
         time: Math.round(new Date()/1000),
