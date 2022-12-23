@@ -6,6 +6,8 @@ const User = require("../models/database/user.model.js");
 const Oauthen2 = require("../models/database/oAuthen2.model.js");
 const Customer = require("../models/database/customer.model.js");
 const OAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
+const express = require("express");
+console.log(__dirname)
 const {
   returnOK,
   returnNotAuthen,
@@ -15,7 +17,7 @@ var oauthen2 = new Oauthen2();
 var oAuthen2Customer = new OAuthen2Customer();
 var lstLogin = [];
 var lstLoginCustomer = [];
-
+var ejs = require("ejs");
 //reset password customer
 const knex = require("../config/knex");
 const { getRamdomData } = require("../utils/utilsString.js");
@@ -196,10 +198,17 @@ authCtrl.resetPassword = async (req, res) => {
           let URLtogetLink =
             `http://localhost:3006/api/auth/reset_password/${userId}?token=` +
             token;
-          console.log(URLtogetLink);
           var content = "";
-          content += "";
-          //gửi mail
+          var fs = require("fs"),
+            file = fs.readFileSync(
+              __dirname + "/../View/authen/sendEmailForgotPass.ejs",
+              "utf-8"
+            ),
+            rendered = ejs.render(file, {
+              userName: user[0].fullname,
+              url: URLtogetLink,
+            });
+          console.log(URLtogetLink);
           transporter.verify(function (error, success) {
             // Nếu có lỗi.
             if (error) {
@@ -212,7 +221,12 @@ authCtrl.resetPassword = async (req, res) => {
                 to: email,
                 subject: "Reset password", // Tiêu đề mail
                 text: "You recieved message from AIRSENSE",
-                html: `<div><p>Nhấp vào đây để lấy lại mật khẩu: <a href=${URLtogetLink}>Link</a></p> <div>`,
+                attachment: [{
+                  filename: "airsense.jpg",
+                  path: `${__dirname}/../../public/resource/airsense/wp-content/img/airsense.jpg`,
+                  cid: "logo",
+                }],
+                html: rendered,
               };
             }
             //Tiến hành gửi email
@@ -220,7 +234,7 @@ authCtrl.resetPassword = async (req, res) => {
               if (error) {
                 // nếu có lỗi
                 console.log(error);
-                req.s("mess", "Lỗi gửi mail: " + err); //Gửi thông báo đến người dùng
+                req.send("mess", "Lỗi gửi mail: " + err); //Gửi thông báo đến người dùng
                 res.redirect("/");
               } else {
                 //nếu thành công

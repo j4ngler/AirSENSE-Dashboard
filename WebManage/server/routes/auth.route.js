@@ -21,7 +21,6 @@ const knex = require("../config/knex");
 router.get("/giang", (req, res) => {
   res.render("authen/sendEmailForgotPass", { route: "register" });
 });
-
 // note
 router
   .route("/register")
