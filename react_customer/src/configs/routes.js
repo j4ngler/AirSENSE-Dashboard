@@ -19,6 +19,7 @@ import ListStation from "../pages/ManageStation/ListStation";
 import Register from "../pages/Register";
 import EnterEmail from "../pages/ForgotPassword/EnterEmail";
 import EnterNewPassword from "../pages/ForgotPassword/EnterNewPassword";
+import CreateInvoice from "../pages/Invoice/CreateInvoice";
 
 const routes = [
   {
@@ -36,6 +37,7 @@ const routes = [
       { path: "courses/exercises", element: <Exercises /> },
       { path: "courses/create_exercises", element: <CreateExercises /> },
       { path: "invoice/station_information", element: <StationInformation /> },
+      { path: "invoice/create_invoice", element: <CreateInvoice /> },
       { path: "account", element: <Account /> },
       { path: "support", element: <Support /> },
       { path: "settings", element: <Settings /> },
@@ -55,6 +57,14 @@ const routes = [
   {
     path: "api/auth/reset_password/:user_id",
     element: <EnterNewPassword />,
+  },
+  {
+    path: "*",
+    element: <MainLayout />,
+    children: [
+      { path: "*", element: <NotFoundPage />
+      } 
+    ]
   },
 ];
 
