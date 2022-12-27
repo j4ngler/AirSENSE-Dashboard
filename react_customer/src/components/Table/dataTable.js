@@ -17,19 +17,20 @@ const TableData = ({table}) =>{
 
 
     useEffect(() => {
-    const columnTable = exportColumnTable(table, callBack);
-    setColumn(columnTable);
-    async function fetchData() {
-    const data = await httpGetDataTable(table);
-    setDataTable(data);
-    }
-    fetchData();
+        const columnTable = exportColumnTable(table, callBack);
+        setColumn(columnTable);
+        async function fetchData() {
+            const data = await httpGetDataTable(table);
+            setDataTable(data);
+            console.log(data);
+        }
+        fetchData();
     }, [refresh])
 
     const callBack = (type) => {
-    if (ActionControl.ACTION_REPORT === type) setShowModalReport(true);
-    if (ActionControl.ACTION_UPDATE === type)  setShowModalEdit(true);
-    if (ActionControl.ACTION_DELETE === type)  setShowModalDelete(true);
+        if (ActionControl.ACTION_REPORT === type) setShowModalReport(true);
+        if (ActionControl.ACTION_UPDATE === type)  setShowModalEdit(true);
+        if (ActionControl.ACTION_DELETE === type)  setShowModalDelete(true);
     }
 
 

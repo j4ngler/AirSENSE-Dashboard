@@ -111,6 +111,12 @@ const MenuList = (permissions) => [
         isHide: checkRole(permissions),
         url: "/customer/invoice/station_information",
       },
+      {
+        id: "admin/create-invoice/type-adminLocation",
+        title: "Tạo hóa đơn",
+        isHide: checkRole(permissions),
+        url: "/customer/invoice/create_invoice",
+      },
     ],
   },
   {

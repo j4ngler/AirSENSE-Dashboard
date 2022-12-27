@@ -1,10 +1,20 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
+import { httpGetDataTable } from "../../features/API/httpBaseUtils";
 
 const LeafletMap = () => {
     const position = [21.0057398, 105.8424833];
+    const [dataMap, setDataMap] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const data = await httpGetDataTable('device_sensor');
+            setDataMap(data);
+        }
+        fetchData()
+    }, [])
 
     return (
         <div>
@@ -14,11 +24,18 @@ const LeafletMap = () => {
                     url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
                 <ZoomControl position='bottomright' />
-                <Marker position={position}>
-                    <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
+                {dataMap.map(data => {
+                    return (
+                        <Marker position={[data.latitude, data.longtitude]}>
+                            <Popup>
+                                <p>
+                                    {data.title}<br></br>
+                                    {data.address}
+                                </p>
+                            </Popup>
+                        </Marker>
+                    )
+                })}
             </MapContainer>
         </div>
     )
