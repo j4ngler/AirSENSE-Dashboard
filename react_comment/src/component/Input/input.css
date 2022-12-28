@@ -1,5 +1,56 @@
 .input-comment {
+    margin: 0px 20px;
+    
+}
 
+.input-comment .form-control {
+    width: 500px;
+    border: 2px solid #ddd;
+    border-radius: 18px;
+}
+/* .input-comment .form-control:focus{
+    border: 2px solid #0099FF;
+} */
+.DraftEditor-root {
+    margin: 0 10px;
+    padding: 5px;
+}
+.div-input{
+    display: flex;
+    margin: 0px 50px;
+}
+.div-input .button-submit{
+    max-height: 36px;
+}
+
+.input-image {
+    border: 1px solid #ddd;
+    padding: 0 17px;
+    border-radius: 15px;
+    max-height: 34px;
+    background-color: white;
+}
+svg.w-6.h-6 {
+    width: 20px;
+    margin-top: 8px;
+    opacity: 0.6;
+}
+
+.input-image:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
+}
+.div-input .button-submit{
+    margin-left: 8px;
+    padding: 0 15px;
+    background-color: #0099FF;
+    color: white;
+    border: none;
+    border-radius: 15px;
+}
+.div-input .button-submit:hover{
+    cursor: pointer;
+    opacity: 0.9;
 }
 
 .avatar-user-comment {

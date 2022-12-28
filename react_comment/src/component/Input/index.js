@@ -14,6 +14,7 @@ import { convertToHTML, convertFromHTML } from 'draft-convert';
 import createEmojiPlugin from '@draft-js-plugins/emoji';
 import "draft-js/dist/Draft.css";
 import "@draft-js-plugins/emoji/lib/plugin.css";
+import './input.css'
 // import { commentTagUser } from '../../reducers/commentReducer';
 // import { loginUser } from '../../api/authen';
 // import { registerInfoCustomer } from '../../api/httpBaseUtil.js';
@@ -265,19 +266,35 @@ const { MentionSuggestions, plugins } = useMemo(() => {
     return (
     <>
         <div className='input-comment'>
-        <p>test mnp</p>
-        <img src={avatar} width={50} className="avatar-user-comment" />
-        <div className='form-control'>
-        <Editor
-        editorKey={'editor'}
-        editorState={editorState}
-        onChange={setEditorState}
-        keyBindingFn={checkKey}
-        plugins={allPlugins}
-        ref={ref}
-        placeholder={'Hãy viết gì đó'}
-      />
-      </div>
+          <p>Comments</p>
+          <img src={avatar} width={50} className="avatar-user-comment" />
+          <div className='div-input'>
+            <div className='form-control'>
+            <Editor
+              editorKey={'editor'}
+              editorState={editorState}
+              onChange={setEditorState}
+              keyBindingFn={checkKey}
+              plugins={allPlugins}
+              ref={ref}
+              placeholder={'Viết bình luận...'}
+            />
+            </div>
+            <div className='emotion-icon'>
+              <EmojiSelect />
+            </div>
+            <div>
+            
+              <button className='input-image'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </button>
+            </div>
+            <button className='button-submit'>Bình luận</button>  
+          </div>
+          <p>0 Comments</p>
+          
       {/* <MentionSuggestions
         open={open}
         onOpenChange={onOpenChange}
@@ -287,9 +304,7 @@ const { MentionSuggestions, plugins } = useMemo(() => {
           dispatch(commentTagUser(user));
         }}
       /> */}
-      <div className='emotion-icon'>
-      <EmojiSelect />
-      </div>
+      
       {/* <div className='upload-imgage-block'>
             <Button variant="outlined" component="label" disableElevation style={{width:20,height: 30, borderRadius: 20}}>
                 <SatelliteIcon />
@@ -305,9 +320,7 @@ const { MentionSuggestions, plugins } = useMemo(() => {
             <button className='comment-submit-btn' onClick={() => submitComment()}>Bình luận</button>
        
        </div> */}
-        <div className={!!image?'image-comment':'no-display-image'}>
-        <img src={image} className='picture-upload-comment' width="200px" height="200px" />
-        </div>   
+        
         </div>     
         </>
     )
