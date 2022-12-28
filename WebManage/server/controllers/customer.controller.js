@@ -9,22 +9,19 @@ const {
   returnOK,
   returnFalse,
   returnNotFound,
-  returnOKCustom
+  returnOKCustom,
 } = require("../utils/returnResponse.js");
-const { uploadFileS3} = require('../models/S3UploadFile.js')
-
+const { uploadFileS3 } = require("../models/S3UploadFile.js");
 
 var customerCtrl = {};
 
-
-customerCtrl.importDataInfo  =async  function(req, res) {
-  console.log("importDataInfo",req.file);
-  var url= await uploadFileS3(req.file.path,req.file.filename);
-  console.log("importDataInfo s ==>",url);
-  if(url!=null) returnOKCustom(res,{url:url});
-  else returnNotFound(res,"Not upload file",WarningInfo.NOT_UPLOAD_FILE);
-}
-
+customerCtrl.importDataInfo = async function (req, res) {
+  console.log("importDataInfo", req.file);
+  var url = await uploadFileS3(req.file.path, req.file.filename);
+  console.log("importDataInfo s ==>", url);
+  if (url != null) returnOKCustom(res, { url: url });
+  else returnNotFound(res, "Not upload file", WarningInfo.NOT_UPLOAD_FILE);
+};
 
 customerCtrl.importDataExel = async function (req, res) {
   res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -41,7 +38,7 @@ customerCtrl.importData = function (req, res) {
 };
 
 customerCtrl.getTableData = function (req, res) {
-  console.log(req.body)
+  console.log(req.body);
   var startPage = 0;
   if (!!req.body.startPage) startPage = req.body.startPage;
   var tableSelect = mangerModelUser(req.body.table);
@@ -62,8 +59,7 @@ customerCtrl.getTableData = function (req, res) {
 
     startPage = startPage * 1000;
     var itemSelect = tableSelect.getValueToSelectToFind(req.body.dataFind);
-    var dataTableSQL =
-      tableSelect.getSQLCustomer(req.currentUser);
+    var dataTableSQL = tableSelect.getSQLCustomer(req.currentUser);
     knex.raw(dataTableSQL).then(
       (result) => {
         return returnOK(res, result[0]);
@@ -568,8 +564,47 @@ customerCtrl.getDetailTheBill = async function (req, res) {
 };
 
 customerCtrl.getAllCourses = async function (req, res) {
-  console.log('get all courses');
-  var sql = 'SELECT '
+  console.log("get all courses");
+  var sql = "SELECT ";
+};
+
+//sale
+customerCtrl.getLstProduct = async function (req, res) {
+  var sql =
+    "SELECT product.* FROM product   WHERE deleteflag =0 AND product_id in (" +
+    req.body["product_id"] +
+    ")";
+  var x = await knex.raw(sql);
+  if (x != null && x.length > 0) {
+    return returnOK(res, x[0]);
+  }
+  return returnOK(res, []);
+};
+customerCtrl.getInfoProductStore = async function (req, res) {
+  var sql = getAllInfoProductInList(
+    req.body["product_group"],
+    req.body["start"],
+    req.body["end"]
+  );
+  var x = await knex.raw(sql);
+  if (x != null && x.length > 0) {
+    return returnOK(res, x[0]);
+  }
+  return returnOK(res, []);
+};
+function getAllInfoProductInList(product_group, start, end) {
+  var sql =
+    "	SELECT product.group_sub_id,product.thumnail" +
+    "  FROM product " +
+    " WHERE product.delete_flag =0  ";
+  "AND product.group_sub_id in (" +
+    product_group +
+    ") LIMIT " +
+    start +
+    "," +
+    end +
+    ";";
+  return sql;
 }
 
 module.exports = customerCtrl;

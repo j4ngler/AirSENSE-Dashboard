@@ -120,7 +120,7 @@ router.route('/services').get((req, res) => {
   customerCtrl.getAllInfoServices(req, res);
 });
 
-
-
+//sale 
+router.route('/lst_product').post(customerCtrl.getInfoProductStore);
 
 module.exports =  router;

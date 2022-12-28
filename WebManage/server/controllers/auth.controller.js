@@ -205,7 +205,7 @@ authCtrl.resetPassword = async (req, res) => {
               "utf-8"
             ),
             rendered = ejs.render(file, {
-              userName: user[0].fullname,
+              username: user[0].fullname,
               url: URLtogetLink,
             });
           console.log(URLtogetLink);

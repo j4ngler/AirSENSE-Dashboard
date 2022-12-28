@@ -10,8 +10,6 @@ router.get("/register", (req, res) => {
   res.render("authen/register", { route: "register" });
 });
 
-
-
 var arrayMenuPages = [
   {
     typePage: "Đào tạo",
@@ -81,20 +79,16 @@ router.get("/blog/detail-blog/:id", async (req, res) => {
   console.log(typeof data);
   if (data == 1) {
     res.render("document/blog-detail-1");
+  } else if (data == 2) {
+    res.render("document/blog-detail-2");
+  } else if (data == 3) {
+    res.render("document/blog-detail-3");
   }
-  else if (data == 2) {
-    res.render("document/blog-detail-2")
-  }
-  else if (data == 3) {
-    res.render("document/blog-detail-3")
-  }
-})
+});
 
 router.get("/blog", async (req, res) => {
   res.render("document/blog");
-})
-
-
+});
 
 router.get("/detail_page/:typePage", (req, res) => {
   var data = req.params.typePage;
@@ -107,7 +101,7 @@ router.get("/group_page/:typePage", (req, res) => {
 });
 
 router.get("/register", (req, res) => {
-  res.render("authen/register", { route: 'register' });
+  res.render("authen/register", { route: "register" });
 });
 
 // Course
@@ -181,7 +175,7 @@ router.get("/map", (req, res) => {
   res.render("home/map");
 });
 
-router.get("/sale", (req, res) => {
+router.get("/product", (req, res) => {
   res.render("sale/Sale");
 });
 
@@ -298,5 +292,27 @@ router.get("/test123", (req, res) => {
 // router.get('/comment', (req, res) => {
 //   res.render('home/comment');
 // })
+/* commonSale */
+router.get("/sale", (req, res) => {
+  res.render("sale/Sale");
+});
+router.get("/sale/product", (req, res) => {
+  console.log("req /sale/product ", req._parsedOriginalUrl.query);
+  res.render("sale/GroupProduct", { detail: req._parsedOriginalUrl.query });
+});
+router.get("/sale/product_detail", (req, res) => {
+  res.render("sale/DetailProduct", { detail: req._parsedOriginalUrl.query });
+});
+router.get("/sale/cart", (req, res) => {
+  res.render("sale/invoiceInfoProduct");
+});
+router.get("/sale/finish", (req, res) => {
+  res.render("sale/finishInvoiceProduct", {
+    detail: req._parsedOriginalUrl.query,
+  });
+});
+router.get("/sale/history", (req, res) => {
+  res.render("sale/historyInvoice");
+});
 
 module.exports = router;
