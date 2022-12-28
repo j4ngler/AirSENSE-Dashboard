@@ -1285,9 +1285,9 @@
 
 
                     if(field=='temperature') {
-                        $("#current-temp").text(Math.round(result[result.length-1].temperature));
+                        $("#current-temp").text(Math.round(result[0][result[0].length -1].temperature));
                     } 
-                    else $("#current-humid").text(Math.round(result[result.length-1].humidity));
+                    else $("#current-humid").text(Math.round(result[0][result[0].length -1].humidity));
                     let datasets = [];
                     let data = [];
                     let getResult = result[0];

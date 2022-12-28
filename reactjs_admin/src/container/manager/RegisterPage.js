@@ -49,21 +49,21 @@ class RegisterPage extends Component {
       image_head: this.props.is_update ? this.props.data.content_img : '',
       title: this.props.is_update ? this.props.data.title : '',
       content: this.props.is_update ? this.props.data.content : '',
-      is_main: this.props.is_update ? this.props.data.is_main_pages_id : 0,
+      // is_main: this.props.is_update ? this.props.data.is_main_pages_id : 0,
       content_html: this.props.is_update ? this.props.content : '',
     };
   }
   componentDidMount() {
     ManagerData.getLstDataPromise('content_sub').then(() => {
       this.setState({ refesh: false });
-      console.log('componentDidMount......................');
+      // console.log('componentDidMount......................');
       setTimeout(() => {
         this.setState({ refesh: true });
       }, 200);
     });
     ManagerData.getLstDataPromise('content_group').then(() => {
       this.setState({ refesh: false });
-      console.log('componentDidMount......................');
+      // console.log('componentDidMount......................');
       setTimeout(() => {
         this.setState({ refesh: true });
       }, 200);
@@ -93,7 +93,7 @@ class RegisterPage extends Component {
     formData.filesave = 'filesave';
     formData.title = this.state.title;
     formData.content = this.state.content;
-    formData.is_main_pages_id = this.state.is_main;
+    // formData.is_main_pages_id = this.state.is_main;
     formData.content_html = this.state.content_html;
     formData.content_page_id = this.state.content_page_id;
     if (this.props.is_update) {
@@ -114,7 +114,7 @@ class RegisterPage extends Component {
     ManagerData.getLstDataPromise('content_page', {
       dataFind: {
         content_sub_id: content.target.value,
-        is_main_pages_id: -1,
+        // is_main_pages_id: -1,
       },
     }).then(() => {
       this.setState({ refesh: false });
@@ -141,7 +141,7 @@ class RegisterPage extends Component {
   }
   choiceSubPages = (value) => {
     console.log('Content: ' + value);
-    this.setState({ is_main: value });
+    // this.setState({ is_main: value });
   };
 
   render() {
@@ -155,6 +155,7 @@ class RegisterPage extends Component {
     var showEditText = false;
 
     showEditText = ManagerData.checkDataExistting('content_sub');
+    // console.log(showEditText);
     if (!showEditText)
       showEditText = ManagerData.checkDataExistting('content_group');
 
@@ -183,13 +184,13 @@ class RegisterPage extends Component {
               ''
             )}
 
-            <SearchPageData
+            {/* <SearchPageData
               id_select={this.state.is_main}
               sub_id_select={this.state.content_sub_id}
               changeID={(value) => {
                 this.choiceSubPages(value);
               }}
-            />
+            /> */}
             <div className={'register-button'}>
               <Button
                 color="primary"

@@ -53,6 +53,7 @@ let ManagerData={
           for (var i = 0; i < data.result.length; i++) data.result[i].id = i;
 
           ManagerData.checkTableInfoUpdate(tableName,data.result);
+          console.log(data.result);
           resolve(data.result);
         })
         .catch((error) => {reject(error)});

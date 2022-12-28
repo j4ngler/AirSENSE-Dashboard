@@ -47,7 +47,7 @@ var SaveFactory = (function(){
 var task = SaveFactory.getInstance();
 
 
-new cronJob(appConstant.EVERY_HOUR, 
+new cronJob(appConstant.EVERY_1MINUTE, 
     async () => {
     console.log('=========================Hourly view update started=======================')
     try {
