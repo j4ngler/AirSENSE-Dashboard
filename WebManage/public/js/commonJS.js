@@ -1,6 +1,6 @@
-  function selectLoginMethod() {
-    Swal.fire({
-            html: `
+function selectLoginMethod() {
+  Swal.fire({
+    html: `
             <div class="container-login">
             <div class="login-content">
                 <div class="login-header">
@@ -29,15 +29,10 @@
                 </div>
             </div>
             `,
-            showConfirmButton: false,
-            width: "700px",
-        })
-  }
-
-
-
-
-
+    showConfirmButton: false,
+    width: "700px",
+  });
+}
 
 function getInfoData(urlLink, callBack) {
   $.ajax({
@@ -287,8 +282,12 @@ function setFormToShowCourse(item, urlDetail) {
   // console.log(limkUrl)
   var content =
     '<div class="course-new__item-wrapper col l-3"><div class="course-new__item">' +
-    limkUrl + '<div class="course-new__img" style="background-image: url(' + item.content_img + ');">' +
-    limkUrl + '</div>' +
+    limkUrl +
+    '<div class="course-new__img" style="background-image: url(' +
+    item.content_img +
+    ');">' +
+    limkUrl +
+    "</div>" +
     '<div class="course-new__main"><div class="course-new__info"><h5 class="course-new__name-course">' +
     item.title +
     '</h5> <span class="course-new__author">' +
@@ -325,12 +324,18 @@ function getInfoDetailCourse(nameDivControl, dataView, urlDetail) {
           if (dataJson[i] == 0) {
             titleSub = dataJson[i].course_group;
             textHtml +=
-              '<div class="course__heading-wrapper"><h2 class="course__heading">' + titleSub + '</h2><div class="course__separator"></div></div>' + startRow;
+              '<div class="course__heading-wrapper"><h2 class="course__heading">' +
+              titleSub +
+              '</h2><div class="course__separator"></div></div>' +
+              startRow;
           } else {
             textHtml += closeRow;
             titleSub = dataJson[i].course_group;
             textHtml +=
-            '<div class="course__heading-wrapper"><h2 class="course__heading">' + titleSub + '</h2><div class="course__separator"></div></div>' + startRow;
+              '<div class="course__heading-wrapper"><h2 class="course__heading">' +
+              titleSub +
+              '</h2><div class="course__separator"></div></div>' +
+              startRow;
           }
         }
         textHtml += setFormToShowCourse(dataJson[i], urlDetail);
@@ -585,7 +590,59 @@ function gotoCheckUserStorage() {
     $("#managerLogout").html("");
   }
 }
+//sale
+function setFillertProductToView(items, itemHtml, type = "sale") {
+  var html = "";
+  console.log("items: ", items);
+  items.forEach((element) => {
+    html += `<div class="col-xs-12"> 
+            <a href="/${type}/${setPadamDetailSale(element)}">
+              <div class="best-seller-item">
+                <div class="image-block-view">
+                    <div class="image-block-view-250" >
+                        <img
+                          src="${element.thumnail}"
+                          class="best-seller-item-image img-fluid"
+                          alt=""
+                        />
+                    </div>
+                </div>
+                <div class="best-seller-item-info">
+                  <div class="info-name">${element.name}</div> <!-- 
+                  <div class="info-star">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </div> -->
+                  <div class="info-price">
+                    <span class="info-price-discount">${
+                      element.cost_detail
+                    }VND</span>
+                    <span class="info-price-percent"
+                      ><del>${element.cost_real}VND</del 
+                      ><span class="text-discount">${
+                        element.promotion != null ? element.promotion : ""
+                      }</span></span
+                    >
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>`;
+  });
+  $(itemHtml).html(html);
+}
 
+function setPadamDetailSale(element) {
+  return (
+    `product_detail?type=` +
+    element.product_id +
+    `&block=` +
+    element.group_sub_id
+  );
+}
 function showLoader() {
   document.getElementById("loader-container").style.display = "block";
 }

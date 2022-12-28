@@ -1,0 +1,39 @@
+<section id="best-seller-section">
+  <% include ../../layout/menu.ejs %>
+  <h2 class="best-seller-caption text-center">IC</h2>
+  <div class="row best-seller-group grid" id="best-seller-items"></div>
+  <div class="best-seller-load-more text-center">
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      onclick="loadAnotherElectric()"
+    >
+      Load more
+    </button>
+  </div>
+</section>
+
+<script type="text/javascript">
+  var jsonItemElectric = [];
+  var lstGroupElectric = { product_group: 1, start: -5, end: 5 };
+  loadAnotherElectric();
+  function loadAnotherElectric() {
+    lstGroupElectric.start += 5;
+    lstGroupElectric.end += 5;
+    postInfoData(
+      "http://localhost:3000/api/customers/lst_product",
+      lstGroupElectric,
+      (data) => {
+        if (!data.error) {
+          console.log(data.result);
+          data.result.forEach((element) => {
+            //   if(jsonItemElectric.findIndex(o=>(o.product_id==element.product_id))<0)
+            //       jsonItemElectric.push(element);
+            jsonItemElectric.push(element);
+          });
+          setFillertProductToView(jsonItemElectric, "#best-seller-items");
+        }
+      }
+    );
+  }
+</script>
