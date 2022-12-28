@@ -14,6 +14,7 @@ class BlockMemory {
     }
 
     add(record) {
+        // console.log(record)
         this.memory.push(record);
         try{
             if(this.isFull())   this.saveAll();
@@ -24,11 +25,11 @@ class BlockMemory {
     }
 
     isFull() {
-        return this.memory.length === 1;
+        return this.memory.length >= 6;
     }
 
     isAvailable() {
-        return !(this.isFull() || this.status == 'pending');
+        return !(this.status == 'pending');
     }
 
     clearMemory() {
@@ -38,40 +39,37 @@ class BlockMemory {
     saveAll() {
         let self = this;
         this.status = 'pending';
-        console.log("Save all...............");
-        var sensor=[];
-        this.memory.forEach(element => {
-            var jsonData={data:element.content};
-            try{
-                jsonData =JSON.parse(element.content);
-            }
-            catch(ie){
+        // console.log("Save all...............");
+        // var sensor=[];
+        // this.memory.forEach(element => {
+        //     var jsonData={data:element.content};
+        //     try{
+        //         jsonData =JSON.parse(element.content);
+        //     }
+        //     catch(ie){
 
-            }
+        //     }
             
-            var record  = { topic:element.topic,
-                            content:jsonData,
-                            time:element.time
-                        };
+        //     var record  = { topic:element.topic,
+        //                     content:jsonData,
+        //                     time:element.time
+        //                 };
             
-                sensor.push(record); 
-        });
+        //         sensor.push(record); 
+        // });
         // console.log('sensor', sensor);
         if(this.memory.length>0){
-            if(sensor.length>0){
-                console.log("Save data station", sensor);
-                data.insertMany(sensor, function (err, data) {
+                console.log("Save data station");
+                data.insertMany(this.memory, function (err, data) {
                     if (err) {
                         console.log("err",err);
                     }
-                    else{
-                        sensor=[];
+                    else
+                    {
                         self.status= 'idle';
                         self.clearMemory();
                     }
                 });
-            }
-            
         }
         else
         {

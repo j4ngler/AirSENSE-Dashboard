@@ -183,8 +183,8 @@ class AQIManager  {
     }
 
     getCurrentTime() {
-        var time = new Date();
-        return time.getTime()/1000;
+        let time = new Date();
+        return Math.floor(time.getTime()/1000);
     }
 
     findMin(a,b) {
@@ -272,12 +272,12 @@ class AQIManager  {
 
     getFielDataRecent(stationId) {
         var currentTime = this.getCurrentTime();
-        var fromTime = currentTime-24*3600;
+        var fromTime = currentTime - 24*3600;
         var query = squel.select().from("data_average")
-        .where("Time > ?", fromTime)
-        .where("Time < ?", currentTime)
+        .where("time > ?", fromTime)
+        .where("time < ?", currentTime)
         .where("station_id = ?", stationId);
-        // console.log(query.toString());
+        console.log(query.toString());
         return new Promise( ( resolve, reject ) => {
             knex.raw(query.toString()).then(function(result) {  
                 resolve( result);

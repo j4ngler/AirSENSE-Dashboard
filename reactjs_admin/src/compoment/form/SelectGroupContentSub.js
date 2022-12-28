@@ -12,7 +12,7 @@ import ManagerData from '../../actions/ManagerData.js';
 
 const SelectGroupContentSub = ({ detailValue, onChange }) => {
   // const [ handleClose] = useState()
-  console.log('Cho nay OK');
+  console.log('Cho nay OK', detailValue);
   var content_sub = ManagerData.getTable('content_sub');
   var content_group = ManagerData.getTable('content_group');
   var idSelect = 0;
@@ -57,6 +57,7 @@ const SelectGroupContentSub = ({ detailValue, onChange }) => {
     }
   };
 
+
   return (
     <div className={'dp-i'}>
       <FormControl variant="outlined" className={'input-pages-register'}>
@@ -79,7 +80,7 @@ const SelectGroupContentSub = ({ detailValue, onChange }) => {
         >
           {state.content_group.map((vars) => (
             <MenuItem value={vars.content_group_id} key={vars.content_group_id}>
-              {vars.content_group}
+              {vars.content}
             </MenuItem>
           ))}
         </Select>
@@ -104,7 +105,7 @@ const SelectGroupContentSub = ({ detailValue, onChange }) => {
         >
           {state.content_sub.map((vars) => (
             <MenuItem value={vars.content_sub_id} key={vars.content_sub_id}>
-              {vars.content_group}
+              {vars.content}
             </MenuItem>
           ))}
         </Select>
