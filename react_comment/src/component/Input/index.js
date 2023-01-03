@@ -15,6 +15,9 @@ import createEmojiPlugin from '@draft-js-plugins/emoji';
 import "draft-js/dist/Draft.css";
 import "@draft-js-plugins/emoji/lib/plugin.css";
 import './input.css'
+import { login } from '../../reducers/Auth/authSlice';
+import { tagUsers, uploadImage } from '../../reducers/Comment/commentSlice';
+// import { useDispatch } from 'react-redux';
 // import { commentTagUser } from '../../reducers/commentReducer';
 // import { loginUser } from '../../api/authen';
 // import { registerInfoCustomer } from '../../api/httpBaseUtil.js';
@@ -98,27 +101,27 @@ const { MentionSuggestions, plugins } = useMemo(() => {
 
     const checkKey=(e)=> {
         e = e || window.event;
-        var mInfoUser = localStorage.getItem('customer');
+        let mInfoUser = localStorage.getItem('token_AirSENSE');
         setUser(mInfoUser);
         if (e.keyCode == '13') {
-            if(!!mInfoUser) {
+            // if(!!mInfoUser) {
                 // right arrow
                 e.preventDefault(); //Prevent default browser behavior mentionsRef.current.toHtml()
                 //convertToHTML(this.state.editorState.getCurrentContent()
-                console.log("...listUser ",ref);
-                console.log("...listUser ",editorState.getCurrentContent().getPlainText());
+                // console.log("...listUser ",ref);
+                // console.log("...listUser ",editorState.getCurrentContent().getPlainText());
                 // ref.current.editor.editor.innerHTML
                 
                 var stringValue = editorState.getCurrentContent().getPlainText();
                 var stringHtml = convertToHTML(editorState.getCurrentContent());
                 let id_reply_comment = 0;
-                if(infoReply) {
-                    console.log('comment reply', infoReply)
+                // if(infoReply) {
+                //     console.log('comment reply', infoReply)
                     
-                    if(infoReply.content.id_comment_reply>0)
-                        id_reply_comment = infoReply.content.id_comment_reply;
-                    else id_reply_comment = infoReply.comment_id;
-                }
+                //     if(infoReply.content.id_comment_reply>0)
+                //         id_reply_comment = infoReply.content.id_comment_reply;
+                //     else id_reply_comment = infoReply.comment_id;
+                // }
                 if(stringValue.length > 0) {
                     handleComment({stringValue, id_reply_comment,url:image});
                 }
@@ -127,11 +130,11 @@ const { MentionSuggestions, plugins } = useMemo(() => {
                 setTimeout(() => {
                     setEditorState(EditorState.createEmpty());
                 }, 100);
-            }
-            else
-            {
-                handleComment();
-            }
+            // }
+            // else
+            // {
+            //     handleComment({kn: 'no data'});
+            // }
         }
     }
 
