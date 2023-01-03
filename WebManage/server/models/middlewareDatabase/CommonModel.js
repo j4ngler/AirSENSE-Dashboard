@@ -7,7 +7,7 @@ const TABLE_NAME = 'address';
 const  defineManifest  = require('../../middlewares/CheckManifest.js');
 const knex = require('../../config/knex.js');
 const CustomerAcess= require('./CustomerAcess.js');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 
 class CommonModel extends bookshelf.Model {
@@ -145,10 +145,10 @@ class CommonModel extends bookshelf.Model {
                 if(!!!data[item]) sqlQuery.set(item,null);
                 else {
                     if(item == "password"){
-                        const salt = await bcrypt.genSalt(12);
+                        // const salt = await bcrypt.genSalt(12);
                         // now we set user password to hashed password
-                        var passwordData = await bcrypt.hash(data[item], salt);
-                        sqlQuery.set(item, passwordData);
+                        // var passwordData = await bcrypt.hash(data[item], salt);
+                        // sqlQuery.set(item, passwordData);
                     }
                     else {
                         sqlQuery.set(item,data[item]);

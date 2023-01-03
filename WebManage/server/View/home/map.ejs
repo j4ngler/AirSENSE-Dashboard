@@ -8,7 +8,7 @@
     <a class="skip-link screen-reader-text" href="#main">Skip to content</a>
 
     <div id="wrapper">
-        <% include ../Layout/topBar.ejs %>
+        <% include ../Layout/topbar.ejs %>
         <div class="contain-map">
             <div id="Map">
             </div>
@@ -711,8 +711,8 @@
 
                 broad_data[itemBroad].data = data[itemBroad].data.map(item => 
                 {
-                    if(item.content !== undefined && item.content.data[property] !== undefined)
-                    return data = {'x': new Date(item.time*1000), 'y': item.content.data[property]};
+                    if(item.content !== undefined && item.content[property] !== undefined)
+                    return data = {'x': new Date(item.time*1000), 'y': item.content[property]};
                 }
                 )
             }
