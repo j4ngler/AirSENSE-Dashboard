@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const HttpStatus = require('http-status-codes');
 const knex = require('../config/knex.js');
 var squel = require("squel");

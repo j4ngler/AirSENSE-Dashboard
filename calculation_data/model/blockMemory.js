@@ -70,9 +70,9 @@ class BlockMemory {
             /** hai chất này phải dùng nowCast */
             const avgPM2p5 = last24i.reduce((prev, cur) => prev + cur.PM2p5, 0) / last24i.length   // µg/m^3
             const avgPM10 = last24i.reduce((prev, cur) => prev + cur.PM10, 0) / last24i.length     // µg/m^3
-            const nowCastPM2p5 = nowCast(last12i.map(item=>item.content.data.PM2p5))
+            const nowCastPM2p5 = nowCast(last12i.map(item=>item.content.PM2p5))
             // console.log(nowCastPM2p5)
-            const nowCastPM10 = nowCast(last12i.map(item=>item.content.data.PM10))
+            const nowCastPM10 = nowCast(last12i.map(item=>item.content.PM10))
             // console.log(nowCastPM10);
             // const avgSO224 = last24i.reduce((prev, cur) => prev + cur.SO2, 0) / last24i.length     // ppb
             // const avgCO = (last8i.reduce((prev, cur) => prev + cur.CO, 0) / last8i.length) / 1000  // ppm
@@ -82,13 +82,13 @@ class BlockMemory {
             // const avgSO21 = last1i.reduce((prev, cur) => prev + cur.SO2, 0) / last1i.length        // ppb
             // const avgNO2 = last1i.reduce((prev, cur) => prev + cur.NO2, 0) / last1i.length         // ppb
             /** for update avg schema */
-            const avgPM2p5hour = last1i.reduce((prev, cur) => prev + cur.content.data.PM2p5, 0) / last1i.length
-            const avgPM10hour = last1i.reduce((prev, cur) => prev + cur.content.data.PM10, 0) / last1i.length     // µg/m^3
-            const avgPM1hour = last1i.reduce((prev, cur) => prev + cur.content.data.PM1, 0) / last1i.length     // µg/m^3
+            const avgPM2p5hour = last1i.reduce((prev, cur) => prev + cur.content.PM2p5, 0) / last1i.length
+            const avgPM10hour = last1i.reduce((prev, cur) => prev + cur.content.PM10, 0) / last1i.length     // µg/m^3
+            const avgPM1hour = last1i.reduce((prev, cur) => prev + cur.content.PM1, 0) / last1i.length     // µg/m^3
             // const avgCOHour = (last1i.reduce((prev, cur) => prev + cur.CO, 0) / last1i.length) / 1000  // ppm
-            const avgHumidityHour = last1i.reduce((prev, cur) => prev + cur.content.data.Humidity, 0) / last1i.length  // ppm
-            const avgTemperatureHour = last1i.reduce((prev, cur) => prev + cur.content.data.Temperature, 0) / last1i.length  // ppm
-            const avgPressureHour = last1i.reduce((prev, cur) => prev + cur.content.data.Pressure, 0) / last1i.length  // ppm
+            const avgHumidityHour = last1i.reduce((prev, cur) => prev + cur.content.Humidity, 0) / last1i.length  // ppm
+            const avgTemperatureHour = last1i.reduce((prev, cur) => prev + cur.content.Temperature, 0) / last1i.length  // ppm
+            const avgPressureHour = last1i.reduce((prev, cur) => prev + cur.content.Pressure, 0) / last1i.length  // ppm
             // const avgWindspeedHour = last1i.reduce((prev, cur) => prev + cur.windSpeed, 0) / last1i.length  // ppm
 
 

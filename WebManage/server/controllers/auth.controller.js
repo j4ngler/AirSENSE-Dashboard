@@ -1,6 +1,6 @@
 const HttpStatus = require("http-status-codes");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 var squel = require("squel");
 const User = require("../models/database/user.model.js");
 const Oauthen2 = require("../models/database/oAuthen2.model.js");
@@ -66,23 +66,23 @@ authCtrl.login = function (req, res) {
       if (user) {
         lstLogin = lstLogin.filter((o) => o.email != email);
         console.log(user);
-        bcrypt
-          .compare(password, user.get("password"))
-          .then(function (result) {
-            // console.log("user Inval",result);
-            if (result) oauthen2.responseLogin(res, user);
-            else
-              return returnNotAuthen(res, {
-                success: false,
-                message: "Authentication failed. Invalid password",
-              });
-          })
-          .catch(() => {
-            return returnNotAuthen(res, {
-              success: false,
-              message: "Authentication failed. Invalid password",
-            });
-          });
+        // bcrypt
+        //   .compare(password, user.get("password"))
+        //   .then(function (result) {
+        //     // console.log("user Inval",result);
+        //     if (result) oauthen2.responseLogin(res, user);
+        //     else
+        //       return returnNotAuthen(res, {
+        //         success: false,
+        //         message: "Authentication failed. Invalid password",
+        //       });
+        //   })
+        //   .catch(() => {
+        //     return returnNotAuthen(res, {
+        //       success: false,
+        //       message: "Authentication failed. Invalid password",
+        //     });
+        //   });
       } else {
         lstLogin.push({ email: email, count: 1, time: Date.now() });
         return returnNotAuthen(res, {
@@ -139,22 +139,22 @@ authCtrl.loginCustomer = function (req, res) {
     .then((user) => {
       if (user) {
         lstLogin = lstLogin.filter((o) => o.email != email);
-        bcrypt
-          .compare(password, user.get("password"))
-          .then(function (result) {
-            if (result) oAuthen2Customer.responseLogin(res, user);
-            else
-              return returnNotAuthen(res, {
-                success: false,
-                message: "Authentication failed. Invalid password",
-              });
-          })
-          .catch(() => {
-            return returnNotAuthen(res, {
-              success: false,
-              message: "Authentication failed. Invalid password",
-            });
-          });
+        // bcrypt
+        //   .compare(password, user.get("password"))
+        //   .then(function (result) {
+        //     if (result) oAuthen2Customer.responseLogin(res, user);
+        //     else
+        //       return returnNotAuthen(res, {
+        //         success: false,
+        //         message: "Authentication failed. Invalid password",
+        //       });
+        //   })
+        //   .catch(() => {
+        //     return returnNotAuthen(res, {
+        //       success: false,
+        //       message: "Authentication failed. Invalid password",
+        //     });
+        //   });
       } else {
         lstLogin.push({ email: email, count: 1, time: Date.now() });
         return returnNotAuthen(res, {

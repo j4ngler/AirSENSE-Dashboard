@@ -13,4 +13,4 @@ let DataSensor = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model('data_sensor', DataSensor);
+module.exports = mongoose.model('sensor', DataSensor);
