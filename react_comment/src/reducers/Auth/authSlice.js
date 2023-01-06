@@ -21,6 +21,16 @@ export const getPersonalInformation = createAsyncThunk('auth/getInformationCusto
   }
 })
 
+export const register = createAsyncThunk('auth/register', async (params, { rejectWithValue }) => {
+  try {
+    const response = await AuthApi.register({ ...params });
+    return response.data;
+  } 
+  catch (error) {
+    return rejectWithValue(error?.response?.data?.message || error?.response || error);
+  }
+})
+
 
 const initialState = {
   username: null,
