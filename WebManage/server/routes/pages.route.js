@@ -174,11 +174,6 @@ router.get("/about", (req, res) => {
 router.get("/map", (req, res) => {
   res.render("home/map");
 });
-
-router.get("/product", (req, res) => {
-  res.render("sale/Sale");
-});
-
 router.get("/faq", (req, res) => {
   res.render("ManagerStation/reportStation");
 });
@@ -293,14 +288,14 @@ router.get("/test123", (req, res) => {
 //   res.render('home/comment');
 // })
 /* commonSale */
-router.get("/sale", (req, res) => {
+router.get("/product", (req, res) => {
   res.render("sale/Sale");
 });
 router.get("/sale/product", (req, res) => {
   console.log("req /sale/product ", req._parsedOriginalUrl.query);
   res.render("sale/GroupProduct", { detail: req._parsedOriginalUrl.query });
 });
-router.get("/sale/product_detail", (req, res) => {
+router.get("/product/product_detail", (req, res) => {
   res.render("sale/DetailProduct", { detail: req._parsedOriginalUrl.query });
 });
 router.get("/sale/cart", (req, res) => {

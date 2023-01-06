@@ -19,7 +19,7 @@
         lstGroupBook.end+=5;
         postInfoData('/api/customers/lst_product',lstGroupBook,(data)=>{
           if(!data.error){
-            data.data.result.forEach((element) => {
+            data.result.forEach((element) => {
               if(jsonItemBook.findIndex(o=>(o.product_id==element.product_id))<0) 
                 jsonItemBook.push(element);
             });

@@ -27,10 +27,11 @@
         if (!data.error) {
           console.log(data.result);
           data.result.forEach((element) => {
-            //   if(jsonItemElectric.findIndex(o=>(o.product_id==element.product_id))<0)
-            //       jsonItemElectric.push(element);
-            jsonItemElectric.push(element);
+              if(jsonItemElectric.findIndex(o=>(o.product_id==element.product_id))<0)
+                  jsonItemElectric.push(element);
+            // jsonItemElectric.push(element);
           });
+          console.log('list IC Seller: ',jsonItemElectric)
           setFillertProductToView(jsonItemElectric, "#best-seller-items");
         }
       }

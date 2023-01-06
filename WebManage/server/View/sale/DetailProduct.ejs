@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <% include ./layout/header.ejs %>
+    <% include ../Layout/header.ejs %>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
         .rounded-circle {
@@ -8,7 +8,7 @@
         }
     </style>
     <body>
-        <% include ./layout/menuSale-new.ejs %>
+        <% include ../Layout/topbar.ejs %>
         <section id="infor-product">
             <div class="row">
                 <% include ./area-function/detail-product/image-product.ejs %>
@@ -23,10 +23,7 @@
         <br/>
     </body>
     <script type="text/javascript">  
-        var dataView = ('<%= detail %>').replaceAll('type=', '');
-
-           
-           
+        var dataView = ('<%= detail %>').replaceAll('type=', '');           
            function nextSilde(){
                $('.main_support_pro_detail').trigger('next.owl.carousel');
            }

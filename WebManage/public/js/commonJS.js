@@ -34,8 +34,8 @@ function selectLoginMethod() {
   });
 }
 
-function getInfoData(urlLink, callBack) {
-  $.ajax({
+async function getInfoData(urlLink, callBack) {
+  await $.ajax({
     type: "GET",
     enctype: "multipart/form-data",
     url: urlLink,
@@ -54,8 +54,8 @@ function getInfoData(urlLink, callBack) {
   });
 }
 
-function getInfoHtml(urlLink, callBack) {
-  $.ajax({
+async function getInfoHtml(urlLink, callBack) {
+  await $.ajax({
     type: "GET",
     enctype: "multipart/form-data",
     url: urlLink,
@@ -73,8 +73,8 @@ function getInfoHtml(urlLink, callBack) {
   });
 }
 
-function postInfoData(urlLink, dataInfo, callBack) {
-  $.ajax({
+async function postInfoData(urlLink, dataInfo, callBack) {
+  await $.ajax({
     type: "post",
     method: "POST",
     url: urlLink,
@@ -297,8 +297,8 @@ function setFormToShowCourse(item, urlDetail) {
   return start + content;
 }
 
-function getInfoDetailCourse(nameDivControl, dataView, urlDetail) {
-  $.ajax({
+async function getInfoDetailCourse(nameDivControl, dataView, urlDetail) {
+  await $.ajax({
     type: "GET",
     enctype: "multipart/form-data",
     url: "/api/document/detail_lesson/" + dataView,
@@ -350,8 +350,8 @@ function getInfoDetailCourse(nameDivControl, dataView, urlDetail) {
   });
 }
 
-function getInfoAbsCourse(nameDivControl, dataView) {
-  $.ajax({
+async function getInfoAbsCourse(nameDivControl, dataView) {
+  await $.ajax({
     type: "GET",
     enctype: "multipart/form-data",
     url: "/api/document/lastest_detail_lesson/" + dataView,
@@ -591,7 +591,7 @@ function gotoCheckUserStorage() {
   }
 }
 //sale
-function setFillertProductToView(items, itemHtml, type = "sale") {
+function setFillertProductToView(items, itemHtml, type = "product") {
   var html = "";
   console.log("items: ", items);
   items.forEach((element) => {
@@ -601,14 +601,14 @@ function setFillertProductToView(items, itemHtml, type = "sale") {
                 <div class="image-block-view">
                     <div class="image-block-view-250" >
                         <img
-                          src="${element.thumnail}"
+                          src="${element.thumbnail}"
                           class="best-seller-item-image img-fluid"
                           alt=""
                         />
                     </div>
                 </div>
                 <div class="best-seller-item-info">
-                  <div class="info-name">${element.name}</div> <!-- 
+                  <div class="info-name">${element.title}</div> <!-- 
                   <div class="info-star">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -618,10 +618,10 @@ function setFillertProductToView(items, itemHtml, type = "sale") {
                   </div> -->
                   <div class="info-price">
                     <span class="info-price-discount">${
-                      element.cost_detail
+                      element.mid_cost
                     }VND</span>
                     <span class="info-price-percent"
-                      ><del>${element.cost_real}VND</del 
+                      ><del>${element.final_cost}VND</del 
                       ><span class="text-discount">${
                         element.promotion != null ? element.promotion : ""
                       }</span></span

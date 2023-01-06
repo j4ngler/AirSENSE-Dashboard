@@ -7,7 +7,6 @@ const Oauthen2 = require("../models/database/oAuthen2.model.js");
 const Customer = require("../models/database/customer.model.js");
 const OAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
 const express = require("express");
-console.log(__dirname)
 const {
   returnOK,
   returnNotAuthen,

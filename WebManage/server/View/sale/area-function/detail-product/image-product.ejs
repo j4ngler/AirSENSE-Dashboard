@@ -10,7 +10,7 @@
 </div>
 <script type="text/javascript">  
     function selectImageView(element){
-        $("#main_product_detail").attr("src",element.image_info_detail );
+        $("#main_product_detail").attr("src",element.link_url );
     }
     function onChangeLinkClick(link){ 
             $("#main_product_detail").attr("src",link );
@@ -18,8 +18,8 @@
     function setCarretImage(loadcofig){  
         var tupeSupportImage='';
         for(var i=0;i<loadcofig.length;i++ ){
-            if(loadcofig[i].image_info_detail!=null){
-                tupeSupportImage+=`<img  src='${loadcofig[i].image_info_detail}' onclick='onChangeLinkClick("${loadcofig[i].image_info_detail}")' width='100' alt=''/> `;
+            if(loadcofig[i].link_url!=null){
+                tupeSupportImage+=`<img  src='${loadcofig[i].link_url}' onclick='onChangeLinkClick("${loadcofig[i].link_url}")' width='100' alt=''/> `;
             } 
         }
         $('#main_support_pro_detail').html(tupeSupportImage);  
