@@ -18,7 +18,7 @@
       lstGroupComponent.end+=5;
       postInfoData('/api/customers/lst_product',lstGroupComponent,(data)=>{
         if(!data.error){
-          data.data.result.forEach((element) => {
+          data.result.forEach((element) => {
             if(jsonItemComponent.findIndex(o=>(o.product_id==element.product_id))<0) 
               jsonItemComponent.push(element);
           });
