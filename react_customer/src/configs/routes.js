@@ -20,6 +20,7 @@ import Register from "../pages/Register";
 import EnterEmail from "../pages/ForgotPassword/EnterEmail";
 import EnterNewPassword from "../pages/ForgotPassword/EnterNewPassword";
 import CreateInvoice from "../pages/Invoice/CreateInvoice";
+import Ads from "../pages/Advertisement/CreateAdvertisement";
 
 const routes = [
   {
@@ -38,6 +39,7 @@ const routes = [
       { path: "courses/create_exercises", element: <CreateExercises /> },
       { path: "invoice/station_information", element: <StationInformation /> },
       { path: "invoice/create_invoice", element: <CreateInvoice /> },
+      { path: "advertisement", element: <Ads /> },
       { path: "account", element: <Account /> },
       { path: "support", element: <Support /> },
       { path: "settings", element: <Settings /> },
@@ -62,8 +64,7 @@ const routes = [
     path: "*",
     element: <MainLayout />,
     children: [
-      { path: "*", element: <NotFoundPage />
-      } 
+      { path: "*", element: <NotFoundPage /> } 
     ]
   },
 ];

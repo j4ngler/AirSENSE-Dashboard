@@ -120,6 +120,13 @@ const MenuList = (permissions) => [
     ],
   },
   {
+    id: "/advertisement",
+    title: "Quảng cáo",
+    icon: <UserOutlined />,
+    isHide: false,
+    url: "/customer/advertisement",
+  },
+  {
     id: "/account",
     title: "Tài khoản",
     icon: <UserOutlined />,

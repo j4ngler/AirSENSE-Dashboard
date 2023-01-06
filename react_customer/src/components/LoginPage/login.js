@@ -1,7 +1,10 @@
+import { SwapLeftOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../features/Authen/AuthSlice";
+import Swal from 'sweetalert2'
+
 import "./login.css";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -15,11 +18,20 @@ const LoginPage = () => {
       password: password,
     };
     dispatch(login(values));
+    // if (username_gs == null) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: 'Sai rồi!',
+    //   })
+    // }
   };
-
+  // console.log(username_gs);
+  
   const navigate = useNavigate();
   useEffect(() => {
-    if (!!username_gs) navigate("/customer/dashboard");
+    if (!!username_gs) {
+      navigate("/customer/dashboard");
+    }
   }, [username_gs]);
 
   return (
