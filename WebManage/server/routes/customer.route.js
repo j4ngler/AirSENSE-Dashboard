@@ -96,6 +96,7 @@ router.route("/register").post(isAuthenticated, (req, res) => {
   customerCtrl.registerUser(req, res);
 });
 
+
 // education
 
 router.route("/getAllCourses").get(isAuthenticatedCustomer, (req, res) => {
