@@ -62,6 +62,12 @@ class Customer extends CommonModel {
     return "customer.delete_flag=0";
   }
 
+  getCustomerService(currentId) {
+    return(
+      `SELECT service_order_detail.permission_id, service_order_detail.service_id, service_order_detail.from_time, service_order_detail.to_time, service_order_detail.order_id, db.customer_id AS customer  FROM service_order_detail LEFT JOIN service_order db ON db.order_id = service_order_detail.order_id WHERE service_order_detail.delete_flag = 0 AND db.customer_id = ${currentId}`
+    )
+  }
+
   getDairyChange(info) {
     return "customer.delete_flag=1";
 

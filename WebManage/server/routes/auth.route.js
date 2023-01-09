@@ -11,6 +11,7 @@ const Customer = require("../models/database/customer.model.js");
 const router = express.Router();
 const squel = require("squel");
 const knex = require("../config/knex");
+const permissionMappings = require('../utils/customerPermission.js')
 
 // authen
 // login -> ok
@@ -117,7 +118,6 @@ router.route("/user").get(isAuthenticated, (req, res) => {
     });
 });
 
-// router.route('/customer').get(isAuthenticated, (req, res) => {
 router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
   console.log("req.currentUser", req.currentUser);
   Customer.query({
@@ -134,16 +134,34 @@ router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
     ],
   })
     .fetch({ require: false })
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         res.status(HttpStatus.NOT_FOUND).json({ error: "No such user" });
-      } else {
+      } 
+      else {
+        let customer = new Customer();
+        const permmsions = await customer.getPermissionCustomer(4);
+        const customerSidebar = await permissionMappings.defineSideBar(permmsions);
         res.status(200).json({
           user: user,
+          permmsions: permmsions,
+          sidebar: customerSidebar
         });
       }
     });
 });
+
+
+router.route('/permission').get( async (req, res) => {
+  let customer = new Customer();
+  const permmsions = await customer.getPermissionCustomer(4);
+  const customerSidebar = await permissionMappings.defineSideBar(permmsions);
+  res.status(200).json({
+    permmsions: permmsions,
+    sidebar: customerSidebar
+  });
+})
+
 router.route("/getInfo").post((req, res) => {
   User.query({
     where: { userid: req.body.userid },
