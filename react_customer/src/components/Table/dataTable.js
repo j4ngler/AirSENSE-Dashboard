@@ -18,6 +18,7 @@ const TableData = ({table}) =>{
 
     useEffect(() => {
         const columnTable = exportColumnTable(table, callBack);
+        console.log('this is collumtable',columnTable);
         setColumn(columnTable);
         async function fetchData() {
             const data = await httpGetDataTable(table);
@@ -43,6 +44,7 @@ const TableData = ({table}) =>{
             ):('')
         }
         </>
+        
     )
 }
 export default TableData

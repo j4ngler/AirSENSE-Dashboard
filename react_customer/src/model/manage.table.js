@@ -2,12 +2,14 @@ import deviceSensor from "./table/deviceSensor.table";
 import groupContent from "./table/groupContent.table";
 import groupContentSub from "./table/groupContentSub.table";
 import pageContent from "./table/pageContent.table";
+import receiptInformation from "./table/receiptInfomation.table";
 import order from "./table/order.table";
 
 
 
 
 const classesFactory = {
+    receiptInformation,
     deviceSensor,
     groupContent,
     groupContentSub,
@@ -16,6 +18,7 @@ const classesFactory = {
 };
 
 const classesFactoryMapping = {
+    service_order: "receiptInformation",
     device_sensor: "deviceSensor",
     content_group: 'groupContent',
     content_sub: 'groupContentSub',
