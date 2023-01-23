@@ -134,7 +134,6 @@ iotCtrl.getStationHome = function(request, response) {
         //var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);  
         knex.raw(dataTableSQL)
         .then(result => {
-            console.log(result[0]);
             return returnOK(response,result[0]);
         }
         , error => {
@@ -158,13 +157,13 @@ iotCtrl.reportDataStationLimit = function(request, response) {
 };
 
 iotCtrl.getReportStations = function(request, response) {
-            // var role = result[0];
+            console.log(request.body)
             var fromTime = request.body.fromTime;
             var toTime = request.body.toTime;
             var station_id = request.body.station_id;
             var convertFromTime = request.body.getFromTime;
             var convertToTime =  request.body.getToTime
-            reportManager.getReportStations(convertFromTime, convertToTime, station_id,request.currentUser).then(function (result) {
+            reportManager.getReportStations(convertFromTime, convertToTime, station_id).then(function (result) {
                 // console.log(result);
                 var workbook = new Excel.Workbook();
                 workbook.views = [

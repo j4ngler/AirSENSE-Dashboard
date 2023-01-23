@@ -1,10 +1,12 @@
 import { API_URL, JWT_TOKEN } from "../../configs/config";
 import { setLocalStorage, clearLocalStorage, getLocalStorage,} from "../../utils/storageUltils";
 import { axiosRequest, axiosMethod } from "../../utils/handleApiRequest";
+import { checkErrorReturn } from "../../utils/commonUtils";
+import { SpinLoading } from "../../components/Spin/SpinLoading";
 
 
-const showLoading = () => {
-    // run spin
+export const showLoading = () => {
+    <SpinLoading />
 }
 
 
@@ -16,7 +18,8 @@ export const httpPostData = (url, data) => {
             resolve(response)
         })
         .catch((error) => {
-            // check error return: no data found
+            // console.log('error post data', error);
+            checkErrorReturn(error);
             reject(error)
         })
     })
@@ -31,7 +34,8 @@ export const httpGetData = (url, data) => {
             resolve(response)
         })
         .catch((error) => {
-            // check error return: no data found
+            // console.log('error get data', error)
+            checkErrorReturn(error);
             reject(error)
         })
     })
@@ -59,6 +63,7 @@ export const httpGetDataTable = async (table, filter = null) => {
             resolve(data.result);
           })
           .catch((error) => {
+            checkErrorReturn(error);
             reject(error)
         });
         });

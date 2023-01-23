@@ -1,6 +1,7 @@
 // import Swal from 'sweetalert2';
 // modal, notification, spin
 import {JWT_TOKEN} from '../configs/config';
+import { openNotification, typeNotify } from './notification';
 
 export const TableView = {
   MAIN_ID: 0,
@@ -154,9 +155,9 @@ export const  validateDate=(timeDate)=> {
 }
 
 
-export const checkErrorRetun=(error)=>{
+export const checkErrorReturn=(error)=>{
   if(!!!error.response){
-    //   Swal.fire('Kết nối mạng có vấn đề');
+    openNotification(typeNotify.WARNING, 'Kết nối mạng có vấn đề');
   }
   else
   {
@@ -165,42 +166,49 @@ export const checkErrorRetun=(error)=>{
         console.log("error ... error . ",error.response.request.response);
         var jsonValue= JSON.parse(error.response.request.response);
           localStorage.removeItem(JWT_TOKEN);
+    openNotification(typeNotify.WARNING, 'Bạn đã quá phiên đăng nhập');
+
         //   Swal.fire(jsonValue.error.message).then((value) => {
             // localStorage.removeItem('username');
             //localStorage.removeItem('username');
-            // window.location.href = window.location.protocol +'////'+ window.location.host +'/admin/#/login';
+            // window.location.href = window.location.protocol +'////'+ window.location.host +'/customer/login';
         //   });
 
           return;
       }
       if (404 === error.response.status) {
-        // redirect to 404 page
+        openNotification(typeNotify.WARNING, 'Không tìm thấy dữ liệu');
+        
+        // window.location.href='/customer/404';
+        return;
       }
       if (500 === error.response.status) {
-        // redirect to 500 page
+       openNotification(typeNotify.ERROR, 'Có lỗi từ phía máy chủ hệ thống');
+        return;
       }
       if((error.response.data.error =="No token provided")){
+    openNotification(typeNotify.WARNING, 'Bạn đã quá phiên đăng nhập');
           localStorage.removeItem(JWT_TOKEN);
-        //   Swal.fire('Quá phiên đăng nhập').then((value) => {
-            // localStorage.removeItem('username');
-            // window.location.href = window.location.protocol +'////'+ window.location.host +'/admin/#/login';
-        //   });
+          setTimeout(() => {
+          window.location.href='/customer/login';
+          }, 6000)
           return;
       }
-      var dataAcess=" Lỗi chi tiết "+ error;
-      if(!!error.response.data)
-      {
-          if((!!error.response.data.data)&&(!!error.response.data.data.message)){
-            dataAcess += "\r\n ||" +error.response.data.data.message;
-          }
-          if(!!error.response.data.error){
-            dataAcess += "\r\n ||" +error.response.data.error.message;
-          }
-          if((!!error.response.data.error)&&(!!error.response.data.error.sqlMessage)){
-            dataAcess += "\r\n ||" +error.response.data.error.sqlMessage;
-          }
-      }
+      // var dataAcess=" Lỗi chi tiết "+ error;
+      // if(!!error.response.data)
+      // {
+      //     if((!!error.response.data.data)&&(!!error.response.data.data.message)){
+      //       dataAcess += "\r\n ||" +error.response.data.data.message;
+      //     }
+      //     if(!!error.response.data.error){
+      //       dataAcess += "\r\n ||" +error.response.data.error.message;
+      //     }
+      //     if((!!error.response.data.error)&&(!!error.response.data.error.sqlMessage)){
+      //       dataAcess += "\r\n ||" +error.response.data.error.sqlMessage;
+      //     }
+      // }
       console.log("error ... error . ",error.response);
+    openNotification(typeNotify.ERROR, error.response);
     //   Swal.fire( " Lỗi",dataAcess,"ok");
   }
 }
