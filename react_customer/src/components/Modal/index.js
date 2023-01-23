@@ -1,37 +1,30 @@
-import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import React from 'react';
+import { Modal } from 'antd';
 
-const ModalComponent = () => {
-  const [open, setOpen] = useState(true);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleOk = () => {
-    setModalText('The modal will be closed after two seconds');
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false);
-  };
-  return (
-    <>
-      <Modal
-        title="Title"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
+const typeEnum = {
+  infomation: 1,
+  success: 2,
+  error: 3,
+  warninig: 4,
+  edit: 5,
+  delete: 6
+}
+
+const ModalComponent = ({type, title, message, isModalOpen, handleOK, handleCancel}) => {
+  console.log('alo alo alo alo')
+  // const [numbe]
+  
+return(
+  <Modal
+        title={title}
+        open={isModalOpen}
         onCancel={handleCancel}
+        closable={false}
+        footer={false}
       >
-        <p>{modalText}</p>
+        {message}
       </Modal>
-    </>
-  );
+)
+ 
 };
 export default ModalComponent;
