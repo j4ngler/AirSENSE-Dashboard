@@ -15,12 +15,16 @@ export default function News() {
   const [fileList, setFileList] = useState([]);
   const options = [
     {
-      value: "zhejiang",
-      label: "Chuyên mục đơn lẻ",
+      value: "evironment",
+      label: "Môi trường",
     },
     {
-      value: "jiangsu",
-      label: " Chuyên mục chính",
+      value: "stem",
+      label: " STEM",
+    },
+    {
+      value: "activity",
+      label: "Hoạt động",
     },
   ];
   const getBase64 = (file) =>
