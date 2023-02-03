@@ -1,59 +1,64 @@
 const express = require('express');
 const router = express.Router();
-const Chat = require('../app/models/Chat.model');
+const Chat = require('../app/models/chat.model');
+const Comment = require('../app/models/comment.model.js');
 const adminAuthenticated = require('../middlewares/authenticate.js');
 const customerAuthenticated = require('../middlewares/authenticateCustomer');
 const chatCtrl = require('../controllers/chat.controller');
 const mqtt = require('mqtt');
 const checkParentId = require('../middlewares/getParentCommentId');
 const getParentCommentId = require('../middlewares/getParentCommentId');
-var option={
-	port:3002,
-	clientId : 'message_' + Math.random().toString(16).substr(2, 8),
-	username : "test",
-	useNewUrlParser: true,
-	password: 'testadmin'
-};
+// var option={
+// 	port:3002,
+// 	clientId : 'message_' + Math.random().toString(16).substr(2, 8),
+// 	username : "test",
+// 	useNewUrlParser: true,
+// 	password: 'testadmin'
+// };
 
-var client = mqtt.connect('ws://localhost:3002', option);
-client.on('connect', function(){
+// var client = mqtt.connect('ws://localhost:3002', option);
+// client.on('connect', function(){
 
-});
+// });
 
 
-router.route('/chat').post(adminAuthenticated, checkParentId, (req, res) => {
-  console.log("chat",req.body);
-  var currentTime = (new Date()).getTime()/1000;
-  var currentPost = currentTime*1000 + req.currentUser.users_id;
+// router.route('/comment_user').post(adminAuthenticated, checkParentId, (req, res) => {
+router.route('/comment_user').post( (req, res) => {
+
+  // console.log("chat",req.body);
+  var currentTime = Math.floor((new Date()).getTime()/1000);
+  var currentPost = 'usr_' + currentTime + '_2';
   let commentParentId = currentPost;
-  if(req.parentId !==0) commentParentId = req.parentId;
+  // if(req.parentId !==0) commentParentId = req.parentId;
   
   var infoSave ={
-    topic:"/comment/"+req.body.post_id,
-    comment_id:currentPost,
+    topic:req.body.topic,
+    commentId:currentPost,
     content:{
-      post_id:req.body.post_id,
-      author_id:req.currentUser.users_id,
+      // author_id:req.currentUser.users_id,
+      author_id: 2, //fake ID user
+      type_user: 1,
       author_IP:req.body.author_IP,
-      reply_id:req.currentUser.users_id,
       content:req.body.content,
       coment_tag:req.body.coment_tag, 
       comment_atack:req.body.comment_atack,
-      comment_parent_id: commentParentId,
-      comment_reply_id: req.body.id_comment_reply
+      comment_parent_id: req.body.comment_parent_id,
+      comment_reply_id: req.body.comment_reply_id
     },
     time:currentTime
 
   };
 
-  console.log(infoSave);
+  console.log('comment', infoSave);
 
-  Chat.insertMany(infoSave, function (err, data) {
-    if (err) 
+  Comment.insertMany(infoSave, function (err, data) {
+    if (err) {
+    console.log('error', err);
       res.status(500).send({success: err, message: 'Server Error!'});
+    }
     else{
       console.log('ok')
-      client.publish(infoSave.topic, JSON.stringify(infoSave));
+      // client.publish(infoSave.topic, JSON.stringify(infoSave));
       res.send(JSON.stringify({content:infoSave.content,time:infoSave.time}));
     }
   });

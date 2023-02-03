@@ -366,7 +366,7 @@ class ReportManager extends CommonModel {
       .set("id_update", idcreate)
       .set("createat", "NOW()", { dontQuote: true })
       .set("updateat", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0);
+      .set("delete_flag", 0);
     console.log(authen.toString());
     return new Promise((resolve, reject) => {
       knex
@@ -409,7 +409,7 @@ class ReportManager extends CommonModel {
       .set("id_update", userId)
       .set("createat", "NOW()", { dontQuote: true })
       .set("updateat", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0);
+      .set("delete_flag", 0);
     return new Promise((resolve, reject) => {
       knex
         .raw(query.toString())
@@ -526,13 +526,15 @@ class ReportManager extends CommonModel {
   getStation(stationId) {
     var query = squel
       .select()
-      .from("sparc_location_sensor")
+      .from("device_sensor")
       .where("station_id = " + stationId);
     return new Promise((resolve, reject) => {
-      if (stationId.includes(",")) {
-        var station = { content: "All" };
-        resolve(station);
-      }
+      // if (stationId.includes(",")) {
+      //   var station = { content: "All" };
+      //   resolve(station);
+      // }
+
+      // console.log(query.toString());
       knex
         .raw(query.toString())
         .then(function (stations) {
@@ -573,10 +575,11 @@ class ReportManager extends CommonModel {
     // });
     console.log(fromTime, toTime, stationID);
     const stationSelect = 'sensor/'+stationID;
-
-    const result = await DataSensor.find({"content": {$exists:true}, "topic": stationSelect, $and: [ { "time": {$gt: fromTime}}, { "time": {$lt: toTime} }]});
+    console.log(stationSelect)
+    const result = await sensor.find({"content": {$exists:true}, "topic": stationSelect, $and: [ { "time": {$gt: fromTime}}, { "time": {$lt: toTime} }]});
     // console.log(result);
-    return JSON.stringify(result);
+    // return JSON.stringify(result);
+    return result;
   }
 
   formatDate(date) {

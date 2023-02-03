@@ -415,7 +415,7 @@
 
             }
 
-       
+            
         function exportReport() {
             var fromTime = new Date($('#fromTime').val());
             const getFromTime = fromTime.getTime();
@@ -429,36 +429,43 @@
             if(isNaN(fromTime.getFullYear())) {
                 fromTime = undefined;
             } 
-            else fromTime = fromTime.getFullYear() +'-'+ fromTime.getMonth() +'-'+ fromTime.getDate() +' '+ fromTime.getHours() +':'+ fromTime.getMinutes() +':00';
+            else 
+            fromTime = fromTime.getFullYear() +'-'+ fromTime.getMonth() +'-'+ fromTime.getDate() +' '+ fromTime.getHours() +':'+ fromTime.getMinutes() +':00';
             if(isNaN(toTime.getFullYear())) {
                 toTime = undefined;
             } 
-            else toTime = toTime.getFullYear() +'-'+ toTime.getMonth() +'-'+ toTime.getDate() +' '+ toTime.getHours() +':'+ toTime.getMinutes() +':00';  
+            else 
+            toTime = toTime.getFullYear() +'-'+ toTime.getMonth() +'-'+ toTime.getDate() +' '+ toTime.getHours() +':'+ toTime.getMinutes() +':00';  
             
             
             var now = new Date().getTime()/1000;
-            if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
-                $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
-            }
-            if(isNaN(fromTime.getFullYear())) {
-                fromTime = undefined;
-            } 
-            else fromTime = fromTime.getTime()/1000;
-            if(isNaN(toTime.getFullYear())) {
-                toTime = undefined;
-            } 
-            else toTime = toTime.getTime()/1000;
+            // if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
+            //     $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
+            // }
+            // if(isNaN(fromTime.getFullYear())) {
+            //     fromTime = undefined;
+            // } 
+            // else fromTime = fromTime.getTime()/1000;
+            // if(isNaN(toTime.getFullYear())) {
+            //     toTime = undefined;
+            // } 
+            // else toTime = toTime.getTime()/1000;
+            var data = {
+                'fromTime': fromTime, 
+                'toTime': toTime, 
+                'station_id': station_id,
+                'getFromTime': getFromTime,
+                'getToTime': getToTime
+        };
 
-
-
-            var data = {'fromTime': fromTime, 'toTime': toTime, 'station_id': station_id};
+    
             var link = '/api/social/getReportStations';
             console.log(data)
             $.ajax({
                     type: 'post',
                     method: 'POST',
                     url: link,
-                    data: JSON.stringify( {station_id: station_id, fromTime: fromTime, toTime: toTime, getFromTime: getFromTime, getToTime: getToTime}),
+                    data: JSON.stringify( {station_id: station_id, fromTime: fromTime, toTime: toTime, getFromTime: getFromTime/1000, getToTime: getToTime/1000 }),
                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
                         credentials: 'same-origin', // include, *same-origin, omit
                         redirect: 'follow', // manual, *follow, error

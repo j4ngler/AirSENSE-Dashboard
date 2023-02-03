@@ -13,4 +13,4 @@ export const JWT_TOKEN = process.env.REACT_APP_JWT_TOKEN;
 export const HOST_HTTP_CHAT = process.env.REACT_APP_HOST_HTTP_CHAT; 
 export const HOST_HTTP_HISTORY_CHAT = process.env.REACT_APP_HOST_HTTP_HISTORY_CHAT;
 
-export const HOST_HTTP_COMMENT = process.env.REACT_APP_HOST_HTTP_COMMENT; 
+export const HOST_HTTP_COMMENT = 'http://localhost:3002/api'; 
