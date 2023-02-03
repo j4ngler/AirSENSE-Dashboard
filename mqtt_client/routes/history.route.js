@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Chat = require('../app/models/Chat.model');
+const Chat = require('../app/models/chat.model');
 
 
 router.route('/login').get((req, res) => {

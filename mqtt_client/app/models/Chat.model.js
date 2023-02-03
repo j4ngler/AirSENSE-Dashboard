@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let Chat = new Schema({
+let Comment = new Schema({
     comment_id: {
         type: Number
     },
@@ -18,4 +18,4 @@ let Chat = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model('comment', Chat);
+module.exports = mongoose.model('chat', Comment);

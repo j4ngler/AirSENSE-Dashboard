@@ -4,7 +4,7 @@ import CommentManagement from '../../utils/commentMessage';
 
 let commentManagement = new CommentManagement();
 
-export const commentAction = createAsyncThunk('comment/data', async (params, { rejectWithValue }) => {
+export const commentAction = createAsyncThunk('comment/comment_user', async (params, { rejectWithValue }) => {
     try {
       const response = await commentAPI.postComment({ ...params });
       return response.data;
