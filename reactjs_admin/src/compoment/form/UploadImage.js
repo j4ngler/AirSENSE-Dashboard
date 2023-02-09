@@ -21,6 +21,7 @@ const UploadImage = ({ urlImage, uploadfileDataLink }) => {
             event.preventDefault();
             const data = new FormData() 
             data.append('file', event.target.files[0]);   
+            console.log(data)
             uploadfileDataImage(data).then((response)=>{
                 var value = response.data.url;
                 console.log("uploadfileDataImage.....................",response,response.data.path,value);

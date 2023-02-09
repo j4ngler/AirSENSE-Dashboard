@@ -439,7 +439,7 @@ customerCtrl.getAllInfoProduct = async function (req, res) {
 
 customerCtrl.getInfoProduct = async function (req, res) {
   var sql =
-    "SELECT product_store.*,product.title,product.description,product.thumbnail FROM product_store LEFT JOIN product on product_store.product_id=product.product_id WHERE product_store.delete_flag =0  AND product.store=" +
+    "SELECT product_store.*,product.title,product.description,product.thumbnail FROM product_store LEFT JOIN product_variant on product_store.product_id=product.product_variant_id LEFT JOIN product on product_variant.product_id = product.product_id WHERE product_store.delete_flag =0  AND product.store=" +
     req.body["type"];
   var x = await knex.raw(sql);
   if (x != null && x.length > 0) {
@@ -451,11 +451,11 @@ customerCtrl.getInfoProduct = async function (req, res) {
 customerCtrl.getDetailProduct = async function (req, res) {
   console.log("req ...xxx....getDetailProduct...", req.query.type);
   var sql =
-    "SELECT product_store.*,product_image.*,product.title,product.description,product.thumbnail,product_varriant.* FROM product_image " +
-    "LEFT JOIN product_varriant on product_image.product_varriant_id=product_varriant.product_varriant_id " +
-    "LEFT JOIN product_store on product_image.product_varriant_id=product_store.product_varriant_id " +
-    "LEFT JOIN product on product_varriant.product_id=product.product_id WHERE product_image.delete_flag =0 " +
-    "AND product_varriant.product_id=" +
+    "SELECT product_store.*,product_image.*,product.title,product.description,product.thumbnail,product_variant.* FROM product_image " +
+    "LEFT JOIN product_variant on product_image.product_variant_id=product_variant.product_variant_id " +
+    "LEFT JOIN product_store on product_image.product_variant_id=product_store.product_variant_id " +
+    "LEFT JOIN product on product_variant.product_id=product.product_id WHERE product_image.delete_flag =0 " +
+    "AND product_variant.product_id=" +
     req.query.type;
   var x = await knex.raw(sql);
   if (x != null && x.length > 0) {
@@ -472,8 +472,8 @@ customerCtrl.getDetailProductPages = async function (req, res) {
   // console.log("req.query.type ==", req.query.type);
   var product_pages =
     "select product_spec.*,product.product_id from product_spec " +
-    "join product_varriant on product_spec.product_varriant_id = product_varriant.product_varriant_id " +
-    "join product on product_varriant.product_id = product.product_id " +
+    "join product_variant on product_spec.product_variant_id = product_variant.product_variant_id " +
+    "join product on product_variant.product_id = product.product_id " +
     "where product_spec.delete_flag=0 and product.product_id = " +
     req.query.type;
   var result = await knex.raw(product_pages);
@@ -619,9 +619,9 @@ function getAllInfoProductInList(product_group, start, end) {
   var sql =
     "	SELECT product_store.*,product.group_sub_id,product.thumbnail,product.product_id,product.title,product_image.link_url" +
     "  FROM product " +
-    "JOIN product_varriant on product.product_id= product_varriant.product_id " +
-    "JOIN product_store on product_varriant.product_varriant_id=product_store.product_varriant_id " +
-    "JOIN product_image on product_varriant.product_varriant_id=product_image.product_varriant_id " +
+    "JOIN product_variant on product.product_id= product_variant.product_id " +
+    "JOIN product_store on product_variant.product_variant_id=product_store.product_variant_id " +
+    "JOIN product_image on product_variant.product_variant_id=product_image.product_variant_id " +
     "WHERE product.delete_flag = 0  " +
     "AND product.group_sub_id = " +
     product_group +

@@ -14,6 +14,8 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import DetailsIcon from '@material-ui/icons/Details';
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+
 import {
   Comment,
   Settings,
@@ -63,9 +65,11 @@ import LoginPage from './container/authen/LoginPage';
 import InfoAccount from './container/authen/account';
 import Header from './compoment/header/header.js';
 import StationMapManager from './container/station_map/stationMapManager';
+import AddProduct from './container/manager/product/AddProduct.js';
+
 const App = () => {
   return (
-    <div className='container-app'>
+    <div className="container-app">
       <Admin
         dataProvider={jsonServerProvider(HOST_HTTP)}
         authProvider={authProvider}
@@ -76,7 +80,7 @@ const App = () => {
           <Layout {...props} menu={TreeMenu} appBar={MenuHeader} typography />
         )}
       >
-         <Resource
+        <Resource
           name="user"
           options={{ label: 'Tài khoản' }}
           icon={UserIcon}
@@ -112,7 +116,19 @@ const App = () => {
           icon={TextFormat}
           list={RegisterPage}
         />
-        
+        {/* Sản phẩm*/}
+        <Resource
+          name="products"
+          options={{ label: 'Sản phẩm', isMenuParent: true }}
+          icon={ShoppingCartIcon}
+          list={LockScreen}
+        />
+        <Resource
+          name="addproduct"
+          options={{ label: 'Thêm sản phẩm', menuParent: 'products' }}
+          icon={ControlPointIcon}
+          list={AddProduct}
+        />
         <Resource
           name="service_x"
           options={{ label: 'Trạm', isMenuParent: true }}
@@ -142,38 +158,38 @@ const App = () => {
         />
 
         <Resource
-          name="products"
+          name="sensor"
           options={{ label: 'sensor', isMenuParent: true }}
           icon={ShoppingCartIcon}
           list={LockScreen}
         />
         <Resource
           name="sparc_aqi"
-          options={{ label: 'AQI', menuParent: 'products' }}
+          options={{ label: 'AQI', menuParent: 'sensor' }}
           icon={KeyboardReturnIcon}
           list={NomalTable}
         />
         <Resource
           name="extended_data"
-          options={{ label: 'Mỏ rộng', menuParent: 'products' }}
+          options={{ label: 'Mỏ rộng', menuParent: 'sensor' }}
           icon={ShoppingCartIcon}
           list={NomalTable}
         />
         <Resource
           name="sparc_sensor_data"
-          options={{ label: 'Dữ liệu sensor', menuParent: 'products' }}
+          options={{ label: 'Dữ liệu sensor', menuParent: 'sensor' }}
           icon={ReceiptIcon}
           list={NomalTable}
         />
         <Resource
           name="sparc_sensor_max_min"
-          options={{ label: 'Cài đặt MaxMin', menuParent: 'products' }}
+          options={{ label: 'Cài đặt MaxMin', menuParent: 'sensor' }}
           icon={HighlightOffIcon}
           list={NomalTable}
         />
         <Resource
           name="sparc_sensor_warning"
-          options={{ label: 'warning', menuParent: 'products' }}
+          options={{ label: 'warning', menuParent: 'sensor' }}
           icon={DetailsIcon}
           list={NomalTable}
         />
@@ -189,8 +205,7 @@ const App = () => {
           options={{ label: 'Đăng xuất' }}
           icon={KeyboardBackspace}
           list={LogoutPage}
-        /> 
-
+        />
       </Admin>
     </div>
   );

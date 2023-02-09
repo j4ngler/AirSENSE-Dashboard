@@ -23,7 +23,8 @@ userCtrl.getTableData = function (req, res) {
   if (!!req.body.startPage) startPage = req.body.startPage;
   // console.log(req.body.table)
   var tableSelect = mangerModelAdmin(req.body.table);
-  console.log('current', req.currentUser);
+  console.log("current", req.currentUser);
+  console.log("req", req.body);
   if (!!tableSelect) {
     if (
       !tableSelect.checkAcessGetDatabase(
@@ -45,48 +46,57 @@ userCtrl.getTableData = function (req, res) {
         tableSelect.getConditionManisfest(req.currentUser) +
         itemSelect;
     }
-    dataTableSQL =dataTableSQL + " LIMIT "+startPage +","+(startPage+1000);
-    console.log("dataTableSQL   ",dataTableSQL);
-    knex.raw(dataTableSQL)
-    .then(result => {
-      return returnOK(res,result[0]);
-    }
-    , error => {
-      return returnNotFound(res,error);
-    });
-  }
-  else 
-    return returnNotFound(res,{ message: "Database inval x" });
-}
+    dataTableSQL =
+      dataTableSQL + " LIMIT " + startPage + "," + (startPage + 1000);
+    console.log("dataTableSQL   ", dataTableSQL);
+    knex.raw(dataTableSQL).then(
+      (result) => {
+        return returnOK(res, result[0]);
+      },
+      (error) => {
+        return returnNotFound(res, error);
+      }
+    );
+  } else return returnNotFound(res, { message: "Database inval x" });
+};
 
 userCtrl.getDairyChange = (req, res) => {
-  var startPage=0;
-  if(!!req.body.startPage) startPage=req.body.startPage;
-  var tableSelect=mangerModelAdmin(req.body.table);
-  if(!!tableSelect){
-    if(!tableSelect.checkAcessGetDatabase(req.currentUser.manifestid,tableSelect.getTypeTable())){
-      return returnNotFound(res,{ message: "Database inval" });
+  var startPage = 0;
+  if (!!req.body.startPage) startPage = req.body.startPage;
+  var tableSelect = mangerModelAdmin(req.body.table);
+  if (!!tableSelect) {
+    if (
+      !tableSelect.checkAcessGetDatabase(
+        req.currentUser.manifestid,
+        tableSelect.getTypeTable()
+      )
+    ) {
+      return returnNotFound(res, { message: "Database inval" });
     }
 
-    startPage =startPage*1000;
-    var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);
-    var dataTableSQL=tableSelect.getSQLReport(req.currentUser);
-    if(tableSelect.getFieldToDelete().valueSelect!=""){
-        dataTableSQL= dataTableSQL +" WHERE "+   tableSelect.getDairyChange(req.currentUser) +itemSelect; 
+    startPage = startPage * 1000;
+    var itemSelect = tableSelect.getValueToSelectToFind(req.body.dataFind);
+    var dataTableSQL = tableSelect.getSQLReport(req.currentUser);
+    if (tableSelect.getFieldToDelete().valueSelect != "") {
+      dataTableSQL =
+        dataTableSQL +
+        " WHERE " +
+        tableSelect.getDairyChange(req.currentUser) +
+        itemSelect;
     }
-    dataTableSQL =dataTableSQL + " LIMIT "+startPage +","+(startPage+1000);
-    console.log("dataTableSQL   ",dataTableSQL);
-    knex.raw(dataTableSQL)
-    .then(result => {
-      return returnOK(res,result[0]);
-    }
-    , error => {
-      return returnNotFound(res,error);
-    });
-  }
-  else 
-    return returnNotFound(res,{ message: "Database inval x" });
-}
+    dataTableSQL =
+      dataTableSQL + " LIMIT " + startPage + "," + (startPage + 1000);
+    console.log("dataTableSQL   ", dataTableSQL);
+    knex.raw(dataTableSQL).then(
+      (result) => {
+        return returnOK(res, result[0]);
+      },
+      (error) => {
+        return returnNotFound(res, error);
+      }
+    );
+  } else return returnNotFound(res, { message: "Database inval x" });
+};
 
 userCtrl.getTableDataByGroup = function (req, res) {
   var table = req.body.table;
@@ -183,15 +193,15 @@ userCtrl.addDataToTable = async function (req, res) {
       });
     }
     // console.log("checkInaval", checkInaval);
-
+    console.log("data=>>>>",data);
     var sqlData = await tableSelect.checkSqlAddAdmin(req, data);
-    console.log(sqlData)
+    console.log(sqlData);
     knex.raw(sqlData).then(
       (result) => {
         return returnOK(res, result[0]);
       },
       (error) => {
-        console.log(error)
+        console.log(error);
         return returnFalse(res, error);
       }
     );
@@ -201,8 +211,10 @@ userCtrl.addDataToTable = async function (req, res) {
 };
 
 userCtrl.deleteData = async function (req, res) {
+  console.log(req.body.table);
   var tableSelect = mangerModelAdmin(req.body.table);
   if (!!!tableSelect) {
+    console.log("Khong thayyyy");
     return returnNotFound(res, { message: "Database inval" });
   }
   if (
@@ -223,7 +235,7 @@ userCtrl.deleteData = async function (req, res) {
     .table(tableSelect.getNameTable())
     .set("id_updated", req.currentUser.users_id)
     .set("updated_at", "NOW()", { dontQuote: true })
-    .set("deleteflag", 1)
+    .set("delete_flag", 1)
     .where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
   knex
     .raw(deleteSQL.toString())
@@ -231,6 +243,7 @@ userCtrl.deleteData = async function (req, res) {
       return returnOK(res, x);
     })
     .catch(function (err) {
+      console.log("Loiiii");
       return returnNotFound(res, { message: "Database inval" });
     });
 };
@@ -265,32 +278,38 @@ userCtrl.updateData = async function (req, res) {
      */
     squelGet.field(item);
   }
-  squelGet.where(dataUser.locationSelect+'='+data[dataUser.locationSelect]);
-  var authen = squel.insert().into(tableSelect.getNameTable())
-                      .fromQuery( dataUser.arrayCoppy, squelGet);
-                      console.log("updateDataauthen.toString() ",authen.toString());
-  var dataAdd= await knex.raw(authen.toString());
-  if((dataAdd==null)||(dataAdd.length<1)) return returnNotFound(res,"Không tồn tại bản ghi dữ liệu này");     
+  squelGet.where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
+  var authen = squel
+    .insert()
+    .into(tableSelect.getNameTable())
+    .fromQuery(dataUser.arrayCoppy, squelGet);
+  console.log("updateDataauthen.toString() ", authen.toString());
+  var dataAdd = await knex.raw(authen.toString());
+  if (dataAdd == null || dataAdd.length < 1)
+    return returnNotFound(res, "Không tồn tại bản ghi dữ liệu này");
   var authen2 = squel.update().table(tableSelect.getNameTable());
-                        authen2.where(dataUser.locationSelect+'='+dataAdd[0].insertId)
-                        .set(dataUser.valueSelect,1) 
-                        .set("id_updated",userid)
-                        .set("oldid",data[dataUser.locationSelect])
-                        .set("deleteflag",1)
-                        .set("updated_at","NOW()",{dontQuote: true});
-                        console.log('oauthen2');
-                        console.log(authen2.toString())
-  var deleteAdd= await knex.raw(authen2.toString());
-  if((deleteAdd==null)||(deleteAdd.length<1)) return returnFalse(res,"Lỗi cập nhật dữ liệu"); 
-  var sqlData = await tableSelect.checkSqlUpdateAdmin(req,data);   
-  knex.raw(sqlData).then(function(x) {
-      return returnOK(res,x);
-  }).catch(function(err){
-      return returnFalse(res,err);
-  });
-      
-}
-
+  authen2
+    .where(dataUser.locationSelect + "=" + dataAdd[0].insertId)
+    .set(dataUser.valueSelect, 1)
+    .set("id_updated", userid)
+    .set("oldid", data[dataUser.locationSelect])
+    .set("deleteflag", 1)
+    .set("updated_at", "NOW()", { dontQuote: true });
+  console.log("oauthen2");
+  console.log(authen2.toString());
+  var deleteAdd = await knex.raw(authen2.toString());
+  if (deleteAdd == null || deleteAdd.length < 1)
+    return returnFalse(res, "Lỗi cập nhật dữ liệu");
+  var sqlData = await tableSelect.checkSqlUpdateAdmin(req, data);
+  knex
+    .raw(sqlData)
+    .then(function (x) {
+      return returnOK(res, x);
+    })
+    .catch(function (err) {
+      return returnFalse(res, err);
+    });
+};
 
 userCtrl.updateUser = async (req, res) => {
   var tableSelect = mangerModelAdmin(req.body.table);
@@ -306,7 +325,6 @@ userCtrl.updateUser = async (req, res) => {
     return returnNotFound(res, { message: "Database not Acess 1" });
   }
 
-
   let data = req.body;
   var userid = req.currentUser.users_id;
   let dataUser = tableSelect.getFieldToDelete();
@@ -319,43 +337,48 @@ userCtrl.updateUser = async (req, res) => {
      */
     squelGet.field(item);
   }
-  squelGet.where(dataUser.locationSelect+'='+data[dataUser.locationSelect]);
-  var authen = squel.insert().into(tableSelect.getNameTable())
-                      .fromQuery( dataUser.arrayCoppy, squelGet);
-                      console.log("updateDataauthen.toString() ",authen.toString());
-  var dataAdd= await knex.raw(authen.toString());
-  if((dataAdd==null)||(dataAdd.length<1)) return returnNotFound(res,"Không tồn tại bản ghi dữ liệu này");     
+  squelGet.where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
+  var authen = squel
+    .insert()
+    .into(tableSelect.getNameTable())
+    .fromQuery(dataUser.arrayCoppy, squelGet);
+  console.log("updateDataauthen.toString() ", authen.toString());
+  var dataAdd = await knex.raw(authen.toString());
+  if (dataAdd == null || dataAdd.length < 1)
+    return returnNotFound(res, "Không tồn tại bản ghi dữ liệu này");
   var authen2 = squel.update().table(tableSelect.getNameTable());
-                        authen2.where(dataUser.locationSelect+'='+dataAdd[0].insertId)
-                        .set(dataUser.valueSelect,1) 
-                        .set("id_updated",userid)
-                        .set("oldid",data[dataUser.locationSelect])
-                        .set("deleteflag",1)
-                        .set("updated_at","NOW()",{dontQuote: true});
-                        console.log('oauthen2');
-                        console.log(authen2.toString())
-  var deleteAdd= await knex.raw(authen2.toString());
-  if((deleteAdd==null)||(deleteAdd.length<1)) return returnFalse(res,"Lỗi cập nhật dữ liệu"); 
+  authen2
+    .where(dataUser.locationSelect + "=" + dataAdd[0].insertId)
+    .set(dataUser.valueSelect, 1)
+    .set("id_updated", userid)
+    .set("oldid", data[dataUser.locationSelect])
+    .set("deleteflag", 1)
+    .set("updated_at", "NOW()", { dontQuote: true });
+  console.log("oauthen2");
+  console.log(authen2.toString());
+  var deleteAdd = await knex.raw(authen2.toString());
+  if (deleteAdd == null || deleteAdd.length < 1)
+    return returnFalse(res, "Lỗi cập nhật dữ liệu");
   var authen3 = squel.update().table(tableSelect.getNameTable());
-  authen3.where(dataUser.locationSelect+'='+userid)
-              .set('name', data.name)
-              .set('fullname', data.fullname)
-              .set('phoneNumber', data.phone)
-              .set('contact', data.contact)
-              .set('avartar', data.avartar)
-              .set("oldid", 0)
-              .set("deleteflag", 0)
-              .set('updated_at', 'NOW()',{dontQuote: true})
-  console.log("updateDataauthen.toString() ",authen3.toString());
-  knex.raw(authen3.toString()).then(function(x) {
-    return returnOK(res,'Cập nhật dữ liệu thành công');
-}).catch(function(err){
-    return returnFalse(res,err);
-});
-  
-  
-   
-
+  authen3
+    .where(dataUser.locationSelect + "=" + userid)
+    .set("name", data.name)
+    .set("fullname", data.fullname)
+    .set("phoneNumber", data.phone)
+    .set("contact", data.contact)
+    .set("avartar", data.avartar)
+    .set("oldid", 0)
+    .set("deleteflag", 0)
+    .set("updated_at", "NOW()", { dontQuote: true });
+  console.log("updateDataauthen.toString() ", authen3.toString());
+  knex
+    .raw(authen3.toString())
+    .then(function (x) {
+      return returnOK(res, "Cập nhật dữ liệu thành công");
+    })
+    .catch(function (err) {
+      return returnFalse(res, err);
+    });
 };
 
 userCtrl.updateFistPages = async function (req, res) {
@@ -437,15 +460,16 @@ userCtrl.registerUser = async function (req, res) {
     .set("deleteflag", "0")
     .set("oldid", "0");
   console.log(newUser.toString());
-  knex.raw(newUser.toString()).then(
-    (result) => {
+  knex
+    .raw(newUser.toString())
+    .then((result) => {
       return returnOK(res, { result: "Please waitting admin comfirm" });
     })
-  .catch((error) => {
-    console.log('error');
-    console.log(error);
-    return returnFalse(res, error);
-  })
+    .catch((error) => {
+      console.log("error");
+      console.log(error);
+      return returnFalse(res, error);
+    });
 };
 
 userCtrl.resetPass = async function (req, res) {
@@ -646,25 +670,22 @@ userCtrl.changePassword = async (req, res) => {
     });
 };
 
-
 userCtrl.listUser = async (req, res) => {
-  var table ='users';
-  var tableSelect=mangerModelAdmin(table);
-  var dataInfo = await tableSelect.queryDatabase(tableSelect.getAllInfoToChat());
-  if(dataInfo){
-    console.log(dataInfo)
-    return returnOK(res,dataInfo);
+  var table = "users";
+  var tableSelect = mangerModelAdmin(table);
+  var dataInfo = await tableSelect.queryDatabase(
+    tableSelect.getAllInfoToChat()
+  );
+  if (dataInfo) {
+    console.log(dataInfo);
+    return returnOK(res, dataInfo);
+  } else {
+    return returnFalse(res, { message: "phone and email is existing" });
   }
-  else{
-    return returnFalse(res,{ message: "phone and email is existing" } );
-  }
-}
+};
 
 userCtrl.listComment = async (req, res) => {
-  var mySql = squel
-  .select()
-  .from("content_page")
-  .where("deleteflag=0");
+  var mySql = squel.select().from("content_page").where("deleteflag=0");
   var result = await knex.raw(mySql.toString());
   if (result == null || result.length == 0) {
     return returnNotFound(res, { message: "No article" });
@@ -679,32 +700,33 @@ userCtrl.listComment = async (req, res) => {
         username: "cuong",
         email: "cuong@gmail.com",
         phone: "123456789",
-        avatar: "https://1.bp.blogspot.com/-n_bFzL9lPUU/Xp23H9Sk8yI/AAAAAAAAhyA/JYfvZhwguxc8vT_YS3w14Xi3YWf3hxqIQCLcBGAsYHQ/s1600/Hinh-Anh-Dep-Tren-Mang%2B%25282%2529.jpg",
-        fullname: "123456789"
+        avatar:
+          "https://1.bp.blogspot.com/-n_bFzL9lPUU/Xp23H9Sk8yI/AAAAAAAAhyA/JYfvZhwguxc8vT_YS3w14Xi3YWf3hxqIQCLcBGAsYHQ/s1600/Hinh-Anh-Dep-Tren-Mang%2B%25282%2529.jpg",
+        fullname: "123456789",
       },
       {
         users_id: 13,
         username: "cuong1",
         email: "luvancuong0105@gmail.com",
         phone: "0389992137",
-        avatar: "https://imgt.taimienphi.vn/cf/images/li/2017/9/26/hinh-anh-vui-hai-huoc.jpg",
-        fullname: "Lu van"
+        avatar:
+          "https://imgt.taimienphi.vn/cf/images/li/2017/9/26/hinh-anh-vui-hai-huoc.jpg",
+        fullname: "Lu van",
       },
       {
         users_id: 14,
         username: "levan cuong",
         email: "luvan1@gmail.com",
         phone: "0988891234",
-        avatar: "https://i.pinimg.com/236x/be/81/a2/be81a2314054d5effd7ea90e8375fbfe.jpg",
-        fullname: "anhban"
+        avatar:
+          "https://i.pinimg.com/236x/be/81/a2/be81a2314054d5effd7ea90e8375fbfe.jpg",
+        fullname: "anhban",
       },
-     
-   
-    ]
-  }
+    ],
+  };
   res.json({
-    data: result1
+    data: result1,
   });
-}
+};
 
 module.exports = userCtrl;

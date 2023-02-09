@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 body {
-  margin-top: 80px;
+  /* margin-top: 80px; */
   padding: 0;
   font-family: 'Open Sans', sans-serif;
 }
@@ -152,6 +152,8 @@ h6 {
   display: flex;
   position: fixed;
   z-index: 300000 !important;
+  justify-content: center;
+  width: 100vw;
 }
 .table-table {
   border-radius: 0px;
@@ -794,7 +796,7 @@ p.line {
   height: 40px;
 }
 .RaLayout-appFrame-2 {
-  margin-top: 74px !important;
+  /* margin-top: 74px !important; */
 }
 .RaLayout-contentWithSidebar-3 {
   margin-top: 0 !important;
@@ -831,7 +833,269 @@ p.line {
   font-weight: 600;
   margin-right: 16px;
 }
-.MuiPaper-root.MuiAppBar-root.MuiAppBar-positionFixed.MuiAppBar-colorPrimary {
-  margin-top: 80px;
+/* Thêm sản phẩm */
+.root-dm-message .title-dm-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 }
-/*  */
+.root-dm-message .title-dm-message input {
+  font-size: 24px;
+}
+.root-dm-message .title-dm-message button {
+  height: 46px;
+  padding: 15px;
+  margin: 0 5px;
+}
+.root-dm-message .title-dm-message button a {
+  text-decoration: none;
+  color: inherit;
+}
+.root-dm-message .collapse-title-dm-message {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+.root-dm-message .collapse-title-dm-message h3 {
+  font-family: 'Roboto';
+}
+.root-dm-message .collapse-content-dm-message {
+  padding: 15px;
+}
+.root-dm-message .collapse-dm-message {
+  margin-bottom: 20px;
+}
+.root-dm-message .official-account-dm-message {
+  display: flex;
+  flex-direction: column;
+}
+.root-dm-message .official-account-dm-message label {
+  max-width: 200px;
+  margin-bottom: 15px;
+  height: 56px;
+}
+.root-dm-message .official-account-dm-message span {
+  font-family: 'Roboto';
+  line-height: 20px;
+  font-size: 0.74rem;
+  color: #5f666d;
+}
+.root-dm-message .margin-right-dm-message {
+  margin-right: 15px;
+}
+.root-dm-message .margin-bottom-dm-message {
+  margin-bottom: 15px;
+}
+.root-dm-message .align-items-center-dm-message {
+  display: flex;
+  align-items: center;
+}
+.root-dm-message .expanded-dm-message {
+  border-color: #0085fe;
+}
+
+.form-dm-message {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.message-content-dm-message {
+  display: flex;
+}
+.input-dm-message {
+  max-width: 300px;
+  margin-bottom: 15px;
+}
+.root-dm-message .input-dm-message {
+  max-width: 300px;
+  margin-bottom: 15px;
+}
+.root-dm-message .form-dm-message {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.root-dm-message .emo-dm-message {
+  max-width: 350px;
+  margin: 14px;
+  padding: 20px;
+  background-color: #dce1e7;
+  border-radius: 8px;
+}
+.root-dm-message .demo-message-dm-message {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+.root-dm-message .text-box-dm-message {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto';
+  margin-bottom: 15px;
+}
+.root-dm-message .text-box-dm-message span {
+  font-weight: 500;
+}
+.root-dm-message .text-box-dm-message p {
+  color: #5f666d;
+  font-size: 0.75rem;
+}
+.root-dm-message .messages-dm-message {
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  padding: 14px 18.5px;
+  border-radius: 4px;
+}
+.root-dm-message .message-dm-message {
+  cursor: pointer;
+  display: flex;
+}
+.root-dm-message .message-dm-message textarea {
+  width: 100%;
+  font-family: 'Roboto';
+  border: none;
+  font-size: 1rem;
+}
+.root-dm-message .message-content-dm-message {
+  display: flex;
+}
+.root-dm-message .action-button-dm-message {
+  font-family: 'Roboto';
+  padding: 10px 10px 7px 10px;
+  display: flex;
+  align-items: center;
+}
+.root-dm-message .action-fields-dm-message {
+  display: flex;
+  align-items: flex-end;
+}
+.root-dm-message .variable-dm-message {
+  display: flex;
+}
+
+.title-dm-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.title-dm-message input {
+  font-size: 24px;
+}
+.title-dm-message button {
+  height: 46px;
+  padding: 15px;
+  margin: 0 5px;
+}
+.title-dm-message button a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.root-dm-message .title-dm-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.root-dm-message .title-dm-message input {
+  font-size: 24px;
+}
+.root-dm-message .title-dm-message button {
+  height: 46px;
+  padding: 15px;
+  margin: 0 5px;
+}
+.root-dm-message .title-dm-message button a {
+  text-decoration: none;
+  color: inherit;
+}
+.root-dm-message .collapse-title-dm-message {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+.root-dm-message .collapse-title-dm-message h3 {
+  font-family: 'Roboto';
+}
+
+.filter-box-search {
+  padding: 1px;
+  margin: 3px;
+}
+
+.text-box-search {
+  padding: 1px !important;
+  margin: 3px !important;
+}
+
+.box-button-common {
+  margin-right: 3px !important;
+  margin-left: 3px !important;
+}
+
+.hidden-button {
+  background-color: #444;
+}
+
+.layout-info-group {
+  position: relative;
+}
+
+.group-button-dm-layout {
+  position: absolute;
+  right: -55px;
+  width: 200px;
+  top: -60px;
+}
+.margin-label-right {
+  margin-right: 20px;
+}
+.test-main-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.text-info-layout {
+  width: 30%;
+  margin: 10px 0;
+}
+
+.margin-right-account {
+  margin-right: 10px !important;
+}
+
+.text-bill-message {
+  padding-right: 30px;
+}
+
+.image-bill-message {
+  width: 100px;
+  height: 80px;
+}
+.div-bill-message {
+  width: 100%;
+  height: 80px;
+}
+
+.div-bill-body-detail {
+  overflow: auto;
+  height: 300px;
+}
+
+/* Create two equal columns that floats next to each other */
+.div-bill-title-column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.div-bill-title-row:after {
+  content: '';
+  display: table;
+  clear: both;
+}
