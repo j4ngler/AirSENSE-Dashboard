@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import commentAPI from "./commentAPI";
 import CommentManagement from '../../utils/commentMessage';
 
+
 let commentManagement = new CommentManagement();
 
 export const commentAction = createAsyncThunk('comment/comment_user', async (params, { rejectWithValue }) => {
@@ -13,6 +14,8 @@ export const commentAction = createAsyncThunk('comment/comment_user', async (par
       return rejectWithValue(error?.response?.data?.message || error?.response || error);
     }
   });
+
+// export const getComment = createAsyncThunk('')
 
 
 export const commentSlice = createSlice({
@@ -69,8 +72,16 @@ export const commentSlice = createSlice({
 
         tagUsers: (state, action) => {
             state.commentExtra.tagUsers = action.payload;
-        }
+        },
 
+        loadConversation: (state,action) =>{
+            // getComment();
+            // state.selectedConversation = commentManagement.modifyData(state.data);
+            state.selectedConversation = commentManagement.modifyData();
+            console.log(state.selectedConversation);
+
+            
+        }
 
 
         // initComment: (state, action) => {
@@ -132,7 +143,7 @@ export const commentSlice = createSlice({
     extraReducers: (buider) => {
         buider
           .addCase(commentAction.pending, (state, action) => {
-           
+           state.data = [];
           })
           .addCase(commentAction.fulfilled, (state, action) => {
            
@@ -143,5 +154,5 @@ export const commentSlice = createSlice({
       }
 });
 
-export const { initComment, uploadImage, tagUsers } = commentSlice.actions;
+export const { initComment, uploadImage, tagUsers, loadConversation } = commentSlice.actions;
 export default commentSlice.reducer;

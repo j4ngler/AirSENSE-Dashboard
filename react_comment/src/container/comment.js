@@ -3,6 +3,7 @@ import InputComment from '../component/Input';
 import { useDispatch, useSelector } from "react-redux";
 import { initComment, commentAction } from "../reducers/Comment/commentSlice";
 import { getGeolocation } from "../utils/commonUtils";
+import ListMessage from "../component/ListMessage";
 const Comment = () => {
     const comment_group_gs = useSelector(state => state.commentSlice.comment_group);
     const comment_sub_gs = useSelector(state => state.commentSlice.comment_sub);
@@ -55,12 +56,14 @@ const Comment = () => {
         dispatch(commentAction(messageComment));
     }
 
+
 }
      
 
     return (
         <>
         <InputComment handleComment={handleComment} infoReply={'test'}/>
+        <ListMessage/>
         </>
     )
 }
