@@ -12,7 +12,8 @@ export default {
           resolve(value);
         })
         .catch((err) => {
-          console.log('err.... ', err.response.request.response);
+
+          console.log('err....', err.response.request.response);
           reject(err);
         });
     });

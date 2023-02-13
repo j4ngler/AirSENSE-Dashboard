@@ -10,6 +10,7 @@ exports.returnOK =  (res, data) => {
 exports.returnOKCustom =  (res, data) => {
     return res.status(HttpStatus.OK).json(data);
 }  
+
 exports.returnFalse =  (res, error,error_code=404) => {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: error,
@@ -48,3 +49,10 @@ exports.returnInfoQuery =  (res,infoData,error_code=204) => {
     }     
 }
 
+exports.returnFalse =  (res, error,error_code=404) => {
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        error: error,
+        error_code:error_code,
+        data: { message: "account Not existing "},
+    });
+}

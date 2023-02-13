@@ -249,7 +249,7 @@ class CommonModel extends bookshelf.Model {
     async  checkDataToEdit(req){
         let data=req.body;
         let dataUser= this.getFieldToDelete();
-        var getInfoData = squel.select().from(req.body.table).where("deleteflag=0");
+        var getInfoData = squel.select().from(req.body.table).where("delete_flag=0");
         if(Number.isInteger(data[dataUser.locationSelect]))
             getInfoData.where(dataUser.locationSelect+"="+data[dataUser.locationSelect]+"");
         else
