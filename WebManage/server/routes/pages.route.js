@@ -216,5 +216,11 @@ router.get("/sale/finish", (req, res) => {
 router.get("/sale/history", (req, res) => {
   res.render("sale/historyInvoice");
 });
-
+//Login 
+router.get("/login/admin", (req, res) => {
+  res.render("admin/admin");
+});
+router.get("/login/customer", (req, res) => {
+  res.render("customer/customer");
+});
 module.exports = router;

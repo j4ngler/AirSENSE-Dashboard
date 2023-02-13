@@ -63,11 +63,34 @@
       </a>
     </div>
     <div id="linktoLogin" href="#" class="appointment-btn scrollto">
-      <span class="d-none d-md-inline">Đăng nhập</span>
+      <span class="d-none d-md-inline" onclick="onLogin()">Đăng nhập</span>
     </div>
   </div>
 </header>
 <script>
+  function onLogin() {
+    Swal.fire({
+      title: "<strong>Tùy chọn đăng nhập</strong>",
+      icon: "info",
+      html:
+        `<button class="btn btn-success btn-lg" onclick="onLoginAdmin()">Admin</button> ` +
+        `<button  class="btn btn-primary btn-lg" onclick="onLoginCustomer()">Customer</button> `,
+      showConfirmButton: false,
+      showCloseButton: true,
+      // showCancelButton: true,
+      // focusConfirm: false,
+      // confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+      // confirmButtonAriaLabel: "Thumbs up, great!",
+      // cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+      // cancelButtonAriaLabel: "Thumbs down",
+    });
+  }
+  function onLoginAdmin() {
+    window.location.href = "http://localhost:3000/login/admin";
+  }
+  function onLoginCustomer() {
+    window.location.href = "http://localhost:3000/login/customer";
+  }
   function onReloadMenu() {
     var data = localStorage.getItem("cart");
     var dataCart = { name: "info", value: [] };
