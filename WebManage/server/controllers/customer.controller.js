@@ -472,8 +472,7 @@ customerCtrl.getDetailProductPages = async function (req, res) {
   // console.log("req.query.type ==", req.query.type);
   var product_pages =
     "select product_spec.*,product.product_id from product_spec " +
-    "join product_variant on product_spec.product_variant_id = product_variant.product_variant_id " +
-    "join product on product_variant.product_id = product.product_id " +
+    "join product on product.product_id = product_spec.product_id " +
     "where product_spec.delete_flag=0 and product.product_id = " +
     req.query.type;
   var result = await knex.raw(product_pages);
