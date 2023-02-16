@@ -300,17 +300,23 @@ iotCtrl.getDataStation = async (req, res) => {
   const { stationID, fromTime, toTime } = req.body;
   console.log(fromTime, toTime, stationID);
   const stationSelect = "sensor/" + stationID;
+  console.log(new Date());
   const result = await DataSensor.find(
     {
       content: { $exists: true },
       topic: stationSelect,
       $and: [{ time: { $gt: fromTime } }, { time: { $lt: toTime } }],
     },
-    { _id: 0 }
+    { _id: 0, __v: 0, topic: 0 }
   )
     .hint({ time: 1 })
     .lean();
-  res.send(JSON.stringify(result));
+    console.log(new Date());
+//   res.send(JSON.stringify(result));
+    res.send(JSON.stringify({
+        station: stationID,
+        data: result
+    }));
 };
 
 
