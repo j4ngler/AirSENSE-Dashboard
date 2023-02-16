@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import InputUser from "../Input/InputUser";
-import { replyComment } from "../../reducers/commentReducer";
+// import InputUser from "../Input/InputUser";
+// import { replyComment } from "../../reducers/commentReducer";
 const MessageItem = ({message, isReply, submitData}) => {  
     let d = new Date(message.time * 1000);
     var date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes();
@@ -14,11 +14,11 @@ const MessageItem = ({message, isReply, submitData}) => {
         w.document.write(image.outerHTML);
       }
 
-      const _replyMessage = (item) => {
-        console.log('reply message', item);
-        setShowReplyBox(true);
-        dispatch(replyComment(item));
-      }
+      // const _replyMessage = (item) => {
+      //   console.log('reply message', item);
+      //   setShowReplyBox(true);
+      //   dispatch(replyComment(item));
+      // }
     return (
          <div className='comment-item'>
             <div className="mt-2">
@@ -36,7 +36,7 @@ const MessageItem = ({message, isReply, submitData}) => {
                     <p className="text-justify comment-text mb-0">{message.content.content}</p>
                     <div className="d-flex flex-row user-feed"> 
                         <span className="wish"><i className="fa fa-heartbeat mr-2" />24</span> 
-                        <span className="ml-3" onClick={() => _replyMessage(message)}><i className="fa fa-comments-o mr-2" />Reply</span> 
+                        {/* <span className="ml-3" onClick={() => _replyMessage(message)}><i className="fa fa-comments-o mr-2" />Reply</span>  */}
                     </div>
                   </div>
                 </div>
@@ -48,7 +48,7 @@ const MessageItem = ({message, isReply, submitData}) => {
             <div className="close-show-reply">
               <i class="fa fa-times-circle icon-close" aria-hidden="true" onClick={() => setShowReplyBox(!showReplyBox)}></i>
             </div>
-            <InputUser  submitData={submitData} infoReply={message}/>
+            {/* <InputUser  submitData={submitData} infoReply={message}/> */}
           </div>:''}
       </div>);
 };
