@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import MessageItem from "./messageItem";
 import { loadConversation } from "../../reducers/Comment/commentSlice";
 import { useDispatch, useSelector} from "react-redux";
+import '../Input/input.css';
+import BoxMessage from "../MessageIteam/BoxMessage";
+// import ReplyComment from "../MessageIteam/replyComment";
 const ListMessage = () => {
   const dataComment = useSelector(state => state.commentSlice.selectedConversation);
   const dispatch = useDispatch();
@@ -11,7 +14,7 @@ const ListMessage = () => {
   useEffect(()=>{
     loadComment();
   },[])
-  
+  const [reply,setReply] = useState(false);
   return (
     // <div>
     //       {
@@ -40,22 +43,25 @@ const ListMessage = () => {
     //         );
     //       }) }
     // </div>
-    <>
-    <p>fjhawek</p>
+    <div className="box-info-container">
     {
       dataComment.map((item) =>{
         let children = item.children;
         return (
           <>
-        <p>{item.content.content}     /      {item.time}</p>
-        {children.map(e =>(
-          <p>Childern: {e.content.content}    /   </p>
-        ))}
+          <BoxMessage author ={item.author} content ={item.content.content} time = {item.timeConvert} />
+                  <div className="box-info-container" style={{marginLeft: 130}}>
+                  {
+                    children.map(e =>(
+                      <BoxMessage author ={e.author} content ={e.content.content} time = {e.time}/>
+                    ))
+                  }
+                  </div>
           </>
         )
       })
     }
-    </>
+    </div>
   );
   
 };

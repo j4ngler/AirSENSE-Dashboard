@@ -148,6 +148,7 @@ class CommentManagement {
                 dataInsert['timeSend']= '20:32 10/2/2022';
                 dataInsert['author']=this.findUser(dataInsert.content.author_id);
                 dataInsert['children'] = [];
+                dataInsert['timeConvert'] = this.timeConverter(dataInsert.time);
                 if(dataInsert.content.comment_reply_id !== 0){  // id_comment_reply
                     let idPrent = this.findParentComment(result, dataInsert.content.comment_parent_id);
                     // console.log(idPrent)
