@@ -417,7 +417,7 @@ documentCtrl.postUpdateAdvertisementToDataBase = function (request, res) {
       .set("id_created", request.currentUser.users_id)
       .set("id_updated", request.currentUser.users_id)
       .set("updated_at", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0)
+      .set("delete_flag", 0)
       .where("advertisement_id=" + request.body["advertisement_id"]);
     knex
       .raw(addData.toString())

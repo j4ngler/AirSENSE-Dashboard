@@ -92,7 +92,7 @@ router.route("/user").get(isAuthenticated, (req, res) => {
   console.log("req.currentUser", req.currentUser);
   console.log(isAuthenticated);
   User.query({
-    where: { userid: req.currentUser.users_id },
+    where: { user_id: req.currentUser.users_id },
     select: [
       "user_id",
       "username",
@@ -102,7 +102,6 @@ router.route("/user").get(isAuthenticated, (req, res) => {
       "password",
       "address",
       "avatar",
-      "note",
       "permission_id",
     ],
   })
@@ -140,11 +139,11 @@ router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
       } 
       else {
         let customer = new Customer();
-        const permmsions = await customer.getPermissionCustomer(4);
-        const customerSidebar = await permissionMappings.defineSideBar(permmsions);
+        const permissions = await customer.getPermissionCustomer(4);
+        const customerSidebar = await permissionMappings.defineSideBar(permissions);
         res.status(200).json({
           user: user,
-          permmsions: permmsions,
+          permissions: permissions,
           sidebar: customerSidebar
         });
       }
@@ -154,10 +153,10 @@ router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
 
 router.route('/permission').get( async (req, res) => {
   let customer = new Customer();
-  const permmsions = await customer.getPermissionCustomer(4);
-  const customerSidebar = await permissionMappings.defineSideBar(permmsions);
+  const permissions = await customer.getPermissionCustomer(4);
+  const customerSidebar = await permissionMappings.defineSideBar(permissions);
   res.status(200).json({
-    permmsions: permmsions,
+    permissions: permissions,
     sidebar: customerSidebar
   });
 })
