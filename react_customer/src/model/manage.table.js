@@ -35,6 +35,8 @@ export const exportColumnTable = (table, callback = null) => {
     return [];
 }
 
+
+
 export const exportFieldToEdit = (table, callback = null) => {
 
 }

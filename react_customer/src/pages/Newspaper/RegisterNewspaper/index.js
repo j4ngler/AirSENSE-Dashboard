@@ -1,28 +1,45 @@
 import "./News.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Select, Input, Modal, Upload, Button, message, Col, Row } from "antd";
-import { FormOutlined, UploadOutlined } from "@ant-design/icons";
+import { Select, Input, Modal, Upload, Col, Row } from "antd";
+import { FormOutlined} from "@ant-design/icons";
 import ButtonComponent from "../../../components/Button";
 import { PlusOutlined } from "@ant-design/icons";
-import {} from "antd";
-
+import { httpGetDataTable } from "../../../features/API/httpBaseUtils";
+import { API_URL } from "../../../configs/config";
+import { httpPostData } from "../../../features/API/httpBaseUtils";
+// init newspaperData type 
 export default function News() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
-  const options = [
-    {
-      value: "zhejiang",
-      label: "Chuyên mục đơn lẻ",
-    },
-    {
-      value: "jiangsu",
-      label: " Chuyên mục chính",
-    },
-  ];
+  const [content,setContent] = useState('')
+  const [contentSubListAll,setContentSubListAll] = useState([])
+  const [contentGroupList, setContentGroupList] = useState([])
+  const [contentSubList,setContentSubList] = useState([])
+  const [descriptionDetail,setDescriptionDetail] = useState('')
+  const [title,setTitle] = useState('')
+  const [contentGroup,setContentGroup] = useState('')
+  const [contentSub,setContentSub] = useState('')
+  const [dataNewspaper,setDataNewSpaper] = useState ({
+      // img:'',
+      contentNewSpaper:'',
+      title: '',
+      descriptionDetail: '',
+      contentGroup:'',
+      contentSub:'',
+  })
+   async function fetchDataTable (tableName,listData) {
+    const data = await httpGetDataTable(tableName)
+    
+    listData(data)
+  }
+  useEffect(()=>{
+    fetchDataTable('content_group',setContentGroupList);
+    fetchDataTable('content_sub',setContentSubListAll)
+  },[])
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -41,22 +58,25 @@ export default function News() {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
-  const onChange = (value) => {
-    console.log(value);
-  };
+  const handleChange = ({ fileList: newFileList }) => {
+    
+    setFileList(newFileList);}
+  
+
+ function onClickSubmit ()  {
+    setDataNewSpaper({
+      contentNewSpaper: content,
+      title: title,
+      descriptionDetail: descriptionDetail,
+      contentGroup: contentGroup,
+      contentSub: contentSub,
+    })
+    
+    httpPostData(API_URL + 'document/uploadFile', 'testimg')
+    // httpPostData(API_URL + 'customer/import-data', dataNewspaper)
+
+  }
+
   return (
     <Col span={22} offset={1} className="news-container">
       <div className="title">
@@ -66,9 +86,9 @@ export default function News() {
         <Col span={10} offset={1}>
           <div>Ảnh bài báo</div>
           <Upload
-            action="http://localhost:3006/customer/register_newspaper"
+            // action="http://localhost:3006/customer"
             listType="picture-card"
-            fileList={fileList}
+            // fileList={fileList}
             onPreview={handlePreview}
             onChange={handleChange}
             beforeUpload={file=>{
@@ -76,8 +96,18 @@ export default function News() {
               return false
             }}
           >
-            {fileList.length >= 1 ? null : uploadButton}
+            {fileList.length >= 1 ? null : (<div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>)}
           </Upload>
+
           <Modal
             open={previewOpen}
             title={previewTitle}
@@ -100,11 +130,15 @@ export default function News() {
           <Select
             size="large"
             placeholder="Please select"
-            onChange={onChange}
+            onChange={(value,option) => {
+              const datas = contentSubListAll.filter(e => e.content_group_id == option.content_group_id)
+              setContentSubList(datas)
+              setContentGroup(value)
+            }}
             style={{
               width: "100%",
             }}
-            options={options}
+            options={contentGroupList}
           />
         </Col>
         <Col span={10} offset={2}>
@@ -112,11 +146,13 @@ export default function News() {
           <Select
             size="large"
             placeholder="Please select"
-            onChange={onChange}
+             onChange={(value,option)=>{
+              setContentSub(value)
+             }}
             style={{
               width: "100%",
             }}
-            options={options}
+            options={contentSubList}
           />
         </Col>
       </Row>
@@ -128,6 +164,9 @@ export default function News() {
             size="large"
             placeholder="large size"
             prefix={<FormOutlined />}
+            onChange={(e)=> {
+              setTitle(e.target.value)
+              }}
           />
         </Col>
 
@@ -137,6 +176,10 @@ export default function News() {
             size="large"
             placeholder="large size"
             prefix={<FormOutlined />}
+            onChange={(e)=> {
+            setDescriptionDetail(e.target.value)
+            }}
+            
           />
         </Col>
       </Row>
@@ -148,20 +191,14 @@ export default function News() {
             <div id="toolbar-container"></div>
             <CKEditor
               editor={ClassicEditor}
-              data="<p>Hello from CKEditor 5!</p>"
+              data=""
               onReady={(editor) => {
                 // You can store the "editor" and use when it is needed.
                 console.log("Editor is ready to use!", editor);
               }}
               onChange={(event, editor) => {
                 const data = editor.getData();
-                console.log({ event, editor, data });
-              }}
-              onBlur={(event, editor) => {
-                console.log("Blur.", editor);
-              }}
-              onFocus={(event, editor) => {
-                console.log("Focus.", editor);
+                setContent(data);               
               }}
             />
           </div>
@@ -170,7 +207,7 @@ export default function News() {
       <br />
       <Row>
         <Col offset={1}>
-          <ButtonComponent content={'Đăng bài'} />
+          <ButtonComponent content={'Đăng bài'} handle= {onClickSubmit}/>
         </Col>
       </Row>
     </Col>
