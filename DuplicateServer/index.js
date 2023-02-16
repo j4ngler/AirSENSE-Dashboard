@@ -1,0 +1,1 @@
+require('./service/cronJob.js');

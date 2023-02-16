@@ -45,7 +45,13 @@ export default function News() {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = ({ fileList: newFileList }) =>
+  
+  {
+    console.log('Heloo guang....')
+    setFileList(newFileList);
+
+  }
   const uploadButton = (
     <div>
       <PlusOutlined />

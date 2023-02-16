@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c451bd80.css",
+    "main.js": "/static/js/main.d27dc1e4.js",
+    "static/js/787.c5066a96.chunk.js": "/static/js/787.c5066a96.chunk.js",
+    "static/media/airsense.jpg": "/static/media/airsense.7e06beaabd9a81719888.jpg",
+    "static/media/avatar.svg": "/static/media/avatar.af1bc96d8dec148932ae8bdc8748ca46.svg",
+    "static/media/ringing.svg": "/static/media/ringing.bf4c6ec47f8c88c8a97af340c60951d4.svg",
+    "index.html": "/index.html",
+    "static/media/refresh.svg": "/static/media/refresh.501190a9a84521e7cd61a100aa6d8edb.svg",
+    "main.c451bd80.css.map": "/static/css/main.c451bd80.css.map",
+    "main.d27dc1e4.js.map": "/static/js/main.d27dc1e4.js.map",
+    "787.c5066a96.chunk.js.map": "/static/js/787.c5066a96.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c451bd80.css",
+    "static/js/main.d27dc1e4.js"
+  ]
+}

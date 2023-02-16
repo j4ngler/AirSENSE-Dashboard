@@ -1,12 +1,37 @@
 const bookshelf = require("../config/bookshelf.js");
 const HttpStatus = require("http-status-codes");
 const DocumentFileAndFloder = require("../models/DocumentFileAndFloder.js");
+const { returnFalse, returnOKCustom } = require("../utils/returnResponse");
+const WarningInfo = require("../utils/warningInfo.js");
+const { DEFINE_DOCUMENT, uploadFileS3 } = require("../models/S3UploadFile.js");
 var documentFileAndFloder = new DocumentFileAndFloder();
 var squel = require("squel");
 const knex = require("../config/knex.js");
 var documentCtrl = {};
 const urlHost =
   (process.env.APP_HOST || "localhost") + ":" + (process.env.APP_PORT || 3000);
+async function queryInfoSql(sql, res = null) {
+  try {
+    var x = await knex.raw(sql).then(rs=>{
+      console.log("rs: ",result)
+    }).catch(err=>{
+      console.log("err>>>",err)
+    });
+    var data = [];
+    console.log("x",x)
+    if (x != null && x.length > 0) {
+      data = x[0];
+    }
+    return data;
+  } catch (ie) {
+    if (res != null)
+      returnFalse(
+        res,
+        "Can't  add file to server",
+        WarningInfo.NOT_UPLOAD_FILE
+      );
+  }
+}
 
 documentCtrl.postAddPageToDataBase = function (request, res) {
   let content = request.body["content"];
@@ -98,7 +123,43 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
       });
   }
 };
-
+async function saveDocumentFileHtml(res, content_html, dirSave) {
+  try {
+    console.log(content_html);
+    var link = await documentFileAndFloder.createNewFileToS3(
+      content_html,
+      dirSave
+    );
+    link = await uploadFileS3("public/" + link, "", DEFINE_DOCUMENT.TYPE_HTML);
+    if (link == null)
+      returnFalse(res, "Can't add file to server", WarningInfo.NOT_UPLOAD_FILE);
+    return link;
+  } catch (ie) {
+    console.log("ie,", ie);
+    returnFalse(res, "Can't  add file to server", WarningInfo.NOT_UPLOAD_FILE);
+    return null;
+  }
+}
+documentCtrl.postAddProductPageToDataBase = async function (request, res) {
+  let content_html = request.body["content_html"];
+  let product_id = request.body["product_id"];
+  var link = await saveDocumentFileHtml(res, content_html, "storeHtml");
+  if (link != null) {
+    var addData = squel.insert().into("product_spec");
+    // save data Sql
+    addData
+      .set("product_id", product_id)
+      .set("filesave", link)
+      .set("id_created", request.currentUser.users_id)
+      .set("id_updated", request.currentUser.users_id)
+      .set("created_at", "NOW()", { dontQuote: true })
+      .set("updated_at", "NOW()", { dontQuote: true })
+      .set("delete_flag", 0)
+      .set("old_id", 0);
+    var x = await queryInfoSql(addData.toString(), res);
+    return returnOKCustom(res, { data: x });
+  }
+};
 // Document Course
 documentCtrl.postAddCourseToDataBase = function (request, res) {
   let content = request.body["content"];
@@ -356,7 +417,7 @@ documentCtrl.postUpdateAdvertisementToDataBase = function (request, res) {
       .set("id_created", request.currentUser.users_id)
       .set("id_updated", request.currentUser.users_id)
       .set("updated_at", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0)
+      .set("delete_flag", 0)
       .where("advertisement_id=" + request.body["advertisement_id"]);
     knex
       .raw(addData.toString())

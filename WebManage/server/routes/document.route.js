@@ -58,7 +58,7 @@ router
 router.route("/updatePages").post(isAuthenticated, (req, res) => {
   documentCtrl.postUpdatePageToDataBase(req, res);
 });
-
+router.route('/registerProductPages').post(isAuthenticated,  documentCtrl.postAddProductPageToDataBase)
 // update Course
 router.route("/updateCourse").post(isAuthenticated, (req, res) => {
   documentCtrl.postUpdateCourseToDataBase(req, res);

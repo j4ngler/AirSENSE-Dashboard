@@ -31,7 +31,6 @@
         "cross-env": "^7.0.2",
         "css-loader": "^3.0.0",
         "dom": "0.0.3",
-        "dotenv-webpack": "^1.8.0",
         "draft-js": "^0.11.7",
         "emoji-js": "^3.6.0",
         "eslint": "^7.5.0",
@@ -68,6 +67,7 @@
         "react-admin": "^3.9.0",
         "react-bootstrap": "^1.6.1",
         "react-chatbox-component": "0.0.5",
+        "react-datetime-picker": "^4.2.0",
         "react-dom": "^17.0.0",
         "react-file-drop": "^3.1.2",
         "react-highlight.js": "^1.0.7",
@@ -95,7 +95,7 @@
         "webpack-merge": "^5.7.3"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "set PORT=3002 && react-scripts start ",
         "startx": "webpack-dev-server --open --port 3020",
         "build": "react-scripts build",
         "buildx": "webpack --mode production",
@@ -106,5 +106,8 @@
         "not dead",
         "not ie <= 11",
         "not op_mini all"
-    ]
+    ],
+    "devDependencies": {
+        "dotenv-webpack": "^1.8.0"
+    }
 }
