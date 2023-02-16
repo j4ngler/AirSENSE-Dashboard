@@ -297,22 +297,27 @@ iotCtrl.getDataRecent= function(request, response) {
 
 
 iotCtrl.getDataStation = async (req, res) => {
-    const { stationID, fromTime, toTime } = req.body;
-    console.log(fromTime, toTime, stationID);
-    const stationSelect = 'sensor/'+stationID;
-    const offset = Math.floor((toTime - fromTime) / 1000);
+  const { stationID, fromTime, toTime } = req.body;
+  console.log(fromTime, toTime, stationID);
+  const stationSelect = "sensor/" + stationID;
+  console.log(new Date());
+  const result = await DataSensor.find(
+    {
+      content: { $exists: true },
+      topic: stationSelect,
+      $and: [{ time: { $gt: fromTime } }, { time: { $lt: toTime } }],
+    },
+    { _id: 0, __v: 0, topic: 0 }
+  )
+    .hint({ time: 1 })
+    .lean();
     console.log(new Date());
-    const result = await DataSensor.find({"content": {$exists:true}, "topic": stationSelect, $and: [ { "time": {$gt: fromTime}}, { "time": {$lt: toTime} }]});
-    // const result = await DataSensor.findOne({"topic": stationSelect});
-
-
-    // const abc = await DataSensor.find({})
-    // const result = await DataSensor.aggregate([{
-        
-    // }])
-    console.log(new Date());
-    res.send(JSON.stringify(result))
-}
+//   res.send(JSON.stringify(result));
+    res.send(JSON.stringify({
+        station: stationID,
+        data: result
+    }));
+};
 
 
 

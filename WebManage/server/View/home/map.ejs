@@ -471,6 +471,8 @@
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
+            // console.log('color', color);
+            color = '#3A0A6C';
             return color;
         }
 
@@ -578,14 +580,17 @@
             $(".no-station").hide();
             $(".no-data").hide();
             $(".dashboard").show();
+            
+            let stationid = data.station;
             var color=[];
-            if(data.length){
-                var arrayData={};
-                var arrayID=[];
-                for(let i=0; i<data.length; i++){
-                    let dataview=data[i];
-                    let subTopic = dataview.topic.split('/');
-                    let stationid=subTopic[1];
+            if(data.data.length){
+                let arrayData={};
+                let arrayID=[];
+                let stationid = data.station;
+                for(let i=0; i<data.data.length; i++){
+                    let dataview=data.data[i];
+                    // let subTopic = dataview.topic.split('/');
+                    // console.log('.......hey Giang, notice that', stationid);
                     if(arrayData[stationid]) { 
                         // Covers 'undefined' as well
                         arrayData[stationid].data.push(dataview);
@@ -611,6 +616,7 @@
                 drawSingleChart(arrayID,arrayData,'PM1','PM1',color);
                 drawSingleChart(arrayID,arrayData,'Temperature','Temperature',color);
                 drawSingleChart(arrayID,arrayData,'Humidity','Humidity',color);
+                // drawSingleChart(arrayID,arrayData,'Pressure','Pressure',color);
                 reset = 1;
             } 
             else {
