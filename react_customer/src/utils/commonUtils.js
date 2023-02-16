@@ -166,7 +166,10 @@ export const checkErrorReturn=(error)=>{
         console.log("error ... error . ",error.response.request.response);
         var jsonValue= JSON.parse(error.response.request.response);
           localStorage.removeItem(JWT_TOKEN);
-    openNotification(typeNotify.WARNING, 'Bạn đã quá phiên đăng nhập');
+          openNotification(typeNotify.WARNING, 'Bạn đã quá phiên đăng nhập');
+          setTimeout(() => {
+          window.location.href='/customer/login';
+          }, 3000)
 
         //   Swal.fire(jsonValue.error.message).then((value) => {
             // localStorage.removeItem('username');
@@ -177,6 +180,7 @@ export const checkErrorReturn=(error)=>{
           return;
       }
       if (404 === error.response.status) {
+        
         openNotification(typeNotify.WARNING, 'Không tìm thấy dữ liệu');
         
         // window.location.href='/customer/404';
@@ -187,11 +191,11 @@ export const checkErrorReturn=(error)=>{
         return;
       }
       if((error.response.data.error =="No token provided")){
-    openNotification(typeNotify.WARNING, 'Bạn đã quá phiên đăng nhập');
+        openNotification(typeNotify.WARNING, 'Bạn đã quá phiên đăng nhập');
           localStorage.removeItem(JWT_TOKEN);
           setTimeout(() => {
           window.location.href='/customer/login';
-          }, 6000)
+          }, 3000)
           return;
       }
       // var dataAcess=" Lỗi chi tiết "+ error;

@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Form, Input, Image } from "antd";
 import avatarDemo from "../../assets/icons/avatar.svg";
 import { Col, Row } from "antd";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { message, Upload } from "antd";
+import { useSelector } from "react-redux";
 
 export default function () {
+  const customerInfo_gs = useSelector(state => state.authSlice.userInformation);
+  const [fullname, setFullname] = useState(customerInfo_gs.user.fullname);
+  const [username, setUsername] = useState(customerInfo_gs.user.username);
+  const [address, setAddress] = useState(customerInfo_gs.user.address);
+  const [phoneNumber, setPhoneNumber] = useState(customerInfo_gs.user.phone_number)
+
+  const changeInformation = (event) => {
+    event.preventDefault();
+    const data = {
+      username: username,
+      fullname: fullname,
+      address: address,
+      phone_number: phoneNumber
+    }
+    console.log(data);
+
+  }
+
+
   const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
@@ -51,7 +69,8 @@ export default function () {
       </div>
     </div>
   );
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+
   return (
     <div>
       <Col span={22} offset={1}>
@@ -90,34 +109,34 @@ export default function () {
         <Form layout="vertical">
           <Row>
             <Col span={10}>
-              <Form.Item label="Full name">
-                <Input value={"Phùng Bá Trường Giang"} name="fullname" />
+              <Form.Item label="Họ và tên">
+                <Input value={fullname} name="fullname" onChange={(e) => setFullname(e.target.value)} />
               </Form.Item>
             </Col>
             <Col span={10} offset={2}>
-              <Form.Item label="User name">
-                <Input value={"Giang handsome"} name="username" />
+              <Form.Item label="Username hệ thống">
+                <Input value={username} name="Username" onChange={(e) => setUsername(e.target.value)} />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={10}>
-              <Form.Item label="Phone number">
-                <Input value={"0836123318"} name="phone_number" />
+              <Form.Item label="Số điện thoại">
+                <Input value={phoneNumber} name="phone_number" onChange={(e) => setPhoneNumber(e.target.value)} />
               </Form.Item>
             </Col>
             <Col span={10} offset={2}>
-              <Form.Item label="Email">
-                <Input value={"sparc.hust@gmail.com"} name="email" />
+              <Form.Item label="Địa chỉ email">
+                <Input value={customerInfo_gs.user.email} name="email" />
               </Form.Item>
             </Col>
           </Row>
 
           <Row>
             <Col span={10} offset={0}>
-              <Form.Item label="Address">
+              <Form.Item label="Địa chỉ" onChange={(e) => setAddress(e.target.value)}>
                 <Input
-                  value={"176, Ngọc Thụy, Long Biên, Hà Nội"}
+                  value={address}
                   name="address"
                 />
               </Form.Item>
@@ -127,7 +146,7 @@ export default function () {
           <Row>
             <Col span={10}>
               <Form.Item>
-                <Button type="primary">Submit</Button>
+                <Button type="primary" onClick={changeInformation}>Submit</Button>
               </Form.Item>
             </Col>
           </Row>
