@@ -37254,10 +37254,10 @@ INSERT INTO `sparc_aqi` (`time`, `station_id`, `aqi`, `SO2_aqi`, `PM25_aqi`, `PM
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sparc_group_location_sensor`
+-- Table structure for table `sensor_device_type`
 --
 
-CREATE TABLE `sparc_group_location_sensor` (
+CREATE TABLE `sensor_device_type` (
   `id_group` int(11) NOT NULL,
   `name_group` varchar(256) CHARACTER SET utf32 COLLATE utf32_vietnamese_ci DEFAULT NULL,
   `created_at` datetime NOT NULL,
@@ -41227,9 +41227,9 @@ ALTER TABLE `sparc_aqi`
   ADD PRIMARY KEY (`station_id`);
 
 --
--- Indexes for table `sparc_group_location_sensor`
+-- Indexes for table `sensor_device_type`
 --
-ALTER TABLE `sparc_group_location_sensor`
+ALTER TABLE `sensor_device_type`
   ADD PRIMARY KEY (`id_group`);
 
 --
@@ -41483,9 +41483,9 @@ ALTER TABLE `setup_device_bill`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `sparc_group_location_sensor`
+-- AUTO_INCREMENT for table `sensor_device_type`
 --
-ALTER TABLE `sparc_group_location_sensor`
+ALTER TABLE `sensor_device_type`
   MODIFY `id_group` int(11) NOT NULL AUTO_INCREMENT;
 
 --

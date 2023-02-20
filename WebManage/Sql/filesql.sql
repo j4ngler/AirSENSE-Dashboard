@@ -227,10 +227,10 @@ INSERT INTO `permission` (`permission_id`, `content`, `created_at`, `updated_at`
 
 
 --
--- Cấu trúc bảng cho bảng `sparc_group_location_sensor`
+-- Cấu trúc bảng cho bảng `sensor_device_type`
 --
 
-CREATE TABLE `sparc_group_location_sensor` (
+CREATE TABLE `sensor_device_type` (
   `id_group` INT(11) NOT NULL,
   `name_group` VARCHAR(256) CHARACTER SET utf32 COLLATE utf32_vietnamese_ci DEFAULT NULL,
   `createat` DATETIME NOT NULL,

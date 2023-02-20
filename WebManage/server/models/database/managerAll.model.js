@@ -52,7 +52,7 @@ const classesFactorryMapping = {
   sparc_sensor_max_min: "SparcSensorMaxMin",
   sparc_sensor_data: "SparcSensorData",
   sparc_access_location_sensor: "SparcAcessLocationSensor",
-  sparc_group_location_sensor: "SparcGroupLocationSensor",
+  sensor_device_type: "SparcGroupLocationSensor",
   sparc_aqi: "SparcAqi",
   device_sensor: "DeviceSensor",
   status_history_device: "StatusHistoryDevice",
@@ -74,7 +74,7 @@ const classesFactorryMappingUser = {
   sparc_sensor_max_min: "SparcSensorMaxMin",
   sparc_sensor_data: "SparcSensorData",
   sparc_access_location_sensor: "SparcAcessLocationSensor",
-  sparc_group_location_sensor: "SparcGroupLocationSensor",
+  sensor_device_type: "SparcGroupLocationSensor",
   sparc_aqi: "SparcAqi",
   device_sensor: "DeviceSensor",
 };

@@ -100,8 +100,7 @@ class PagesContent extends Component {
             this.selectEditPages(true);
           }}
         >
-          {' '}
-          Edit Page{' '}
+          Edit Page
         </button>
         <button
           className='btn btn-success'
@@ -109,8 +108,7 @@ class PagesContent extends Component {
             this.selectPagesToTop();
           }}
         >
-          {' '}
-          Đưa bài lên top{' '}
+          Đưa bài lên top
         </button>
         </div>
       </div>

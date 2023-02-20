@@ -77,7 +77,7 @@ const App = () => {
         dashboard={Dashboard}
         customReducers={{ messageInfo }}
         layout={(props) => (
-          <Layout {...props} menu={TreeMenu} appBar={MenuHeader} typography />
+          <Layout {...props} menu={TreeMenu} appBar={MenuHeader} />
         )}
       >
         <Resource
@@ -130,13 +130,19 @@ const App = () => {
           list={AddProduct}
         />
         <Resource
+          name="product"
+          options={{ label: 'Chi tiết sản phẩm', menuParent: 'products' }}
+          icon={DetailsIcon}
+          list={NomalTable}
+        />
+        <Resource
           name="service_x"
           options={{ label: 'Trạm', isMenuParent: true }}
           icon={RoomServiceIcon}
           list={LockScreen}
         />
         <Resource
-          name="sparc_group_location_sensor"
+          name="sensor_device_type"
           options={{ label: 'Nhóm vị trí', menuParent: 'service_x' }}
           icon={AttachMoneyIcon}
           list={NomalTable}

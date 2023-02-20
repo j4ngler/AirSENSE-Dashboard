@@ -53,7 +53,7 @@ class SparcAqi extends CommonModel {
   
   getSQLReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT sparc_aqi.* FROM sparc_aqi ');
+      return ('SELECT aqi_data.* FROM aqi_data ');
        //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
   getJsonTofind(){

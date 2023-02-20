@@ -92,7 +92,7 @@ router.route("/user").get(isAuthenticated, (req, res) => {
   console.log("req.currentUser", req.currentUser);
   console.log(isAuthenticated);
   User.query({
-    where: { userid: req.currentUser.users_id },
+    where: { user_id: req.currentUser.users_id },
     select: [
       "user_id",
       "username",
@@ -102,7 +102,6 @@ router.route("/user").get(isAuthenticated, (req, res) => {
       "password",
       "address",
       "avatar",
-      "note",
       "permission_id",
     ],
   })

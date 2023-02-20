@@ -37806,10 +37806,10 @@ INSERT INTO `sparc_aqi` (`time`, `station_id`, `aqi`, `SO2_aqi`, `PM25_aqi`, `PM
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sparc_group_location_sensor`
+-- Table structure for table `sensor_device_type`
 --
 
-CREATE TABLE `sparc_group_location_sensor` (
+CREATE TABLE `sensor_device_type` (
   `id_group` int(11) NOT NULL,
   `name_group` varchar(256) CHARACTER SET utf32 COLLATE utf32_vietnamese_ci DEFAULT NULL,
   `createat` datetime NOT NULL,
