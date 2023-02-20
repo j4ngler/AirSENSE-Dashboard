@@ -1,10 +1,10 @@
-const TypeModel= require('../middlewareDatabase/TypeModel.js');
-const TableView= require('../middlewareDatabase/TableView.js');
-const TableManifest= require('../middlewareDatabase/TableManifest.js');
-const TABLE_NAME = 'sparc_group_location_sensor';
-const CommonModel= require('../middlewareDatabase/CommonModel.js');
-const  defineManifest  = require('../../middlewares/CheckManifest.js');
-const CustomerAcess= require('../middlewareDatabase/CustomerAcess.js');
+const TypeModel = require("../middlewareDatabase/TypeModel.js");
+const TableView = require("../middlewareDatabase/TableView.js");
+const TableManifest = require("../middlewareDatabase/TableManifest.js");
+const TABLE_NAME = "sensor_device_type";
+const CommonModel = require("../middlewareDatabase/CommonModel.js");
+const defineManifest = require("../../middlewares/CheckManifest.js");
+const CustomerAcess = require("../middlewareDatabase/CustomerAcess.js");
 /**
  * User model.
  */
@@ -22,42 +22,45 @@ class sparcGroupLocationSensor extends CommonModel {
   get hasTimestamps() {
     return true;
   }
-/*
+  /*
   verifyPassword(password) {
     return this.get('password') === password;
   } */
-  getNameTable(){ return TABLE_NAME;}
-  getTypeTable(){ return TypeModel.NEWS;}
-  customerAcess(){ 
-    return  {edit:CustomerAcess.NOT_ACESS,
-             add:CustomerAcess.NOT_ACESS,
-             view:CustomerAcess.NOT_ACESS  }; 
+  getNameTable() {
+    return TABLE_NAME;
   }
-  getFieldToAdd(){
-      return {
-          valueSetup: ["name_group"]
-      };
+  getTypeTable() {
+    return TypeModel.NEWS;
   }
-  getFieldToDelete(){
-      return {
-          arrayCoppy:["name_group"],
-          locationSelect:"id_group",
-          valueSelect:"deleteflag",
-          userUpdate:"id_updated"
-      };
+  customerAcess() {
+    return {
+      edit: CustomerAcess.NOT_ACESS,
+      add: CustomerAcess.NOT_ACESS,
+      view: CustomerAcess.NOT_ACESS,
+    };
   }
-  
-  
-  getSQLReport(currentUser){
-    console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT sparc_group_location_sensor.* FROM sparc_group_location_sensor ');
-       //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  getFieldToAdd() {
+    return {
+      valueSetup: ["content"],
+    };
   }
-  getJsonTofind(){
-      return [];
+  getFieldToDelete() {
+    return {
+      arrayCoppy: ["content"],
+      locationSelect: "device_type_id",
+      valueSelect: "delete_flag",
+      userUpdate: "id_updated",
+    };
   }
 
-
+  getSQLReport(currentUser) {
+    console.log("getSQLReport...2....... ", currentUser.manifestid);
+    return "SELECT sensor_device_type.* FROM sensor_device_type ";
+    //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  }
+  getJsonTofind() {
+    return [];
+  }
 }
 
-module.exports =  sparcGroupLocationSensor;
+module.exports = sparcGroupLocationSensor;

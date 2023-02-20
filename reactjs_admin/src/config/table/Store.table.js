@@ -8,54 +8,44 @@ import {
   SelectHTml,
 } from '../../utils/commonUtil';
 
-export default class Product {
+export default class Customer {
   getColumeShow = (callback) => {
     //"user_id","name","contactPhoneNumber","province","city","streetaddr","postCode"
     const columns = [
       {
         field: 'id',
         headerName: 'stt',
-        flex: 1,
-      },
-      {
-        field: 'title',
-        headerName: 'title',
-        flex: 1,
-      },
-      {
-        field: 'sub_title',
-        headerName: 'sub_title',
-        flex: 1,
-      },
-      {
-        field: 'description',
-        headerName: 'description',
-        flex: 1,
-      },
-      {
-        field: 'thumbnail',
-        headerName: 'thumbnail',
-        flex: 1,
-      },
-      {
-        field: 'origin_country',
-        headerName: 'origin_country',
-        flex: 1,
+        width: 140,
       },
       {
         field: 'store_name',
         headerName: 'store_name',
-        flex: 1,
+        width: 200,
       },
       {
-        field: 'group_name',
-        headerName: 'group_name',
-        flex: 1,
+        field: 'owner',
+        headerName: 'owner',
+        width: 200,
+      },
+      {
+        field: 'type_owner',
+        headerName: 'type_owner',
+        width: 200,
+      },
+      {
+        field: 'adresss',
+        headerName: 'adresss',
+        width: 200,
+      },
+      {
+        field: 'adresss_detail',
+        headerName: 'adresss_detail',
+        width: 200,
       },
       {
         field: 'action',
         headerName: 'Thao tác',
-        flex: 1,
+        width: 140,
         renderCell: () => (
           <div>
             <span
@@ -81,41 +71,53 @@ export default class Product {
 
   getInfoToEdit() {
     return {
-      mainID: 'product_id',
+      mainID: 'store_id',
       mainInfo: {
-        field: 'name',
-        headerName: 'Sản phẩm',
-        flex: 1,
+        field: 'store_name',
+        headerName: 'Công ty',
+        width: 200,
       },
+      detailEdit: [
+        {
+          field: 'store_name',
+          headerName: 'store_name',
+          width: 200,
+        },
+        {
+          field: 'adresss',
+          headerName: 'adresss',
+          width: 200,
+        },
+        {
+          field: 'adresss_detail',
+          headerName: 'adresss_detail',
+          width: 200,
+        },
+      ],
     };
   }
 
   getInfoToAdd() {
     return [
-      'store_id',
-      'group_sub_id',
-      'title',
-      'sub_title',
-      'description',
-      'thumbnail',
+      'store_name',
+      'owner_id',
+      'type_owner_id',
+      'adresss',
+      'adresss_detail',
     ];
   }
   getTitleToAdd() {
     return [
-      'store_id',
-      'group_sub_id',
-      'title',
-      'sub_title',
-      'description',
-      'thumbnail',
+      'store_name',
+      'owner_id',
+      'type_owner_id',
+      'adresss',
+      'adresss_detail',
     ];
   }
-  getJsonTofind() {
-    return ['title', 'subtitle', 'description', 'thumnail'];
-  }
+
   getHtmlAdd() {
     return [
-      TypeDialgueShow.SELECT_TABLE,
       TypeDialgueShow.EDIT_TEXT,
       TypeDialgueShow.EDIT_TEXT,
       TypeDialgueShow.EDIT_TEXT,
@@ -128,11 +130,10 @@ export default class Product {
       SelectHTml.NOT_CHECK_HTML,
       SelectHTml.NOT_CHECK_HTML,
       SelectHTml.NOT_CHECK_HTML,
-      SelectHTml.NOT_CHECK_HTML,
     ];
   }
   getTypeSelectTabbleToAdd() {
-    return ['store', '', '', '', ''];
+    return ['', '', '', '', ''];
   }
   getColumeValidate() {
     return ['', '', '', '', ''];

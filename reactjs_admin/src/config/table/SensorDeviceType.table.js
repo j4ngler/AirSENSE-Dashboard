@@ -4,7 +4,7 @@ import React from 'react';
 import ManagerData from '../../actions/ManagerData.js'
 import {ActionControl ,TypeDialgueShow,SelectHTml} from '../../utils/commonUtil';
 
-class sparcGroupLocationSensor  {
+class SensorDeivceType  {
     getColumeShow=(callback)=>{
         const columns = [
             {
@@ -13,8 +13,8 @@ class sparcGroupLocationSensor  {
               width: 140,
             },
             {
-              field: 'name_group',
-              headerName: 'name_group',
+              field: 'content',
+              headerName: 'content',
               width: 200,
             },
             {
@@ -47,14 +47,14 @@ class sparcGroupLocationSensor  {
       return {
         mainID:'id_group',
         mainInfo:{
-          field: 'name_group',
-          headerName: 'name_group',
+          field: 'content',
+          headerName: 'content',
           width: 240,
         },
         detailEdit:[
           {
-            field: 'name_group',
-            headerName: 'name_group',
+            field: 'content',
+            headerName: 'content',
             width: 200,
           },
         ]
@@ -62,10 +62,10 @@ class sparcGroupLocationSensor  {
     }
 
     getInfoToAdd(){
-      return  ["name_group"];
+      return  ["content"];
     }
     getTitleToAdd(){
-      return  ["name_group"];
+      return  ["content"];
     }
     getHtmlAdd(){
       return  [TypeDialgueShow.EDIT_TEXT];
@@ -81,4 +81,4 @@ class sparcGroupLocationSensor  {
     }
 } 
 
-export default  sparcGroupLocationSensor;
+export default  SensorDeivceType;

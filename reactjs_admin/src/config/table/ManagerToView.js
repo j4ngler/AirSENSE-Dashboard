@@ -3,6 +3,11 @@ import GroupContent from './GroupContent.table';
 import GroupContentSub from './GroupContentSub.table.js';
 import PagesContent from './PagesContent.table';
 import Customer from './Customer.table';
+import Product from './Product.table.js';
+import Store from './Store.table.js';
+import SparcSensorData from './SparcSensorData.table.js';
+import SensorDeivceType from './SensorDeviceType.table.js';
+
 import {
   validateEmail,
   validatePhone,
@@ -12,26 +17,35 @@ import {
 // import SparcAqi from './SparcAqi.table';
 // import ExtendedData from './ExtendedData.table';
 import DeviceSensor from './DeviceSensor.table.js';
+import SparcAqi from './SparcAqi.table.js';
 // import user_admin from './user_admin.table';
-
 
 const classesFactory = {
   User_View,
-  DeviceSensor,  
+  DeviceSensor,
   GroupContent,
   GroupContentSub,
   PagesContent,
   Customer,
-  PagesContent
+  Product,
+  Store,
+  SparcSensorData,
+  SensorDeivceType,
+  SparcAqi,
 };
 const classesFactorryMapping = {
   user: 'User_View',
   content_group: 'GroupContent',
-  content_sub: "GroupContentSub",
+  content_sub: 'GroupContentSub',
   content_page: 'PagesContent',
   content_sub: 'GroupContentSub',
   customer: 'Customer',
   device_sensor: 'DeviceSensor',
+  product: 'Product',
+  store: 'Store',
+  sparc_sensor_data: 'SparcSensorData',
+  sensor_device_type: 'SensorDeivceType',
+  sparc_aqi: "SparcAqi",
 };
 
 export const exportColumeData = (table, callback = null) => {

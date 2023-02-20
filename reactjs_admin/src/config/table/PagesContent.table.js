@@ -47,8 +47,8 @@ class PagesContent {
         width: 240,
       },
       {
-        field: 'set_to_fist',
-        headerName: 'set_to_fist',
+        field: 'set_to_first',
+        headerName: 'set_to_first',
         width: 240,
       },
       {
@@ -117,8 +117,8 @@ class PagesContent {
           width: 240,
         },
         {
-          field: 'set_to_fist',
-          headerName: 'set_to_fist',
+          field: 'set_to_first',
+          headerName: 'set_to_first',
           width: 240,
         },
       ],
@@ -134,7 +134,7 @@ class PagesContent {
       'content',
       'content_img',
       'is_main_pages_id',
-      'set_to_fist',
+      'set_to_first',
     ];
   }
   getTitleToAdd() {
@@ -146,7 +146,7 @@ class PagesContent {
       'content',
       'content_img',
       'is_main_pages_id',
-      'set_to_fist',
+      'set_to_first',
     ];
   }
   getHtmlAdd() {

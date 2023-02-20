@@ -4,7 +4,6 @@ import { DataGrid } from '@material-ui/data-grid';
 import { Stack, Button, TextField } from '@material-ui/core';
 // import { Stack, Button, TextField } from '@mui/material';
 
-
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
@@ -19,7 +18,7 @@ import { ButtonGroup } from 'react-bootstrap';
 import { Divider } from 'material-ui';
 class TableDataView extends Component {
   static propTypes = {
-    selectChange: PropTypes.func.isRequired,
+    // selectChange: PropTypes.func.isRequired,
     table: PropTypes.string.isRequired,
   };
   constructor(props) {
@@ -40,13 +39,13 @@ class TableDataView extends Component {
     this.setState({ columns: columns });
     ManagerData.initdialogueCustomization(this.state.table);
     ManagerData.getLstDataPromise(this.state.table).then((data) => {
-      console.log(data);
-      this.setState({ data: ManagerData.getTable(this.state.table) });
+      console.log("data",data)
+      this.setState({ data: data });
     });
   }
   getDairyChange = () => {
     ManagerData.getDairyChange(this.state.table).then((data) => {
-      console.log(data);
+      console.log('data', this.state.table);
       this.setState({ data: ManagerData.getTable(this.state.table) });
     });
   };
@@ -84,12 +83,9 @@ class TableDataView extends Component {
   };
   // rowHeight={125}
   render() {
-    console.log(this.state.columns);
-    console.log(this.state.data);
     return (
       <div className="user-data">
         <div className="user-table-data">
-          
           <TextField
             variant="outlined"
             value={this.state.value_fillter}
@@ -99,7 +95,7 @@ class TableDataView extends Component {
           />
           <div className="user-control-btn">
             <Button
-              color='primary'
+              color="primary"
               variant="contained"
               component="label"
               disableElevation
@@ -110,7 +106,7 @@ class TableDataView extends Component {
           </div>
           <div className="user-control-btn">
             <Button
-              color='secondary'
+              color="secondary"
               variant="contained"
               component="label"
               disableElevation

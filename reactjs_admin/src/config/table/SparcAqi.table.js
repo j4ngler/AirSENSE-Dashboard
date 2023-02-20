@@ -63,8 +63,8 @@ class SparcAqi  {
             width: 200,
           },
           {
-            field: 'aqi',
-            headerName: 'aqi',
+            field: 'aqi_data',
+            headerName: 'aqi_data',
             width: 200,
           },
 

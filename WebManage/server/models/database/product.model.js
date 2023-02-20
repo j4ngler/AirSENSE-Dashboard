@@ -32,7 +32,7 @@ class Product extends CommonModel {
         "origin_country",
         "store_id",
         "meta_data",
-        "old_id"
+        "old_id",
       ],
     };
   }
@@ -49,7 +49,7 @@ class Product extends CommonModel {
         "meta_data",
         "created_at",
         "created_id",
-        "old_id"
+        "old_id",
       ],
       locationSelect: "product_id",
       valueSelect: "delete_flag",
@@ -59,7 +59,7 @@ class Product extends CommonModel {
 
   getSQLReport(currentUser) {
     console.log("getSQLReport...2....... ", currentUser.permission_id);
-    return "SELECT product.*,store.store_name FROM product LEFT JOIN store on store.store_id=product.store_id ";
+    return "SELECT product.*,store.store_name,product_group.title as group_name FROM product LEFT JOIN store on store.store_id=product.store_id LEFT JOIN product_group on product.group_sub_id=product_group.product_group_id ";
     // + defineManifest.checkManifestTableUser(currentUser.permission_id,currentUser.users_id,currentUser.value_manifest));
   }
   getJsonTofind() {
