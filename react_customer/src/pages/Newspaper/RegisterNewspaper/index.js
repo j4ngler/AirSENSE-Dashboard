@@ -8,7 +8,10 @@ import ButtonComponent from "../../../components/Button";
 import { PlusOutlined } from "@ant-design/icons";
 import { httpGetDataTable } from "../../../features/API/httpBaseUtils";
 import { API_URL } from "../../../configs/config";
-import { httpPostData } from "../../../features/API/httpBaseUtils";
+import { httpPostData, uploadFileDataImage } from "../../../features/API/httpBaseUtils";
+
+
+
 // init newspaperData type 
 export default function News() {
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -31,14 +34,14 @@ export default function News() {
       contentGroup:'',
       contentSub:'',
   })
-   async function fetchDataTable (tableName,listData) {
+   async function fetchDataTable (tableName, setData) {
     const data = await httpGetDataTable(tableName)
-    
-    listData(data)
+    console.log(data);
+    setData(data);
   }
   useEffect(()=>{
-    fetchDataTable('content_group',setContentGroupList);
-    fetchDataTable('content_sub',setContentSubListAll)
+    fetchDataTable('content_group', setContentGroupList);
+    fetchDataTable('content_sub', setContentSubListAll)
   },[])
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -58,9 +61,23 @@ export default function News() {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  const handleChange = ({ fileList: newFileList }) => {
-    
-    setFileList(newFileList);}
+
+
+  const handleChange = (event) => {
+    console.log("Content: " + event);
+    // event.preventDefault();
+    let data = new FormData() 
+    data.append('file', event);   
+    uploadFileDataImage(data).then((response)=>{
+        var value = response.data.url;
+        console.log("uploadfileDataImage.....................",response,response.data.path,value);
+        // Swal.fire("Cập nhật thông tin thành công");
+        // setState({ link:value});
+        // uploadfileDataLink(value);
+    });
+}
+    // setFileList(newFileList);
+
   
 
  function onClickSubmit ()  {
@@ -131,15 +148,23 @@ export default function News() {
             size="large"
             placeholder="Please select"
             onChange={(value,option) => {
-              const datas = contentSubListAll.filter(e => e.content_group_id == option.content_group_id)
+              const datas = contentSubListAll.filter(e => e.content_group_id == option.value)
+              console.log('sub content', datas)
               setContentSubList(datas)
               setContentGroup(value)
             }}
             style={{
               width: "100%",
             }}
-            options={contentGroupList}
-          />
+          >
+            {
+              contentGroupList.map((group)=>(
+                <Select.Option value={group.content_group_id}>
+                {group.content}                        
+              </Select.Option>
+              ))
+            }
+            </Select>
         </Col>
         <Col span={10} offset={2}>
           <p>Chuyên mục chi tiết</p>
@@ -152,8 +177,15 @@ export default function News() {
             style={{
               width: "100%",
             }}
-            options={contentSubList}
-          />
+          >
+           {
+            contentSubList.map((sub) => (
+              <Select.Option value={sub.content_sub_id}>
+                {sub.content}                        
+              </Select.Option>
+            ))
+           }
+          </Select>
         </Col>
       </Row>
       <br />

@@ -65,6 +65,11 @@ class GroupContentSub extends CommonModel {
     return "SELECT content_sub.* ,content_group.content as group_content_main FROM content_sub LEFT JOIN content_group ON content_group.content_group_id=content_sub.content_group_id ";
     //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
+
+  getSQLCustomer() {
+    return "SELECT content_sub.* ,content_group.content as group_content_main FROM content_sub LEFT JOIN content_group ON content_group.content_group_id=content_sub.content_group_id ";
+  }
+
   getJsonTofind() {
     return [];
   }
