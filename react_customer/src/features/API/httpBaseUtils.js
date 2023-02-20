@@ -73,3 +73,15 @@ export const httpGetDataTable = async (table, filter = null) => {
         });
 }
 
+export const uploadFileDataImage = (data) => {
+    return new Promise((resolve, reject) => {
+        return httpPostData(API_URL + 'customers/upload-image', data)
+        .then((result) => {
+            resolve(result.result);
+          })
+          .catch((error) => {
+            reject(error)
+        });
+        });
+}
+

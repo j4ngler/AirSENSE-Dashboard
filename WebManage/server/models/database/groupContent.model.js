@@ -48,15 +48,20 @@ class GroupContent extends CommonModel {
     return {
       arrayCoppy: ["content_group", "title", "created_at", "id_created"],
       locationSelect: "content_group_id",
-      valueSelect: "deleteflag",
+      valueSelect: "delete_flag",
       userUpdate: "id_updated",
     };
   }
 
   getSQLReport(currentUser) {
     console.log("getSQLReport...2....... ", currentUser.manifestid);
-    return "SELECT content_group.* FROM content_group ";
+    return "SELECT content_group.* FROM content_group WHERE delete_flag = 0";
     //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  }
+
+  getSQLCustomer() {
+    // console.log("getSQLReport...2....... ", currentUser.manifestid);
+    return "SELECT content_group.content_group_id, content_group.content FROM content_group WHERE delete_flag = 0";
   }
   getJsonTofind() {
     return [];

@@ -53,6 +53,12 @@ router
     customerCtrl.importDataInfo(req, res);
   });
 
+  router
+  .route("/upload-image")
+  .post( uploadImage.single("file"), (req, res) => {
+    customerCtrl.importDataInfo(req, res);
+  });
+
 let uploadImageUser = multer({
   storage: storageImgUser,
   fileFilter: files.imageFilter,
