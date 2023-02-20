@@ -7,10 +7,7 @@
         height: 60px;
         display: block;
     }
-    </style>
-
-    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
-    
+    </style>    
 </head>
 <body class="home page-template page-template-page-home page-template-page-home-php page page-id-55 lightbox nav-dropdown-has-arrow">
 
@@ -277,18 +274,6 @@
         <% include ../Layout/footer.ejs %>
 
     </div>
-
-    <script>
-        const beamsClient = new PusherPushNotifications.Client({
-          instanceId: '56d6812e-92af-4bfa-bd31-a1529229ddaf',
-        });
-      
-        beamsClient.start()
-          .then(() => beamsClient.addDeviceInterest('hello'))
-          .then(() => console.log('Successfully registered and subscribed!'))
-          .catch(console.error);
-      </script>
-
     <script type="text/javascript">
         // $('#datatable').dataTable( {
         //     "language": {
@@ -301,6 +286,7 @@
         var mname = 'no token';
         var allInfoStation = null;
         loadAllContent();
+        
         function loadAllContent(){
             var Link='/api/social/getStationHome';
                 $.ajax({
@@ -314,14 +300,12 @@
                         var groupID=[];
                         var nameGroupID=[];
                         allInfoStation=loadcofig.result;
-                        for(var k=0;k< loadcofig.result.length;k++) {
-                            let v=loadcofig.result[k];
-                            showData+='<option value="'+v.station_id+'">'+v.content +'</option>';
-                            if((v.id_group>0)&&(!groupID.includes(v.id_group)))
-                            {
-                                groupID.push(v.id_group);
-                                nameGroupID.push(v.name_group);
-                            }
+                        defaultStation = loadcofig.result.station_id;
+                        for(var k=0;k< allInfoStation.length;k++) {
+                            let v=allInfoStation[k];
+                            if(k===0) {
+                                showData+='<option selected value="'+v.station_id+'">'+v.title +'</option>';
+                            } else showData+='<option value="'+v.station_id+'">'+v.title +'</option>';
                             
                         }
 
@@ -332,115 +316,26 @@
                                 let v=loadcofig.result[k];
                                 if(v.id_group==dataChoice){
                                     if(itemData.length>1) itemData+=","
-                                    itemData+="'"+v.station_id+"'";
+                                    itemData+=""+v.station_id+"";
                                 }   
                             }
-                            showData+='<option value="('+itemData+')">'+nameGroupID[l] +'</option>';
+                            showData+='<option value="'+itemData+'">'+nameGroupID[l] +'</option>';
 
                         }
                         $('#selectTable').html(showData);
+                        gotoCheckData();
                         
                     },
-                      error: function (loadcofig) {
+                    error: function (loadcofig) {
                         console.log('error');
                           console.log(loadcofig);
                           console.log('end error');
                       }
                 });
         }
-
-
-            var lisItemStation="";
-		    var tableReport='sparc_sensor_max_min';
-            // gotoCheckUser(tableReport);
-
-
             var actionDataSelect=null;
             var dataSelectEdit=null;
             var dataClick=null;
-
-        //     // gotoCheckUserStorage();
-        //     function onSelectClick(){
-        //         var stringvalue=document.getElementById("selectTable").value;
-        //         if(stringvalue.length>1)
-        //             gotoCheckData(stringvalue);
-        //     }
-        // function gotoCheckData(isShowLoader){  
-        //     console.log("go to check data");
-        //     var data=document.getElementById("selectTable").value;
-        //     var Link='/api/social/getdata';
-        //     var fromTime = new Date($('#fromTime').val());
-        //     var now = new Date().getTime()/1000;
-        //     if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
-        //         $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
-        //     }
-        //     var toTime = new Date($('#toTime').val());
-        //     if(isNaN(fromTime.getFullYear())) {
-        //         fromTime = undefined;
-        //     } else fromTime = fromTime.getTime()/1000;
-        //     if(isNaN(toTime.getFullYear())) {
-        //         toTime = undefined;
-        //     } else toTime = toTime.getTime()/1000;
-        //     if(isShowLoader != false) {
-        //         // showLoader();
-        //     }
-        //     // document.getElementsByClassName("dashboard")[0].style.display = "none";
-        //     $.ajax({    type: 'post',
-        //                 method: 'POST',
-        //                 url: Link,
-        //                 data: JSON.stringify( {data:data, fromTime: fromTime, toTime: toTime}), // body data type must match "Content-Type" header
-        //                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        //                 credentials: 'same-origin', // include, *same-origin, omit
-        //                 redirect: 'follow', // manual, *follow, error
-        //                 referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        //                 dataType: 'json',
-        //                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        //                 credentials: 'same-origin', // include, *same-origin, omit
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Accept': 'application/json',
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': 'Beard ' + localStorage.getItem('LVC_tocken'),
-        //                     // 'Content-Type': 'application/x-www-form-urlencoded',
-        //                 },
-        //         success: function (loadcofig) {
-        //             // hideLoader();
-        //             document.getElementsByClassName("dashboard")[0].style.display = "block";
-        //             console.log('loadcofig: ',loadcofig);
-        //             // drawSensor(loadcofig);
-        //             assetDataBase(loadcofig);
-        //         },
-        //         error: function (loadcofig) {
-        //             hideLoader();
-        //             console.log('error');
-        //             console.log(loadcofig);
-        //         }
-        //     });
-        // }
-
-        //     function gotoCheckData(data){  
-        //         var Link='/api/social/getdata';
-        //         $.ajax({
-        //             type: 'post',
-        //             dataType: 'json',
-        //             url: Link,
-        //             data: {data:data },
-        //             beforeSend: function (xhr) {
-        //                 xhr.setRequestHeader('Authorization', 'Bearer '+mname);
-        //             },
-        //             success: function (loadcofig) {
-        //                 console.log(loadcofig);
-        //                 assetDataBase(loadcofig);
-        //                 console.log('ssssssssssss');
-        //             },
-        //               error: function (loadcofig) {
-        //                 console.log('error');
-        //                   console.log(loadcofig);
-        //                   console.log('end error');
-        //               }
-        //         });
-        // }
-
             function assetDataBase(result){
                
                var showData = `<thead>
@@ -520,9 +415,7 @@
 
             }
 
-       
-      
-
+            
         function exportReport() {
             var fromTime = new Date($('#fromTime').val());
             const getFromTime = fromTime.getTime();
@@ -535,18 +428,44 @@
             }
             if(isNaN(fromTime.getFullYear())) {
                 fromTime = undefined;
-            } else fromTime = fromTime.getFullYear() +'-'+ fromTime.getMonth() +'-'+ fromTime.getDate() +' '+ fromTime.getHours() +':'+ fromTime.getMinutes() +':00';
+            } 
+            else 
+            fromTime = fromTime.getFullYear() +'-'+ fromTime.getMonth() +'-'+ fromTime.getDate() +' '+ fromTime.getHours() +':'+ fromTime.getMinutes() +':00';
             if(isNaN(toTime.getFullYear())) {
                 toTime = undefined;
-            } else toTime = toTime.getFullYear() +'-'+ toTime.getMonth() +'-'+ toTime.getDate() +' '+ toTime.getHours() +':'+ toTime.getMinutes() +':00';            
-            var data = {'fromTime': fromTime, 'toTime': toTime, 'station_id': station_id};
+            } 
+            else 
+            toTime = toTime.getFullYear() +'-'+ toTime.getMonth() +'-'+ toTime.getDate() +' '+ toTime.getHours() +':'+ toTime.getMinutes() +':00';  
+            
+            
+            var now = new Date().getTime()/1000;
+            // if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
+            //     $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
+            // }
+            // if(isNaN(fromTime.getFullYear())) {
+            //     fromTime = undefined;
+            // } 
+            // else fromTime = fromTime.getTime()/1000;
+            // if(isNaN(toTime.getFullYear())) {
+            //     toTime = undefined;
+            // } 
+            // else toTime = toTime.getTime()/1000;
+            var data = {
+                'fromTime': fromTime, 
+                'toTime': toTime, 
+                'station_id': station_id,
+                'getFromTime': getFromTime,
+                'getToTime': getToTime
+        };
+
+    
             var link = '/api/social/getReportStations';
             console.log(data)
             $.ajax({
                     type: 'post',
                     method: 'POST',
                     url: link,
-                    data: JSON.stringify( {station_id: station_id, fromTime: fromTime, toTime: toTime, getFromTime: getFromTime, getToTime: getToTime}),
+                    data: JSON.stringify( {station_id: station_id, fromTime: fromTime, toTime: toTime, getFromTime: getFromTime/1000, getToTime: getToTime/1000 }),
                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
                         credentials: 'same-origin', // include, *same-origin, omit
                         redirect: 'follow', // manual, *follow, error

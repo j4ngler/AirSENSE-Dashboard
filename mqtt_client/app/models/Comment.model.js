@@ -5,12 +5,14 @@ let Comment = new Schema({
     topic: {
         type: String
     },
+    commentId: {
+        type: String
+    },
     content:{
         type: Object
     },
     time: {
-        type: Number,
-        default: Date.now()
+        type: String,
     }
 });
 

@@ -10,8 +10,15 @@ const SparcAqi = require("./sparcAqi.model");
 const DeviceSensor = require("./deviceSensor.model");
 const ExtendedData = require("./extendedData.model");
 const StatusHistoryDevice = require("./statusHistoryDevice.model");
+const Store = require("./store.model");
+const ProductGroup = require("./productGroup.model");
+const Product = require("./product.model");
+const ProductStore = require("./productStore.model");
+const ProductVariant = require("./productVariant.model");
+const ProductImage = require('./productImage.model')
+const ProductSpec = require('./productSpec.model')
 // customer
-const Customer = require('./customer.model.js')
+const Customer = require("./customer.model.js");
 const classesFactory = {
   User,
   GroupContent,
@@ -25,7 +32,14 @@ const classesFactory = {
   SparcGroupLocationSensor,
   SparcAqi,
   DeviceSensor,
-  Customer
+  Customer,
+  Store,
+  ProductGroup,
+  Product,
+  ProductStore,
+  ProductVariant,
+  ProductImage,
+  ProductSpec
 };
 const classesFactorryMapping = {
   user: "User",
@@ -42,6 +56,12 @@ const classesFactorryMapping = {
   sparc_aqi: "SparcAqi",
   device_sensor: "DeviceSensor",
   status_history_device: "StatusHistoryDevice",
+  product: "Product",
+  store: "Store",
+  product_group: "ProductGroup",
+  product_store: "ProductStore",
+  product_variant: "ProductVariant",
+  product_image: "ProductImage"
 };
 
 const classesFactorryMappingUser = {

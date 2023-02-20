@@ -1,4 +1,4 @@
-const Chat = require('../app/models/Chat.model')
+const Chat = require('../app/models/chat.model')
 
 module.exports = (req, res, next) => {
     if(req.body.id_comment_reply==0) {

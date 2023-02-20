@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { UserOutlined } from "@ant-design/icons";
+import { LikeFilled, UserOutlined } from "@ant-design/icons";
 import HeaderCustomer from "../../components/Header";
 import { Breadcrumb, Layout } from "antd";
 import MenuBar from "../../components/MenuBar";
@@ -7,13 +7,33 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "./MainLayout.css";
 import ReBreadcrumb from "../../components/Breadcrumb";
 import { Col } from "antd";
+import { useSelector } from "react-redux";
 const { Header, Content, Sider } = Layout;
 
-const checkRole = (permissions) => {
-  return false;
+const checkRole = (list, ...permissions) => {
+  if (list !== undefined){
+    if (list.includes("1") || list.includes("2"))
+      return false;
+    else {
+      if (permissions[0] === undefined)
+        return true;
+      else {
+        let check = true;
+        for(let i = 0; i < permissions.length; i++){
+          let num = permissions[i];
+          let perID = num.toString();
+          if (list.includes(perID)){
+            check = false;
+            break;
+          }
+        }
+        return check;
+      }
+    } 
+  }
 };
 
-const MenuList = (permissions) => [
+const MenuList = (list) => [
   {
     id: "/dashboard",
     title: "Dashboard",
@@ -30,19 +50,19 @@ const MenuList = (permissions) => [
       {
         id: "manage_account/type_customer",
         title: "Người dùng",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list,20,21,22,23),
         url: "/customer/station/user",
       },
       {
         id: "/admin/list_station/type-adminLocation",
         title: "Danh sách trạm",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list,20,21,22,23),
         url: "/customer/station/list_station",
       },
       {
         id: "/admin/data_station/type-adminLocation",
         title: "Dữ liệu trạm",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list,20,21,22,23),
         url: "/customer/station/station_data",
       },
     ],
@@ -56,13 +76,13 @@ const MenuList = (permissions) => [
       {
         id: "my_newspaper/type_customer",
         title: "Bài báo của tôi",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list,30,31,32,33),
         url: "/customer/my_newspaper",
       },
       {
         id: "/admin/register_newspaper/type-adminLocation",
         title: "Viết bài",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list,30,34),
         url: "/customer/register_newspaper",
       },
     ],
@@ -76,25 +96,25 @@ const MenuList = (permissions) => [
       {
         id: "courses/type_customer",
         title: "Khóa học",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list),
         url: "/customer/courses",
       },
       {
         id: "/admin/create-course/type-adminLocation",
         title: "Tạo khóa học",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list),
         url: "/customer/courses/create_course",
       },
       {
         id: "exercises/type_customer",
         title: "Bài tập",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list),
         url: "/customer/courses/exercises",
       },
       {
         id: "/admin/create-exercise/type-adminLocation",
         title: "Tạo bài tập",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list),
         url: "/customer/courses/create_exercises",
       },
     ],
@@ -108,13 +128,13 @@ const MenuList = (permissions) => [
       {
         id: "station_information/type_customer",
         title: "Thông tin đặt trạm",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list),
         url: "/customer/invoice/station_information",
       },
       {
         id: "admin/create-invoice/type-adminLocation",
         title: "Tạo hóa đơn",
-        isHide: checkRole(permissions),
+        isHide: checkRole(list),
         url: "/customer/invoice/create_invoice",
       },
     ],
@@ -153,6 +173,8 @@ const MainLayout = () => {
   // const { authenticate, permissions, clearAuthenticate} = useUser();
   const navigate = useNavigate();
 
+  let customer_info = useSelector(state => state.authSlice.userInformation);
+  let sidebarList = customer_info.sidebar;
   // useEffect(() => {
   //   const token = localStorage.getItem("token_AirSENSE");
   //   const username = localStorage.getItem("username");
@@ -169,7 +191,7 @@ const MainLayout = () => {
       </Header>
       <Layout>
         <Sider width={215} className="site-layout-background" theme="light">
-          <MenuBar menuList={MenuList("admin")} mode="inline" />
+          <MenuBar menuList={MenuList(sidebarList)} mode="inline" />
         </Sider>
 
         <Content className="customer-main-content">

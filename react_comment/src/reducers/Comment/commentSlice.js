@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import commentAPI from "./commentAPI";
 import CommentManagement from '../../utils/commentMessage';
 
+
 let commentManagement = new CommentManagement();
 
-export const commentAction = createAsyncThunk('comment/data', async (params, { rejectWithValue }) => {
+export const commentAction = createAsyncThunk('comment/comment_user', async (params, { rejectWithValue }) => {
     try {
       const response = await commentAPI.postComment({ ...params });
       return response.data;
@@ -13,6 +14,8 @@ export const commentAction = createAsyncThunk('comment/data', async (params, { r
       return rejectWithValue(error?.response?.data?.message || error?.response || error);
     }
   });
+
+// export const getComment = createAsyncThunk('')
 
 
 export const commentSlice = createSlice({
@@ -23,7 +26,121 @@ export const commentSlice = createSlice({
         comment_sub: null,
         comment_page: null,
         userIPs: '',
-        data: [],
+        data: [
+            {
+            _id: 'ObjectId(63d14a91ef12ca38ec6c01af)',
+            topic: "product/smart_device/5",
+            commentId: "usr_1674660497_2",
+            content: {
+            author_id: 2,
+            type_user: 1,
+            author_IP: "171.236.58.19",
+            content: "Hi Giang",
+            comment_atack: "",
+            comment_parent_id: 0,
+            comment_reply_id: 0
+            },
+            time: "1674660497",
+            __v: 0            
+            },
+            {
+            _id: 'ObjectId(63d14af2ef12ca38ec6c01b3)',
+            topic: "product/smart_device/5",
+            commentId: "cus_1674660609_4",
+            content: {
+            author_id: 4,
+            type_user: 2,
+            author_IP: "171.236.58.19",
+            content: "Hi Giang handsome",
+            comment_atack: "",
+            comment_parent_id: 0,
+            comment_reply_id: 0
+            },
+            time: "1674660609",
+            __v: 0
+            },
+            {
+                _id: 'ObjectId(63d14b18ef12ca38ec6c01b7)',
+                topic: "product/smart_device/5",
+                commentId: "cus_1674660668_4",
+                content: {
+                author_id: 4,
+                type_user: 2,
+                author_IP: "171.236.58.19",
+                content: "acknowledgement",
+                comment_atack: "",
+                comment_parent_id: 0,
+                comment_reply_id: 0
+                },
+                time: "1674660668",
+                __v: 0
+            },
+            {
+                _id: 'ObjectId(63d14b18ef662138ec6c01b7)',
+                topic: "product/smart_device/5",
+                commentId: "usr_1675611574_2",
+                content: {
+                author_id: 2,
+                type_user: 1,
+                author_IP: "171.236.58.19",
+                content: "reply 1",
+                comment_atack: "",
+                comment_parent_id: 'usr_1674660497_2',
+                comment_reply_id: 'usr_1674660497_2'
+                },
+                time: "1675611574",
+                __v: 0
+            },
+            {
+                _id: 'ObjectId(63d17235ef12ca38ec6c01b7)',
+                topic: "product/smart_device/5",
+                commentId: "cus_1675611697_4",
+                content: {
+                author_id: 4,
+                type_user: 2,
+                author_IP: "171.236.58.19",
+                content: "reply 2",
+                comment_atack: "",
+                comment_parent_id: 'usr_1674660497_2',
+                comment_reply_id: 'usr_1674660497_2'
+                },
+                time: "1675611697",
+                __v: 0
+            },
+            {
+                _id: 'ObjectId(63d121a5ef12ca38ec6c01b7)',
+                topic: "product/smart_device/5",
+                commentId: "cus_1675611774_5",
+                content: {
+                author_id: 5,
+                type_user: 2,
+                author_IP: "171.236.58.19",
+                content: "food and drink🤣 😂 😂",
+                comment_atack: "",
+                comment_parent_id: 'usr_1674660497_2',
+                comment_reply_id: 'cus_1675611697_4'
+                },
+                time: "1675611774",
+                __v: 0
+            },
+            {
+                _id: 'ObjectId(63d121a5ef12ca38ec6c01b7)',
+                topic: "product/smart_device/5",
+                commentId: "cus_1675611942_5",
+                content: {
+                author_id: 5,
+                type_user: 2,
+                author_IP: "171.236.58.19",
+                content: "sea food",
+                comment_atack: "",
+                comment_parent_id: 'usr_1674660497_2',
+                comment_reply_id: 'cus_1675611697_4'
+                },
+                time: "1675611942",
+                __v: 0
+            },
+
+        ],
         commentExtra: {},
         selectedConversation: [],
         listUser: [],
@@ -69,8 +186,16 @@ export const commentSlice = createSlice({
 
         tagUsers: (state, action) => {
             state.commentExtra.tagUsers = action.payload;
-        }
+        },
 
+        loadConversation: (state,action) =>{
+            // getComment();
+            // state.selectedConversation = commentManagement.modifyData(state.data);
+            state.selectedConversation = commentManagement.modifyData();
+            console.log(state.selectedConversation);
+
+            
+        }
 
 
         // initComment: (state, action) => {
@@ -132,7 +257,7 @@ export const commentSlice = createSlice({
     extraReducers: (buider) => {
         buider
           .addCase(commentAction.pending, (state, action) => {
-           
+           state.data = [];
           })
           .addCase(commentAction.fulfilled, (state, action) => {
            
@@ -143,5 +268,5 @@ export const commentSlice = createSlice({
       }
 });
 
-export const { initComment, uploadImage, tagUsers } = commentSlice.actions;
+export const { initComment, uploadImage, tagUsers, loadConversation } = commentSlice.actions;
 export default commentSlice.reducer;

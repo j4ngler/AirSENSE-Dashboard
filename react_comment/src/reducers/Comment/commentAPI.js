@@ -7,9 +7,10 @@ class CommentAPI {
     constructor() {
         this.apiEndPoint = HOST_HTTP_COMMENT;
     }
-    postComment({content}) {
+    postComment(dataComment) {
+        console.log('cpntenf', dataComment)
         const token = getLocalStorage('AirSENSE_token')
-        return axiosRequest(this.apiEndPoint, axiosMethod.POST, token, {content});
+        return axiosRequest(this.apiEndPoint + '/comment/comment_user', axiosMethod.POST, token, dataComment);
     }
 }
 

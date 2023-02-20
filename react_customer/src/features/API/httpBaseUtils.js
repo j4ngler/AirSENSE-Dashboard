@@ -1,10 +1,12 @@
 import { API_URL, JWT_TOKEN } from "../../configs/config";
 import { setLocalStorage, clearLocalStorage, getLocalStorage,} from "../../utils/storageUltils";
 import { axiosRequest, axiosMethod } from "../../utils/handleApiRequest";
+import { checkErrorReturn } from "../../utils/commonUtils";
+import { SpinLoading } from "../../components/Spin/SpinLoading";
 
 
-const showLoading = () => {
-    // run spin
+export const showLoading = () => {
+    <SpinLoading size={'medium'} />
 }
 
 
@@ -13,10 +15,13 @@ export const httpPostData = (url, data) => {
     return new Promise((resolve, reject) => {
         axiosRequest(url, axiosMethod.POST, token, data)
         .then((response) => {
+            showLoading();
             resolve(response)
         })
         .catch((error) => {
-            // check error return: no data found
+            showLoading();
+            // console.log('error post data', error);
+            checkErrorReturn(error);
             reject(error)
         })
     })
@@ -28,10 +33,13 @@ export const httpGetData = (url, data) => {
     return Promise((resolve, reject) => {
         axiosRequest(url, axiosMethod.GET, token, data)
         .then((response) => {
+            showLoading();
             resolve(response)
         })
         .catch((error) => {
-            // check error return: no data found
+            // console.log('error get data', error)
+            showLoading();
+            checkErrorReturn(error);
             reject(error)
         })
     })
@@ -47,7 +55,7 @@ export const httpGetDataTable = async (table, filter = null) => {
         else {
             dataUpload = {table: table};
         }
-        return httpPostData(API_URL + 'customers/report',dataUpload)
+        return httpPostData(API_URL + 'customers/report', dataUpload)
         .then((result) => {
             let data = result.data;
             if(data.result[0].id !== undefined)
@@ -59,6 +67,7 @@ export const httpGetDataTable = async (table, filter = null) => {
             resolve(data.result);
           })
           .catch((error) => {
+            checkErrorReturn(error);
             reject(error)
         });
         });

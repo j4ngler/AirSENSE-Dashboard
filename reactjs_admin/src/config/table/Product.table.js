@@ -14,28 +14,28 @@ export default class Product  {
               width: 140,
             },
             {
-              field: 'companyname',
-              headerName: 'companyname',
+              field: 'productGroup',
+              headerName: 'productGroup',
               width: 200,
             },
             {
-              field: 'name',
-              headerName: 'name',
+              field: 'title',
+              headerName: 'title',
               width: 200,
             },
             {
-              field: 'detail',
-              headerName: 'detail',
+              field: 'description',
+              headerName: 'description',
               width: 240,
             },
             {
-                field: 'image',
-                headerName: 'image',
+                field: 'thumbnail',
+                headerName: 'thumbnail',
                 width: 240,
             },
             {
-                field: 'store',
-                headerName: 'store',
+                field: 'originCountry',
+                headerName: 'originCountry',
                 width: 240,
             },
             {

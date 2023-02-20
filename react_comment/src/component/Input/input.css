@@ -62,7 +62,12 @@ svg.w-6.h-6 {
     cursor: pointer;
     opacity: 0.9;
 }
+.box-info-container{
+    display: flex;
+    flex-direction: column;
 
+
+}
 .box-inf-comment{
     margin: 15px 50px;
     float: left;

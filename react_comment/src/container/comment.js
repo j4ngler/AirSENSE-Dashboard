@@ -3,15 +3,20 @@ import InputComment from '../component/Input';
 import { useDispatch, useSelector } from "react-redux";
 import { initComment, commentAction } from "../reducers/Comment/commentSlice";
 import { getGeolocation } from "../utils/commonUtils";
+import ListMessage from "../component/ListMessage";
 const Comment = () => {
     const comment_group_gs = useSelector(state => state.commentSlice.comment_group);
     const comment_sub_gs = useSelector(state => state.commentSlice.comment_sub);
     const comment_page_gs = useSelector(state => state.commentSlice.comment_page);
     const userIPs_gs = useSelector(state => state.commentSlice.userIPs);
+    const username_gs = useSelector(state => state.authSlice.username);
+    const userId_gs = useSelector(state => state.authSlice.userId);
+    const typeUser_gs = useSelector(state => state.authSlice.typeUser);
+
     const dispatch = useDispatch();
 
     const searchGroup = async () => {
-        let params = (new URL(document.location)).searchParams;
+        let params = (new URL(document.location)).searchParams; // get group, sub, id later
 
         //get IP user
         let userIPs = await getGeolocation();
@@ -24,6 +29,9 @@ const Comment = () => {
             userIPs: userIPs
         }
         dispatch(initComment(fakeGroup))
+
+
+        
 
     }
 
@@ -45,8 +53,9 @@ const Comment = () => {
                 comment_parent_id:data.hasOwnProperty("id_reply_comment")?data.id_reply_comment:0,
             };
         console.log(messageComment);
-        commentAction(messageComment);
+        dispatch(commentAction(messageComment));
     }
+
 
 }
      
@@ -54,6 +63,7 @@ const Comment = () => {
     return (
         <>
         <InputComment handleComment={handleComment} infoReply={'test'}/>
+        <ListMessage/>
         </>
     )
 }

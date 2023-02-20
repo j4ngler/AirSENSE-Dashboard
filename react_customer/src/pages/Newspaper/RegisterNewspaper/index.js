@@ -18,6 +18,7 @@ export default function News() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+
   const [content,setContent] = useState('')
   const [contentSubListAll,setContentSubListAll] = useState([])
   const [contentGroupList, setContentGroupList] = useState([])
@@ -43,25 +44,6 @@ export default function News() {
     fetchDataTable('content_group', setContentGroupList);
     fetchDataTable('content_sub', setContentSubListAll)
   },[])
-  const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  const handleCancel = () => setPreviewOpen(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-  };
-
 
   const handleChange = (event) => {
     console.log("Content: " + event);
@@ -93,6 +75,29 @@ export default function News() {
     // httpPostData(API_URL + 'customer/import-data', dataNewspaper)
 
   }
+
+    const handleChange = ({ fileList: newFileList }) =>
+  
+  {
+    console.log('Heloo guang....')
+    setFileList(newFileList);
+
+  }
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
+  const onChange = (value) => {
+    console.log(value);
+  };
 
   return (
     <Col span={22} offset={1} className="news-container">

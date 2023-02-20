@@ -1,8 +1,172 @@
 
 // const moment = require('moment');
 
+const data = [
+    {
+    _id: 'ObjectId(63d14a91ef12ca38ec6c01af)',
+    topic: "product/smart_device/5",
+    commentId: "usr_1674660497_2",
+    content: {
+    author_id: 2,
+    type_user: 1,
+    author_IP: "171.236.58.19",
+    content: "Hi Giang",
+    comment_atack: "",
+    comment_parent_id: 0,
+    comment_reply_id: 0
+    },
+    time: "1674660497",
+    __v: 0            
+    },
+    {
+    _id: 'ObjectId(63d14af2ef12ca38ec6c01b3)',
+    topic: "product/smart_device/5",
+    commentId: "cus_1674660609_4",
+    content: {
+    author_id: 4,
+    type_user: 2,
+    author_IP: "171.236.58.19",
+    content: "Hi Giang handsome",
+    comment_atack: "",
+    comment_parent_id: 0,
+    comment_reply_id: 0
+    },
+    time: "1674660609",
+    __v: 0
+    },
+    {
+        _id: 'ObjectId(63d14b18ef12ca38ec6c01b7)',
+        topic: "product/smart_device/5",
+        commentId: "cus_1674660668_4",
+        content: {
+        author_id: 4,
+        type_user: 2,
+        author_IP: "171.236.58.19",
+        content: "acknowledgement",
+        comment_atack: "",
+        comment_parent_id: 0,
+        comment_reply_id: 0,
+        },
+        time: "1674660668",
+        __v: 0
+    },
+    {
+        _id: 'ObjectId(63d14b18ef662138ec6c01b7)',
+        topic: "product/smart_device/5",
+        commentId: "usr_1675611574_2",
+        content: {
+        author_id: 2,
+        type_user: 1,
+        author_IP: "171.236.58.19",
+        content: "reply 1",
+        comment_atack: "",
+        comment_parent_id: 'usr_1674660497_2',
+        comment_reply_id: 'usr_1674660497_2'
+        },
+        time: "1675611574",
+        __v: 0
+    },
+    {
+        _id: 'ObjectId(63d17235ef12ca38ec6c01b7)',
+        topic: "product/smart_device/5",
+        commentId: "cus_1675611697_4",
+        content: {
+        author_id: 4,
+        type_user: 2,
+        author_IP: "171.236.58.19",
+        content: "reply 2",
+        comment_atack: "",
+        comment_parent_id: 'usr_1674660497_2',
+        comment_reply_id: 'usr_1674660497_2'
+        },
+        time: "1675611697",
+        __v: 0
+    },
+    {
+        _id: 'ObjectId(63d121a5ef12ca38ec6c01b7)',
+        topic: "product/smart_device/5",
+        commentId: "cus_1675611774_5",
+        content: {
+        author_id: 5,
+        type_user: 2,
+        author_IP: "171.236.58.19",
+        content: "food and drink🤣 😂 😂",
+        comment_atack: "",
+        comment_parent_id: 'usr_1674660497_2',
+        comment_reply_id: 'cus_1675611697_4'
+        },
+        time: "1675611774",
+        __v: 0
+    },
+    {
+        _id: 'ObjectId(63d121a5ef12ca38ec6c01b7)',
+        topic: "product/smart_device/5",
+        commentId: "cus_1675611942_5",
+        content: {
+        author_id: 5,
+        type_user: 2,
+        author_IP: "171.236.58.19",
+        content: "sea food",
+        comment_atack: "",
+        comment_parent_id: 'usr_1674660497_2',
+        comment_reply_id: 'cus_1675611697_4'
+        },
+        time: "1675611942",
+        __v: 0
+    },
+
+]
+
 
 class CommentManagement {
+    constructor(commentData){
+        // this.commentId = commentData.commentId;
+        // this.content = commentData.content;
+        // this.time = commentData.time;
+        // this.__v = commentData.__v;
+    }
+    
+    findParentComment(data, id) {
+        console.log(data)
+        console.log(id)
+        let found = data.findIndex(o => o.commentId ==id);
+                if(found > -1) { 
+                    return found;
+                }
+                return  null;
+    }
+
+    findUser(id) {
+        return 'Long Nguyen Hoang';
+    }
+
+    modifyData() {
+        let result=[];
+            data.forEach(element => {
+                let dataInsert= JSON.parse(JSON.stringify(element));
+                // var day = moment(dataInsert.time);
+                dataInsert['timeSend']= '20:32 10/2/2022';
+                dataInsert['author']=this.findUser(dataInsert.content.author_id);
+                dataInsert['children'] = [];
+                dataInsert['timeConvert'] = this.timeConverter(dataInsert.time);
+                if(dataInsert.content.comment_reply_id !== 0){  // id_comment_reply
+                    let idPrent = this.findParentComment(result, dataInsert.content.comment_parent_id);
+                    // console.log(idPrent)
+                    result[idPrent].children.push(dataInsert);
+                    return result;
+                }
+                result.push(dataInsert);
+            });
+//             console.log("informChatboxDataChat ",messageInfo);
+            let newDataSort=[];
+            for(let i=(result.length-1); i>-1; i--){
+                newDataSort.push(result[i]);
+            }
+        return newDataSort;
+
+    }
+
+
     timeConverter(UNIX_timestamp) {
         let a = new Date(UNIX_timestamp * 1000);
         let months = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6',
@@ -16,8 +180,53 @@ class CommentManagement {
         let time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
         return time;
     }
+    commentSortTime(commentData){
+        if(this.time > commentData.time){
+            let temp1 = this.commentId;
+            this.commentId = commentData.commentId;
+            commentData.commentId = temp1;
+            
+            let temp2 = this.content;
+            this.content = commentData.content;
+            commentData.content = temp2;
+
+            let temp3 = this.time;
+            this.time = commentData.time;
+            commentData.time = temp3;
+
+            let temp4 = this.__v;
+            this.__v = commentData.__v;
+            commentData.__v = temp4;
+        }
+    }
+    deleteCommentData(index){
+        this.commentId="";
+        this.content={};
+        this.time = "";
+        this.__v=0;
+        
+
+    }
+    display(){
+
+    }
 
     
+}
+const cmt = [];
+for(let i = 0; i<data.length;i++){
+     cmt[i] = new CommentManagement(data[i]);
+}
+for(let i = 0; i<cmt.length;i++){
+    for(let j = i+1; j< cmt.length;j++){
+        cmt[i].commentSortTime(cmt[j]);
+    }
+}
+for(let i = 0; i< cmt.length; i++){
+    if(cmt[i].comment_parent_id == 0){
+        cmt[i].display();
+        cmt[i].deleteCommentData(i);
+    }
 }
 
 // class ChatMessage {

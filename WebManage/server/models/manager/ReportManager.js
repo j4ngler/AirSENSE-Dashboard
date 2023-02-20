@@ -1,6 +1,7 @@
 const CommonModel = require("../middlewareDatabase/CommonModel.js");
 var squel = require("squel");
 const knex = require("../../config/knex.js");
+const sensor = require('../../models/schemaMongo/dataSensor')
 
 class ReportManager extends CommonModel {
   reportListSql(sqlCommandTable) {
@@ -120,7 +121,7 @@ class ReportManager extends CommonModel {
       .select()
       .from("content_page")
       .where("group_file ='" + typePages + "'")
-      .where("deleteflag = 0")
+      .where("delete_flag = 0")
       .limit(100);
     //    console.log('reportPage reportPage');
     //    console.log(report.toString());
@@ -141,8 +142,8 @@ class ReportManager extends CommonModel {
     var authen = squel.update().table("content_page");
     authen
       .where("id=" + idset)
-      .set("deleteflag", 1)
-      .set("updateat", "NOW()", { dontQuote: true });
+      .set("delete_flag", 1)
+      .set("updated_at", "NOW()", { dontQuote: true });
     // console.log(authen.toString());
     return new Promise((resolve, reject) => {
       knex
@@ -365,7 +366,7 @@ class ReportManager extends CommonModel {
       .set("id_update", idcreate)
       .set("createat", "NOW()", { dontQuote: true })
       .set("updateat", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0);
+      .set("delete_flag", 0);
     console.log(authen.toString());
     return new Promise((resolve, reject) => {
       knex
@@ -408,7 +409,7 @@ class ReportManager extends CommonModel {
       .set("id_update", userId)
       .set("createat", "NOW()", { dontQuote: true })
       .set("updateat", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0);
+      .set("delete_flag", 0);
     return new Promise((resolve, reject) => {
       knex
         .raw(query.toString())
@@ -525,13 +526,15 @@ class ReportManager extends CommonModel {
   getStation(stationId) {
     var query = squel
       .select()
-      .from("sparc_location_sensor")
+      .from("device_sensor")
       .where("station_id = " + stationId);
     return new Promise((resolve, reject) => {
-      if (stationId.includes(",")) {
-        var station = { content: "All" };
-        resolve(station);
-      }
+      // if (stationId.includes(",")) {
+      //   var station = { content: "All" };
+      //   resolve(station);
+      // }
+
+      // console.log(query.toString());
       knex
         .raw(query.toString())
         .then(function (stations) {
@@ -543,41 +546,40 @@ class ReportManager extends CommonModel {
     });
   }
 
-  getReportStations(fromTime, toTime, station_id, role) {
-    var query = squel.select().from("sparc_sensor_data");
-    if (fromTime != undefined) {
-      query = query.where("Time>=" + fromTime / 1000);
-    }
-    if (toTime != undefined) {
-      query = query.where("Time<" + toTime / 1000);
-    }
-    var privilege;
-    // check manifest
-    // if(DataTableRole.sparc_location_sensor[role.role] == undefined || DataTableRole.sparc_location_sensor[role.role].view==undefined) return;
-    // var privilege = DataTableRole.sparc_location_sensor[role.role].view;
-    // var privilege = DataTableRole.sparc_location_sensor[role.manifestid].view;
-    // when you are the suppoter
-    // if(privilege=="own") {
-    //     query.join( "sparc_location_sensor", null, squel.expr().and("sparc_location_sensor.station_id = sparc_sensor_data.station_id"));
-    //     query.where("sparc_location_sensor.id_create = "+"'"+role.userid+"'");
+  async getReportStations(fromTime, toTime, stationID) {
+    // var query = squel.select().from("sparc_sensor_data");
+    // if (fromTime != undefined) {
+    //   query = query.where("Time>=" + fromTime / 1000);
     // }
-    if (station_id.includes(",")) {
-      query = query.where("sparc_sensor_data.station_id IN " + station_id);
-    } else
-      query = query.where(
-        "sparc_sensor_data.station_id = '" + station_id + "'"
-      );
-      console.log(query.toString());
-    return new Promise((resolve, reject) => {
-      knex
-        .raw(query.toString())
-        .then(function (result) {
-          resolve(result);
-        })
-        .catch(function (err) {
-          return reject(err);
-        });
-    });
+    // if (toTime != undefined) {
+    //   query = query.where("Time<" + toTime / 1000);
+    // }
+    // var privilege;
+    // if (station_id.includes(",")) {
+    //   query = query.where("sparc_sensor_data.station_id IN " + station_id);
+    // } else
+    //   query = query.where(
+    //     "sparc_sensor_data.station_id = '" + station_id + "'"
+    //   );
+    //   console.log(query.toString());
+
+    // return new Promise((resolve, reject) => {
+    //   knex
+    //     .raw(query.toString())
+    //     .then(function (result) {
+    //       resolve(result);
+    //     })
+    //     .catch(function (err) {
+    //       return reject(err);
+    //     });
+    // });
+    console.log(fromTime, toTime, stationID);
+    const stationSelect = 'sensor/'+stationID;
+    console.log(stationSelect)
+    const result = await sensor.find({"content": {$exists:true}, "topic": stationSelect, $and: [ { "time": {$gt: fromTime}}, { "time": {$lt: toTime} }]});
+    // console.log(result);
+    // return JSON.stringify(result);
+    return result;
   }
 
   formatDate(date) {

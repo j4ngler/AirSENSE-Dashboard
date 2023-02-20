@@ -174,112 +174,17 @@ router.get("/about", (req, res) => {
 router.get("/map", (req, res) => {
   res.render("home/map");
 });
+
+
 router.get("/faq", (req, res) => {
   res.render("ManagerStation/reportStation");
 });
 
-// router.get("/sale/product", (req, res) => {
-//   console.log("req /sale/product ", req._parsedOriginalUrl.query);
-//   res.render("sale/GroupProduct", { detail: req._parsedOriginalUrl.query });
-// });
-
-// router.get("/sale/product_detail", (req, res) => {
-//   res.render("sale/DetailProduct", { detail: req._parsedOriginalUrl.query });
-// });
-
-// router.get("/sale/cart", (req, res) => {
-//   res.render("sale/invoiceInfoProduct");
-// });
-
-// router.get("/sale/finish", (req, res) => {
-//   res.render("sale/finishInvoiceProduct", {
-//     detail: req._parsedOriginalUrl.query,
-//   });
-// });
-
-// router.get("/service", (req, res) => {
-//   res.render("service/service");
-// });
-
-// router.get("/service/detail", (req, res) => {
-//   res.render("service/detailService");
-// });
-
-// router.get("/service/bill", (req, res) => {
-//   res.render("service/billService");
-// });
-
-// router.get("/service/charging", (req, res) => {
-//   res.render("service/chargingService");
-// });
-
-// router.get("/test2", (req, res) => {
-//   res.render("sale/DetaileSalePages");
-// });
-
-// router.get("/test3", (req, res) => {
-//   res.render("sale/Sale");
-// });
-// router.get("/test4", (req, res) => {
-//   res.render("sale/SaleGroupPages");
-// });
-
-// router.get("/test5", (req, res) => {
-//   res.render("sale/SalePages");
-// });
-
-// router.get("/old", (req, res) => {
-//   res.render("old/home");
-// });
-// router.get("/old_map", (req, res) => {
-//   res.render("old/map");
-// });
-// router.get("/allStation/:token", (req, res) => {
-//   res.render("old/map");
-// });
-// router.get("/old_register", (req, res) => {
-//   res.render("old/Account/register");
-// });
-// router.get("/old_profile", (req, res) => {
-//   res.render("old/Account/profile");
-// });
-
-// router.get("/oldreportstation", (req, res) => {
-//   res.render("old/reportStation");
-// });
-
-// router.get("/reportstation/:token", (req, res) => {
-//   res.render("ManagerStation/reportStation");
-// });
-
-/*
-router.get('/old_addUser', (req, res) => {
-  res.render('old/Account/addUsers');
+router.get("/report_station", (req, res) => {
+  res.render("ManagerStation/reportStation");
 });
-router.get('/old_station', (req, res) => {
-  res.render('old/Manager/StationManager');
-});
-router.get('/old_groupstation', (req, res) => {
-  res.render('old/Manager/GroupStationManager');
-});
-router.get('/old_setupstation', (req, res) => {
-  res.render('old/Manager/SetupStationManager');
-});
-router.get('/old_reportstation', (req, res) => {
-  res.render('old/reportStation');
-});
-router.get('/old_manifeststation', (req, res) => {
-  res.render('old/Manager/ManifestStationManager"');
-});
-router.get('/old_abnormalIndex', (req, res) => {
-  res.render('old/Manager/AbnormalIndex');
-});
-router.get('/old_blog', (req, res) => {
-  res.render('old/blog');
-});
-router.get('/old_manageBlog', (req, res) => {
-  res.render('old/Manager/BlogManager');
-});*/
+
+
 router.get("/test123", (req, res) => {
   res.render("old/Account/login");
 });
@@ -287,6 +192,8 @@ router.get("/test123", (req, res) => {
 // router.get('/comment', (req, res) => {
 //   res.render('home/comment');
 // })
+
+
 /* commonSale */
 router.get("/product", (req, res) => {
   res.render("sale/Sale");
@@ -309,5 +216,11 @@ router.get("/sale/finish", (req, res) => {
 router.get("/sale/history", (req, res) => {
   res.render("sale/historyInvoice");
 });
-
+//Login 
+router.get("/login/admin", (req, res) => {
+  res.render("admin/admin");
+});
+router.get("/login/customer", (req, res) => {
+  res.render("customer/customer");
+});
 module.exports = router;

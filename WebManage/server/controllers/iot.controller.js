@@ -134,7 +134,6 @@ iotCtrl.getStationHome = function(request, response) {
         //var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);  
         knex.raw(dataTableSQL)
         .then(result => {
-            console.log(result[0]);
             return returnOK(response,result[0]);
         }
         , error => {
@@ -158,13 +157,24 @@ iotCtrl.reportDataStationLimit = function(request, response) {
 };
 
 iotCtrl.getReportStations = function(request, response) {
-            // var role = result[0];
-            var fromTime = request.body.fromTime;
-            var toTime = request.body.toTime;
-            var station_id = request.body.station_id;
-            var convertFromTime = request.body.getFromTime;
-            var convertToTime =  request.body.getToTime
-            reportManager.getReportStations(convertFromTime, convertToTime, station_id,request.currentUser).then(function (result) {
+            console.log(request.body)
+            let fromTime = request.body.fromTime;
+            let toTime = request.body.toTime;
+            let station_id = request.body.station_id;
+            let convertFromTime = request.body.getFromTime;
+            let convertToTime =  request.body.getToTime;
+            let stationTitle = 'rell';
+            let stationMAC = '';
+            reportManager.getStation(station_id).then(function(station) {
+                stationTitle = station[0].title;
+                stationMAC = station[0].mac
+            })
+            .catch((error) => {
+                stationTitle = 'No Information';
+                stationMAC = 'None'
+            })
+            reportManager.getReportStations(convertFromTime, convertToTime, station_id).then(function (result) {
+            // console.log(stationTitle);
                 // console.log(result);
                 var workbook = new Excel.Workbook();
                 workbook.views = [
@@ -174,9 +184,10 @@ iotCtrl.getReportStations = function(request, response) {
                     }
                 ]
 
-                var worksheet = workbook.addWorksheet('Report');
+                var worksheet = workbook.addWorksheet(stationTitle);
                 worksheet.columns = [
                     { header: 'Mã trạm', key: 'station_id', width: 10 },
+                    { header: 'Tên trạm', key: 'station_title', width: 30},
                     { header: 'Thời gian', key: 'Date', width: 10 },
                     { header: 'Timestamp', key: 'Time', width: 10 },
                     { header: 'PM2p5', key: 'PM2p5', width: 10 },
@@ -194,39 +205,60 @@ iotCtrl.getReportStations = function(request, response) {
                     { header: 'SO2W', key: 'SO2W', width: 10 },
                     { header: 'SO2A', key: 'SO2A', width: 10 },
                 ];
-                const resultReal = result[0];
-                for (var i = 0; i < resultReal.length; i++) {
-                    var record = resultReal[i];
-                    var d = new Date((record.Time) * 1000);
-                    var date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':00';
+                // const resultReal = result[0];
+                for (let i = 0; i < result.length; i++) {
+                    let record = result[i];
+                    console.log(record)
+                    let d = new Date((record.time) * 1000);
+                    let date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':00';
                     worksheet.addRow({
-                        Date: date, Time: record.Time, station_id: record.station_id.toString(16).toUpperCase(),
-                        PM2p5: record.PM2p5, PM10: record.PM10, PM1: record.PM1, Temperature: record.Temperature, Humidity: record.Humidity,
-                        Pressure: record.Pressure,NO2W: record.NO2W,NO2A: record.NO2A,O3W: record.O3W,O3A: record.O3A,
-                        COW: record.COW,COA: record.COA,SO2W: record.SO2W,SO2A: record.SO2A
+                        Date: date, 
+                        Time: record.time, 
+                        station_id: stationMAC,
+                        station_title: stationTitle,
+                        PM2p5: record.content.PM2p5 ? record.content.PM2p5 : 'NULL' , 
+                        PM10: record.content.PM10 ? record.content.PM10 : 'NULL', 
+                        PM1: record.content.PM1 ? record.content.PM1 : 'NULL', 
+                        Temperature: record.content.Temperature ? record.content.Temperature : 'NULL', 
+                        Humidity: record.content.Humidity ? record.content.Humidity : 'NULL',
+                        Pressure: record.content.Pressure ? record.content.Pressure : 'NULL',
+                        NO2W: record.content.NO2W ? record.content.NO2W : 'NULL',
+                        NO2A: record.content.NO2A  ? record.content.NO2A : 'NULL',
+                        O3W: record.content.O3W ? record.content.O3W : 'NULL',
+                        O3A: record.content.O3A ? record.content.O3A : 'NULL',
+                        COW: record.content.COW ? record.content.COW : 'NULL',
+                        COA: record.content.COA ? record.content.COA : 'NULL',
+                        SO2W: record.content.SO2W ? record.content.SO2W  : 'NULL',
+                        SO2A: record.content.SO2A ?  record.content.SO2A  : 'NULL'
                     });
                 }
 
-                reportManager.getStation(station_id).then(function(station) {
-                    var from = reportManager.formatDate(new Date(convertFromTime));
-                    var fileName = "";
+                // reportManager.getStation(station_id).then(function(station) {
+                    let from = reportManager.formatDate(new Date(convertFromTime * 1000));
+                    let fileName = "";
                     if(toTime!=undefined) {
-                        var to = reportManager.formatDate(new Date(convertToTime));
-                        fileName = station[0].content+'_'+from+'_'+to+'.xlsx';
+                        let to = reportManager.formatDate(new Date(convertToTime * 1000));
+                        fileName = stationTitle+'_'+from+'_'+to+'.xlsx';
                     } 
-                    else fileName = station[0].content+'_'+from+'.xlsx';
-                    var filePath = './public/file/'+fileName;
-                    const responData = {
+                    else 
+                    fileName = stationTitle+'_'+from+'.xlsx';
+
+                    let filePath = './public/file/'+fileName;
+                    console.log(filePath);
+                    const responseData = {
                         filePath: filePath,
-                        data: resultReal
+                        data: result
                     };
+                    // console.log(responData);
+
+
                     workbook.xlsx.writeFile(filePath).then(function () {
-                        // console.log(JSON.stringify(responData));
-                        console.log(filePath);
-                        return response.send(JSON.stringify(responData));
-                        // return response.send(JSON.stringify({ fileExcel: filePath }));
+                    //     // console.log(JSON.stringify(responData));
+                    //     console.log(filePath);
+                        return response.send(JSON.stringify(responseData));
+                    //     // return response.send(JSON.stringify({ fileExcel: filePath }));
                     });
-                });
+                // });
 
             })
             .catch(function (err1) { return response.send("false"); });
@@ -265,14 +297,27 @@ iotCtrl.getDataRecent= function(request, response) {
 
 
 iotCtrl.getDataStation = async (req, res) => {
-    const { stationID, fromTime, toTime } = req.body;
-    console.log(fromTime, toTime, stationID);
-    const stationSelect = 'sensor/'+stationID;
-
-    const result = await DataSensor.find({"content": {$exists:true}, "topic": stationSelect, $and: [ { "time": {$gt: fromTime}}, { "time": {$lt: toTime} }]});
-    // console.log(result);
-    res.send(JSON.stringify(result))
-}
+  const { stationID, fromTime, toTime } = req.body;
+  console.log(fromTime, toTime, stationID);
+  const stationSelect = "sensor/" + stationID;
+  console.log(new Date());
+  const result = await DataSensor.find(
+    {
+      content: { $exists: true },
+      topic: stationSelect,
+      $and: [{ time: { $gt: fromTime } }, { time: { $lt: toTime } }],
+    },
+    { _id: 0, __v: 0, topic: 0 }
+  )
+    .hint({ time: 1 })
+    .lean();
+    console.log(new Date());
+//   res.send(JSON.stringify(result));
+    res.send(JSON.stringify({
+        station: stationID,
+        data: result
+    }));
+};
 
 
 

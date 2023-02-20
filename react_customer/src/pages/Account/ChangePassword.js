@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Col, Row } from "antd";
-import { Button, Form, Input, Image } from "antd";
+import { Button, Form, Input } from "antd";
+import { openNotification, typeNotify } from "../../utils/notification";
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const submitForm = () => {
+    openNotification(typeNotify.SUCCESS, 'Bạn đã thay đổi mật khẩu cá nhân thành công');
+  }
+
+
   const handleConfirmPassword = (e) => {
     setConfirmNewPassword(e.target.value);
   };
+
   return (
+    <>
     <Col span={22} offset={1} className="change-password">
       <br />
       <Form layout="vertical" action="/abc" method="get">
@@ -55,11 +64,15 @@ const ChangePassword = () => {
         </Row>
         <div className="change-pass-submit">
           <Form.Item>
-            <Button type="primary submit">Submit</Button>
+            <Button type="primary submit" onClick={submitForm}>Submit</Button>
           </Form.Item>
         </div>
       </Form>
     </Col>
+
+
+   
+    </>
   );
 };
 
