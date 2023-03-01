@@ -193,7 +193,7 @@ userCtrl.addDataToTable = async function (req, res) {
       });
     }
     // console.log("checkInaval", checkInaval);
-    console.log("data=>>>>",data);
+    console.log("data=>>>>", data);
     var sqlData = await tableSelect.checkSqlAddAdmin(req, data);
     console.log(sqlData);
     knex.raw(sqlData).then(
@@ -270,6 +270,7 @@ userCtrl.updateData = async function (req, res) {
   var userid = req.currentUser.users_id;
   let dataUser = tableSelect.getFieldToDelete();
   var squelGet = squel.select().from(tableSelect.getNameTable());
+  console.log("data", data);
   for (var i = 0; i < dataUser.arrayCoppy.length; i++) {
     let item = dataUser.arrayCoppy[i];
     /*    if(!!!data[item]) squelGet.set(item,null);
@@ -278,11 +279,16 @@ userCtrl.updateData = async function (req, res) {
      */
     squelGet.field(item);
   }
+  if (data.table === "customer" || data.table === "user") {
+    squelGet.field("password");
+  }
+  squelGet.field("id_updated");
   squelGet.where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
+  let dataUserFake = [...dataUser.arrayCoppy, "password", "id_updated"];
   var authen = squel
     .insert()
     .into(tableSelect.getNameTable())
-    .fromQuery(dataUser.arrayCoppy, squelGet);
+    .fromQuery(dataUserFake, squelGet);
   console.log("updateDataauthen.toString() ", authen.toString());
   var dataAdd = await knex.raw(authen.toString());
   if (dataAdd == null || dataAdd.length < 1)
@@ -292,8 +298,8 @@ userCtrl.updateData = async function (req, res) {
     .where(dataUser.locationSelect + "=" + dataAdd[0].insertId)
     .set(dataUser.valueSelect, 1)
     .set("id_updated", userid)
-    .set("oldid", data[dataUser.locationSelect])
-    .set("deleteflag", 1)
+    .set("old_id", data[dataUser.locationSelect])
+    .set("delete_flag", 1)
     .set("updated_at", "NOW()", { dontQuote: true });
   console.log("oauthen2");
   console.log(authen2.toString());
@@ -351,8 +357,8 @@ userCtrl.updateUser = async (req, res) => {
     .where(dataUser.locationSelect + "=" + dataAdd[0].insertId)
     .set(dataUser.valueSelect, 1)
     .set("id_updated", userid)
-    .set("oldid", data[dataUser.locationSelect])
-    .set("deleteflag", 1)
+    .set("old_id", data[dataUser.locationSelect])
+    .set("delete_flag", 1)
     .set("updated_at", "NOW()", { dontQuote: true });
   console.log("oauthen2");
   console.log(authen2.toString());
@@ -367,8 +373,8 @@ userCtrl.updateUser = async (req, res) => {
     .set("phoneNumber", data.phone)
     .set("contact", data.contact)
     .set("avartar", data.avartar)
-    .set("oldid", 0)
-    .set("deleteflag", 0)
+    .set("old_id", 0)
+    .set("delete_flag", 0)
     .set("updated_at", "NOW()", { dontQuote: true });
   console.log("updateDataauthen.toString() ", authen3.toString());
   knex
@@ -392,7 +398,7 @@ userCtrl.updateFistPages = async function (req, res) {
     return returnNotFound(res, { message: "Database inval" });
   }
   var sqlUpdate =
-    "UPDATE content_page SET set_to_fist = ( SELECT MAX(set_to_fist) + 1 ) WHERE deleteflag =0 and content_page_id=" +
+    "UPDATE content_page SET set_to_fist = ( SELECT MAX(set_to_fist) + 1 ) WHERE delete_flag =0 and content_page_id=" +
     req.body["content_page_id"] +
     ";";
   knex
@@ -416,7 +422,7 @@ userCtrl.updateFistCourse = async function (req, res) {
     return returnNotFound(res, { message: "Database inval" });
   }
   var sqlUpdate =
-    "UPDATE course_page SET set_to_fist = ( SELECT MAX(set_to_fist) + 1 ) WHERE deleteflag =0 and course_page_id=" +
+    "UPDATE course_page SET set_to_fist = ( SELECT MAX(set_to_fist) + 1 ) WHERE delete_flag =0 and course_page_id=" +
     req.body["course_page_id"] +
     ";";
   knex
@@ -457,8 +463,8 @@ userCtrl.registerUser = async function (req, res) {
     .set("id_updated", 0)
     .set("note", "")
     .set("permission_id", 4)
-    .set("deleteflag", "0")
-    .set("oldid", "0");
+    .set("delete_flag", "0")
+    .set("old_id", "0");
   console.log(newUser.toString());
   knex
     .raw(newUser.toString())
@@ -543,10 +549,10 @@ userCtrl.resetPass = async function (req, res) {
               .set("tocken", token)
               .set("id_updated", current_id)
               .set("id_created", current_id)
-              .set("deleteflag", 0)
+              .set("delete_flag", 0)
               .set("created_at", "NOW()", { dontQuote: true })
               .set("updated_at", "NOW()", { dontQuote: true })
-              .set("deleteflag", 0)
+              .set("delete_flag", 0)
               .set("time_relase", "NOW() + INTERVAL 1 DAY", { dontQuote: true })
               .set("check_reset", "reset");
             console.log(authen2.toString());
@@ -610,7 +616,7 @@ userCtrl.changePassword1 = async function (req, res) {
     .from("users")
     .where("email='" + data["email"] + "'")
     .where("forgot_pass_token='" + data["forgot_pass_token"] + "'")
-    .where("deleteflag=0");
+    .where("delete_flag=0");
   var result = await knex.raw(authen.toString());
   if (result == null || result.length == 0) {
     return returnNotFound(res, { message: "acao Not exitting " });
@@ -685,7 +691,7 @@ userCtrl.listUser = async (req, res) => {
 };
 
 userCtrl.listComment = async (req, res) => {
-  var mySql = squel.select().from("content_page").where("deleteflag=0");
+  var mySql = squel.select().from("content_page").where("delete_flag=0");
   var result = await knex.raw(mySql.toString());
   if (result == null || result.length == 0) {
     return returnNotFound(res, { message: "No article" });

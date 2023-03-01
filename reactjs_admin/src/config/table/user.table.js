@@ -62,7 +62,7 @@ class User_View  {
 
     getInfoToEdit(){
       return {
-        mainID:'userid',
+        mainID:'user_id',
         mainInfo:{
             field: 'fullname',
             headerName: 'Thông tin khách hàng',

@@ -22,29 +22,29 @@ class SparcAqi  {
               headerName: 'aqi',
               width: 200,
             },
-            {
-              field: 'action',
-              headerName: 'Thao tác',
-              width: 140,
-              renderCell: () => (
-                <div>
-                  <span
-                    onClick={() => {
-                      if(callback!=null) callback(ActionControl.ACTION_UPDATE);
-                    }}
-                  >
-                  <EditIcon />
-                  </span>
-                  <span
-                      onClick={() => {
-                        if(callback!=null) callback(ActionControl.ACTION_DELETE);
-                        }}
-                    >
-                    <DeleteIcon />
-                  </span>
-                </div>
-              ),
-            },
+            // {
+            //   field: 'action',
+            //   headerName: 'Thao tác',
+            //   width: 140,
+            //   renderCell: () => (
+            //     <div>
+            //       <span
+            //         onClick={() => {
+            //           if(callback!=null) callback(ActionControl.ACTION_UPDATE);
+            //         }}
+            //       >
+            //       <EditIcon />
+            //       </span>
+            //       <span
+            //           onClick={() => {
+            //             if(callback!=null) callback(ActionControl.ACTION_DELETE);
+            //             }}
+            //         >
+            //         <DeleteIcon />
+            //       </span>
+            //     </div>
+            //   ),
+            // },
           ];
         return columns;
     }

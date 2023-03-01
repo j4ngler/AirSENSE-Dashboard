@@ -45,7 +45,7 @@ class SensorDeivceType  {
     }
     getInfoToEdit(){
       return {
-        mainID:'id_group',
+        mainID:'device_type_id',
         mainInfo:{
           field: 'content',
           headerName: 'content',

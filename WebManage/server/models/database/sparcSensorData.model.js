@@ -1,7 +1,7 @@
 const TypeModel = require("../middlewareDatabase/TypeModel.js");
 const TableView = require("../middlewareDatabase/TableView.js");
 const TableManifest = require("../middlewareDatabase/TableManifest.js");
-const TABLE_NAME = "sparc_sensor_data";
+const TABLE_NAME = "data_average";
 const CommonModel = require("../middlewareDatabase/CommonModel.js");
 const defineManifest = require("../../middlewares/CheckManifest.js");
 const CustomerAcess = require("../middlewareDatabase/CustomerAcess.js");
@@ -51,17 +51,17 @@ class SparcSensorData extends CommonModel {
         "Pressure",
         "SO2",
         "NO2",
-        "CO2",
+        // "CO2",
         "CO",
         "O3",
-        "NO2A",
-        "NO2W",
-        "O3W",
-        "O3A",
-        "COW",
-        "COA",
-        "SO2W",
-        "SO2A",
+        // "NO2A",
+        // "NO2W",
+        // "O3W",
+        // "O3A",
+        // "COW",
+        // "COA",
+        // "SO2W",
+        // "SO2A",
       ],
     };
   }
@@ -80,17 +80,17 @@ class SparcSensorData extends CommonModel {
         "Pressure",
         "SO2",
         "NO2",
-        "CO2",
+        // "CO2",
         "CO",
         "O3",
-        "NO2A",
-        "NO2W",
-        "O3W",
-        "O3A",
-        "COW",
-        "COA",
-        "SO2W",
-        "SO2A",
+        // "NO2A",
+        // "NO2W",
+        // "O3W",
+        // "O3A",
+        // "COW",
+        // "COA",
+        // "SO2W",
+        // "SO2A",
       ],
       locationSelect: "Time",
       valueSelect: "",

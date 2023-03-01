@@ -79,7 +79,6 @@ const AddNomalDialogue = ({ table, dataInput, handleClose }) => {
     >
       <Divider />
       {state.header.map((vars) => {
-        console.log('vars', state.value);
         return (
           <DynamicForm
             value={vars}

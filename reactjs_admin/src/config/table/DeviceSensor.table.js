@@ -74,7 +74,7 @@ class DeviceSensor {
   };
   getInfoToEdit() {
     return {
-      mainID: 'id',
+      mainID: 'station_id',
       mainInfo: {
         field: 'mac',
         headerName: 'mac',

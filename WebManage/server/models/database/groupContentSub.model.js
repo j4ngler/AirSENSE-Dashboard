@@ -42,13 +42,13 @@ class GroupContentSub extends CommonModel {
 
   getFieldToAdd() {
     return {
-      valueSetup: ["content_group", "content_group_id", "title"],
+      valueSetup: ["content", "content_group_id", "title"],
     };
   }
   getFieldToDelete() {
     return {
       arrayCoppy: [
-        "content_group",
+        "content",
         "content_group_id",
         "title",
         "created_at",

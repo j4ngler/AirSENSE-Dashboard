@@ -48,7 +48,7 @@ class SparcSensorData {
       },
       {
         field: 'Pressure',
-        headerName: 'Áp xuất',
+        headerName: 'Áp suất',
         width: 180,
       },
       {
@@ -61,29 +61,29 @@ class SparcSensorData {
         headerName: 'NO2',
         width: 150,
       },
-      {
-        field: 'action',
-        headerName: 'Thao tác',
-        width: 140,
-        renderCell: () => (
-          <div>
-            <span
-              onClick={() => {
-                if (callback != null) callback(ActionControl.ACTION_UPDATE);
-              }}
-            >
-              <EditIcon />
-            </span>
-            <span
-              onClick={() => {
-                if (callback != null) callback(ActionControl.ACTION_DELETE);
-              }}
-            >
-              <DeleteIcon />
-            </span>
-          </div>
-        ),
-      },
+      // {
+      //   field: 'action',
+      //   headerName: 'Thao tác',
+      //   width: 140,
+      //   renderCell: () => (
+      //     <div>
+      //       <span
+      //         onClick={() => {
+      //           if (callback != null) callback(ActionControl.ACTION_UPDATE);
+      //         }}
+      //       >
+      //         <EditIcon />
+      //       </span>
+      //       <span
+      //         onClick={() => {
+      //           if (callback != null) callback(ActionControl.ACTION_DELETE);
+      //         }}
+      //       >
+      //         <DeleteIcon />
+      //       </span>
+      //     </div>
+      //   ),
+      // },
     ];
     return columns;
   };
@@ -156,7 +156,6 @@ class SparcSensorData {
       'PM1',
       'CO',
       'O3',
-      'CO2',
     ];
   }
   getTitleToAdd() {
@@ -170,12 +169,10 @@ class SparcSensorData {
       'PM1',
       'CO',
       'O3',
-      'CO2',
     ];
   }
   getHtmlAdd() {
     return [
-      TypeDialgueShow.EDIT_TEXT,
       TypeDialgueShow.EDIT_TEXT,
       TypeDialgueShow.EDIT_TEXT,
       TypeDialgueShow.EDIT_TEXT,
@@ -198,14 +195,13 @@ class SparcSensorData {
       SelectHTml.NOT_CHECK_HTML,
       SelectHTml.NOT_CHECK_HTML,
       SelectHTml.NOT_CHECK_HTML,
-      SelectHTml.NOT_CHECK_HTML,
     ];
   }
   getTypeSelectTabbleToAdd() {
-    return ['', '', '', '', '', '', '', '', '', ''];
+    return ['', '', '', '', '', '', '', '', ''];
   }
   getColumeValidate() {
-    return ['', '', '', '', '', '', '', '', '', ''];
+    return ['', '', '', '', '', '', '', '', ''];
   }
 }
 

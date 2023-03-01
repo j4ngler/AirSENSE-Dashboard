@@ -39,7 +39,7 @@ class TableDataView extends Component {
     this.setState({ columns: columns });
     ManagerData.initdialogueCustomization(this.state.table);
     ManagerData.getLstDataPromise(this.state.table).then((data) => {
-      console.log("data",data)
+      console.log('data', data);
       this.setState({ data: data });
     });
   }
@@ -104,19 +104,24 @@ class TableDataView extends Component {
               Lọc
             </Button>
           </div>
-          <div className="user-control-btn">
-            <Button
-              color="secondary"
-              variant="contained"
-              component="label"
-              disableElevation
-              onClick={() => {
-                this.callBackEdit(ActionControl.ACTION_ADD);
-              }}
-            >
-              Thêm mới
-            </Button>
-          </div>
+          {this.state.table !== 'data_average' &&
+          this.state.table !== 'sparc_aqi' ? (
+            <div className="user-control-btn">
+              <Button
+                color="secondary"
+                variant="contained"
+                component="label"
+                disableElevation
+                onClick={() => {
+                  this.callBackEdit(ActionControl.ACTION_ADD);
+                }}
+              >
+                Thêm mới
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="user-control-btn">
             <Button
               variant="contained"
