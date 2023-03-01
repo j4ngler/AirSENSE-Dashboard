@@ -35,7 +35,7 @@ class DeviceSensor extends CommonModel {
   }
   getFieldToAdd(){
       return {
-          valueSetup: ["mac","station_id","longtitude","latitide","adsress","title","type_id"]
+          valueSetup: ["mac","station_id","longtitude","latitude","address","title","type_id"]
       };
   }
   getFieldToDelete(){

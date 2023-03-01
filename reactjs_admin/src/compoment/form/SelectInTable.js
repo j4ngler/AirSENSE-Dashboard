@@ -27,6 +27,10 @@ class SelectInTable extends Component {
     this.setState({ infoTitle: exportColumeEdit(this.props.table) });
     ManagerData.getLstDataPromise(this.props.table).then((data) => {
       this.setState({ data: ManagerData.getTable(this.props.table) });
+      console.log(
+        ' exportColumeEdit(this.props.table)',
+        exportColumeEdit(this.props.table)
+      );
     });
   }
   handleRowSelection = (e) => {

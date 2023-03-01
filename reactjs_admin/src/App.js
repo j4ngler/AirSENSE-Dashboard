@@ -182,7 +182,7 @@ const App = () => {
           list={NomalTable}
         />
         <Resource
-          name="sparc_sensor_data"
+          name="data_average"
           options={{ label: 'Dữ liệu sensor', menuParent: 'sensor' }}
           icon={ReceiptIcon}
           list={NomalTable}

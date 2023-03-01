@@ -1,8 +1,8 @@
-const HttpStatus = require('http-status-codes');
-const jwt = require('jsonwebtoken');
+const HttpStatus = require("http-status-codes");
+const jwt = require("jsonwebtoken");
 
-const Oauthen2 = require('../models/database/oAuthen2.model.js');
-var oauthen2=new Oauthen2();
+const Oauthen2 = require("../models/database/oAuthen2.model.js");
+var oauthen2 = new Oauthen2();
 /**
  * Route authentication middleware to verify a token
  *
@@ -12,30 +12,33 @@ var oauthen2=new Oauthen2();
  *
  */
 
-module.exports =  (req, res, next) => {
-  const authorizationHeader = req.headers['authorization'];
+module.exports = (req, res, next) => {
+  const authorizationHeader = req.headers["authorization"];
   let token;
   if (authorizationHeader) {
-      token = authorizationHeader.split(' ')[1];
+    token = authorizationHeader.split(" ")[1];
   }
   if (token) {
-    oauthen2.checkInvalUserExistingTocken(token).then((user) => {
+    oauthen2
+      .checkInvalUserExistingTocken(token)
+      .then((user) => {
         req.currentUser = {
-          manifestid:user[0].permission_id,
-          users_id:user[0].user_id,
-          enterprise_id:user[0].enterprise_id,
-          value_manifest:user[0].value_manifest
+          manifestid: user[0].permission_id,
+          users_id: user[0].user_id,
+          enterprise_id: user[0].enterprise_id,
+          value_manifest: user[0].value_manifest,
         };
+        req.body = { ...req.body, id_created: user[0].user_id };
         next();
       })
-      .catch(function(err){
-            res.status(HttpStatus.FORBIDDEN).json({
-              error: 'No token provided',
-            });
+      .catch(function (err) {
+        res.status(HttpStatus.FORBIDDEN).json({
+          error: "No token provided",
+        });
       });
   } else {
     res.status(HttpStatus.FORBIDDEN).json({
-      error: 'No token False',
+      error: "No token False",
     });
   }
 };

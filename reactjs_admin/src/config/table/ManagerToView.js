@@ -43,9 +43,9 @@ const classesFactorryMapping = {
   device_sensor: 'DeviceSensor',
   product: 'Product',
   store: 'Store',
-  sparc_sensor_data: 'SparcSensorData',
+  data_average: 'SparcSensorData',
   sensor_device_type: 'SensorDeivceType',
-  sparc_aqi: "SparcAqi",
+  sparc_aqi: 'SparcAqi',
 };
 
 export const exportColumeData = (table, callback = null) => {
@@ -105,13 +105,13 @@ export const checkValidateValue = (infoTitle, value) => {
         break;
       }
     } else if (checkValidate == 'password') {
-      if (accessValue.length < 6) {
+      if (accessValue && accessValue.length < 6) {
         validate.validate = false;
         validate.err += 'Độ dài mật khẩu <6';
         break;
       }
     } else if (checkValidate == 'leng3') {
-      if (accessValue.length < 3) {
+      if (accessValue && accessValue.length < 3) {
         validate.validate = false;
         validate.err += 'Độ dài ký tự không hợp lệ , độ dài >3';
         break;

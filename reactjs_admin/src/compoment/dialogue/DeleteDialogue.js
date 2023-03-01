@@ -23,6 +23,7 @@ const DeleteDialogue = ({ table, dataInput,handleClose }) => {
     var infoTitle =exportColumeEdit(table);
     var dataInfo ="";
     var newInfo = {};
+    console.log("infoTitle",infoTitle)
     if(!!infoTitle.mainInfo) {
         dataInfo = infoTitle.mainInfo.headerName + " :"+ dataInput[infoTitle.mainInfo.field];
     }
@@ -30,9 +31,9 @@ const DeleteDialogue = ({ table, dataInput,handleClose }) => {
         newInfo[infoTitle.mainID]=dataInput[infoTitle.mainID];
     }
     var dataDetail = {value:newInfo};
+    console.log("dataDetail",dataDetail)
     const [state, setState] = useState(dataDetail);
     console.log(table,dataInfo);
-    console.log(dataInput)
     const onChange = () => {
         deleteOneDataToTable(table,state.value).then(()=>{
             Swal.fire({

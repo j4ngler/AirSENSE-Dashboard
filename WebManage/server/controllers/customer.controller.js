@@ -268,6 +268,7 @@ customerCtrl.updateData = async function (req, res) {
     squelGet.field(item);
   }
   squelGet.where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
+  console.log("sqelGet", squelGet);
   var authen = squel
     .insert()
     .into(tableSelect.getNameTable())
@@ -281,7 +282,7 @@ customerCtrl.updateData = async function (req, res) {
         .where(dataUser.locationSelect + "=" + x[0].insertId)
         .set(dataUser.valueSelect, 1)
         .set("id_updated", userid)
-        .set("oldid", data[dataUser.locationSelect])
+        .set("old_id", data[dataUser.locationSelect])
         .set("delete_flag", 1)
         .set("updated_at", "NOW()", { dontQuote: true });
       let dataUser1 = tableSelect.getFieldToAdd();
@@ -539,7 +540,7 @@ customerCtrl.setTheBillData = async function (req, res) {
       return returnNotFound(res, { message: "Not find Sql " });
     }
     var sqlStringProduct =
-      "INSERT INTO buyproductdetail (buyproduct_id,product_id,product_image, quantity, KM, created_at, updated_at, id_created, id_updated, delete_flag, oldid) VALUES ";
+      "INSERT INTO buyproductdetail (buyproduct_id,product_id,product_image, quantity, KM, created_at, updated_at, id_created, id_updated, delete_flag, old_id) VALUES ";
     var thefist = false;
     data.value.forEach((element) => {
       if (thefist) sqlStringProduct = sqlStringProduct + ",";

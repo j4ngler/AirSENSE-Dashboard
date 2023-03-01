@@ -65,8 +65,8 @@ export default class GroupContentSub {
       },
       detailEdit: [
         {
-          field: 'content_group',
-          headerName: 'content_group',
+          field: 'content',
+          headerName: 'content',
           width: 200,
         },
         {
@@ -84,10 +84,10 @@ export default class GroupContentSub {
   }
 
   getInfoToAdd() {
-    return ['content_group', 'content_group_id', 'title'];
+    return ['content', 'content_group_id', 'title'];
   }
   getTitleToAdd() {
-    return ['content_group', 'content_group_id', 'title'];
+    return ['content', 'content_group_id', 'title'];
   }
 
   getHtmlAdd() {

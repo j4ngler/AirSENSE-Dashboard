@@ -72,8 +72,8 @@ class GroupContent {
     return {
       mainID: 'content_group_id',
       mainInfo: {
-        field: 'content_group',
-        headerName: 'content_group',
+        field: 'content',
+        headerName: 'content',
         width: 400,
       },
       detailEdit: [
