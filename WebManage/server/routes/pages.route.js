@@ -114,7 +114,6 @@ router.get("/group_lesson/:typePage", (req, res) => {
   var data = req.params.typePage;
   res.render("course/viewCourse", { detail: data, route: "course" });
 });
-
 router.get("/course/:typePage", async (req, res) => {
   var data = req.params.typePage;
   var itemvalue = ["head", "maths", "physics", "english"];

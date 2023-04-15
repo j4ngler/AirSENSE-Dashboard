@@ -59,7 +59,7 @@ customerCtrl.getTableData = function (req, res) {
 
     startPage = startPage * 1000;
     var itemSelect = tableSelect.getValueToSelectToFind(req.body.dataFind);
-    var dataTableSQL = tableSelect.getSQLCustomer(req.currentUser);
+    var dataTableSQL = tableSelect.getSQLReport(req.currentUser);
     knex.raw(dataTableSQL).then(
       (result) => {
         return returnOK(res, result[0]);
