@@ -144,7 +144,7 @@ export const addOneDataToTable = (table, data) => {
 };
 
 export const deleteOneDataToTable = (table, data) => {
-  console.log("datadelete",data)
+  console.log('datadelete', data);
   return httpPostData(
     API_URL + 'users/manager_delete',
     Object.assign(data, { table: table })
@@ -205,6 +205,7 @@ export const updatePageToAdvertisement = (data) => {
 
 export const uploadfileDataImage = (data) => {
   showLoadding();
+  console.log('Dataimg', data);
   return new Promise((resolve, reject) => {
     axios
       .post(API_URL + 'customers/import-image', Object.assign(data), {
