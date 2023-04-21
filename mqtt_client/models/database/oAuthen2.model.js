@@ -29,27 +29,11 @@ class Oauthen2 extends CommonModel {
   /**
    * Table has timestamps.
    */
-    checkInvalUserExistingTocken(tocken){
+    checkInvalUserExistingTocken(token){
         var authen = squel.select().from("oauthen2")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
-                        .where("time_relase > NOW()");
-        return new Promise( ( resolve, reject ) => {
-            console.log(authen.toString());
-            knex.raw(authen.toString()).then(function(result) {
-               console.log("checkInvalUserExistingTocken ok",result[1]);
-                resolve( result[0] );
-            }).catch(function(err){
-                console.log("checkInvalUserExistingTocken erro");
-                return reject(err);
-            } )
-        } );
-    }
-    checkInvalUserExistingTocken(tocken){
-        var authen = squel.select().from("oauthen2")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
-                        .where("time_relase > NOW()");
+                        .where("token = '"+token+"'" )
+                        .where("delete_flag = 0")
+                        .where("time_release > NOW()");
         return new Promise( ( resolve, reject ) => {
             //console.log(authen.toString(),tocken);
             knex.raw(authen.toString()).then(function(result) {
@@ -61,51 +45,34 @@ class Oauthen2 extends CommonModel {
             } )
         } );
     }
-    addTocken(data){
-        var authen2 = squel.insert().into("oauthen2");
-        var fieldToAdd =["permission_id","userid","tocken","id_updated","id_created",
-                            "deleteflag","created_at","updated_at","time_relase","value_manifest"];
-        for(var i=0;i<fieldToAdd.length;i++){
-            authen2.set(fieldToAdd[i],data[fieldToAdd[i]]);
-        }
-        authen2.set('permission_id', data.manifestid);
-        return new Promise( ( resolve, reject ) => {
-            knex.raw(authen2.toString()).then(function(x) {
-                resolve(true);
-            }).catch(function(err1){
-                reject(false);
-            }); 
-        });
-        
-    }
-
     responseLogin(res,user){
         var dataTocken= getRamdomData(256);
-        var permission_id=user.get('permission_id');
-        var current_id=user.get('users_id');
+        var manifestid=user.get('permission_id');
+        var current_id=user.get('user_id');
         var listDataContain="";
         var listDataEnterprise_id="";
         listDataContain+=current_id;
         var authen2 = squel.insert().into("oauthen2")
-                .set("permission_id",permission_id)
-                .set("userid",current_id)
-                .set("tocken",dataTocken)
-                .set("id_updated",current_id)
-                .set("id_created",current_id)
-                .set("deleteflag",0)
+                .set("permission_id",manifestid)
+                .set("user_id",current_id)
+                .set("token",dataTocken)
+                .set('delete_flag', 0)
                 .set("created_at",'NOW()',{dontQuote: true})
-                .set("updated_at",'NOW()',{dontQuote: true})
-                .set("deleteflag",0)
-                .set("time_relase",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
-        if(permission_id<TableManifest.NEW_REGISTER) {
-                authen2.set("value_manifest",listDataContain);
-                knex.raw(authen2.toString()).then(function(x) {
+                .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
+        console.log("<TableManifest.NEW_REGISTER",manifestid);
+        if(manifestid<TableManifest.NEW_REGISTER) {
+                // authen2.set("value_manifest",listDataContain);
+                knex.raw(authen2.toString())
+                .then(function(x) {
                     res.json({
                         success: true,
                         token:dataTocken,
                         email: user.get('email'),
+                        userName: user.get('name')
                     });
-                }).catch(function(err1){
+                })
+                .catch(function(err1){
+                    console.log("<TableManifest.NEW_REGISTER",err1);
                     res.status(HttpStatus.UNAUTHORIZED).json({
                         success: false,
                         message: 'Problem SQL.',
@@ -114,8 +81,8 @@ class Oauthen2 extends CommonModel {
         } 
         else 
         {
-            var sqlMain="SELECT users_id FROM users WHERE deleteflag=0 and id_created="+current_id;
-            if(permission_id<TableManifest.ADMIN)
+            var sqlMain="SELECT users_id FROM user WHERE delete_flag=0 and id_created="+current_id;
+            if(manifestid<TableManifest.ADMIN)
             {
                     sqlMain +=" UNION "+ "SELECT id_member FROM decentralization_access WHERE id_admin="+current_id
                     + " and deleteflag=0 and id_member!=0";
@@ -125,7 +92,7 @@ class Oauthen2 extends CommonModel {
                     listDataContain+=","+x[0][i].users_id; 
                 }
                 var sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_member="+current_id;
-                if(permission_id<TableManifest.ADMIN)
+                if(manifestid<TableManifest.ADMIN)
                 {
                     sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_admin="+current_id;
                 }
@@ -134,8 +101,8 @@ class Oauthen2 extends CommonModel {
                     for(var i=0;i<x[0].length;i++){
                         listDataEnterprise_id+=","+x[0][i].enterprise_id; 
                     }
-                    authen2.set("value_manifest",listDataContain)
-                        .set("enterprise_id",listDataEnterprise_id);
+                    // authen2.set("value_manifest",listDataContain)
+                        // .set("enterprise_id",listDataEnterprise_id);
                     knex.raw(authen2.toString()).then(function(xa) {
                             res.json({
                                 success: true,
@@ -143,12 +110,14 @@ class Oauthen2 extends CommonModel {
                                 email: user.get('email'),
                             });
                     }).catch(function(err1){
+                        console.log("<TableManifest.NEW_REGIưSTE 2R",err1);
                                 res.status(HttpStatus.UNAUTHORIZED).json({
                                     success: false,
                                     message: 'Problem SQL.',
                                 });
                     });
                 }).catch(function(err1){
+                    console.log("<TableManifest.NEW_REGISTE 2R",err1);
                     res.status(HttpStatus.UNAUTHORIZED).json({
                         success: false,
                         message: 'Problem SQL.',
@@ -156,6 +125,7 @@ class Oauthen2 extends CommonModel {
                 });
                 
             }).catch(function(err1){
+                console.log("<TableManifest.NEW_sssssREGISTE 2R",err1);
                 res.status(HttpStatus.UNAUTHORIZED).json({
                     success: false,
                     message: 'Problem SQL.',
@@ -176,12 +146,12 @@ class Oauthen2 extends CommonModel {
     }
     getFieldToAdd(){
         return {
-            valueSetup: [ "permission_id","userid","tocken","value_manifest"]
+            valueSetup: [ "manifestid","userid","tocken","value_manifest"]
         };
     }
     getFieldToDelete(){
         return {
-            arrayCoppy:["permission_id","userid","tocken","value_manifest","created_at","id_created"],
+            arrayCoppy:["manifestid","userid","tocken","value_manifest","created_at","id_created"],
             locationSelect:"id",
             valueSelect:"deleteflag",
             userUpdate:"id_updated"

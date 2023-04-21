@@ -11,6 +11,19 @@ const bcrypt = require('bcrypt');
 
 
 class CommonModel extends bookshelf.Model {
+    
+    async queryDatabase(sql){
+        try
+        {
+            var data= await  knex.raw(sql);
+            if(data==null) return false;
+            return data[0];
+        }
+        catch(ie){
+            return false;
+        }
+    }
+
 
     checkAcessGetDatabase(permission_id,type){
         console.log("dataTableSQL   ",permission_id,type);

@@ -12,6 +12,10 @@ class CommentAPI {
         const token = getLocalStorage('AirSENSE_token')
         return axiosRequest(this.apiEndPoint + '/comment/comment_user', axiosMethod.POST, token, dataComment);
     }
+    getComment(){
+        const token = getLocalStorage('AirSENSE_token')
+        return axiosRequest(this.apiEndPoint + '/comment/comment_user',axiosMethod.GET,token)
+    }
 }
 
 
