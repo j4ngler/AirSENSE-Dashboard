@@ -10,12 +10,6 @@ const router = express.Router();
 VD: 
 */
 router.get('/action/send', CommentController.sendComment)
-
-router.get('/login',(req,res) =>{
-  res.send(JSON.stringify({sample:false}));
-})
-
-
 router.get('/comment', CommentController.getAll)
 router.post('/comment-by-topic', CommentController.getCommentByTopic)
 router.get('/get-user-id',CommentController.getAllUser)

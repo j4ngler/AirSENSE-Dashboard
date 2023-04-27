@@ -6,6 +6,6 @@ const authenticationRoutes = require('./authentication.route.js')
 // router.use("/chat", chatRoutes);
 // router.use("/comment", commentRoutes);
 router.use("/comment", commentRoutes);
-router.use("/authentication", authenticationRoutes)
+router.use("/auth", authenticationRoutes)
 
 module.exports = router;

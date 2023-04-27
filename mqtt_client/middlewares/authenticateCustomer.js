@@ -33,37 +33,7 @@ module.exports =  (req, res, next) => {
               error: 'No token',
             });
       });
-    /*jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
-      if (err) {
-        res
-          .status(HttpStatus.UNAUTHORIZED)
-          .json({ error: 'You are not authorized to perform this operation!' });
-      } else {
-        User.query({
-          where: { users_id: decoded.id },
-          select: [
-            'users_id',
-            'email',
-            'username',
-            'phone',
-            'avatar',
-            'fullname',
-            'birthday',
-            'passport',
-            'address',
-          ],
-        })
-          .fetch({ require: false })
-          .then((user) => {
-            if (!user) {
-              res.status(HttpStatus.NOT_FOUND).json({ error: 'No such user' });
-            } else {
-              req.currentUser = user;
-              next();
-            }
-          });
-      }
-    });*/
+ 
   } else {
     res.status(HttpStatus.FORBIDDEN).json({
       error: 'No token False',

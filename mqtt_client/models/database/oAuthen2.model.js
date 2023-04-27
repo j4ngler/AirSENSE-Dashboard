@@ -9,7 +9,8 @@ const  defineManifest  = require('../../middlewares/CheckManifest.js');
 const HttpStatus = require('http-status-codes');
 const CustomerAcess= require('../middlewareDatabase/CustomerAcess.js');
 const  {getRamdomData}  = require('../../utils/utilsString.js');
-
+const {API_LOGIN, API_GET_USER} = require("../../config/configApi.js")
+const AxiosSupport = require('../../utils/axiosSupport.js')
 /**
  * Enterprise model.
  */
@@ -45,94 +46,25 @@ class Oauthen2 extends CommonModel {
             } )
         } );
     }
-    responseLogin(res,user){
-        var dataTocken= getRamdomData(256);
-        var manifestid=user.get('permission_id');
-        var current_id=user.get('user_id');
-        var listDataContain="";
-        var listDataEnterprise_id="";
-        listDataContain+=current_id;
-        var authen2 = squel.insert().into("oauthen2")
-                .set("permission_id",manifestid)
-                .set("user_id",current_id)
-                .set("token",dataTocken)
+    actionLogin(token){
+        AxiosSupport.getInformationUser(API_GET_USER,token)
+          .then((res)=> {
+            var authen2 = squel.insert().into("oauthen2")
+                .set("permission_id",res.data.user.permission_id)
+                .set("user_id",res.data.user.user_id)
+                .set("token",token)
                 .set('delete_flag', 0)
                 .set("created_at",'NOW()',{dontQuote: true})
                 .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
-        console.log("<TableManifest.NEW_REGISTER",manifestid);
-        if(manifestid<TableManifest.NEW_REGISTER) {
-                // authen2.set("value_manifest",listDataContain);
-                knex.raw(authen2.toString())
-                .then(function(x) {
-                    res.json({
-                        success: true,
-                        token:dataTocken,
-                        email: user.get('email'),
-                        userName: user.get('name')
-                    });
-                })
-                .catch(function(err1){
-                    console.log("<TableManifest.NEW_REGISTER",err1);
-                    res.status(HttpStatus.UNAUTHORIZED).json({
-                        success: false,
-                        message: 'Problem SQL.',
-                    });
-                });
-        } 
-        else 
-        {
-            var sqlMain="SELECT users_id FROM user WHERE delete_flag=0 and id_created="+current_id;
-            if(manifestid<TableManifest.ADMIN)
-            {
-                    sqlMain +=" UNION "+ "SELECT id_member FROM decentralization_access WHERE id_admin="+current_id
-                    + " and deleteflag=0 and id_member!=0";
-            }
-            knex.raw(sqlMain).then(function(x) {
-                for(var i=0;i<x[0].length;i++){
-                    listDataContain+=","+x[0][i].users_id; 
-                }
-                var sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_member="+current_id;
-                if(manifestid<TableManifest.ADMIN)
-                {
-                    sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_admin="+current_id;
-                }
-                knex.raw(sqlMain1).then(function(x) {
-                    console.log("sqlMain1 ............... sqlMain1",sqlMain1,x);
-                    for(var i=0;i<x[0].length;i++){
-                        listDataEnterprise_id+=","+x[0][i].enterprise_id; 
-                    }
-                    // authen2.set("value_manifest",listDataContain)
-                        // .set("enterprise_id",listDataEnterprise_id);
-                    knex.raw(authen2.toString()).then(function(xa) {
-                            res.json({
-                                success: true,
-                                token:dataTocken,
-                                email: user.get('email'),
-                            });
-                    }).catch(function(err1){
-                        console.log("<TableManifest.NEW_REGIưSTE 2R",err1);
-                                res.status(HttpStatus.UNAUTHORIZED).json({
-                                    success: false,
-                                    message: 'Problem SQL.',
-                                });
-                    });
-                }).catch(function(err1){
-                    console.log("<TableManifest.NEW_REGISTE 2R",err1);
-                    res.status(HttpStatus.UNAUTHORIZED).json({
-                        success: false,
-                        message: 'Problem SQL.',
-                    });
-                });
-                
-            }).catch(function(err1){
-                console.log("<TableManifest.NEW_sssssREGISTE 2R",err1);
-                res.status(HttpStatus.UNAUTHORIZED).json({
-                    success: false,
-                    message: 'Problem SQL.',
-                });
-            });           
-        }  
+
+            knex.raw(authen2.toString())
+            .then(res => console.log("true",res))
+            .catch(err => console.log("err",err))
+          })
+          .catch(err => console.log(err))
     }
+
+
 
   get hasTimestamps() {
     return true;

@@ -20,14 +20,14 @@ exports.returnFalse =  (res, error,error_code=404) => {
 }
 
 exports.returnNotFound =  (res, error,error_code=404) => {
-    return res.status(HttpStatus.NOT_FOUND).json({
+    return res.json({
         error: error,
         error_code:error_code,
         data: { message: "NOT_FOUND "},
     });
 }
 exports.returnNotAuthen =  (res, error,error_code=104) => {
-    return res.status(HttpStatus.UNAUTHORIZED).json({
+    return res.json({
         error: error,
         error_code:error_code,
         data: { message: "UNAUTHORIZED "},

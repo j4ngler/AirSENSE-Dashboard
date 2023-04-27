@@ -45,7 +45,7 @@ export default function News() {
     fetchDataTable('content_sub', setContentSubListAll)
   },[])
 
-  const handleChange = (event) => {
+  const handleChange1 = (event) => {
     console.log("Content: " + event);
     // event.preventDefault();
     let data = new FormData() 
@@ -111,7 +111,7 @@ export default function News() {
             // action="http://localhost:3006/customer"
             listType="picture-card"
             // fileList={fileList}
-            onPreview={handlePreview}
+            // onPreview={handlePreview}
             onChange={handleChange}
             beforeUpload={file=>{
               console.log({file})
@@ -134,7 +134,7 @@ export default function News() {
             open={previewOpen}
             title={previewTitle}
             footer={null}
-            onCancel={handleCancel}
+            // onCancel={handleCancel}
           >
             <img
               alt="example"

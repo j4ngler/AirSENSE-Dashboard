@@ -61,19 +61,19 @@ class Oauthen2 extends CommonModel {
                 .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
         console.log("<TableManifest.NEW_REGISTER",manifestid);
         if(manifestid<TableManifest.NEW_REGISTER) {
-                // authen2.set("value_manifest",listDataContain);
+                
                 knex.raw(authen2.toString())
                 .then(function(x) {
                     res.json({
                         success: true,
                         token:dataTocken,
                         email: user.get('email'),
-                        userName: user.get('name')
+                        userName: user.get('username')
                     });
                 })
                 .catch(function(err1){
                     console.log("<TableManifest.NEW_REGISTER",err1);
-                    res.status(HttpStatus.UNAUTHORIZED).json({
+                    res.json({
                         success: false,
                         message: 'Problem SQL.',
                     });

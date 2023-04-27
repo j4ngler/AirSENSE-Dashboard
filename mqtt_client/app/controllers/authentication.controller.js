@@ -1,68 +1,47 @@
-const express = require("express");
-const {
-    returnOK,
-    returnNotAuthen,
-    returnNotFound,
-  } = require("../../utils/returnResponse.js");
 const Oauthen2 = require("../../models/database/oAuthen2.model.js");
+const {API_LOGIN, API_GET_USER, API_LOGIN_CUSTOMER, API_GET_USER_CUSTOMER} = require("../../config/configApi.js")
+const oauthen2 = new Oauthen2();
+const AxiosSupport = require('../../utils/axiosSupport.js')
+const Oauthen2Customer = require("../../models/database/oAuthen2Customer.model.js")
+const oAuthen2Customer = new Oauthen2Customer()
 
-const User = require("../../models/database/user.model.js");
-const bcrypt = require("bcrypt");
-const { use } = require("../../routes/authentication.route.js");
-
-var oauthen2 = new Oauthen2();
-var lastLoginTimes = []
 class AuthenticationController {
-    
-    
-    // POST: Login 
-    login(req,res) {
+    // POST: Login admin 
+   login(req,res) {
         const {email, password} = req.body;
-        lastLoginTimes = lastLoginTimes.filter((item) => Date.now() - item.item < 2000);
-        var emailExist = lastLoginTimes.filter((o) => o.email == email);
-        if(emailExist >=1 ){
-            return returnNotAuthen(res,{
-                success: false,
-                message: "Bạn dang đăng nhập tài khoản hơn 2 lần trong 1s.",
-            });
-        }
-        User.query({where: {email: email, delete_flag: 0}})
-        .fetch({require: false})
-            .then(user => {
-                if(user){
-                    lastLoginTimes = lastLoginTimes.filter((item) => Date.now() - item.item < 2000);
-                    res.send(JSON.stringify(user.get("password")))
-                    bcrypt.compare(password,user.get("password"))
-                        .then(result=> { 
-
-                            if(result){
-                                oauthen2.responseLogin(res,user);
-                            }
-                            else{
-                                return returnNotAuthen(res, {
-                                    success: false,
-                                    message: "Authentication failed. Invalid password1",
-                                  });
-                            }
-                            
-                        })
-                        .catch(() => {
-                            return returnNotAuthen(res, {
-                              success: false,
-                              message: "Authentication failed. Invalid password2",
-                            });
-                          });
+        AxiosSupport.login(API_LOGIN,email,password)
+            .then((result) => {
+                if(result.data?.success === true){
+                    oauthen2.actionLogin(result.data?.token)
                 }
-                else {
-                    lastLoginTimes.push({ email: email, count: 1, time: Date.now() });
-                    return returnNotAuthen(res, {
-                      success: false,
-                      message: "Invalid username or password3.",
-                    });
-                  }
-            })
-            .catch(error => res.send(JSON.stringify(error)))
+                res.json(result.data)})
+            .catch(error => res.json(error))
     }
-    
+    // GET: Get user information
+    getUserInformation(req,res){
+        let token = req.headers['authorization'].split(' ')[1];
+        AxiosSupport.getInformationUser(API_GET_USER,token)
+            .then((result) => res.json(result.data))
+            .catch(error => console.log(error))
+    }
+    // POST: Login customer
+    loginCustomer(req,res){
+        const {email, password} = req.body;
+        AxiosSupport.login(API_LOGIN_CUSTOMER,email,password)
+            .then((result)=>{
+                if(result.data?.success === true){
+                    oAuthen2Customer.actionLogin(result.data.token)
+                }
+                res.json(result.data)
+            })
+            .catch(error => res.json(error))
+    }
+    // GET: Get customer information
+    getCustomerInformation(req, res){
+        let token = req.headers['authorization'].split(' ')[1];
+        AxiosSupport.getInformationUser(API_GET_USER_CUSTOMER,token)
+            .then((result) => res.json(result.data))
+            .catch(error => console.log(error))
+    }
 }
 module.exports = new AuthenticationController;

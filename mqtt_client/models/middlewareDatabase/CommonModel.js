@@ -7,11 +7,11 @@ const TABLE_NAME = 'address';
 const  defineManifest  = require('../../middlewares/CheckManifest.js');
 const knex = require('../../config/knex.js');
 const CustomerAcess= require('./CustomerAcess.js');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 
 class CommonModel extends bookshelf.Model {
-    
+
     async queryDatabase(sql){
         try
         {
@@ -24,6 +24,9 @@ class CommonModel extends bookshelf.Model {
         }
     }
 
+    checkCustomerAccess(service, manifest, type) {
+        return true;
+    }
 
     checkAcessGetDatabase(permission_id,type){
         console.log("dataTableSQL   ",permission_id,type);
@@ -112,7 +115,7 @@ class CommonModel extends bookshelf.Model {
     async checkManifestSpecialTable(table,request){
         console.log("checkManifestSpecialTable",table);
         if(table=='users'){
-            if(request.currentUser.permission_id<=TableManifest.NEW_REGISTER)
+            if(request.currentUser.manifestid<=TableManifest.NEW_REGISTER)
             {
                 var checkUsser = squel.select().from('users')
                               .where("email='"+request.body["email"]+"'")
@@ -120,8 +123,8 @@ class CommonModel extends bookshelf.Model {
                 var result= await knex.raw(checkUsser.toString());
                 console.log("checkManifestSpecialTable result",result[0]);
                 if ((result==null)||(result[0].length==0)) {
-                    console.log("checkManifestSpecialTable result s",request.currentUser.permission_id,request.body.permission_id);
-                    if(request.currentUser.permission_id<=request.body.permission_id){
+                    console.log("checkManifestSpecialTable result s",request.currentUser.manifestid,request.body.permission_id);
+                    if(request.currentUser.manifestid<=request.body.permission_id){
                         return true;
                     }
                 }
@@ -136,16 +139,16 @@ class CommonModel extends bookshelf.Model {
         var userid=req.currentUser.users_id;
         let dataUser=  this.getFieldToAdd();//  DataTableFieldAdd[table];
         var sqlQuery = squel.insert().into(this.getNameTable());
-        if(this.getNameTable()=='users'){
+        if(this.getNameTable()=='user' || this.getNameTable() == 'customer'){
             for(var i=0;i<dataUser.valueSetup.length;i++){
                 let item=dataUser.valueSetup[i];
                 if(!!!data[item]) sqlQuery.set(item,null);
                 else {
-                    if(item=="password"){
-                        const salt = await bcrypt.genSalt(12);
+                    if(item == "password"){
+                        // const salt = await bcrypt.genSalt(12);
                         // now we set user password to hashed password
-                        var passwordData = await bcrypt.hash(data[item], salt);
-                        sqlQuery.set(item,passwordData);
+                        // var passwordData = await bcrypt.hash(data[item], salt);
+                        // sqlQuery.set(item, passwordData);
                     }
                     else {
                         sqlQuery.set(item,data[item]);
@@ -169,21 +172,47 @@ class CommonModel extends bookshelf.Model {
         sqlQuery.set("id_created",userid).set("id_updated",userid)
             .set("created_at","NOW()",{dontQuote: true}) 
             .set("updated_at","NOW()",{dontQuote: true})
-            .set("deleteflag",0);
+            .set("delete_flag",0);
 
+        console.log(sqlQuery.toString())
         return sqlQuery.toString();
     }
     
-    checkSqlUpdateAdmin(req,data){
+    async checkSqlUpdateAdmin(req,data){
         var userid=req.currentUser.users_id;
         let dataUser=  this.getFieldToDelete();//  DataTableFieldAdd[table];
         var sqlQuery = squel.update().table(this.getNameTable());
-        for(var i=0;i<dataUser.arrayCoppy.length;i++){
-            let item=dataUser.arrayCoppy[i];
-            if(!!!data[item]) sqlQuery.set(item,null);
-            else {
-                sqlQuery.set(item,data[item]);
-            }    
+        if(this.getNameTable()=='users'){
+            for(var i=0;i<dataUser.arrayCoppy.length;i++){
+                let item=dataUser.arrayCoppy[i];
+                if(!!!data[item]) sqlQuery.set(item,null);
+                else {
+                    if(item=="password"){
+                        const salt = 'detbg';
+                        // now we set user password to hashed password
+                        var passwordData = 'btheda';
+                        sqlQuery.set(item,passwordData);
+                    }
+                    else if(item=="email"){
+                        // email not change
+                    }
+                    else {
+                        sqlQuery.set(item,data[item]);
+                    }
+                }
+                   
+            }
+        }
+        else
+        {
+            for(var i=0;i<dataUser.arrayCoppy.length;i++){
+                let item=dataUser.arrayCoppy[i];
+                if(!!!data[item]) sqlQuery.set(item,null);
+                else {
+                    sqlQuery.set(item,data[item]);
+                }
+                   
+            }
         }
         sqlQuery.set("id_updated",userid)
                     .set("created_at","NOW()",{dontQuote: true})
@@ -193,16 +222,6 @@ class CommonModel extends bookshelf.Model {
 
         return sqlQuery.toString();
     } 
-
-    async createDataToSql(req){
-        var sqlData = await this.checkSqlAddAdmin(req,req.body);  
-        console.log("getRoomChatFriend..createDataToSql",sqlData);      
-        var x= await knex.raw(sqlData);
-        console.log("getRoomChatFriend.......x",x,x[0]);
-        console.log("getRoomChatFriend.... x.insertId...x", x[0].insertId);
-        if(x!=null) return x.insertId;
-        return 0;
-    }
 
 
     checkManifestSpecialCustomer(action){
@@ -230,7 +249,7 @@ class CommonModel extends bookshelf.Model {
     async  checkDataToEdit(req){
         let data=req.body;
         let dataUser= this.getFieldToDelete();
-        var getInfoData = squel.select().from(req.body.table).where("deleteflag=0");
+        var getInfoData = squel.select().from(req.body.table).where("delete_flag=0");
         if(Number.isInteger(data[dataUser.locationSelect]))
             getInfoData.where(dataUser.locationSelect+"="+data[dataUser.locationSelect]+"");
         else
@@ -243,21 +262,21 @@ class CommonModel extends bookshelf.Model {
         }
         if(req.body.table=='users'){
         //console.log(" req.currentUser req.currentUser  2",req.currentUser,result[0][0]);
-        console.log(" req.currentUser req.currentUser 2",result[0][0].permission_id,req.currentUser.permission_id);
-            if(result[0][0].permission_id==req.currentUser.permission_id){
+        console.log(" req.currentUser req.currentUser 2",result[0][0].manifestid,req.currentUser.manifestid);
+            if(result[0][0].permission_id==req.currentUser.manifestid){
                 console.log(" req.currentUser req.currentUser 1");
                 if(result[0][0].users_id==req.currentUser.users_id)  return true;
                 console.log(" req.currentUser req.currentUser 1 a");
             }
-            else if(result[0][0].permission_id <req.currentUser.permission_id){
+            else if(result[0][0].permission_id <req.currentUser.manifestid){
                 console.log(" req.currentUser req.currentUser 2");
                 return false;
-            } else if(result[0][0].permission_id >req.currentUser.permission_id){
+            } else if(result[0][0].permission_id >req.currentUser.manifestid){
                 console.log(" req.currentUser req.currentUser 2");
                 return true;
             }
             console.log(" req.currentUser req.currentUser 3a",req.currentUser);
-            if((req.currentUser.permission_id==TableManifest.MASTER)){
+            if((req.currentUser.manifestid==TableManifest.MASTER)){
                 return true;
             }
             else
@@ -271,8 +290,8 @@ class CommonModel extends bookshelf.Model {
         }
         else
         {
-            if((req.currentUser.permission_id==TableManifest.MASTER)||
-                    (req.currentUser.permission_id==TableManifest.MANAGER )){
+            if((req.currentUser.manifestid==TableManifest.MASTER)||
+                    (req.currentUser.manifestid==TableManifest.MANAGER )){
                 return true;
             }
             else
@@ -301,28 +320,34 @@ class CommonModel extends bookshelf.Model {
         var tableSelect = this.getNameTable();
         console.log("getValueToSelectToFind .........",data,arrayTofind,tableSelect);
         if(!!data){
-            console.log("getValueToSelectToFind ......... enable");
           for(var i=0;i<arrayTofind.length;i++){
-            console.log("getValueToSelectToFind ......... ==",arrayTofind[i]
-            ,data[arrayTofind[i]],!!data[arrayTofind[i]]);
               if(!!data[arrayTofind[i]]){
                   if(data[arrayTofind[i]]!=null){
-                      if(Number.isInteger(data[arrayTofind[i]])){
-                        stringData += " AND "+ tableSelect+"."+arrayTofind[i]+" = " +data[arrayTofind[i]]+" ";
-                      }
-                      else
-                      {
-                        stringData += " AND "+ tableSelect+"."+arrayTofind[i]+"  LIKE '% " +data[arrayTofind[i]]+"%' ";
-                      }
+                      stringData += " AND "+ tableSelect+"."+arrayTofind[i]+" = " +data[arrayTofind[i]]+" ";
                   }
               }
           }
         }
-        console.log("getValue stringData",stringData);
         return stringData;
     }
     getConditionManisfest(info){
-        return this.getNameTable()  +".deleteflag=0 ";
+        return this.getNameTable()  +".delete_flag=0 ";
+    }
+
+
+    async getPermissionCustomer (user_id) {
+        let mysql = squel.select().field('value_id').field('manifest_id').from('ref_manifest').where('customer_id = ' + user_id);
+        console.log(mysql.toString())
+        let result = await knex.raw(mysql.toString());
+        if(!!result) {
+            let dataPermssion = '';
+            console.log(result[0])
+            result[0].map(obj => {
+                dataPermssion += obj.value_id + '/' + obj.manifest_id + ',';
+            })
+            return dataPermssion.slice(0, -1);
+        }
+        return '';
     }
 
   }
