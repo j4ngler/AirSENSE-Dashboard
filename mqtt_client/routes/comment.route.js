@@ -1,20 +1,17 @@
 const CommentController = require('../app/controllers/commnent.controller')
 const express = require('express');
-const authenticated = require('../middlewares/authenticate');
+
 const router = express.Router();
+const validate = require("../config/joi.validate.js")
+const schema = require("../utils/validator.js");
+const isAuthenticated = require('../middlewares/authenticate');
+const isAuthenticatedCustomer = require('../middlewares/authenticateCustomer')
 
 
-/**  quy ước: 
- * 
- * các router dùng để quy định các hành động khi comment như send comment, delete comment thì sẽ thêm router /action
-VD: 
-*/
-router.get('/action/send', CommentController.sendComment)
-router.get('/comment', CommentController.getAll)
-router.post('/comment-by-topic', CommentController.getCommentByTopic)
-router.get('/get-user-id',CommentController.getAllUser)
-
-
-
+router.get('/', isAuthenticated, CommentController.getAll)
+router.get('/get-by-topic', isAuthenticated, validate(schema.comment), CommentController.getCommentByTopic)
+router.get('/get-person-comment', isAuthenticated, validate(schema.commentUser), CommentController.getPersonComment)
+router.get('/get-relate-comment', isAuthenticated, validate(schema.commentUser), CommentController.getRealateComment)
+router.post('/send-comment', isAuthenticated, validate(schema))
 
 module.exports = router;

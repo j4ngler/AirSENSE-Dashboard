@@ -29,4 +29,24 @@ module.exports =  {
     name: Joi.string().required(),
     enterprise_id: Joi.required(),
   }),
+
+  commentTopic: Joi.object(
+    {
+      topic: Joi.string().required(),
+    }
+  ),
+  
+  commentUser: Joi.object(
+    {
+      user_id: Joi.string().required(),
+    }
+  ),
+
+  comment: Joi.object(
+    {
+      comment: Joi.string().required(),
+    }
+  ),
+  
+
 };

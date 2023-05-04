@@ -17,4 +17,5 @@ let Comment = new Schema({
 });
 
 // Export the model
+
 module.exports = mongoose.model('comments', Comment);

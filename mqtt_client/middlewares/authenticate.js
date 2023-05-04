@@ -27,6 +27,7 @@ module.exports =  (req, res, next) => {
           enterprise_id:user[0].enterprise_id,
           value_manifest:user[0].value_manifest
         };
+        
         next();
       })
       .catch(function(err){
