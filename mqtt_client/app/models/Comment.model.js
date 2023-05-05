@@ -5,15 +5,37 @@ let Comment = new Schema({
     topic: {
         type: String
     },
-    commentId: {
-        type: String
-    },
     content:{
-        type: Object
+        author_id: {
+            type: Number,
+            required: true
+          },
+          type_user: {
+            type: Number,
+            required: true
+          },
+          author_IP: {
+            type: String,
+            required: true
+          },
+          content: {
+            type: String,
+            required: true
+          },
+          comment_atack: {
+            type: String,
+            default: ""
+          },
+          comment_parent_id: {
+            type: Number,
+            default: 0
+          },
+          comment_reply_id: {
+            type: Number,
+            default: 0
+          }
     },
-    time: {
-        type: String,
-    }
+    
 });
 
 // Export the model
