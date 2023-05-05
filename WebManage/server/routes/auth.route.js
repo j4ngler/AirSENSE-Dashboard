@@ -11,7 +11,10 @@ const Customer = require("../models/database/customer.model.js");
 const router = express.Router();
 const squel = require("squel");
 const knex = require("../config/knex");
-const permissionMappings = require('../utils/customerPermission.js')
+const permissionMappings = require('../utils/customerPermission.js');
+const { login } = require("../controllers/auth.controller.js");
+const customerCtrl = require("../controllers/customer.controller.js");
+const { registerCustomer } = require("../controllers/customer.controller.js");
 
 // authen
 // login -> ok
@@ -22,12 +25,18 @@ const permissionMappings = require('../utils/customerPermission.js')
 router.get("/giang", (req, res) => {
   res.render("authen/sendEmailForgotPass", { route: "register" });
 });
-// note
+
+// register new User 
 router
   .route("/register")
   .post(validate(schema.register), authenNewUser, (req, res) => {
     userCtrl.registerUser(req, res);
   });
+
+// router.get("/register", (req, res) => {
+//   res.render("/authen/register");
+// })
+
 
 //change information for admin
 router
@@ -45,7 +54,6 @@ router
   });
 
 // change password
-
 router
   .route("/changePassword")
   .put(validate(schema.changePassword), isAuthenticated, (req, res) => {
@@ -164,7 +172,7 @@ router.route('/permission').get( async (req, res) => {
 router.route("/getInfo").post((req, res) => {
   User.query({
     where: { userid: req.body.userid },
-    select: ["userid", "name", "fullname", "avartar", "manifestid"],
+    select: ["userid", "name", "fullname", "avatar", "manifestid"],
   })
     .fetch({ require: false })
     .then((user) => {
@@ -202,54 +210,65 @@ router.route("/generateTocken").post((req, res) => {
   });
 });
 
-//register customer user
+// //register customer user
+// router
+//   .route("/customer_register")
+//   .post(validate(schema.registerCustomer), async (req, res, next) => {
+//     const fullname = req.body.fullName ? req.body.fullName : null;
+//     const email = req.body.email ? req.body.email : null;
+//     const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
+//     const username = req.body.userName ? req.body.userName : null;
+//     const address = req.body.address ? req.body.address : null;
+//     const password = req.body.password ? req.body.password : null;
+//     const contact = req.body.contact ? req.body.contact : null;
+//     const created_at = new Date();
+//     const updated_at = new Date();
+//     const id_created = 0;
+//     const id_updated = 0;
+//     const delete_flag = 0;
+//     await knex
+//       .raw("select * from customer where email= ?", [email])
+//       .then(async (user) => {
+//         if (user[0].length > 0) {
+//           console.log('email ton tai');
+//           return res.status(208).json({ message: "Email này đã tồn tại" });
+//         } else {
+//           await knex("customer")
+//             .insert({
+//               fullname,
+//               email,
+//               phone_number,
+//               username,
+//               address,
+//               password,
+//               contact,
+//               created_at,
+//               updated_at,
+//               id_created,
+//               id_updated,
+//               delete_flag,
+//             })
+//             .then(() => {
+//               console.log('check customer regis route')
+//               return res.status(200).json({ message: "Đăng ký thành công" });
+//             })
+//             .catch((err) => {
+//               console.error(err);
+//               return res.status(500).json({
+//                 success: false,
+//                 message: "An error occurred, please try again later.",
+//               });
+//             });
+//         }
+//       });
+//   });
+
 router
   .route("/customer_register")
-  .post(validate(schema.registerCustomer), async (req, res, next) => {
-    const fullname = req.body.fullName ? req.body.fullName : null;
-    const email = req.body.email ? req.body.email : null;
-    const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
-    const username = req.body.username ? req.body.username : null;
-    const address = req.body.address ? req.body.address : null;
-    const password = req.body.password ? req.body.password : null;
-    const created_at = new Date();
-    const updated_at = new Date();
-    const id_created = 0;
-    const id_updated = 0;
-    const delete_flag = 0;
-    await knex
-      .raw("select * from customer where email= ?", [email])
-      .then(async (user) => {
-        if (user[0].length > 0) {
-          return res.status(208).json({ message: "Email này đã tồn tại" });
-        } else {
-          await knex("customer")
-            .insert({
-              fullname,
-              email,
-              phone_number,
-              username,
-              address,
-              password,
-              created_at,
-              updated_at,
-              id_created,
-              id_updated,
-              delete_flag,
-            })
-            .then(() => {
-              return res.status(200).json({ message: "Đăng ký thành công" });
-            })
-            .catch((err) => {
-              console.error(err);
-              return res.status(500).json({
-                success: false,
-                message: "An error occurred, please try again later.",
-              });
-            });
-        }
-      });
+  .post(validate(schema.registerCustomer), authenNewUser, async (req, res, next) => {
+    customerCtrl.registerCustomer(req, res);
   });
+
 //reset password customer
 router.route("/reset_password").post(authCtrl.resetPassword);
 router.route("/new_password").post(authCtrl.newPassword);

@@ -323,65 +323,120 @@ customerCtrl.updateData = async function (req, res) {
     });
 };
 
-customerCtrl.registerUser = function (req, res) {
-  var table = "customer";
-  var tableSelect = mangerModelUser(table);
-  if (!!tableSelect) {
-    var tableSelect = mangerModelUser(table);
-    if (
-      !tableSelect.checkDataAddDatabase(
-        req.currentUser.manifestid,
-        tableSelect.getTypeTable()
-      )
-    ) {
-      return returnNotFound(res, { message: "Database inval" });
-    }
-    var checkInaval = tableSelect.checkManifestSpecialCustomer("edit");
-    if (!checkInaval) {
-      return returnNotFound(res, { message: "Database Not Acess 2" });
-    }
-    checkDatataBaseInval = true;
-    var userToget = squel
-      .select()
-      .from("customer")
-      .where(
-        squel
-          .expr()
-          .and("phone='" + req.body["phone"] + "'")
-          .or("email='" + req.body["email"] + "'")
-      )
-      .where("delete_flag=0");
+// customerCtrl.registerUser = function (req, res) {
+//   var table = "customer";
+//   var tableSelect = mangerModelUser(table);
+//   if (!!tableSelect) {
+//     var tableSelect = mangerModelUser(table);
+//     if (
+//       !tableSelect.checkDataAddDatabase(
+//         req.currentUser.manifestid,
+//         tableSelect.getTypeTable()
+//       )
+//     ) {
+//       return returnNotFound(res, { message: "Database inval" });
+//     }
+//     var checkInaval = tableSelect.checkManifestSpecialCustomer("edit");
+//     if (!checkInaval) {
+//       return returnNotFound(res, { message: "Database Not Acess 2" });
+//     }
+//     checkDatataBaseInval = true;
+//     var userToget = squel
+//       .select()
+//       .from("customer")
+//       .where(
+//         squel
+//           .expr()
+//           .and("phone='" + req.body["phone"] + "'")
+//           .or("email='" + req.body["email"] + "'")
+//       )
+//       .where("delete_flag=0");
 
-    knex.raw(userToget.toString()).then(
-      (result) => {
-        let data = req.body;
-        let dataUser = tableSelect.getFieldToAdd(); //  DataTableFieldAdd[table];
-        var authen = squel.insert().into(tableSelect.getNameTable());
-        for (var i = 0; i < dataUser.valueSetup.length; i++) {
-          let item = dataUser.valueSetup[i];
-          if (!!!data[item]) authen.set(item, null);
-          else authen.set(item, data[item]);
-        }
-        authen
-          .set("id_created", 0)
-          .set("id_updated", 0)
-          .set("created_at", "NOW()", { dontQuote: true })
-          .set("updated_at", "NOW()", { dontQuote: true })
-          .set("delete_flag", 0);
-        knex.raw(authen.toString()).then(
-          (result) => {
-            return returnOK(res, { result: "Please waitting admin comfirm" });
-          },
-          (error) => {
-            return returnFalse(res, error);
-          }
-        );
-      },
-      (error) => {
-        return returnFalse(res, { message: "phone and email is existing" });
+//     knex.raw(userToget.toString()).then(
+//       (result) => {
+//         let data = req.body;
+//         let dataUser = tableSelect.getFieldToAdd(); //  DataTableFieldAdd[table];
+//         var authen = squel.insert().into(tableSelect.getNameTable());
+//         for (var i = 0; i < dataUser.valueSetup.length; i++) {
+//           let item = dataUser.valueSetup[i];
+//           if (!!!data[item]) authen.set(item, null);
+//           else authen.set(item, data[item]);
+//         }
+//         authen
+//           .set("id_created", 0)
+//           .set("id_updated", 0)
+//           .set("created_at", "NOW()", { dontQuote: true })
+//           .set("updated_at", "NOW()", { dontQuote: true })
+//           .set("delete_flag", 0);
+//         knex.raw(authen.toString()).then(
+//           (result) => {
+//             return returnOK(res, { result: "Please waitting admin comfirm" });
+//           },
+//           (error) => {
+//             return returnFalse(res, error);
+//           }
+//         );
+//       },
+//       (error) => {
+//         return returnFalse(res, { message: "phone and email is existing" });
+//       }
+//     );
+//   }
+// };
+
+//register new customer
+customerCtrl.registerCustomer = async function( req, res ) {
+  const username = req.body.userName ? req.body.userName : null;
+  const fullname = req.body.fullName ? req.body.fullName : null;
+  const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
+  const email = req.body.email ? req.body.email : null;
+  const password = req.body.password ? req.body.password : null;
+  const address = req.body.address ? req.body.address : null;
+  const contact = req.body.contact ? req.body.contact : null;
+  const created_at = new Date();
+  const updated_at = new Date();
+  const id_created = 0;
+  const id_updated = 0;
+  const delete_flag =0;
+  
+  //hash password before save to database
+  const salt = bcrypt.genSaltSync(12);
+  const hashPass = await bcrypt.hash(password, salt); 
+
+  //save info to database
+  knex
+    .raw(" SELECT * FROM customer WHERE email = ?", [email])
+    .then(async (user) => {
+      if( user[0].length > 0 ) {
+        return res.status(208).json({ message: "Email existed!"});
+      
       }
-    );
-  }
+      else {
+        knex("customer")
+          .insert({
+            username,
+            fullname,
+            phone_number,
+            email,
+            password: hashPass,
+            address,
+            contact,
+            created_at,
+            updated_at,
+            id_created,
+            id_updated,
+            delete_flag
+          })
+          .then(() => {
+            console.log(password);
+            return res.status(200).json({ message: "Register succesfully!" });
+          })
+          .catch((err) => {
+            console.log(err);
+            return res.status(500).json({ message: "An error occured, please try again!"})
+          });
+      }
+    });
 };
 
 customerCtrl.resetPass = async function (req, res) {
@@ -498,6 +553,7 @@ customerCtrl.getAllInfoServices = async function (req, res) {
 };
 
 const oAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
+const { CostExplorer } = require("aws-sdk");
 
 customerCtrl.setTheBillData = async function (req, res) {
   try {

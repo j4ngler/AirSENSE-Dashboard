@@ -15,6 +15,10 @@ const User = require("../models/database/user.model.js");
 const Authen2 = require("../models/database/oAuthen2.model");
 const { getRamdomData } = require("../utils/utilsString.js");
 const { select } = require("squel");
+const { useRouteMatch } = require("react-router-dom");
+const bcrypt = require("bcrypt");
+var user = new User();
+
 
 var userCtrl = {};
 
@@ -372,7 +376,7 @@ userCtrl.updateUser = async (req, res) => {
     .set("fullname", data.fullname)
     .set("phoneNumber", data.phone)
     .set("contact", data.contact)
-    .set("avartar", data.avartar)
+    .set("avatar", data.avatar)
     .set("old_id", 0)
     .set("delete_flag", 0)
     .set("updated_at", "NOW()", { dontQuote: true });
@@ -435,46 +439,113 @@ userCtrl.updateFistCourse = async function (req, res) {
     });
 };
 
-userCtrl.registerUser = async function (req, res) {
-  var table = "customer";
-  var tableSelect = mangerModelAdmin(table);
-  var exittingUser = await tableSelect.checkInvalUserExistingToRegister(
-    req.body
-  );
-  if (exittingUser) {
-    res.status(HttpStatus.UNAUTHORIZED).json({
-      success: false,
-      message: "Tài khoản đã tồn tại xin vui lòng kiểm tra lại",
-    });
-  }
-  var newUser = squel
-    .insert()
-    .into("customer")
-    .set("username", req.body.name)
-    .set("fullname", req.body.fullname)
-    .set("email", req.body.email)
-    .set("password", req.body.password)
-    .set("phone", req.body.phoneNumber)
-    .set("address", req.body.contact)
-    .set("avatar", "")
-    .set("created_at", "NOW()", { dontQuote: true })
-    .set("updated_at", "NOW()", { dontQuote: true })
-    .set("id_created", 0)
-    .set("id_updated", 0)
-    .set("note", "")
-    .set("permission_id", 4)
-    .set("delete_flag", "0")
-    .set("old_id", "0");
-  console.log(newUser.toString());
-  knex
-    .raw(newUser.toString())
-    .then((result) => {
-      return returnOK(res, { result: "Please waitting admin comfirm" });
-    })
-    .catch((error) => {
-      console.log("error");
-      console.log(error);
-      return returnFalse(res, error);
+
+
+
+
+// userCtrl.registerUser = async function (req, res) {
+//   var table = "user";
+//   // var tableSelect = mangerModelAdmin(table);
+//   // var existingUser = await tableSelect.checkInvalUserExistingToRegister(
+//   //   req.body
+//   // );
+  
+//   var existingUser = await user.checkExistingUser( req.body );
+
+//   if (existingUser) {
+//     console.log(existingUser);
+//     res.status(HttpStatus.UNAUTHORIZED).json({
+//       success: false,
+//       message: "Email or Phone number existed!",
+//     });
+//   }
+//   else {
+//     var newUser = squel
+//     .insert()
+//     .into("user")
+//     .set("username", req.body.userName)
+//     .set("fullname", req.body.fullName)
+//     .set("email", req.body.email)
+//     .set("password", req.body.password)
+//     .set("phone_number", req.body.phoneNumber)
+//     .set("address", req.body.address)
+//     .set("avatar", req.body.avatar)
+//     .set("created_at", "NOW()", { dontQuote: true })
+//     .set("updated_at", "NOW()", { dontQuote: true })
+//     .set("id_created", 0)
+//     .set("id_updated", 0)
+//     // .set("note", "")
+//     .set("permission_id", 4)
+//     .set("delete_flag", "0")
+//     .set("old_id", "0");
+//   // console.log(newUser.toString());
+//   knex
+//     .raw(newUser.toString())
+//     .then((result) => {
+//       // return returnOK(res, { result: "Please waitting admin comfirm" });
+//       return res.json('User registered successfully!');
+//     })
+//     .catch((error) => {
+//       console.log("error");
+//       // console.log(error);
+//       return returnFalse(res, error);
+//     });
+//   };
+// };
+
+
+//register new user
+userCtrl.registerUser = async function(req, res) {
+  const username = req.body.userName ? req.body.userName : null;
+  const fullname = req.body.fullName ? req.body.fullName : null;
+  const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
+  const email = req.body.email ? req.body.email : null;
+  const password = req.body.password ? req.body.password : null;
+  const address = req.body.address ? req.body.address : null;
+  const permission_id = TableManifest.NEW_REGISTER;
+  const created_at = new Date();
+  const updated_at = new Date();
+  const id_created = 0;
+  const id_updated = 0;
+  const delete_flag =0;
+
+  //hash password before save to database
+  const salt = bcrypt.genSaltSync(12);
+  const hashPass = await bcrypt.hash(password, salt);
+
+
+  //save info to database
+  await knex
+    .raw(" SELECT * FROM user WHERE email = ?", [email])
+    .then(async (user) => {
+      if( user[0].length > 0 ) {
+        console.log(user[0]);
+        return res.status(208).json({ message: "Email existed!"});
+      }
+      else {
+        await knex("user")
+          .insert({
+            username,
+            fullname,
+            phone_number,
+            email,
+            password: hashPass,
+            address,
+            permission_id,
+            created_at,
+            updated_at,
+            id_created,
+            id_updated,
+            delete_flag
+          })
+          .then(() => {
+            return res.status(200).json({ message: "Register succesfully!" });
+          })
+          .catch((err) => {
+            console.log(err);
+            return res.status(500).json({ message: "An error occured, please try again!"})
+          });
+      }
     });
 };
 
@@ -677,7 +748,7 @@ userCtrl.changePassword = async (req, res) => {
 };
 
 userCtrl.listUser = async (req, res) => {
-  var table = "users";
+  var table = "user";
   var tableSelect = mangerModelAdmin(table);
   var dataInfo = await tableSelect.queryDatabase(
     tableSelect.getAllInfoToChat()
