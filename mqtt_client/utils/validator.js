@@ -47,10 +47,14 @@ module.exports =  {
       topic: Joi.string().required(),
       comment: Joi.string().required(),
       comment_atack: Joi.string(),
-      comment_parent_id: Joi.number(),
-      comment_reply_id: Joi.number(),
+      comment_reply_id: Joi.string(),
     }
   ),
-  
+  commentId: Joi.object(
+    {
+      _id: Joi.string().required(),
+    }
+  ),
+
 
 };

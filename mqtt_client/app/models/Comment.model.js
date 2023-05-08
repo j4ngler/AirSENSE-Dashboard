@@ -27,12 +27,12 @@ let Comment = new Schema({
             default: ""
           },
           comment_parent_id: {
-            type: Number,
-            default: 0
+            type: String,
+            default: ""
           },
           comment_reply_id: {
-            type: Number,
-            default: 0
+            type: String,
+            default: ""
           }
     },
     

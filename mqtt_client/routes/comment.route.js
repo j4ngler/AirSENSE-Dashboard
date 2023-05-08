@@ -10,8 +10,8 @@ const isAuthenticatedCustomer = require('../middlewares/authenticateCustomer')
 
 router.get('/', isAuthenticated, CommentController.getAll)
 router.get('/get-by-topic', isAuthenticated, validate(schema.commentTopic), CommentController.getCommentByTopic)
-router.get('/get-by-person', isAuthenticated, validate(schema.commentUser), CommentController.getPersonComment)
-router.get('/get-relate-person', isAuthenticated, validate(schema.commentUser), CommentController.getRealateComment)
+router.get('/get-by-person', isAuthenticated, CommentController.getPersonComment)
+router.get('/get-relate-person', isAuthenticated, CommentController.getRealateComment)
 router.post('/send', isAuthenticated, validate(schema.comment),CommentController.sendComment)
-
+router.delete('/delete',isAuthenticated,validate(schema.commentId),CommentController.deleteComment)
 module.exports = router;
