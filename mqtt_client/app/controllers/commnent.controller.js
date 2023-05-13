@@ -3,9 +3,10 @@ const Comment = require('../models/Comment.model')
 
 const convertArr =(array) => {
     return array.map((item,index)=> {
+        const comment = item.toJSON()
         return{
-            _id:array._id.getTimestamp(),
-            ...item
+            ...comment,
+            time: comment._id.getTimestamp()
         }
     })
 }
@@ -15,19 +16,20 @@ class CommentController {
         
         Comment.find()
             .then(comments => {
-                var listComment = [];
-// TODO: code thêm trường time để trả về cho FE
-                res.send(JSON.stringify(comments))
+                var listComments = convertArr(comments);
+                
+                res.send(JSON.stringify(listComments))
             })
             .catch(next)
     }
     
     // GET: get comment by topic
     getCommentByTopic(req,res,next){
-        
+        console.log(req.body);
         const topic = new RegExp(req.body.topic, "i");
         Comment.find({topic: topic})
             .then(comments => {
+                
                 var listComments = convertArr(comments)
                 res.send(JSON.stringify(listComments))
             })
@@ -40,7 +42,10 @@ class CommentController {
     getPersonComment(req,res,next){
         const user_id = Number.parseInt(req.currentUser.users_id);
         Comment.find({"content.author_id": user_id})
-            .then(comment => res.send(JSON.stringify(comment)))
+        .then(comments => {
+            var listComments = convertArr(comments)
+            res.send(JSON.stringify(listComments))
+        })
             .catch(error => {
                 console.log(error);
                 res.send(JSON.stringify("Can not find comment"))
@@ -57,7 +62,10 @@ class CommentController {
                 { "content.comment_reply_id": user_id }
               ]
         })
-        .then(comment => res.send(JSON.stringify(comment)))
+        .then(comments => {
+            var listComments = convertArr(comments)
+            res.send(JSON.stringify(listComments))
+        })
             .catch(error => {
                 console.log(error);
                 res.send(JSON.stringify("Can not find comment"))
@@ -69,7 +77,6 @@ class CommentController {
         
        
         if(req.body.comment_reply_id){
-            
         Comment.findOne({_id: req.body.comment_reply_id})
             .then(comment =>{
                 const commentSave = new Comment({
@@ -128,12 +135,22 @@ class CommentController {
     }
     deleteComment(req,res,next){
         const user_id = req.currentUser.users_id;
-        const _id = req.body._id;
-        const comment_parent_id = new RegExp(_id, "i");
-
-        Comment.deleteMany({$or:[{"_id": _id},{"content.comment_parent_id":comment_parent_id}]})
-            .then((item)=> res.send(JSON.stringify(item)))
-            .catch((error)=> res.send(JSON.stringify("Can not delete")))
+        const _id = req.body.id;
+        Comment.findOne({_id:_id})
+            .then(comment => {
+                if(comment.author_id == user_id){
+                    const comment_parent_id = new RegExp(_id, "i");
+                    Comment.deleteMany({$or:[{"_id": _id},{"content.comment_parent_id":comment_parent_id}]})
+                        .then((item)=> res.send(JSON.stringify(item)))
+                        .catch((error)=> res.send(JSON.stringify("Can not delete")))
+                }
+                else{
+                    res.send(JSON.stringify("Can not delete because it is not your comment "))
+                }
+            })
+            .catch(()=>{
+                res.send(JSON.stringify("Can not find comment"))
+            })
     }
     
 }

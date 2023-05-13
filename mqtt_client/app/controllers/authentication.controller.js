@@ -8,6 +8,7 @@ const oAuthen2Customer = new Oauthen2Customer()
 class AuthenticationController {
     // POST: Login admin 
    login(req,res) {
+    // console.log(req.body);
         const {email, password} = req.body;
         AxiosSupport.login(API_LOGIN,email,password)
             .then((result) => {
