@@ -5,16 +5,39 @@ let Comment = new Schema({
     topic: {
         type: String
     },
-    commentId: {
-        type: String
-    },
     content:{
-        type: Object
+        author_id: {
+            type: Number,
+            required: true
+          },
+          type_user: {
+            type: Number,
+            required: true
+          },
+          author_IP: {
+            type: String,
+            required: true
+          },
+          content: {
+            type: String,
+            required: true
+          },
+          comment_atack: {
+            type: String,
+            default: ""
+          },
+          comment_parent_id: {
+            type: String,
+            default: ""
+          },
+          comment_reply_id: {
+            type: String,
+            default: ""
+          }
     },
-    time: {
-        type: String,
-    }
+    
 });
 
 // Export the model
-module.exports = mongoose.model('comment', Comment);
+
+module.exports = mongoose.model('comments', Comment);

@@ -8,6 +8,7 @@
   "dependencies": {
     "aedes": "^0.46.1",
     "axios": "^0.23.0",
+    "axios-middleware": "^0.3.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.18.3",
     "bookshelf": "^1.2.0",
@@ -20,6 +21,7 @@
     "http-errors": "~1.6.3",
     "http-status-codes": "^2.1.4",
     "jade": "~1.11.0",
+    "joi": "^17.9.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.11",
     "mongoose": "^5.11.8",

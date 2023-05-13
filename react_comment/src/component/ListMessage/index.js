@@ -26,7 +26,6 @@ const ListMessage = () => {
     //             isReply={true}
     //             submitData = {submitData}
     //             />
-        
     //             <div className='reply-comment-block'>
     //                 {children.map(chid => {
     //                     return (

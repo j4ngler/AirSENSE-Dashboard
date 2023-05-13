@@ -16,7 +16,7 @@ export const commentAction = createAsyncThunk('comment/comment_user', async (par
   });
 
 // export const getComment = createAsyncThunk('')
-
+export const getComment = createAsyncThunk('')
 
 export const commentSlice = createSlice({
     name: 'commentSlice',
@@ -26,142 +26,13 @@ export const commentSlice = createSlice({
         comment_sub: null,
         comment_page: null,
         userIPs: '',
-        data: [
-            {
-            _id: 'ObjectId(63d14a91ef12ca38ec6c01af)',
-            topic: "product/smart_device/5",
-            commentId: "usr_1674660497_2",
-            content: {
-            author_id: 2,
-            type_user: 1,
-            author_IP: "171.236.58.19",
-            content: "Hi Giang",
-            comment_atack: "",
-            comment_parent_id: 0,
-            comment_reply_id: 0
-            },
-            time: "1674660497",
-            __v: 0            
-            },
-            {
-            _id: 'ObjectId(63d14af2ef12ca38ec6c01b3)',
-            topic: "product/smart_device/5",
-            commentId: "cus_1674660609_4",
-            content: {
-            author_id: 4,
-            type_user: 2,
-            author_IP: "171.236.58.19",
-            content: "Hi Giang handsome",
-            comment_atack: "",
-            comment_parent_id: 0,
-            comment_reply_id: 0
-            },
-            time: "1674660609",
-            __v: 0
-            },
-            {
-                _id: 'ObjectId(63d14b18ef12ca38ec6c01b7)',
-                topic: "product/smart_device/5",
-                commentId: "cus_1674660668_4",
-                content: {
-                author_id: 4,
-                type_user: 2,
-                author_IP: "171.236.58.19",
-                content: "acknowledgement",
-                comment_atack: "",
-                comment_parent_id: 0,
-                comment_reply_id: 0
-                },
-                time: "1674660668",
-                __v: 0
-            },
-            {
-                _id: 'ObjectId(63d14b18ef662138ec6c01b7)',
-                topic: "product/smart_device/5",
-                commentId: "usr_1675611574_2",
-                content: {
-                author_id: 2,
-                type_user: 1,
-                author_IP: "171.236.58.19",
-                content: "reply 1",
-                comment_atack: "",
-                comment_parent_id: 'usr_1674660497_2',
-                comment_reply_id: 'usr_1674660497_2'
-                },
-                time: "1675611574",
-                __v: 0
-            },
-            {
-                _id: 'ObjectId(63d17235ef12ca38ec6c01b7)',
-                topic: "product/smart_device/5",
-                commentId: "cus_1675611697_4",
-                content: {
-                author_id: 4,
-                type_user: 2,
-                author_IP: "171.236.58.19",
-                content: "reply 2",
-                comment_atack: "",
-                comment_parent_id: 'usr_1674660497_2',
-                comment_reply_id: 'usr_1674660497_2'
-                },
-                time: "1675611697",
-                __v: 0
-            },
-            {
-                _id: 'ObjectId(63d121a5ef12ca38ec6c01b7)',
-                topic: "product/smart_device/5",
-                commentId: "cus_1675611774_5",
-                content: {
-                author_id: 5,
-                type_user: 2,
-                author_IP: "171.236.58.19",
-                content: "food and drink🤣 😂 😂",
-                comment_atack: "",
-                comment_parent_id: 'usr_1674660497_2',
-                comment_reply_id: 'cus_1675611697_4'
-                },
-                time: "1675611774",
-                __v: 0
-            },
-            {
-                _id: 'ObjectId(63d121a5ef12ca38ec6c01b7)',
-                topic: "product/smart_device/5",
-                commentId: "cus_1675611942_5",
-                content: {
-                author_id: 5,
-                type_user: 2,
-                author_IP: "171.236.58.19",
-                content: "sea food",
-                comment_atack: "",
-                comment_parent_id: 'usr_1674660497_2',
-                comment_reply_id: 'cus_1675611697_4'
-                },
-                time: "1675611942",
-                __v: 0
-            },
-
-        ],
+        data: [],
         commentExtra: {},
         selectedConversation: [],
         listUser: [],
         commentQuantity: 0,
         page: 1,    // pagination
         offset: 0   // pagination
-
-
-
-        // old code
-        // content_group: null,
-        // content_page: null,
-        // content_sub: null,
-        // data: [],
-        // infoArticle: '',
-        // selectedConversation: [],
-        // list_user: [],
-        // sub_data_comment: {},
-        // all_comment_count: 0,
-        // page_select: 0,
-        // displayData: []
     },
     reducers: {
 
@@ -191,6 +62,7 @@ export const commentSlice = createSlice({
         loadConversation: (state,action) =>{
             // getComment();
             // state.selectedConversation = commentManagement.modifyData(state.data);
+            // todo: gọi dữ liệu từ database
             state.selectedConversation = commentManagement.modifyData();
             console.log(state.selectedConversation);
 

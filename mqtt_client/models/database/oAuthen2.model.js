@@ -9,7 +9,8 @@ const  defineManifest  = require('../../middlewares/CheckManifest.js');
 const HttpStatus = require('http-status-codes');
 const CustomerAcess= require('../middlewareDatabase/CustomerAcess.js');
 const  {getRamdomData}  = require('../../utils/utilsString.js');
-
+const {API_LOGIN, API_GET_USER} = require("../../config/configApi.js")
+const AxiosSupport = require('../../utils/axiosSupport.js')
 /**
  * Enterprise model.
  */
@@ -29,27 +30,11 @@ class Oauthen2 extends CommonModel {
   /**
    * Table has timestamps.
    */
-    checkInvalUserExistingTocken(tocken){
+    checkInvalUserExistingTocken(token){
         var authen = squel.select().from("oauthen2")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
-                        .where("time_relase > NOW()");
-        return new Promise( ( resolve, reject ) => {
-            console.log(authen.toString());
-            knex.raw(authen.toString()).then(function(result) {
-               console.log("checkInvalUserExistingTocken ok",result[1]);
-                resolve( result[0] );
-            }).catch(function(err){
-                console.log("checkInvalUserExistingTocken erro");
-                return reject(err);
-            } )
-        } );
-    }
-    checkInvalUserExistingTocken(tocken){
-        var authen = squel.select().from("oauthen2")
-                        .where("tocken = '"+tocken+"'" )
-                        .where("deleteflag = 0")
-                        .where("time_relase > NOW()");
+                        .where("token = '"+token+"'" )
+                        .where("delete_flag = 0")
+                        .where("time_release > NOW()");
         return new Promise( ( resolve, reject ) => {
             //console.log(authen.toString(),tocken);
             knex.raw(authen.toString()).then(function(result) {
@@ -61,108 +46,25 @@ class Oauthen2 extends CommonModel {
             } )
         } );
     }
-    addTocken(data){
-        var authen2 = squel.insert().into("oauthen2");
-        var fieldToAdd =["permission_id","userid","tocken","id_updated","id_created",
-                            "deleteflag","created_at","updated_at","time_relase","value_manifest"];
-        for(var i=0;i<fieldToAdd.length;i++){
-            authen2.set(fieldToAdd[i],data[fieldToAdd[i]]);
-        }
-        authen2.set('permission_id', data.manifestid);
-        return new Promise( ( resolve, reject ) => {
-            knex.raw(authen2.toString()).then(function(x) {
-                resolve(true);
-            }).catch(function(err1){
-                reject(false);
-            }); 
-        });
-        
+    actionLogin(token){
+        AxiosSupport.getInformationUser(API_GET_USER,token)
+          .then((res)=> {
+            var authen2 = squel.insert().into("oauthen2")
+                .set("permission_id",res.data.user.permission_id)
+                .set("user_id",res.data.user.user_id)
+                .set("token",token)
+                .set('delete_flag', 0)
+                .set("created_at",'NOW()',{dontQuote: true})
+                .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
+
+            knex.raw(authen2.toString())
+            .then(res => console.log("true",res))
+            .catch(err => console.log("err",err))
+          })
+          .catch(err => console.log(err))
     }
 
-    responseLogin(res,user){
-        var dataTocken= getRamdomData(256);
-        var permission_id=user.get('permission_id');
-        var current_id=user.get('users_id');
-        var listDataContain="";
-        var listDataEnterprise_id="";
-        listDataContain+=current_id;
-        var authen2 = squel.insert().into("oauthen2")
-                .set("permission_id",permission_id)
-                .set("userid",current_id)
-                .set("tocken",dataTocken)
-                .set("id_updated",current_id)
-                .set("id_created",current_id)
-                .set("deleteflag",0)
-                .set("created_at",'NOW()',{dontQuote: true})
-                .set("updated_at",'NOW()',{dontQuote: true})
-                .set("deleteflag",0)
-                .set("time_relase",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
-        if(permission_id<TableManifest.NEW_REGISTER) {
-                authen2.set("value_manifest",listDataContain);
-                knex.raw(authen2.toString()).then(function(x) {
-                    res.json({
-                        success: true,
-                        token:dataTocken,
-                        email: user.get('email'),
-                    });
-                }).catch(function(err1){
-                    res.status(HttpStatus.UNAUTHORIZED).json({
-                        success: false,
-                        message: 'Problem SQL.',
-                    });
-                });
-        } 
-        else 
-        {
-            var sqlMain="SELECT users_id FROM users WHERE deleteflag=0 and id_created="+current_id;
-            if(permission_id<TableManifest.ADMIN)
-            {
-                    sqlMain +=" UNION "+ "SELECT id_member FROM decentralization_access WHERE id_admin="+current_id
-                    + " and deleteflag=0 and id_member!=0";
-            }
-            knex.raw(sqlMain).then(function(x) {
-                for(var i=0;i<x[0].length;i++){
-                    listDataContain+=","+x[0][i].users_id; 
-                }
-                var sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_member="+current_id;
-                if(permission_id<TableManifest.ADMIN)
-                {
-                    sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_admin="+current_id;
-                }
-                knex.raw(sqlMain1).then(function(x) {
-                    console.log("sqlMain1 ............... sqlMain1",sqlMain1,x);
-                    for(var i=0;i<x[0].length;i++){
-                        listDataEnterprise_id+=","+x[0][i].enterprise_id; 
-                    }
-                    authen2.set("value_manifest",listDataContain)
-                        .set("enterprise_id",listDataEnterprise_id);
-                    knex.raw(authen2.toString()).then(function(xa) {
-                            res.json({
-                                success: true,
-                                token:dataTocken,
-                                email: user.get('email'),
-                            });
-                    }).catch(function(err1){
-                                res.status(HttpStatus.UNAUTHORIZED).json({
-                                    success: false,
-                                    message: 'Problem SQL.',
-                                });
-                    });
-                }).catch(function(err1){
-                    res.status(HttpStatus.UNAUTHORIZED).json({
-                        success: false,
-                        message: 'Problem SQL.',
-                    });
-                });
-                
-            }).catch(function(err1){
-                res.status(HttpStatus.UNAUTHORIZED).json({
-                    success: false,
-                    message: 'Problem SQL.',
-                });
-            });           
-        }  
-    }
+
 
   get hasTimestamps() {
     return true;
@@ -176,12 +78,12 @@ class Oauthen2 extends CommonModel {
     }
     getFieldToAdd(){
         return {
-            valueSetup: [ "permission_id","userid","tocken","value_manifest"]
+            valueSetup: [ "manifestid","userid","tocken","value_manifest"]
         };
     }
     getFieldToDelete(){
         return {
-            arrayCoppy:["permission_id","userid","tocken","value_manifest","created_at","id_created"],
+            arrayCoppy:["manifestid","userid","tocken","value_manifest","created_at","id_created"],
             locationSelect:"id",
             valueSelect:"deleteflag",
             userUpdate:"id_updated"
