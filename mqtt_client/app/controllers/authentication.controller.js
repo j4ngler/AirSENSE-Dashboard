@@ -8,21 +8,21 @@ const oAuthen2Customer = new Oauthen2Customer()
 class AuthenticationController {
     // POST: Login admin 
    login(req,res) {
-    // console.log(req.body);
+    
         const {email, password} = req.body;
         AxiosSupport.login(API_LOGIN,email,password)
             .then((result) => {
                 if(result.data?.success === true){
                     oauthen2.actionLogin(result.data?.token)
                 }
-                res.json(result.data)})
+                res.send(JSON.stringify(result.data))})
             .catch(error => res.json(error))
     }
     // GET: Get user information
     getUserInformation(req,res){
         let token = req.headers['authorization'].split(' ')[1];
         AxiosSupport.getInformationUser(API_GET_USER,token)
-            .then((result) => res.json(result.data))
+            .then((result) => res.json(result.data.user))
             .catch(error => console.log(error))
     }
     // POST: Login customer

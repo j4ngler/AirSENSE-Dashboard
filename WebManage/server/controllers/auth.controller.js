@@ -40,6 +40,7 @@ var authCtrl = {};
  */
 authCtrl.login = function (req, res) {
   const { email, password } = req.body;
+  console.log(email, password);
   lstLogin = lstLogin.filter((o) => Date.now() - o.time < 2000);
   var emailExist = lstLogin.filter((o) => o.email == email);
   if (emailExist.length == 1) {
@@ -53,22 +54,19 @@ authCtrl.login = function (req, res) {
       message: "Bạn dang đăng nhập tài khoản hơn 2 lần trong 1s.",
     });
   }
-
-  console.log("email", email);
-
   User.query({
     where: { email: email, delete_flag: 0 },
   })
     .fetch({ require: false })
     .then((user) => {
-      console.log(user);
+      // console.log(user);
       if (user) {
         lstLogin = lstLogin.filter((o) => o.email != email);
-        console.log(user);
+        // console.log(user);
         bcrypt
           .compare(password, user.get("password"))
           .then(function (result) {
-            // console.log("user Inval",result);
+            console.log("user Inval",result);
             if (result) oauthen2.responseLogin(res, user);
             else
               return returnNotAuthen(res, {

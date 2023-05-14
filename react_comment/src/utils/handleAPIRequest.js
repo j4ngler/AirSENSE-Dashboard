@@ -13,14 +13,18 @@ export const axiosRequest = (url, method, token, data) => {
     method,
     headers: {}
   };
-  if (method !== axiosMethod.GET) {
-    axiosConfig.headers['Content-Type'] = `application/json`;
-  }
+  axiosConfig.headers['Content-Type'] = `application/json`;
   if (token) {
     axiosConfig.headers['authorization'] = `Bearer ${token}`;
     axiosConfig.headers['X-XSRF-TOKEN'] = token;
   }
-  axiosConfig.data = data;
-  console.log(data);
+  if(method === axiosMethod.GET || method === axiosMethod.DELETE){
+    
+    axiosConfig.query = data;
+  }
+  else{
+    axiosConfig.data = data;
+  }
+  
   return axios(axiosConfig);
 };

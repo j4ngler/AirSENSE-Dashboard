@@ -63,7 +63,7 @@ const Comment = () => {
     return (
         <>
         <InputComment handleComment={handleComment} infoReply={'test'}/>
-        <ListMessage topic = {"hsgd"} />
+        <ListMessage topic = {topic} />
         
         </>
     )

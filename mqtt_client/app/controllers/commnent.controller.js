@@ -25,11 +25,9 @@ class CommentController {
     
     // GET: get comment by topic
     getCommentByTopic(req,res,next){
-        console.log(req.body);
-        const topic = new RegExp(req.body.topic, "i");
+        const topic = new RegExp(req.query.topic, "i");
         Comment.find({topic: topic})
             .then(comments => {
-                
                 var listComments = convertArr(comments)
                 res.send(JSON.stringify(listComments))
             })
@@ -135,7 +133,7 @@ class CommentController {
     }
     deleteComment(req,res,next){
         const user_id = req.currentUser.users_id;
-        const _id = req.body.id;
+        const _id = req.query.id;
         Comment.findOne({_id:_id})
             .then(comment => {
                 if(comment.author_id == user_id){

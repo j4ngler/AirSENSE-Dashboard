@@ -30,11 +30,9 @@ module.exports =  {
     enterprise_id: Joi.required(),
   }),
 
-  commentTopic: Joi.object(
-    {
-      topic: Joi.string().required(),
-    }
-  ),
+  commentTopic: Joi.object({
+    topic:Joi.string().required(),
+  }),
   
   commentUser: Joi.object(
     {

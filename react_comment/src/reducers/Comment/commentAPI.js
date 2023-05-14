@@ -18,11 +18,11 @@ class CommentAPI {
     }
     getBytopic({topic}){
         const token = getLocalStorage('token_AirSENSE')
-        return axiosRequest(this.apiEndPoint + '/comment/get-by-topic',axiosMethod.GET,token, {topic: "dfds"})
+        return axiosRequest(this.apiEndPoint + '/comment/get-by-topic',axiosMethod.GET,token, {topic})
     }
     delete(id){
         const token = getLocalStorage('token_AirSENSE')
-        return axiosRequest(this.apiEndPoint + '/comment/delete',axiosMethod.delete ,token, {id})
+        return axiosRequest(this.apiEndPoint + '/comment/delete',axiosMethod.DELETE ,token, {id})
     }
 
 }

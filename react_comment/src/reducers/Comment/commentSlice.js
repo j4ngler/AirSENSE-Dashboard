@@ -12,7 +12,6 @@ export const commentModel = {
 
 }
 
-// let commentManagement = new CommentManagement();
 
 export const sendComment = createAsyncThunk('comment/send', async (params, { rejectWithValue }) => {
     try {

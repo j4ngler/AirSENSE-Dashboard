@@ -14,4 +14,14 @@ function validate(schema) {
   };
 }
 
-module.exports =  validate;
+function validateQuery(schema){
+  return function (req, res, next) {
+    const { error } = schema.validate(req['query'], { abortEarly: false });
+    if (error) {
+      return next(error);
+    }
+    return next();
+}
+}
+
+module.exports =  {validate,validateQuery};

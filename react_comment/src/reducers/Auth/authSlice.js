@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import AuthApi from './authAPI';
+import {loadStatus} from '../Comment/commentSlice'
 
 export const login = createAsyncThunk('auth/login', async (params, { rejectWithValue }) => {
   try {
@@ -11,7 +12,7 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
   }
 });
 
-export const getPersonalInformation = createAsyncThunk('auth/getInformationCustomer', async (params, { rejectWithValue }) => {
+export const getPersonalInformation = createAsyncThunk('auth/getInformation', async (params, { rejectWithValue }) => {
   try {
     const response = await AuthApi.getAPIInformationCustomer({ ...params });
     return response.data;
@@ -33,18 +34,11 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 
 
 const initialState = {
-  username: '',
   token: null,
+  username: '',
   userInformation: {
-    email: '',
-    fullname: '',
-    username: '',
-    address: '',
-    contact: ''
   },
-  typeUser: 1, // type of user: user or customer
-  userId: 2
-
+  loadStatus: loadStatus.None
 };
 
 export const authSlice = createSlice({
@@ -52,10 +46,11 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logOutAction: (state) => {
-      state.username = null;
-      state.token = null;
+      state.token = '';
+      state.loadStatus = loadStatus.None;
+      state.userInformation = {};
       localStorage.removeItem('token_AirSENSE');
-      localStorage.removeItem('username')
+      localStorage.removeItem('username');
     },
     checkPermission: (state, action) => {
       console.log(action.payload)
@@ -69,8 +64,23 @@ export const authSlice = createSlice({
         state.username = action.payload.email;
         state.token = action.payload.token;
       })
+      .addCase(login.pending, (state, action) => {
+        state.loadStatus  = loadStatus.Loading;
+        console.log("login loading...");
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loadStatus = loadStatus.Failed;
+        console.log("login failed");
+
+      })
       .addCase(getPersonalInformation.fulfilled, (state, action) => {
         state.userInformation = action.payload;
+      })
+      .addCase(getPersonalInformation.pending, (state, action) => {
+        state.loadStatus = loadStatus.Loading;
+      })
+      .addCase(getPersonalInformation.rejected, (state, action) => {
+        state.loadStatus = loadStatus.Failed;
       })
 
      
