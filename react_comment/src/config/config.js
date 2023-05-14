@@ -1,10 +1,9 @@
 export const apiPath = 'api/';
 
-export const APP_HOST = process.env.REACT_APP_HOST; //'103.130.212.210';//'178.128.221.254';//'localhost';// '103.1.238.175';
-export const APP_PORT = process.env.REACT_APP_PORT;
+export const APP_HOST = '127.0.0.1'; //'103.130.212.210';//'178.128.221.254';//'localhost';// '103.1.238.175';
+export const APP_PORT = '3002';
 export const HOST = `${APP_HOST}:${APP_PORT}/`;
 export const HOST_HTTP = `http://${APP_HOST}:${APP_PORT}/`;
-
 export const API_URL = `http://${HOST}${apiPath}`;
 export const JWT_TOKEN = process.env.REACT_APP_JWT_TOKEN;
 // http://127.0.0.1:3002

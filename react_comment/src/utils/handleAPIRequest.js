@@ -21,5 +21,6 @@ export const axiosRequest = (url, method, token, data) => {
     axiosConfig.headers['X-XSRF-TOKEN'] = token;
   }
   axiosConfig.data = data;
+  console.log(data);
   return axios(axiosConfig);
 };

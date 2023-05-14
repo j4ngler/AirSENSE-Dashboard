@@ -12,6 +12,15 @@
 /* CSS riêng */
 .input-comment {
     margin: 0px 20px;
+    display: flex;
+    align-items: center;
+    /* flex-direction:row; */
+    /* justify-content: flex-start; */
+}
+.avatar-input-comment{
+    /* position: absolute;
+     */
+     display: flex;
     
 }
 
@@ -27,7 +36,7 @@
 }
 .div-input{
     display: flex;
-    margin: 0px 50px;
+    margin: 0px 10px;
 }
 .div-input .button-submit{
     max-height: 36px;
