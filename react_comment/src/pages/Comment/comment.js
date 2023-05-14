@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
-import InputComment from '../component/Input';
+import React, { useCallback, useEffect, useMemo } from "react";
+import InputComment from '../../component/InputHeader';
 import { useDispatch, useSelector } from "react-redux";
-import { initComment, commentAction } from "../reducers/Comment/commentSlice";
-import { getGeolocation } from "../utils/commonUtils";
-import ListMessage from "../component/ListMessage";
+import { initComment, sendComment } from "../../reducers/Comment/commentSlice";
+import { getGeolocation } from "../../utils/commonUtils";
+import ListMessage from "../../component/ListMessage";
 const Comment = () => {
     const comment_group_gs = useSelector(state => state.commentSlice.comment_group);
     const comment_sub_gs = useSelector(state => state.commentSlice.comment_sub);
     const comment_page_gs = useSelector(state => state.commentSlice.comment_page);
+    const loadCommentStatus  = useSelector(state => state.commentSlice.loadStatus);
+
     const userIPs_gs = useSelector(state => state.commentSlice.userIPs);
     const username_gs = useSelector(state => state.authSlice.username);
     const userId_gs = useSelector(state => state.authSlice.userId);
@@ -15,28 +17,24 @@ const Comment = () => {
 
     const dispatch = useDispatch();
 
+    
     const searchGroup = async () => {
         let params = (new URL(document.location)).searchParams; // get group, sub, id later
-
         //get IP user
         let userIPs = await getGeolocation();
-
         // fake group comment
         let fakeGroup = {
             comment_group: 'product',
-            comment_sub: 'smart_device',
-            comment_page: 5,
+            comment_sub: 'car',
+            comment_page: 0,
             userIPs: userIPs
         }
         dispatch(initComment(fakeGroup))
-
-
-        
-
     }
 
+
     useEffect(() => {
-        searchGroup();
+        searchGroup()
     }, [])
 
     const handleComment = (data) => {
@@ -49,21 +47,24 @@ const Comment = () => {
                 content: message,
                 comment_tag: "",     //no tags function
                 comment_atack: "", // no upload function
-                comment_reply_id: data.hasOwnProperty("id_reply_comment")?data.id_reply_comment:0,
-                comment_parent_id:data.hasOwnProperty("id_reply_comment")?data.id_reply_comment:0,
+                comment_reply_id: data.hasOwnProperty("id_reply_comment")? data.id_reply_comment:0,
             };
-        console.log(messageComment);
-        dispatch(commentAction(messageComment));
+        
+        dispatch(sendComment(messageComment));
     }
 
 
 }
+    const topic = useMemo(()=> {
+        return `${comment_group_gs}/${comment_sub_gs}/${comment_page_gs}`
+    }, [comment_group_gs,comment_page_gs,comment_sub_gs,loadCommentStatus])
      
 
     return (
         <>
         <InputComment handleComment={handleComment} infoReply={'test'}/>
-        <ListMessage/>
+        <ListMessage topic = {"hsgd"} />
+        
         </>
     )
 }

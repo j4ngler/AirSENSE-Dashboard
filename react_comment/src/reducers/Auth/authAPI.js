@@ -7,8 +7,9 @@ class AuthApi {
     this.apiEndpoint = API_URL;
     this.loginApiEndpoint = this.apiEndpoint + '/user';
   }
-  getAPILogin({ email, password }) {
-    return axiosRequest(this.apiEndpoint + 'auth/customer/login', axiosMethod.POST, null, {
+  getAPILogin({ email, password, role }) {
+    const apiLogin = role === "admin" ? "auth/login" : "auth/login/customer"
+    return axiosRequest(this.apiEndpoint + apiLogin, axiosMethod.POST, null, {
       email,
       password
     });

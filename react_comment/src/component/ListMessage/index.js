@@ -1,59 +1,37 @@
 import React, { useEffect, useState } from "react";
 // import MessageItem from "./messageItem";
-import { loadConversation } from "../../reducers/Comment/commentSlice";
 import { useDispatch, useSelector} from "react-redux";
-import '../Input/input.css';
+import '../InputHeader/input.css';
 import BoxMessage from "../MessageIteam/BoxMessage";
+import { getAllComment, getCommentByTopic } from "../../reducers/Comment/commentSlice";
 // import ReplyComment from "../MessageIteam/replyComment";
-const ListMessage = () => {
-  const dataComment = useSelector(state => state.commentSlice.selectedConversation);
+const ListMessage = ({topic}) => {
+  const dataComment = useSelector(state => state.commentSlice.data);
+  const statusLoad = useSelector(state=> state.commentSlice.loadStatus);
   const dispatch = useDispatch();
-  const loadComment = async () =>{
-    await dispatch(loadConversation());
-  }
+ const value = {
+  topic: "dfkjhf"
+ }
   useEffect(()=>{
-    loadComment();
-  },[])
+    dispatch(getCommentByTopic(value))
+    // console.log(topic);
+  },[topic])
   const [reply,setReply] = useState(false);
   return (
-    // <div>
-    //       {
-    //         messages.map(item =>{
-    //             const children = item.children;
-    //             return (
-    //                 <div>
-    //             <MessageItem message={item}
-    //             isReply={true}
-    //             submitData = {submitData}
-    //             />
-    //             <div className='reply-comment-block'>
-    //                 {children.map(chid => {
-    //                     return (
-    //                       <MessageItem 
-    //                             message={chid} 
-    //                             isReply = {false}
-    //                             submitData={submitData}
-    //                       />
-    //                     );
-    //                   })
-    //                 }
-    //           </div>
-    //           </div>
-    //         );
-    //       }) }
-    // </div>
+  
     <div className="box-info-container">
     {
-      dataComment.map((item) =>{
-        let children = item.children;
+      dataComment && dataComment.map((item,index) =>{
+        // let children = item.children;
         return (
           <>
-          <BoxMessage author ={item.author} content ={item.content.content} time = {item.timeConvert} />
+          <BoxMessage author ={item.author_id} content ={item.content.content} key={index}/>
                   <div className="box-info-container" style={{marginLeft: 130}}>
                   {
-                    children.map(e =>(
-                      <BoxMessage author ={e.author} content ={e.content.content} time = {e.time}/>
-                    ))
+                    // children.map((e,index) =>(
+                    //   <BoxMessage author ={e.author} content ={e.content.content} time = {e.time} key={index}/>
+                    // ))
+                    
                   }
                   </div>
           </>

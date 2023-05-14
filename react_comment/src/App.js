@@ -1,8 +1,14 @@
 import React from "react";
-import Comment from "./container/comment";
+import { useRoutes } from "react-router-dom";
+import routes from "./config/route";
+
 function App() {
+  const routing = useRoutes(routes);
+
   return (
-      <Comment />
+      <>
+        {routing}
+      </>
   );
 }
 

@@ -7,14 +7,24 @@ class CommentAPI {
     constructor() {
         this.apiEndPoint = HOST_HTTP_COMMENT;
     }
-    postComment(dataComment) {
-        const token = getLocalStorage('AirSENSE_token')
-        return axiosRequest(this.apiEndPoint + '/comment/comment_user', axiosMethod.POST, token, dataComment);
+    send(topic, comment) {
+        const token = getLocalStorage('token_AirSENSE')
+
+        return axiosRequest(this.apiEndPoint + '/comment/send', axiosMethod.POST, token, {topic,comment});
     }
-    getComment(){
-        const token = getLocalStorage('AirSENSE_token')
-        return axiosRequest(this.apiEndPoint + '/comment/comment_user',axiosMethod.GET,token)
+    getAll(){
+        const token = getLocalStorage('token_AirSENSE')
+        return axiosRequest(this.apiEndPoint + '/comment/',axiosMethod.GET,token)
     }
+    getBytopic({topic}){
+        const token = getLocalStorage('token_AirSENSE')
+        return axiosRequest(this.apiEndPoint + '/comment/get-by-topic',axiosMethod.GET,token, {topic: "dfds"})
+    }
+    delete(id){
+        const token = getLocalStorage('token_AirSENSE')
+        return axiosRequest(this.apiEndPoint + '/comment/delete',axiosMethod.delete ,token, {id})
+    }
+
 }
 
 

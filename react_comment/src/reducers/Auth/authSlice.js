@@ -33,14 +33,14 @@ export const register = createAsyncThunk('auth/register', async (params, { rejec
 
 
 const initialState = {
-  username: 'Truong Giang Phung',
+  username: '',
   token: null,
   userInformation: {
-    email: 'giangpbt@gmail.com',
-    fullname: 'Phung Ba Truong Giang',
-    username: 'Truong Giang Phung',
-    address: '174, Ngoc Thuy, Long Bien, Ha Noi',
-    contact: 'SPARC Laboratory'
+    email: '',
+    fullname: '',
+    username: '',
+    address: '',
+    contact: ''
   },
   typeUser: 1, // type of user: user or customer
   userId: 2
