@@ -34,7 +34,7 @@ const ListMessage = ({topic}) => {
           {dataComment && dataComment.map((item,index)=>{
             return (
               <div>
-                <BoxMessage author = {item.content.auther_id} content={item.content.content} key={index}/>
+                <BoxMessage author = {item.content.author_id} content={item.content.content} key={index}/>
               </div>
             )
           })}

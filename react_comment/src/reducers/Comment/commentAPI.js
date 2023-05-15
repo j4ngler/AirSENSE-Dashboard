@@ -18,6 +18,7 @@ class CommentAPI {
     }
     getBytopic({topic}){
         const token = getLocalStorage('token_AirSENSE')
+        console.log("token: ",token);
         return axiosRequest(this.apiEndPoint + '/comment/get-by-topic',axiosMethod.GET,token, {topic})
     }
     delete(id){
