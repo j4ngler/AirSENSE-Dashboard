@@ -397,22 +397,22 @@ customerCtrl.registerCustomer = async function( req, res ) {
   const updated_at = new Date();
   const id_created = 0;
   const id_updated = 0;
-  const delete_flag =0;
+  const delete_flag = 0;
   
   //hash password before save to database
   const salt = bcrypt.genSaltSync(12);
   const hashPass = await bcrypt.hash(password, salt); 
 
-  //save info to database
-  knex
+  //check email and phone number existed?
+  await knex
     .raw(" SELECT * FROM customer WHERE email = ?", [email])
     .then(async (user) => {
       if( user[0].length > 0 ) {
+        console.log(user[0]);
         return res.status(208).json({ message: "Email existed!"});
-      
       }
       else {
-        knex("customer")
+        await knex("user")
           .insert({
             username,
             fullname,
@@ -421,6 +421,7 @@ customerCtrl.registerCustomer = async function( req, res ) {
             password: hashPass,
             address,
             contact,
+            permission_id,
             created_at,
             updated_at,
             id_created,
@@ -428,7 +429,6 @@ customerCtrl.registerCustomer = async function( req, res ) {
             delete_flag
           })
           .then(() => {
-            console.log(password);
             return res.status(200).json({ message: "Register succesfully!" });
           })
           .catch((err) => {
@@ -554,6 +554,7 @@ customerCtrl.getAllInfoServices = async function (req, res) {
 
 const oAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
 const { CostExplorer } = require("aws-sdk");
+const { exceptions } = require("winston");
 
 customerCtrl.setTheBillData = async function (req, res) {
   try {
@@ -689,4 +690,36 @@ function getAllInfoProductInList(product_group, start, end) {
   return sql;
 }
 
+//update customer information
+customerCtrl.updateInfo = async(req, res) => {
+  const customer_id = req.body.customer_id;
+  const fullname = req.body.fullName ? req.body.fullName : null;
+  const username = req.body.userName ? req.body.userName : null;
+  const address = req.body.address ? req.body.address : null;
+  const contact = req.body.contact ? req.body.contact : null;
+
+  //check customer existed
+  // const existCustomer = knex.select('customer_id').from("customer");
+  const existCustomer = async(result) => {
+    await knex.raw("SELECT * FROM customer WHERE customer_id = ?", customer_id);
+    console.log('abc', result[0]);
+  }; 
+
+  // console.log('abc', existCustomer)
+  if(!existCustomer) {
+    return res.status(208).json({ message: "Customer not existed!"});
+  }
+
+  //update customer info
+  const updateInfoCustomer = await knex("customer")
+                                  .insert({fullname, username, address, contact})
+                                  .then(() => {
+                                    return res.status(200).json({message: 'Update customer info successfully !'});
+                                  })
+                                  .catch((error) => {
+                                    console.log(error);
+                                    return res.status(500).json({message: 'Update failed !', error});
+                                  })
+  return updateInfoCustomer;
+}
 module.exports = customerCtrl;
