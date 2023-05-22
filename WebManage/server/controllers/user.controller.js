@@ -502,6 +502,7 @@ userCtrl.registerUser = async function(req, res) {
   const email = req.body.email ? req.body.email : null;
   const password = req.body.password ? req.body.password : null;
   const address = req.body.address ? req.body.address : null;
+  // const contact = req.body.contact ? req.body.contact : null;
   const permission_id = TableManifest.NEW_REGISTER;
   const created_at = new Date();
   const updated_at = new Date();
@@ -531,6 +532,7 @@ userCtrl.registerUser = async function(req, res) {
             email,
             password: hashPass,
             address,
+            // contact,
             permission_id,
             created_at,
             updated_at,

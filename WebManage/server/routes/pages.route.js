@@ -6,9 +6,15 @@ router.get("/", (req, res) => {
   res.render("home/home", { route: "home" });
 });
 
-router.get("/register", (req, res) => {
-  res.render("authen/register", { route: "register" });
+//register for customer and user
+router.get("/customer_register", (req, res) => {
+  res.render("authen/customer_register", { route: "register" });
 });
+
+router.get("/user_register", (req, res) => {
+  res.render("authen/user_register", { route: "register" });
+});
+
 
 var arrayMenuPages = [
   {
@@ -221,5 +227,8 @@ router.get("/login/admin", (req, res) => {
 });
 router.get("/login/customer", (req, res) => {
   res.render("customer/customer");
+});
+router.get("/login/user", (req, res) => {
+  res.render("authen/login");
 });
 module.exports = router;

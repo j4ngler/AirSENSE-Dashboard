@@ -79,4 +79,13 @@ module.exports = {
     userName: Joi.string().required(),
     // avatar: Joi.string().required(),
   }),
+
+  //validate info before update
+  updateInfo: Joi.object({
+    customer_id: Joi.number().required(),
+    userName: Joi.string().required(),
+    fullName: Joi.string().required(),
+    contact: Joi.string().required(),
+    address: Joi.string().required()
+  }),
 };

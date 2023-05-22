@@ -62,15 +62,17 @@ authCtrl.login = function (req, res) {
   })
     .fetch({ require: false })
     .then((user) => {
-      // console.log(user);
       if (user) {
         lstLogin = lstLogin.filter((o) => o.email != email);
         // console.log(user);
         bcrypt
           .compare(password, user.get("password"))
           .then(function (result) {
-            console.log("user Inval",result);
-            if (result) oauthen2.responseLogin(res, user);
+            // console.log("user Inval",result);
+            // console.log(user)
+            if (result) {
+              oauthen2.responseLogin(res, user);
+            }
             else
               return returnNotAuthen(res, {
                 success: false,
