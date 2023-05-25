@@ -10,5 +10,6 @@ router.post('/login',validate(schema.login),AuthenticationController.login)
 router.post('/login/customer', validate(schema.login), AuthenticationController.loginCustomer)
 router.get('/user',isAuthenticated, AuthenticationController.getUserInformation)
 router.get('/customer',isAuthenticatedCustomer, AuthenticationController.getCustomerInformation)
+router.get('/list-users',isAuthenticated, AuthenticationController.getListUsers)
 
 module.exports = router;

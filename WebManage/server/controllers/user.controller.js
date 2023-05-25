@@ -735,4 +735,22 @@ userCtrl.listComment = async (req, res) => {
   });
 };
 
+userCtrl.getListUser = (req,res) => {
+  const getUserQuery = squel.select().from('user').field('user_id').field('username').field('fullname').field('email')
+  knex.raw(getUserQuery.toString())
+        .then((data) => {
+         const records = data[0].map((row)=>{
+         return{
+          user_id: row.user_id,
+          username: row.username,
+          fullname: row.fullname,
+          email: row.email
+        }})
+             return res.json(records)
+        })
+        .catch((err) =>{
+          return res.send(JSON.stringify("can not get list "))
+        })
+};
+
 module.exports = userCtrl;

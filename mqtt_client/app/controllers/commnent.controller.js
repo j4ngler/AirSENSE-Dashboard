@@ -1,12 +1,14 @@
 const knex = require('../../config/knex');
 const Comment = require('../models/Comment.model')
+const {convertDate} = require('../../utils/utilsString')
 
 const convertArr =(array) => {
     return array.map((item,index)=> {
         const comment = item.toJSON()
+        const time = convertDate(comment._id.getTimestamp())
         return{
             ...comment,
-            time: comment._id.getTimestamp()
+            time: time
         }
     })
 }
@@ -25,6 +27,7 @@ class CommentController {
     
     // GET: get comment by topic
     getCommentByTopic(req,res,next){
+        console.log("get by topic lan 1");
         const topic = new RegExp(req.query.topic, "i");
         Comment.find({topic: topic})
             .then(comments => {
@@ -72,9 +75,9 @@ class CommentController {
     }
     // POST: Send comment
     sendComment(req,res,next){
-        
+        console.log(req.body);
        
-        if(req.body.comment_reply_id){
+        if(!!req.body.comment_reply_id){
         Comment.findOne({_id: req.body.comment_reply_id})
             .then(comment =>{
                 const commentSave = new Comment({
@@ -101,8 +104,7 @@ class CommentController {
                 })
             })
             .catch(err => {
-                res.send(JSON.stringify("Can not save comment"))
-                console.log(err);
+                res.send(JSON.stringify("Can not find reply comment"))
             })
         }
         else{
@@ -133,10 +135,12 @@ class CommentController {
     }
     deleteComment(req,res,next){
         const user_id = req.currentUser.users_id;
+        console.log(user_id);
         const _id = req.query.id;
+        console.log(_id);
         Comment.findOne({_id:_id})
             .then(comment => {
-                if(comment.author_id == user_id){
+                if(comment.content.author_id == user_id){
                     const comment_parent_id = new RegExp(_id, "i");
                     Comment.deleteMany({$or:[{"_id": _id},{"content.comment_parent_id":comment_parent_id}]})
                         .then((item)=> res.send(JSON.stringify(item)))
@@ -150,6 +154,6 @@ class CommentController {
                 res.send(JSON.stringify("Can not find comment"))
             })
     }
-    
+  
 }
 module.exports = new CommentController;

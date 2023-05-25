@@ -9,7 +9,7 @@ const isAuthenticatedCustomer = require('../middlewares/authenticateCustomer')
 
 
 router.get('/', isAuthenticated, CommentController.getAll)
-router.get('/get-by-topic', isAuthenticated, CommentController.getCommentByTopic)
+router.get('/get-by-topic',isAuthenticated,  CommentController.getCommentByTopic)
 router.get('/get-by-person', isAuthenticated, CommentController.getPersonComment)
 router.get('/get-relate-person', isAuthenticated, CommentController.getRealateComment)
 router.post('/send', isAuthenticated, validate(schema.comment),CommentController.sendComment)

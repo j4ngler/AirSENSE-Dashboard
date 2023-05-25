@@ -10,3 +10,7 @@ exports.getRamdomData = (length)=> {
     return dataTocken;
   }
   
+exports.convertDate = (time) =>{
+  const date = new Date(time);
+  return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
+}

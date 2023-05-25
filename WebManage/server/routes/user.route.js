@@ -47,6 +47,9 @@ const router = express.Router();
     userCtrl.listUser(req, res);
   })
 
+  router.route('/list-users').get(isAuthenticated, (req, res) => {
+      userCtrl.getListUser(req,res)
+    });
   
 
 module.exports =  router;

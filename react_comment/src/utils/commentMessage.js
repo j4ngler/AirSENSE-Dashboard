@@ -94,37 +94,26 @@ const test =[
 ]
 class CommentManagement {
     constructor(){
-        // this._id = commentData._id
-        // this.content = commentData.content;
-        // this.time = commentData.time;
-        // this.__v = commentData.__v;
+       
     }
     
-   
-    modifyData(data) {
+   findUser(listUser,author_id){
+    return listUser.length  > 0 ? listUser.filter(item => item.content.author_id = author_id) : "Anynomous";
+   }
+    modifyData(data,listUser) {
         let result=[];
             data.forEach(element => {
                 let dataInsert= JSON.parse(JSON.stringify(element));
-                // var day = moment(dataInsert.time);
-                dataInsert['timeSend']= '20:32 10/2/2022';
-                dataInsert['author']=this.findUser(dataInsert.content.author_id);
-                dataInsert['children'] = [];
-                dataInsert['timeConvert'] = this.timeConverter(dataInsert.time);
-                if(dataInsert.content.comment_reply_id !== 0){  // id_comment_reply
-                    let idPrent = this.findParentComment(result, dataInsert.content.comment_parent_id);
-                    // console.log(idPrent)
-                    result[idPrent].children.push(dataInsert);
-                    return result;
-                }
+                // dataInsert['timeSend']= '20:32 10/2/2022';
+                // dataInsert['author']=this.findUser(listUser,dataInsert.content.author_id);
+                // dataInsert['replyId'] = dataInsert.content.comment_reply_id;
+                // dataInsert['timeConvert'] = dataInsert.time;
+                // dataInsert['content'] = dataInsert.content.content;
                 result.push(dataInsert);
             });
-//             console.log("informChatboxDataChat ",messageInfo);
-            let newDataSort=[];
-            for(let i=(result.length-1); i>-1; i--){
-                newDataSort.push(result[i]);
-            }
-        return newDataSort;
-
+           console.log("Comment modified: ",data);
+           console.log("list Users: ", listUser);
+        return result;
     }
 
 
@@ -168,4 +157,4 @@ class CommentManagement {
 
 
 
-export default CommentManagement;
+export default CommentManagement = new CommentManagement;

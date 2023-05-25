@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import InputComment from '../../component/InputHeader';
 import { useDispatch, useSelector } from "react-redux";
-import { initComment, sendComment } from "../../reducers/Comment/commentSlice";
+import { getListUsers, initComment, sendComment } from "../../reducers/Comment/commentSlice";
 import { getGeolocation } from "../../utils/commonUtils";
 import ListMessage from "../../component/ListMessage";
 const Comment = () => {
@@ -14,19 +14,18 @@ const Comment = () => {
     const username_gs = useSelector(state => state.authSlice.username);
     const userId_gs = useSelector(state => state.authSlice.userId);
     const typeUser_gs = useSelector(state => state.authSlice.typeUser);
-
+    const list = useSelector(state => state.commentSlice.listUser)
     const dispatch = useDispatch();
 
     
     const searchGroup = async () => {
-        let params = (new URL(document.location)).searchParams; // get group, sub, id later
         //get IP user
         let userIPs = await getGeolocation();
         // fake group comment
         let fakeGroup = {
             comment_group: 'product',
             comment_sub: 'car',
-            comment_page: 0,
+            comment_page: '',
             userIPs: userIPs
         }
         dispatch(initComment(fakeGroup))
@@ -34,35 +33,40 @@ const Comment = () => {
 
 
     useEffect(() => {
-        searchGroup()
+        searchGroup();
+        
     }, [])
 
     const handleComment = (data) => {
-        const message = data.stringValue;
-        console.log('result onMessageWasSent ', data); // comment_reply_id
-        if(!!data) {
+        if(!!data.content) {
+            if(!!data.reply_id) {
             let messageComment = {
-                topic: comment_group_gs + '/' + comment_sub_gs + '/' + comment_page_gs,
-                author_IP: userIPs_gs,
-                content: message,
-                comment_tag: "",     //no tags function
-                comment_atack: "", // no upload function
-                comment_reply_id: data.hasOwnProperty("id_reply_comment")? data.id_reply_comment:0,
+                topic: topic,
+                comment: data.content,
+                comment_reply_id: data.reply_id
             };
         
-        dispatch(sendComment(messageComment));
+            dispatch(sendComment(messageComment));
+        }
+        else{
+            let messageComment = {
+                topic: topic,
+                comment: data.content,
+            };
+            dispatch(sendComment(messageComment));
+        }
     }
 
 
 }
     const topic = useMemo(()=> {
-        return `${comment_group_gs}/${comment_sub_gs}/${comment_page_gs}`
+        return `${comment_group_gs}/${comment_sub_gs}`
     }, [comment_group_gs,comment_page_gs,comment_sub_gs,loadCommentStatus])
      
 
     return (
         <>
-        <InputComment handleComment={handleComment} infoReply={'test'}/>
+        <InputComment handleComment={handleComment} />
         <ListMessage topic = {topic} />
         
         </>

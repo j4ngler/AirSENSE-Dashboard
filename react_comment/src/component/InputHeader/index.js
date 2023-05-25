@@ -20,15 +20,10 @@ import { tagUsers, uploadImage } from '../../reducers/Comment/commentSlice';
 import InputComment from './Input';
 var listUserData = null;
 
-// // emotion
-const emojiPlugin = createEmojiPlugin();
-const { EmojiSelect } = emojiPlugin;
 
 
 const InputCommentHeader = ({handleComment, infoReply}) => {
-  const ref = useRef(null);
-  const [editorState, setEditorState] = useState(createEditorStateWithText(''));
-  const [avatar,setAvatar] = useState('')
+ 
 
    
     return (
@@ -36,7 +31,7 @@ const InputCommentHeader = ({handleComment, infoReply}) => {
         <div className='input-comment-header'>
           <p>Comments</p>
          
-        <InputComment />
+        <InputComment handleComment={handleComment}/>
         </div>  
         <div>
           <div className='update'>

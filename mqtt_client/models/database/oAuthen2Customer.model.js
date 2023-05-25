@@ -50,7 +50,7 @@ class oAuthen2Customer extends CommonModel {
       
           
     async actionLogin(token){
-        AxiosSupport.getInformationUser(API_GET_USER_CUSTOMER,token)
+        AxiosSupport.getMethod(API_GET_USER_CUSTOMER,token)
         .then((res)=> {
             var authen2 = squel.insert().into('oauthen2_customer')
                 .set("customer_id",res.data.user.customer_id)

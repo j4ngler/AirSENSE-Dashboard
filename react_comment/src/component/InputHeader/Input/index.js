@@ -24,14 +24,15 @@ const emojiPlugin = createEmojiPlugin();
 const { EmojiSelect } = emojiPlugin;
 
 
-const InputComment = ({handleComment, infoReply}) => {
+const InputComment = ({handleComment, reply_id}) => {
   const ref = useRef(null);
   const [editorState, setEditorState] = useState(createEditorStateWithText(''));
-  
+  const [avatar, setAvatar] = useState(null);
+  const [image, setImage] = useState('');
   const mentionsStyles = {
     color: 'blue'
   }
-  const { plugins } = useMemo(() => {
+  const { MentionSuggestions, plugins } = useMemo(() => {
     const mentionPlugin = createMentionPlugin({
       entityMutability: 'IMMUTABLE',
     theme: mentionsStyles,
@@ -47,7 +48,31 @@ const InputComment = ({handleComment, infoReply}) => {
     }, []);
 
     const allPlugins = [plugins, emojiPlugin];
-    
+    const checkKey=(e)=> {
+      e = e || window.event;
+      
+      if (e.keyCode == '13') {
+          // if(!!mInfoUser) {
+              // right arrow
+              e.preventDefault(); //Prevent default browser behavior mentionsRef.current.toHtml()
+              
+              
+              var stringValue = editorState.getCurrentContent().getPlainText();
+              var stringHtml = convertToHTML(editorState.getCurrentContent());
+              let id_reply_comment = 0;
+              var data = {content: stringValue}
+              data.reply_id = reply_id ?? "";
+              if(stringValue.length > 0) {
+
+                  handleComment(data);
+              }
+              setImage('');
+              setTimeout(() => {
+                  setEditorState(EditorState.createEmpty());
+              }, 100);
+         
+      }
+  }
     return (
     <>
         <div className='input-comment'>
@@ -62,7 +87,7 @@ const InputComment = ({handleComment, infoReply}) => {
               editorKey={'editor'}
               editorState={editorState}
               onChange={setEditorState}
-              // keyBindingFn={checkKey}
+              keyBindingFn={checkKey}
               plugins={allPlugins}
               ref={ref}
               placeholder={'Viết bình luận...'}

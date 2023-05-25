@@ -14,20 +14,22 @@ var oauthen2=new Oauthen2();
 
 module.exports =  (req, res, next) => {
   const authorizationHeader = req.headers['authorization'];
-  
   let token;
   if (authorizationHeader) {
       token = authorizationHeader.split(' ')[1];
   }
   if (token) {
-    oauthen2.checkInvalUserExistingTocken(token).then((user) => {
+    oauthen2.checkInvalUserExistingTocken(token)
+    .then((user) => {
+
         req.currentUser = {
           manifestid:user[0].permission_id,
           users_id:user[0].user_id,
           enterprise_id:user[0].enterprise_id,
           value_manifest:user[0].value_manifest
         };
-        
+        console.log(user);
+        console.log("check token success");
         next();
       })
       .catch(function(err){

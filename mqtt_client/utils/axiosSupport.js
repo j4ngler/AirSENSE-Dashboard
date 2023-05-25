@@ -6,14 +6,14 @@ const axios = require('axios');
 
 class AxiosSupport {
 
-    login(api, email, password){
+    postMethod(api, email, password){
         return axios.post(api,{
             email: email,
             password: password
         })
     }
 
-    getInformationUser(api,token){
+    getMethod(api,token){
         return axios.get(api,{
             headers: {
                 authorization: `Bearer ${token}`

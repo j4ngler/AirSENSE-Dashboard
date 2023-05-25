@@ -7,6 +7,7 @@ const knex = require("../../config/knex.js");
 const CommonModel = require("../middlewareDatabase/CommonModel.js");
 const defineManifest = require("../../middlewares/CheckManifest.js");
 const CustomerAcess = require("../middlewareDatabase/CustomerAcess.js");
+const { returnOKCustom, returnNotFound } = require("../../utils/returnResponse.js");
 /**
  * User model.
  */
@@ -133,6 +134,17 @@ class User extends CommonModel {
       return true;
     }
     return false;
+  }
+
+  getListUsers = (res) =>{
+    const getUserQuery = squel.select().from(TABLE_NAME).field('user_id').field('username').field('fullname').field('email').where('delete_flag = 0')
+    const listUser = knew.raw(getUserQuery.toString())
+          .then((data) => {
+                return returnOKCustom(res,data)
+          })
+          .catch((err) =>{
+            return returnNotFound(res,err)
+          })
   }
 }
 
