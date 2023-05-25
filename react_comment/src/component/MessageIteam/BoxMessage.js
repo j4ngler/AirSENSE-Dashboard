@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputComment from "../InputHeader/Input";
-import CommentManagement from "../../utils/commentMessage";
-const BoxMessage = ({author,content,time}) => {
+import { deleteComment } from "../../reducers/Comment/commentSlice";
+import { useDispatch } from "react-redux";
+const BoxMessage = ({handleComment, id,author,content,time, replies, replyLevel = 1}) => {
+  const dispatch = useDispatch();
+  const spaceReply = 30
+  const replySpace = replyLevel * spaceReply
   const [reply,setReply] = useState(false);
-  
+ const handleDelete = (id) =>{
+    if(id){
+      dispatch(deleteComment(id))
+    }
+ }
     return(
         <>
-        <div className='box-inf-comment'>
+        <div className='box-inf-comment' style={{marginLeft: replySpace }} key={id}>
         <div className='comment'>
+          <div className="comment-option" onClick={()=>{handleDelete(id)}}>del</div>
           <div className=''>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 img-user-comment">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
@@ -32,14 +41,22 @@ const BoxMessage = ({author,content,time}) => {
               <span className='dots'>.</span>
               <span className=''>{time}</span>
         </div>
+        <div>
+          {
+            replies && replies.map((item,index) => {
+              return(
+              <BoxMessage handleComment={handleComment} reply_id={item._id} replies={item.replies} author = {item.content.author_id} content={item.content.content} time={item.time} id={item._id} key={index} replyLevel={replyLevel+1}/>
+            )})
+          }
         </div>
         {
           reply && (<>
-          <InputComment />
+          <InputComment handleComment={handleComment} reply_id={id}/>
          
 </>)
         }
-        
+        </div>
+       
         
         </>
     )

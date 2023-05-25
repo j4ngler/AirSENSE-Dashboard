@@ -18,11 +18,16 @@ export const axiosRequest = (url, method, token, data) => {
     axiosConfig.headers['authorization'] = `Bearer ${token}`;
     axiosConfig.headers['X-XSRF-TOKEN'] = token;
   }
-  if(method === axiosMethod.GET || method === axiosMethod.DELETE){
-    
-    axiosConfig.query = data;
+  if(method === axiosMethod.GET){
+   
+  }
+  else if(method === axiosMethod.DELETE){
+    axiosConfig.params = {
+      id: data
+    };
   }
   else{
+    console.log("gello posst");
     axiosConfig.data = data;
   }
   

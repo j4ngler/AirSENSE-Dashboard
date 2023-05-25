@@ -46,8 +46,8 @@ class Oauthen2 extends CommonModel {
             } )
         } );
     }
-    actionLogin(token){
-        AxiosSupport.getInformationUser(API_GET_USER,token)
+    async actionLogin(token){
+        await AxiosSupport.getMethod(API_GET_USER,token)
           .then((res)=> {
             var authen2 = squel.insert().into("oauthen2")
                 .set("permission_id",res.data.user.permission_id)

@@ -10,3 +10,8 @@ export const getGeolocation = async () => {
       return "0.0.0.0";
     }        
   }
+
+export const convertDate = (time)=>{
+  const date = new Date(time);
+  return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
+}
