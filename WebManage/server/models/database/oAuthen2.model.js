@@ -60,7 +60,7 @@ class Oauthen2 extends CommonModel {
                 .set("created_at",'NOW()',{dontQuote: true})
                 .set("time_release",'NOW() + INTERVAL 1 DAY',{dontQuote: true});
         console.log("<TableManifest.NEW_REGISTER",manifestid);
-        if(manifestid<TableManifest.NEW_REGISTER) {
+        if(manifestid<=TableManifest.NEW_REGISTER) {
                 
                 knex.raw(authen2.toString())
                 .then(function(x) {
@@ -81,7 +81,7 @@ class Oauthen2 extends CommonModel {
         } 
         else 
         {
-            var sqlMain="SELECT users_id FROM user WHERE delete_flag=0 and id_created="+current_id;
+            var sqlMain="SELECT user_id FROM user WHERE delete_flag=0 and id_created="+current_id;
             if(manifestid<TableManifest.ADMIN)
             {
                     sqlMain +=" UNION "+ "SELECT id_member FROM decentralization_access WHERE id_admin="+current_id
@@ -89,7 +89,7 @@ class Oauthen2 extends CommonModel {
             }
             knex.raw(sqlMain).then(function(x) {
                 for(var i=0;i<x[0].length;i++){
-                    listDataContain+=","+x[0][i].users_id; 
+                    listDataContain+=","+x[0][i].user_id; 
                 }
                 var sqlMain1="SELECT enterprise_id FROM decentralization_access WHERE deleteflag=0 and id_member="+current_id;
                 if(manifestid<TableManifest.ADMIN)
