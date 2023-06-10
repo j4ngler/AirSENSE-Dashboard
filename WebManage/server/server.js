@@ -26,6 +26,14 @@ mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:passwor
     console.log('Could not connect to the database. Exiting now...', err);
 });
 
+(async () => {
+  try {
+    await RedisClient.connect();
+    console.log("Successfully connect to redis")
+  } catch (err) {
+    console.log("Failed to connect to redis")
+  }
+})();
 
 //set view engine 
 app.use(express.static(__dirname + '/public'));
