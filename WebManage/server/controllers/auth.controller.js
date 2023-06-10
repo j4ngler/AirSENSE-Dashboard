@@ -359,4 +359,7 @@ authCtrl.newPassword = async (req, res) => {
     }
   }
 };
+
+
+
 module.exports = authCtrl;

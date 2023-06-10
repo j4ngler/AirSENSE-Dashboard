@@ -80,12 +80,33 @@ module.exports = {
     // avatar: Joi.string().required(),
   }),
 
-  //validate info before update
-  updateInfo: Joi.object({
-    customer_id: Joi.number().required(),
-    userName: Joi.string().required(),
-    fullName: Joi.string().required(),
-    contact: Joi.string().required(),
-    address: Joi.string().required()
+  //validate customer info before update
+  updateCustomerInfo: Joi.object({
+    customer_id: Joi.number(),
+    // email: Joi.string(),
+    userName: Joi.string(),
+    fullName: Joi.string(),
+    contact: Joi.string(),
+    address: Joi.string(),
+    phoneNumber: Joi.string(),
+    updated_at: Joi.date()
   }),
+
+  //validate user info
+  updateUserInfo: Joi.object({
+    user_id: Joi.number(),
+    userName: Joi.string(),
+    fullName: Joi.string(),
+    address: Joi.string(),
+    phoneNumber: Joi.string(),
+    updated_at: Joi.date()
+  }),
+
+
+  //validate password after changing
+  changeCusPass: Joi.object({
+    email: Joi.string(),
+    old_password: Joi.string(),
+    new_password: Joi.string()
+  })
 };

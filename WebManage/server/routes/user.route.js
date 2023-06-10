@@ -9,7 +9,13 @@ const router = express.Router();
     userCtrl.mqtt(req, res);
   })
 
+  //user information
+  router.route('/update_info').put(validate(schema.updateUserInfo),isAuthenticated, (req, res) => {
+    userCtrl.updateInfo(req, res)
+  });
 
+
+  //
   router.route('/report').post(isAuthenticated, (req, res) => {
       userCtrl.getTableData(req, res);
   });

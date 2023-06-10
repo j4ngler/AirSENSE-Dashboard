@@ -826,4 +826,47 @@ userCtrl.getListUser = (req,res) => {
         })
 };
 
+//update user information
+userCtrl.updateInfo = async(req, res) => {
+  const user_id = req.body.user_id;
+  // const email = req.body.email;
+  const fullname = req.body.fullName;
+  const username = req.body.userName;
+  const address = req.body.address;
+  const phone_number = req.body.phoneNumber;
+  // const is_updated = new Date();
+
+  //check if user existed
+  const checkUser = squel.select().from("user")
+                            .where("user_id='"+ user_id +"'")
+                            .where("delete_flag = 0");
+  const existedUser = await knex.raw(checkUser.toString());
+
+  if(!existedUser) {
+    return res.status(208).json({ message: "User not existed!"});
+  }
+
+  //update customer info
+  await knex("user")
+    .where({'user_id': user_id})
+    .update({
+      'fullname':fullname, 
+      'username':username, 
+      'address':address, 
+      'phone_number': phone_number,
+      'updated_at': new Date(),
+    })
+    .then((user) => {
+      console.log('check',user)
+      return res.status(200).json({
+        message: 'Update user info successfully !'
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(500).json({message: 'Update failed !', error});
+    })
+
+  }
+
 module.exports = userCtrl;

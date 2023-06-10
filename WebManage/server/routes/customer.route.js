@@ -105,9 +105,15 @@ router.route("/register").post(isAuthenticated, (req, res) => {
   customerCtrl.registerUser(req, res);
 });
 
-router.route("/update_info").put(validate(schema.updateInfo), isAuthenticatedCustomer, (req, res) => {
+router.route("/update_info").put(validate(schema.updateCustomerInfo), isAuthenticatedCustomer, (req, res) => {
   customerCtrl.updateInfo(req,res);
 });
+
+router.route("/change_password").put(validate(schema.changeCusPass), isAuthenticatedCustomer, (req, res) => {
+  customerCtrl.changePassword(req, res);
+})
+
+
 
 
 // education

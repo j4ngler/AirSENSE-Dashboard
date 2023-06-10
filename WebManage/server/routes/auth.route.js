@@ -265,11 +265,12 @@ router.route("/generateTocken").post((req, res) => {
 
 router
   .route("/customer_register")
-  .post(validate(schema.registerCustomer), authenNewUser, async (req, res, next) => {
+  .post(validate(schema.registerCustomer), async (req, res, next) => {
+    console.log('abc',registerCustomer[0]);
     customerCtrl.registerCustomer(req, res);
   });
 
-//reset password customer
+//reset password customer when forget password
 router.route("/reset_password").post(authCtrl.resetPassword);
 router.route("/new_password").post(authCtrl.newPassword);
 
