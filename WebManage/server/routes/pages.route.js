@@ -231,4 +231,8 @@ router.get("/login/customer", (req, res) => {
 router.get("/login/user", (req, res) => {
   res.render("authen/login");
 });
+
+router.get("/user_info", (req, res) => {
+  res.render("user/userInfo");
+})
 module.exports = router;
