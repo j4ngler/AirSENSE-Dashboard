@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%include ../Layout/header.ejs%>
+    <title>Thông tin người dùng</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333333;
+        text-align: center;
+      }
+
+      .user-card {
+        margin-top: 74px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .user-card img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 20px;
+        display: block;
+      }
+
+      .user-card h2 {
+        color: #333333;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .user-card p {
+        color: #666666;
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+      .nav-tabs {
+        color: #333333 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <%include ../Layout/topbar.ejs%>
+    <!-- Nav tabs -->
+    <div id="userInfo" class="user-card">
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button
+            class="nav-link active"
+            id="nav-home-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#user-info"
+            type="button"
+            role="tab"
+            aria-controls="nav-home"
+            aria-selected="true"
+          >
+            Thông tin người dùng
+          </button>
+          <button
+            class="nav-link"
+            id="nav-profile-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-profile"
+            type="button"
+            role="tab"
+            aria-controls="nav-profile"
+            aria-selected="false"
+          >
+            Thay đổi thông tin người dùng
+          </button>
+          <button
+            class="nav-link"
+            id="nav-profile-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#nav-profile"
+            type="button"
+            role="tab"
+            aria-controls="nav-profile"
+            aria-selected="false"
+          >
+            Thay đổi mật khẩu
+          </button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div
+          class="tab-pane fade show active"
+          id="user-info"
+          role="tabpanel"
+          aria-labelledby="nav-home-tab"
+        >
+          ...
+        </div>
+        <div
+          class="tab-pane fade"
+          id="nav-profile"
+          role="tabpanel"
+          aria-labelledby="nav-profile-tab"
+        >
+          ...
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  function showUser(loadconf) {
+    const data = `
+    <div class="container">
+      <div class="row">
+        <div class="col-4">Fullname: </div>
+        <div class="col-8">${loadconf.fullname}</div>
+      </div>
+      <div class="row">
+        <div class="col-4">Username: </div>
+        <div class="col-8"> ${loadconf.username}</div>
+      </div>
+      <div class="row">
+        <div class="col-4">Email:</div>
+        <div class="col-8">${loadconf.email}</div>
+      </div><div class="row">
+        <div class="col-4">Phone number:</div>
+        <div class="col-8">${loadconf.phone_number}</div>
+      </div>
+      <div class="row">
+        <div class="col-4">Address:</div>
+        <div class="col-8">${loadconf.address}</div>
+      </div>
+    </div>`;
+    $("#user-info").html(data);
+  }
+  function userInfo() {
+    getInfoHtml("/api/auth/user", (dataJson) => {
+      showUser(dataJson.user);
+    });
+  }
+
+  userInfo();
+</script>
