@@ -8,6 +8,9 @@ const router = express.Router();
 const multer = require("multer");
 const files = require("../utils/files.js");
 const urlStaticLink = require("../config/urlSetting.js");
+const validate = require("../config/joi.validate.js");
+const schema = require("../utils/validator.js");
+const { Schema } = require("mongoose");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -101,6 +104,16 @@ router.route("/manager_update").post(isAuthenticatedCustomer, (req, res) => {
 router.route("/register").post(isAuthenticated, (req, res) => {
   customerCtrl.registerUser(req, res);
 });
+
+router.route("/update_info").put(validate(schema.updateCustomerInfo), isAuthenticatedCustomer, (req, res) => {
+  customerCtrl.updateInfo(req,res);
+});
+
+router.route("/change_password").put(validate(schema.changeCusPass), isAuthenticatedCustomer, (req, res) => {
+  customerCtrl.changePassword(req, res);
+})
+
+
 
 
 // education

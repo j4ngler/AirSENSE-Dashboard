@@ -28,6 +28,9 @@ const option = {
     pass: process.env.MAIL_PASSWORD, // password
   },
 };
+
+
+
 var transporter = nodemailer.createTransport(option);
 
 var authCtrl = {};
@@ -59,15 +62,17 @@ authCtrl.login = function (req, res) {
   })
     .fetch({ require: false })
     .then((user) => {
-      // console.log(user);
       if (user) {
         lstLogin = lstLogin.filter((o) => o.email != email);
         // console.log(user);
         bcrypt
           .compare(password, user.get("password"))
           .then(function (result) {
-            console.log("user Inval",result);
-            if (result) oauthen2.responseLogin(res, user);
+            // console.log("user Inval",result);
+            // console.log(user)
+            if (result) {
+              oauthen2.responseLogin(res, user);
+            }
             else
               return returnNotAuthen(res, {
                 success: false,
@@ -139,7 +144,9 @@ authCtrl.loginCustomer = function (req, res) {
         bcrypt
           .compare(password, user.get("password"))
           .then(function (result) {
-            if (result) oAuthen2Customer.responseLogin(res, user);
+            if (result) {
+              oAuthen2Customer.responseLogin(res, user);
+            }
             else
               return returnNotAuthen(res, {
                 success: false,
@@ -180,6 +187,8 @@ authCtrl.logOut = function (req, res) {
   console.log(SQL);
 };
 
+
+//reset your password 
 authCtrl.resetPassword = async (req, res) => {
   const email = req.body.email;
   try {
@@ -236,6 +245,22 @@ authCtrl.resetPassword = async (req, res) => {
               } else {
                 //nếu thành công
                 console.log("Email sent: " + info.response);
+
+                var authen2 = squel
+                  .insert()
+                  .into("reset_password")
+                  // .set("id", 1)
+                  .set("user_type", 2)
+                  .set("user_id", userId)
+                  .set("token_reset", token)
+                  .set("delete_flag", 0)
+                  .set("created_at", "NOW()", { dontQuote: true })
+                  .set("time_release", "NOW() + INTERVAL 1 HOUR", {
+                    dontQuote: true,
+                  });
+                console.log(authen2.toString());
+
+
                 await knex
                   .raw(`select * from reset_password where user_id= ?`, [
                     userId,
@@ -261,19 +286,8 @@ authCtrl.resetPassword = async (req, res) => {
                         });
                     }
                   });
-                var authen2 = squel
-                  .insert()
-                  .into("reset_password")
-                  .set("id", 1)
-                  .set("user_type", 2)
-                  .set("user_id", userId)
-                  .set("token_reset", token)
-                  .set("delete_flag", 0)
-                  .set("created_at", "NOW()", { dontQuote: true })
-                  .set("time_release", "NOW() + INTERVAL 1 HOUR", {
-                    dontQuote: true,
-                  });
-                console.log(authen2.toString());
+
+                
                 await knex
                   .raw(authen2.toString())
                   .then(function (data) {
@@ -300,6 +314,9 @@ authCtrl.resetPassword = async (req, res) => {
     res.status(HttpStatus.BAD_GATEWAY).json({ message: "Loi server" });
   }
 };
+
+
+//get new password 
 authCtrl.newPassword = async (req, res) => {
   const dataUser = req.body.data;
 
@@ -311,12 +328,16 @@ authCtrl.newPassword = async (req, res) => {
     const tokenDB = result[0][0].token_reset;
     console.log(tokenDB);
     console.log(dataUser.token);
+
+    const salt = bcrypt.genSaltSync(12);
+    const hashPass = await bcrypt.hash(dataUser.password, salt); 
+
     if (tokenDB === dataUser.token) {
       var authen = squel
         .update()
         .table("customer")
         .where("customer_id=?", squel.str(dataUser.user_id))
-        .set("password", squel.str(dataUser.password))
+        .set("password", hashPass)
         .toString();
       console.log("updateDataauthen.toString() ", authen);
       knex
@@ -338,4 +359,7 @@ authCtrl.newPassword = async (req, res) => {
     }
   }
 };
+
+
+
 module.exports = authCtrl;

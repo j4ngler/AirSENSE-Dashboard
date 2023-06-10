@@ -24,7 +24,7 @@ module.exports = {
     fullname: Joi.string().required(),
     phone: Joi.string().required(),
     contact: Joi.string().required(),
-    avartar: Joi.string(),
+    avatar: Joi.string(),
   }),
 
   changePassword: Joi.object({
@@ -40,12 +40,14 @@ module.exports = {
   }),
 
   register: Joi.object({
-    name: Joi.string().required(),
-    fullname: Joi.string().min(4).required(),
+    userName: Joi.string().required(),
+    fullName: Joi.string().min(4).required(),
     email: Joi.string().required(),
-    contact: Joi.string().required(),
+    // contact: Joi.string().required(),
     phoneNumber: Joi.string().min(6).required(),
     password: Joi.string().min(6).required(),
+    address: Joi.string().required(),
+    // avatar: Joi.string().required(),
   }),
 
   storeEnterprise: Joi.object({
@@ -74,6 +76,37 @@ module.exports = {
     address: Joi.string().required(),
     phoneNumber: Joi.string().min(6).required(),
     contact: Joi.string().required(),
-    username: Joi.string().required(),
+    userName: Joi.string().required(),
+    // avatar: Joi.string().required(),
   }),
+
+  //validate customer info before update
+  updateCustomerInfo: Joi.object({
+    customer_id: Joi.number(),
+    // email: Joi.string(),
+    userName: Joi.string(),
+    fullName: Joi.string(),
+    contact: Joi.string(),
+    address: Joi.string(),
+    phoneNumber: Joi.string(),
+    updated_at: Joi.date()
+  }),
+
+  //validate user info
+  updateUserInfo: Joi.object({
+    user_id: Joi.number(),
+    userName: Joi.string(),
+    fullName: Joi.string(),
+    address: Joi.string(),
+    phoneNumber: Joi.string(),
+    updated_at: Joi.date()
+  }),
+
+
+  //validate password after changing
+  changeCusPass: Joi.object({
+    email: Joi.string(),
+    old_password: Joi.string(),
+    new_password: Joi.string()
+  })
 };

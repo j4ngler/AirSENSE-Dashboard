@@ -12,6 +12,9 @@ const {
   returnOKCustom,
 } = require("../utils/returnResponse.js");
 const { uploadFileS3 } = require("../models/S3UploadFile.js");
+// const customer = require("../models/database/customer.model");
+
+
 
 var customerCtrl = {};
 
@@ -323,65 +326,120 @@ customerCtrl.updateData = async function (req, res) {
     });
 };
 
-customerCtrl.registerUser = function (req, res) {
-  var table = "customer";
-  var tableSelect = mangerModelUser(table);
-  if (!!tableSelect) {
-    var tableSelect = mangerModelUser(table);
-    if (
-      !tableSelect.checkDataAddDatabase(
-        req.currentUser.manifestid,
-        tableSelect.getTypeTable()
-      )
-    ) {
-      return returnNotFound(res, { message: "Database inval" });
-    }
-    var checkInaval = tableSelect.checkManifestSpecialCustomer("edit");
-    if (!checkInaval) {
-      return returnNotFound(res, { message: "Database Not Acess 2" });
-    }
-    checkDatataBaseInval = true;
-    var userToget = squel
-      .select()
-      .from("customer")
-      .where(
-        squel
-          .expr()
-          .and("phone='" + req.body["phone"] + "'")
-          .or("email='" + req.body["email"] + "'")
-      )
-      .where("delete_flag=0");
+// customerCtrl.registerUser = function (req, res) {
+//   var table = "customer";
+//   var tableSelect = mangerModelUser(table);
+//   if (!!tableSelect) {
+//     var tableSelect = mangerModelUser(table);
+//     if (
+//       !tableSelect.checkDataAddDatabase(
+//         req.currentUser.manifestid,
+//         tableSelect.getTypeTable()
+//       )
+//     ) {
+//       return returnNotFound(res, { message: "Database inval" });
+//     }
+//     var checkInaval = tableSelect.checkManifestSpecialCustomer("edit");
+//     if (!checkInaval) {
+//       return returnNotFound(res, { message: "Database Not Acess 2" });
+//     }
+//     checkDatataBaseInval = true;
+//     var userToget = squel
+//       .select()
+//       .from("customer")
+//       .where(
+//         squel
+//           .expr()
+//           .and("phone='" + req.body["phone"] + "'")
+//           .or("email='" + req.body["email"] + "'")
+//       )
+//       .where("delete_flag=0");
 
-    knex.raw(userToget.toString()).then(
-      (result) => {
-        let data = req.body;
-        let dataUser = tableSelect.getFieldToAdd(); //  DataTableFieldAdd[table];
-        var authen = squel.insert().into(tableSelect.getNameTable());
-        for (var i = 0; i < dataUser.valueSetup.length; i++) {
-          let item = dataUser.valueSetup[i];
-          if (!!!data[item]) authen.set(item, null);
-          else authen.set(item, data[item]);
-        }
-        authen
-          .set("id_created", 0)
-          .set("id_updated", 0)
-          .set("created_at", "NOW()", { dontQuote: true })
-          .set("updated_at", "NOW()", { dontQuote: true })
-          .set("delete_flag", 0);
-        knex.raw(authen.toString()).then(
-          (result) => {
-            return returnOK(res, { result: "Please waitting admin comfirm" });
-          },
-          (error) => {
-            return returnFalse(res, error);
-          }
-        );
-      },
-      (error) => {
-        return returnFalse(res, { message: "phone and email is existing" });
+//     knex.raw(userToget.toString()).then(
+//       (result) => {
+//         let data = req.body;
+//         let dataUser = tableSelect.getFieldToAdd(); //  DataTableFieldAdd[table];
+//         var authen = squel.insert().into(tableSelect.getNameTable());
+//         for (var i = 0; i < dataUser.valueSetup.length; i++) {
+//           let item = dataUser.valueSetup[i];
+//           if (!!!data[item]) authen.set(item, null);
+//           else authen.set(item, data[item]);
+//         }
+//         authen
+//           .set("id_created", 0)
+//           .set("id_updated", 0)
+//           .set("created_at", "NOW()", { dontQuote: true })
+//           .set("updated_at", "NOW()", { dontQuote: true })
+//           .set("delete_flag", 0);
+//         knex.raw(authen.toString()).then(
+//           (result) => {
+//             return returnOK(res, { result: "Please waitting admin comfirm" });
+//           },
+//           (error) => {
+//             return returnFalse(res, error);
+//           }
+//         );
+//       },
+//       (error) => {
+//         return returnFalse(res, { message: "phone and email is existing" });
+//       }
+//     );
+//   }
+// };
+
+//register new customer
+customerCtrl.registerCustomer = async function( req, res ) {
+  const username = req.body.userName ? req.body.userName : null;
+  const fullname = req.body.fullName ? req.body.fullName : null;
+  const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
+  const email = req.body.email ? req.body.email : null;
+  const password = req.body.password ? req.body.password : null;
+  const address = req.body.address ? req.body.address : null;
+  const contact = req.body.contact ? req.body.contact : null;
+  const created_at = new Date();
+  const updated_at = new Date();
+  const id_created = 0;
+  const id_updated = 0;
+  const delete_flag = 0;
+  
+  //hash password before save to database
+  const salt = bcrypt.genSaltSync(12);
+  const hashPass = await bcrypt.hash(password, salt); 
+
+  //check email and phone number existed?
+  await knex
+    .raw(" SELECT * FROM customer WHERE email = ?", [email])
+    .then(async (customer) => {
+      if( customer[0].length > 0 ) {
+        console.log('123',customer[0]);
+        return res.status(208).json({ message: "Email existed!"});
       }
-    );
-  }
+      else {
+        await knex("customer")
+          .insert({
+            username,
+            fullname,
+            phone_number,
+            email,
+            password: hashPass,
+            address,
+            contact,
+            // permission_id,
+            created_at,
+            updated_at,
+            id_created,
+            id_updated,
+            delete_flag
+          })
+          .then((customer) => {
+            return res.status(200).json({ message: "Register succesfully!" });
+          })
+          .catch((err) => {
+            console.log(err);
+            return res.status(500).json({ message: "An error occured, please try again!"})
+          });
+      }
+    });
 };
 
 customerCtrl.resetPass = async function (req, res) {
@@ -399,23 +457,23 @@ customerCtrl.resetPass = async function (req, res) {
   ////mailBoxSupport.sendEmailNomal(result[0]["add_table"].email,"please comfirm email "+result[0]["add_table"].forgot_pass_token)
 };
 
-customerCtrl.changePassword = async function (req, res) {
-  //var acount="SELECT * FROM users " +request.body;
-  var authen = squel
-    .select()
-    .from("customer")
-    .where("email='" + data["email"] + "'")
-    .where("forgot_pass_token='" + data["forgot_pass_token"] + "'")
-    .where("delete_flag=0");
-  var result = await knex.raw(authen.toString());
-  if (result == null || result.length == 0) {
-    return returnNotFound(res, { message: "acao Not exitting " });
-  }
-  result[0][0].currentUser = { users_id: 0 };
-  result[0][0].table = "customer";
-  //mailBoxSupport.sendEmailNomal(result[0]["add_table"].email,"đổi mat khau thanh cong")
-  updateData(result[0][0], res);
-};
+// customerCtrl.changePassword = async function (req, res) {
+//   //var acount="SELECT * FROM users " +request.body;
+//   var authen = squel
+//     .select()
+//     .from("customer")
+//     .where("email='" + data["email"] + "'")
+//     .where("forgot_pass_token='" + data["forgot_pass_token"] + "'")
+//     .where("delete_flag=0");
+//   var result = await knex.raw(authen.toString());
+//   if (result == null || result.length == 0) {
+//     return returnNotFound(res, { message: "acao Not exitting " });
+//   }
+//   result[0][0].currentUser = { users_id: 0 };
+//   result[0][0].table = "customer";
+//   //mailBoxSupport.sendEmailNomal(result[0]["add_table"].email,"đổi mat khau thanh cong")
+//   updateData(result[0][0], res);
+// };
 
 customerCtrl.getAllAdvertisementContent = async function (req, res) {
   var sql =
@@ -498,6 +556,10 @@ customerCtrl.getAllInfoServices = async function (req, res) {
 };
 
 const oAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
+const { CostExplorer } = require("aws-sdk");
+const { exceptions, error } = require("winston");
+const User = require("../models/database/user.model.js");
+const Customer = require("../models/database/customer.model.js");
 
 customerCtrl.setTheBillData = async function (req, res) {
   try {
@@ -632,5 +694,91 @@ function getAllInfoProductInList(product_group, start, end) {
     ";";
   return sql;
 }
+
+//update customer information
+customerCtrl.updateInfo = async(req, res) => {
+  const customer_id = req.body.customer_id;
+  // const email = req.body.email;
+  const fullname = req.body.fullName;
+  const username = req.body.userName;
+  const address = req.body.address;
+  const contact = req.body.contact;
+  const phone_number = req.body.phoneNumber;
+  // const is_updated = new Date();
+
+  const checkCustomer= squel.select().from("customer")
+                            .where("customer_id='"+ customer_id +"'")
+                            .where("delete_flag = 0");
+  const existedCustomer = await knex.raw(checkCustomer.toString());
+  // console.log('abcde', existedCustomer[0]);
+
+  // const existedCustomer = customer.existedCustomer();
+  // console.log(existedCustomer)
+
+
+  if(!existedCustomer) {
+    return res.status(208).json({ message: "Customer not existed!"});
+  }
+
+//update customer info
+  await knex("customer")
+    .where({'customer_id': customer_id})
+    .update({
+      'fullname':fullname, 
+      'username':username, 
+      'address':address, 
+      'contact':contact,
+      'phone_number': phone_number,
+      'updated_at': new Date(),
+    })
+    .then((customer) => {
+      console.log('check',customer)
+      return res.status(200).json({
+        message: 'Update customer info successfully !'
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(500).json({message: 'Update failed !', error});
+    })
+  };
+
+
+
+//change customer password after login
+  customerCtrl.changePassword = async(req, res) => {
+    const {email, old_password, new_password} = req.body;
+
+    //check old password if correct
+    await Customer.query({'email': {email} })
+                  .then(()=> {
+                    bcrypt.compare(old_password, Customer.get("password"), (result, error) => {
+                      if(error) {
+                        return res.status(500).json('Error occured');
+                      }
+                      if(!result) {
+                        return res.status(401).json('Invalid password');
+                      }
+                    })
+                  })
+    console.log('email', email)
+
+    const newPass = await bcrypt.hash(new_password, 12, (error, hash) => {
+      console.log('new pass', hash)
+      if(error) {
+        return res.status(500).json('Error occured');
+      }
+      knex("customer").where({email: {email} })
+                      .update({'password': hash})
+                      .then(() => {
+                        return res.status(200).json('Change password succesfully')
+                      })
+                      .catch((err) => {
+                        return res.json({err})
+                      })
+    })
+    return newPass;                                     
+  }
+
 
 module.exports = customerCtrl;

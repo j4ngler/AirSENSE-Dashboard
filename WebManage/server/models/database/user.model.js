@@ -34,14 +34,14 @@ class User extends CommonModel {
   };
   getTypeTable() {
     return TypeModel.SELL_PRODUCT;
-  }
+  };
   customerAcess() {
     return {
       edit: CustomerAcess.NOT_ACESS,
       add: CustomerAcess.NOT_ACESS,
       view: CustomerAcess.NOT_ACESS,
     };
-  }
+  };
   getFieldToAdd() {
     return {
       valueSetup: [
@@ -109,7 +109,7 @@ class User extends CommonModel {
   async checkValueEmailData(email) {
     var squelGet = squel
       .select()
-      .from("users")
+      .from("user")
       .where('email="' + email + '"')
       .where("delete_flag=0");
     var info = await knex.raw(squelGet.toString());
@@ -119,15 +119,45 @@ class User extends CommonModel {
     return false;
   }
 
-  async checkInvalUserExistingToRegister(request) {
+  // async checkInvalUserExistingToRegister(request) {
+  //   var checkInfo = squel
+  //     .select()
+  //     .from("user")
+  //     .where(
+  //       squel
+  //         .expr()
+  //         .and("phone_number='" + request["phone_number"] + "'")
+  //         .or("email='" + request["email"] + "'")
+  //     );
+  //   var info = await knex.raw(checkInfo.toString());
+  //   if (info != null && info.length > 0) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  // async checkUserExistingToRegister (req) {
+  //   var Info = squel
+  //     .select()
+  //     .from("user")
+  //     .where(
+  //       squel
+  //         .expr()
+  //         .and("user.phone_number" == req)
+  //         .or("user.email" == req)
+  //     )
+  // }
+
+
+  async checkExistingUser(req) {
     var checkInfo = squel
       .select()
-      .from("users")
+      .from("user")
       .where(
         squel
           .expr()
-          .and("phoneNumber='" + request["phoneNumber"] + "'")
-          .or("email='" + request["email"] + "'")
+          .and("phone_number='" + req["phone_number"] + "'")
+          .or("email='" + req["email"] + "'")
       );
     var info = await knex.raw(checkInfo.toString());
     if (info != null && info.length > 0) {
@@ -147,5 +177,6 @@ class User extends CommonModel {
           })
   }
 }
+
 
 module.exports = User;

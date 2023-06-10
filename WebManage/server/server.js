@@ -14,9 +14,10 @@ const { password } = require('./config/mongoConfig.js');
 });*/
 // const fileUpload = require('express-fileupload')
 // app.use(fileUpload());
-// app.use(express.static('public'));
+// app.use(express.static('public'));\
 
 
+mongoose.set('strictQuery', false);
 mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:password}).then(() => {
     console.log("Successfully connected to the database");
 }).catch(err => {
@@ -26,7 +27,8 @@ mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:passwor
 });
 
 
-
+//set view engine 
+app.use(express.static(__dirname + '/public'));
 
 // Router
 app.use('/api', routes);

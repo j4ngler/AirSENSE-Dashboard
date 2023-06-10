@@ -65,16 +65,52 @@
     <div id="linktoLogin" href="#" class="appointment-btn scrollto">
       <span class="d-none d-md-inline" onclick="onLogin()">Đăng nhập</span>
     </div>
+
+    <div>
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li class="dropdown">
+            <button
+              type="button"
+              class="btn btn-light"
+              id="userAcount"
+            ></button>
+            <ul>
+              <li><a href="/user_info">User Acount</a></li>
+              <li><a href="#" onclick="userLogout()">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </header>
 <script>
+  $(function () {
+    $('[data-toggle="popover"]').popover();
+  });
+
+  function userLogout() {
+    localStorage.removeItem("token_AIRSENSE", "user_name", "user_email");
+    window.location.href = "/";
+  }
+
+  if (localStorage.token_AIRSENSE) {
+    document.getElementById("linktoLogin").style.visibility = "hidden";
+    document.getElementById("userAcount").style.visibility = "visible";
+    document.getElementById("userAcount").innerText = localStorage.user_name;
+  } else {
+    document.getElementById("userAcount").style.visibility = "hidden";
+    document.getElementById("linktoLogin").style.visibility = "visible";
+  }
   function onLogin() {
     Swal.fire({
       title: "<strong>Tùy chọn đăng nhập</strong>",
       icon: "info",
       html:
         `<button class="btn btn-success btn-lg" onclick="onLoginAdmin()">Admin</button> ` +
-        `<button  class="btn btn-primary btn-lg" onclick="onLoginCustomer()">Customer</button> `,
+        `<button  class="btn btn-primary btn-lg" onclick="onLoginCustomer()">Customer</button> ` +
+        `<button  class="btn btn-primary btn-lg" onclick="onLoginUser()">User</button> `,
       showConfirmButton: false,
       showCloseButton: true,
       // showCancelButton: true,
@@ -90,6 +126,9 @@
   }
   function onLoginCustomer() {
     window.location.href = "http://localhost:3000/login/customer";
+  }
+  function onLoginUser() {
+    window.location.href = "http://localhost:3000/login/user";
   }
   function onReloadMenu() {
     var data = localStorage.getItem("cart");

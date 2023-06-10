@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+  <% include ../Layout/header.ejs %>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+        integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro@4cac1a6/css/all.css" rel="stylesheet"
+        type="text/css" />
+    <style>
+        * {
+    box-sizing: inherit;
+}
+
+html {
+    line-height: 1.6;
+    font-family: 'Josefin Sans', sans-serif;
+    box-sizing: border-box;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+<% include ../Layout/topBar.ejs %>
+<div>
+
+    <div class="register-container">
+        <div class="grid wide">
+            <div class="center row">
+                <div class="col col-lg-6 col-md-6 c-12">
+                    <div>
+                        <img src="https://bootstrapious.com/i/snippets/sn-registeration/illustration.svg"
+                            alt="register-img" class="register-img hide-on-mobile">
+                        <h1 class="register-heading">Đăng ký</h1>
+                        <p class="register-description">Đăng ký tài khoản để tham gia khoá học và trải nghiệm nhiều
+                            điều
+                            thú vị hơn</p>
+                    </div>
+                </div>
+                <div class="col col-lg-6 col-md-6 c-12">
+                    <form action="" class="register-form">
+                        <div class="row sm-gutter">
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-group">
+                                    <div>
+                                        <i class="register-icon fad fa-address-card"></i>
+                                    </div>
+                                    <input type="text" class="register-input" id="rfullname" name="rfullname" placeholder="Họ và tên">
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-group">
+                                    <div>
+                                        <i class="register-icon fad fa-user"></i>
+                                    </div>
+                                    <input type="text" class="register-input" id="rname" name="rname" placeholder="Tên người dùng">
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-group">
+                                    <div>
+                                        <i class="register-icon fad fa-envelope"></i>
+                                    </div>
+                                    <input type="email" class="register-input" id="remail" name="remail" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-group">
+                                    <div>
+                                        <i class="register-icon fad fa-mobile"></i>
+                                    </div>
+                                    <input type="tel" class="register-input" id="rphone" name="rphone" placeholder="Số điện thoại">
+                                </div>
+                            </div>
+            
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-group">
+                                    <div>
+                                        <i class="register-icon fad fa-map-marked-alt"></i>
+                                    </div>
+                                    <input type="text" class="register-input" id="raddress" name="raddress" placeholder="Địa chỉ">
+                                </div>
+                            </div>
+
+                            <div class="col col-lg-6 mcol--d12 c-12">
+                                <div class="register-group ">
+                                    <div>
+                                        <i class="register-icon fad fa-lock"></i>
+                                    </div>
+                                    <input type="password" class="register-input register-input-password" id="rpass" name="rpass"
+                                        placeholder="Mật khẩu" required>
+                                    <div class="show-hide-password"><i class="far fa-eye-slash"></i></div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-6 mcol--d12 c-12">
+                                <div class="register-group">
+                                    <div>
+                                        <i class="register-icon fad fa-lock"></i>
+                                    </div>
+                                    <input type="password" class="register-input register-input-password-confirm" id="rcheckpass" name="rcheckpass"
+                                        placeholder="Nhập lại mật khẩu" required>
+                                    <div class="show-hide-password-confirm"><i class="far fa-eye-slash"></i></div>
+
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div>
+                                    <div class="register-btn register-btn-primary" onclick="submitUser()"><span>Đăng ký</span></div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-divider-section">
+                                    <div class="register-divider-line"></div>
+                                    <span class="register-divider-text">HOẶC</span>
+                                    <div class="register-divider-line"></div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-btn register-btn-facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                    <span>Đăng nhập với Facebook</span>
+                                </div>
+
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-btn register-btn-google">
+                                    <svg viewBox="0 0 24 24" width="20" height="20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
+                                            <path fill="#4285F4"
+                                                d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z" />
+                                            <path fill="#34A853"
+                                                d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z" />
+                                            <path fill="#FBBC05"
+                                                d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z" />
+                                            <path fill="#EA4335"
+                                                d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z" />
+                                        </g>
+                                    </svg>
+                                    <span>Đăng nhập với Google</span>
+                                </div>
+                            </div>
+                            <div class="col col-lg-12 col-md-12 c-12">
+                                <div class="register-question">
+                                    <span>Bạn đã có tài khoản?</span>
+                                    <a href="/">Đăng nhập</a>
+                                </div>
+
+                            </div>
+  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <% include ../Layout/footer.ejs %>
+  <script>
+    const password = document.querySelector('.register-input-password');
+    const showHide = document.querySelector('.show-hide-password');
+    const passwordConfirm = document.querySelector('.register-input-password-confirm');
+    const showHideConfirm = document.querySelector('.show-hide-password-confirm');
+
+    showHide.addEventListener('click', () => {
+        if (password.type === 'password') {
+            password.type = 'text';
+            showHide.innerHTML = '<i class="far fa-eye"></i>';
+        } else {
+            password.type = 'password';
+            showHide.innerHTML = '<i class="far fa-eye-slash"></i>';
+        }
+    });
+
+    showHideConfirm.addEventListener('click', () => {
+        if (passwordConfirm.type === 'password') {
+            passwordConfirm.type = 'text';
+            showHideConfirm.innerHTML = '<i class="far fa-eye"></i>';
+        } else {
+            passwordConfirm.type = 'password';
+            showHideConfirm.innerHTML = '<i class="far fa-eye-slash"></i>';
+        }
+    });
+</script>
+    <script>
+      
+    //console.log(dataLink);
+    function validateEmail(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+
+    function submitUser(){
+        if ($('#rfullname').val().length < 4) {
+            alert("độ dài Họ tên lớn hơn 4");
+            return;
+        }
+        if ($('#rpass').val().length < 8) {
+            alert("pass quá ngắn");
+            return;
+        }
+        
+
+        var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        if (!$('#rphone').val().match(phoneno)) {
+            alert("Số điện thoại không hợp lệ");
+            return;
+        }
+        if (!validateEmail($('#remail').val())) {
+            alert("Sai định dạng email");
+            return;
+        }
+
+        if ($('#raddress').val().length < 4) {
+            alert("Xin vui lòng nhập địa chỉ");
+            return;
+        }
+
+                $.ajax({
+                        type: 'post',
+                        method: 'POST',
+                        url: '/api/auth/register',
+                     //   body: JSON.stringify({type:dataView}), // body data type must match "Content-Type" header
+                        data: JSON.stringify( {
+                            userName: $('#rname').val(),
+                            fullName: $('#rfullname').val(),
+                            phoneNumber: $('#rphone').val(),
+                            password: $('#rpass').val(),
+                            email: $('#remail').val(),
+                            address: $('#raddress').val()
+                        }), // body data type must match "Content-Type" header
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        dataType: 'json',
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Beard ' + localStorage.getItem('token'),
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+   
+   
+          success: function(loadcofig) {
+              console.log(loadcofig);
+              console.log(loadcofig);
+              if (loadcofig.message) {
+                  window.location.href = "/";
+                  alert(loadcofig.message)
+              } else {
+                  alert("Thông tin đăng nhập lỗi, Xin vui lòng thử lại");
+              }
+          },
+          complete: function(loadcofig) {
+              console.log(loadcofig.responseText);
+          },
+          error: function(loadcofig) {
+              console.log(loadcofig);
+          }
+      });
+      }
+
+    // When the user clicks anywhere outside of the modal, close it
+    </script>
+    </script>
+</body>
+</html>

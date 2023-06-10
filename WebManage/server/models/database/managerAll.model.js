@@ -42,7 +42,7 @@ const classesFactory = {
   ProductSpec
 };
 const classesFactorryMapping = {
-  user: "User",
+  user: "user",
   customer: "Customer",
   extended_data: "ExtendedData",
   content_group: "GroupContent",

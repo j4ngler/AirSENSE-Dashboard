@@ -61,10 +61,10 @@ class oAuthen2Customer extends CommonModel {
         authen2.set("value_manifest",listDataContain);
         authen2.set("value_service", listDataRole);
         knex.raw(authen2.toString()).then(function(x) {
-            console.log(" knex err1 .....",x);
+            // console.log(" knex err1 .....",x);
             return returnOKCustom(res,{success: true,token:dataTocken,email: user.get('email')});
         }).catch(function(err1){
-            console.log("err1 .....",err1);
+            // console.log("err1 .....",err1);
             return returnNotAuthen(res,err1);
         });
     }
