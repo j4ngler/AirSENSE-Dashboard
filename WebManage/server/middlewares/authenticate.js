@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
       .then((user) => {
         req.currentUser = {
           manifestid: user[0].permission_id,
-          users_id: user[0].user_id,
+          user_id: user[0].user_id,
           enterprise_id: user[0].enterprise_id,
           value_manifest: user[0].value_manifest,
         };
