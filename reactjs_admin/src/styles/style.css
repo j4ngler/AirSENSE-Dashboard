@@ -244,6 +244,10 @@ p.line {
   margin: 10px 0;
 }
 
+.action-account1{
+  margin-top:10px
+}
+
 .modal-modal1 {
   display: flex;
   align-items: center;
@@ -272,6 +276,7 @@ p.line {
 }
 
 .permison-box {
+  margin: 15px;
   width: 220px;
 }
 

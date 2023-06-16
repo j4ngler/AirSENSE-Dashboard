@@ -14,9 +14,8 @@ import { HOST_HTTP } from '../../config/config.js';
 
 const UploadImage = ({ urlImage, uploadfileDataLink }) => {
   const [state, setState] = useState({ link: urlImage });
-
   const uploadImageData = (event) => {
-    console.log('Contentxyz: ' + JSON.stringify(event.target.files));
+    console.log('Contentxyz: ' + JSON.stringify(event.target.files[0]));
     event.preventDefault();
     const data = new FormData();
     data.append('file', event.target.files[0]);
@@ -40,7 +39,7 @@ const UploadImage = ({ urlImage, uploadfileDataLink }) => {
       variant="outlined"
       component="label"
       disableElevation
-      style={{ width: 160, height: 160 }}
+      style={{ width: 160, height: 160, margin: "15px" }}
     >
       <PublishIcon />
       <label style={{ fontSize: 8, lineHeight: 1.6, height: 15 }}>
@@ -56,7 +55,10 @@ const UploadImage = ({ urlImage, uploadfileDataLink }) => {
         }}
         hidden
       />
-      <img src={state.link} width="100px" height="160px" />
+      {state.link &&
+        <img src={state.link} width="100px" height="160px" />
+
+      }
     </Button>
   );
 };

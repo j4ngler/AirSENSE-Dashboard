@@ -83,7 +83,7 @@ export default class Product {
     return {
       mainID: 'product_id',
       mainInfo: {
-        field: 'name',
+        field: 'title',
         headerName: 'Sản phẩm',
         flex: 1,
       },

@@ -19,6 +19,7 @@ const DynamicForm = ({ value, valueDetail, selectTabble, onChange }) => {
   //   console.log('value', value);
   //   console.log('valueDetail', valueDetail);
   //   console.log('selectTable', selectTabble);
+
   if (value.html == TypeDialgueShow.NO_CHECK) {
     return <></>;
   } else if (value.html == TypeDialgueShow.EDIT_TEXT) {

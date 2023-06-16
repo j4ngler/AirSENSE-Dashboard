@@ -10,34 +10,33 @@ import {
 
 export default class Service {
   getColumeShow = (callback) => {
-    //"user_id","name","contactPhoneNumber","province","city","streetaddr","postCode"
     const columns = [
       {
-        field: 'id',
-        headerName: 'stt',
+        field: 'service_order_id',
+        headerName: 'STT',
         width: 140,
       },
       {
-        field: 'name',
-        headerName: 'name',
+        field: 'fullname',
+        headerName: 'customer name',
         width: 200,
       },
       {
-        field: 'content',
-        headerName: 'content',
-        width: 200,
-      },
-      {
-        field: 'title',
-        headerName: 'title',
+        field: 'service_name',
+        headerName: 'service',
         width: 240,
       },
       {
-        field: 'cost',
-        headerName: 'cost',
+        field: 'status',
+        headerName: 'status',
         width: 240,
       },
-
+      {
+        field: 'from_time',
+        headerName: 'from',
+        width: 240,
+      },
+      { field: 'to_time', headerName: 'to', width: 240 },
       {
         field: 'action',
         headerName: 'Thao tác',
@@ -67,48 +66,33 @@ export default class Service {
 
   getInfoToEdit() {
     return {
-      mainID: 'service_id',
+      mainID: 'service_order_id',
       mainInfo: {
-        field: 'name',
-        headerName: 'Sản phẩm',
+        field: 'fullname',
+        headerName: 'Khách hàng',
         width: 200,
       },
       detailEdit: [
         {
-          field: 'name',
-          headerName: 'name',
+          field: 'status',
+          headerName: 'status',
           width: 200,
-        },
-        {
-          field: 'content',
-          headerName: 'content',
-          width: 200,
-        },
-        {
-          field: 'page_service_id',
-          headerName: 'page_service_id',
-          width: 240,
-        },
-        {
-          field: 'cost',
-          headerName: 'cost',
-          width: 240,
         },
       ],
     };
   }
 
   getInfoToAdd() {
-    return ['name', 'content', 'page_service_id', 'cost', 'downloads'];
+    return ['customer_id', 'service_collection_id', 'order_status_id', 'from_time', 'to_time'];
   }
   getTitleToAdd() {
-    return ['name', 'content', 'page_service_id', 'cost', 'downloads'];
+    return ['customer_id', 'service_collection_id', 'order_status_id', 'from_time', 'to_time'];
   }
 
   getHtmlAdd() {
     return [
       TypeDialgueShow.EDIT_TEXT,
-      TypeDialgueShow.EDIT_TEXT,
+      TypeDialgueShow.SELECT_TABLE,
       TypeDialgueShow.SELECT_TABLE,
       TypeDialgueShow.EDIT_TEXT,
       TypeDialgueShow.EDIT_TEXT,
@@ -124,9 +108,9 @@ export default class Service {
     ];
   }
   getTypeSelectTabbleToAdd() {
-    return ['', '', 'content_page', '', ''];
+    return ['customer', 'service_collection', 'order_status', 'service_order_detail', 'service_order_detail'];
   }
   getColumeValidate() {
-    return ['', '', '', 'number', ''];
+    return ['', '', '', '', ''];
   }
 }

@@ -178,7 +178,7 @@ class CommonModel extends bookshelf.Model {
   }
 
   async checkSqlUpdateAdmin(req, data) {
-    var userid = req.currentUser.users_id;
+    var userid = req.currentUser.user_id;
     let dataUser = this.getFieldToDelete(); //  DataTableFieldAdd[table];
     var sqlQuery = squel.update().table(this.getNameTable());
     if (this.getNameTable() == "users") {
