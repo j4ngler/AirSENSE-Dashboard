@@ -115,3 +115,22 @@ clients.map(client => {
 
 
 
+// delete data
+const task = cron.schedule('0 0 0 * * *', async () => {
+  console.log('Cron job chạy vào lúc 12:00AM mỗi ngày!')
+  var current = +new Date()
+  current = Math.floor(current / 1000)
+  const dataGet = await data.findOne().sort('time').exec()
+  const fromTimeDelete = dataGet.time
+  const toTimeDelete = fromTimeDelete + 24*3600
+  console.log(fromTimeDelete)
+  const dataDelete = await data
+    .deleteMany({
+      time: { $gte: fromTimeDelete },
+      time: { $lte: toTimeDelete }
+    })
+    .exec()
+  if (dataDelete && dataDelete.acknowledged === true) {
+    console.log('Đã xóa', dataDelete.deletedCount, 'bản ghi')
+  }
+})
