@@ -90,7 +90,8 @@ class RegisterPage extends Component {
     formData.content_sub_id = this.state.content_sub_id;
     formData.content_img = this.state.image_head;
     formData.group_file = 'group_file';
-    formData.filesave = 'filesave';
+    formData.file_save = 'file_save';
+    formData.set_to_first='1'
     formData.title = this.state.title;
     formData.content = this.state.content;
     // formData.is_main_pages_id = this.state.is_main;
@@ -168,6 +169,7 @@ class RegisterPage extends Component {
             <UploadImage
               urlImage={this.state.image_head}
               uploadfileDataLink={(url) => {
+                console.log("url", url)
                 this.uploadImage(url);
               }}
             />

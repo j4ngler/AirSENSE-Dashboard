@@ -5,7 +5,8 @@ let DataSensor = new Schema({
         type: String
     },
     time: {
-        type: Number
+        type: Number,
+        require:true
     },
     content: {
         type: Object
