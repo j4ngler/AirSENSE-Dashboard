@@ -42,15 +42,14 @@ const EditNomalDialogue = ({ table, dataInput, handleClose }) => {
   if (!!infoTitleInfo.mainInfo) {
     dataInfo =
       infoTitleInfo.mainInfo.headerName +
-      ' :' +
+      ' : ' +
       dataInput[infoTitleInfo.mainInfo.field];
   }
   if (!!infoTitleInfo.mainID) {
     newInfo[infoTitleInfo.mainID] = dataInput[infoTitleInfo.mainID];
   }
   var dataDetail = { header: header, value: newInfo };
-  console.log('dataDetail', dataDetail);
-
+  console.log('Data detail', dataDetail);
   const [state, setState] = useState(dataDetail);
   const onChange = () => {
     var checkValue = checkValidateValue(state.header, state.value);
@@ -95,16 +94,21 @@ const EditNomalDialogue = ({ table, dataInput, handleClose }) => {
         <Typography variant="h6">{`Sửa ` + dataInfo}</Typography>
       </div>
       <Divider />
-      {state.header.map((vars) => (
-        <DynamicForm
-          value={vars}
-          valueDetail={state.value[vars.view]}
-          selectTabble={vars.selectTabble}
-          onChange={(event) => {
-            onchangeValue(event, vars.view);
-          }}
-        />
-      ))}
+      <br />
+      {state.header.map((vars) => {
+        console.log('vars', vars);
+        return (
+          <DynamicForm
+            value={vars}
+            valueDetail={state.value[vars.view]}
+            selectTabble={vars.selectTabble}
+            onChange={(event) => {
+              onchangeValue(event, vars.view);
+            }}
+          />
+        );
+      })}
+      <br />
       <Divider />
       <div className={'action-account1'}>
         <Button

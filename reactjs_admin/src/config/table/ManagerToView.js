@@ -7,7 +7,9 @@ import Product from './Product.table.js';
 import Store from './Store.table.js';
 import SparcSensorData from './SparcSensorData.table.js';
 import SensorDeivceType from './SensorDeviceType.table.js';
-
+import Service from './Service.table.js';
+import OrderStatus from './OrderStatus.table.js';
+import ServiceCollection from './ServiceCollection.table.js';
 import {
   validateEmail,
   validatePhone,
@@ -32,6 +34,9 @@ const classesFactory = {
   SparcSensorData,
   SensorDeivceType,
   SparcAqi,
+  Service,
+  OrderStatus,
+  ServiceCollection,
 };
 const classesFactorryMapping = {
   user: 'User_View',
@@ -46,6 +51,9 @@ const classesFactorryMapping = {
   data_average: 'SparcSensorData',
   sensor_device_type: 'SensorDeivceType',
   sparc_aqi: 'SparcAqi',
+  service_order: 'Service',
+  order_status: 'OrderStatus',
+  service_collection:'ServiceCollection'
 };
 
 export const exportColumeData = (table, callback = null) => {

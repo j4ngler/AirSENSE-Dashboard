@@ -90,7 +90,9 @@ class TableDataView extends Component {
             variant="outlined"
             value={this.state.value_fillter}
             onChange={(event) => {
-              value = event.target.value;
+              this.setState({
+                value_fillter: event.target.value,
+              });
             }}
           />
           <div className="user-control-btn">

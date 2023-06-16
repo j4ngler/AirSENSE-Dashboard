@@ -22,8 +22,8 @@ class PagesContent {
         width: 200,
       },
       {
-        field: 'filesave',
-        headerName: 'filesave',
+        field: 'file_save',
+        headerName: 'file_save',
         width: 200,
       },
       {
@@ -92,8 +92,8 @@ class PagesContent {
           width: 200,
         },
         {
-          field: 'filesave',
-          headerName: 'filesave',
+          field: 'file_save',
+          headerName: 'file_save',
           width: 200,
         },
         {
@@ -129,7 +129,7 @@ class PagesContent {
     return [
       'content_sub_id',
       'group_file',
-      'filesave',
+      'file_save',
       'title',
       'content',
       'content_img',
@@ -141,7 +141,7 @@ class PagesContent {
     return [
       'content_sub_id',
       'group_file',
-      'filesave',
+      'file_save',
       'title',
       'content',
       'content_img',

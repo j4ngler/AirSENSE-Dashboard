@@ -13,7 +13,6 @@ function checkLink(){
 
 
 const messageInfo = (state = initialState, action) => {
-    console.log("messageInfo ....................." ,state);
     const newState = { ...state };
     newState.inChatbox = (window.location.href).includes('chatbox');
 

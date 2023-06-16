@@ -12,7 +12,6 @@ import ManagerData from '../../actions/ManagerData.js';
 
 const SelectGroupContentSub = ({ detailValue, onChange }) => {
   // const [ handleClose] = useState()
-  console.log('Cho nay OK', detailValue);
   var content_sub = ManagerData.getTable('content_sub');
   var content_group = ManagerData.getTable('content_group');
   var idSelect = 0;

@@ -14,10 +14,11 @@
     "dotenv": "^16.0.3",
     "events": "^3.3.0",
     "mongoose": "^6.6.6",
-    "mqtt": "^4.3.2"
+    "mqtt": "^4.3.2",
+    "node-cron": "^3.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.22"
   },
   "husky": {},
   "lint-staged": {

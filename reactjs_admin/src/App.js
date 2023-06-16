@@ -81,7 +81,7 @@ const App = () => {
         )}
       >
         <Resource
-          name="user"
+          name="users"
           options={{ label: 'Tài khoản' }}
           icon={UserIcon}
           list={UserList}
@@ -177,7 +177,7 @@ const App = () => {
         />
         <Resource
           name="extended_data"
-          options={{ label: 'Mỏ rộng', menuParent: 'sensor' }}
+          options={{ label: 'Mở rộng', menuParent: 'sensor' }}
           icon={ShoppingCartIcon}
           list={NomalTable}
         />
@@ -200,6 +200,18 @@ const App = () => {
           list={NomalTable}
         />
 
+        <Resource
+          name="order"
+          options={{ label: 'Order', isMenuParent: true }}
+          icon={ShoppingCartIcon}
+          list={LockScreen}
+        />
+        <Resource
+          name="service_order"
+          options={{ label: 'Danh sách order', menuParent: 'order' }}
+          icon={DetailsIcon}
+          list={NomalTable}
+        />
         <Resource
           name="infoUser"
           options={{ label: 'Thông tin tài khoản' }}
