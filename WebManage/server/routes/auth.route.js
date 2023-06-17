@@ -107,7 +107,6 @@ router.route("/user").get(isAuthenticated, (req, res) => {
       "fullname",
       "phone_number",
       "email",
-      "password",
       "address",
       "avatar",
       "permission_id",
@@ -126,7 +125,7 @@ router.route("/user").get(isAuthenticated, (req, res) => {
 });
 
 router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
-  console.log("req.currentUser", req.currentUser);
+  console.log("req.currentCustomer", req.currentUser);
   Customer.query({
     where: { customer_id: req.currentUser.customer_id },
     select: [
@@ -143,7 +142,7 @@ router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
     .fetch({ require: false })
     .then(async (user) => {
       if (!user) {
-        res.status(HttpStatus.NOT_FOUND).json({ error: "No such user" });
+        res.status(HttpStatus.NOT_FOUND).json({ error: "No such customer" });
       } 
       else {
         let customer = new Customer();
