@@ -120,12 +120,12 @@
    
    
           success: function(loadconfig) {
-              console.log(loadconfig);  
+              console.log("loadconfig",loadconfig);  
               if (loadconfig.token) {
+                console.log(loadconfig)
                   localStorage.setItem("token_AIRSENSE", loadconfig.token);
                   localStorage.setItem("user_email", loadconfig.email);
-                  localStorage.setItem("user_name", loadconfig.user_name);
-                  // localStorage.setItem("username_AIRSENSE", loadconfig.userName);
+                  localStorage.setItem("user_name", loadconfig.userName);
                   window.location.href = "/";
               } else {
                   alert("Thông tin đăng nhập lỗi,Xin vui lòng thử lại");

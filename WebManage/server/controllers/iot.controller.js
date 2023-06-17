@@ -157,7 +157,7 @@ iotCtrl.reportDataStationLimit = function(request, response) {
 };
 
 iotCtrl.getReportStations = function(request, response) {
-            console.log(request.body)
+            console.log("abc",request.body)
             let fromTime = request.body.fromTime;
             let toTime = request.body.toTime;
             let station_id = request.body.station_id;

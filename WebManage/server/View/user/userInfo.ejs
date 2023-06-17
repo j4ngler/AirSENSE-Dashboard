@@ -94,7 +94,7 @@
           </button>
         </div>
       </nav>
-      <div class="tab-content" id="nav-tabContent">
+      <div class="tab-content" id="nav-tabContent" style="margin-top: 20px;">
         <div
           class="tab-pane fade show active"
           id="user-info"
@@ -144,6 +144,7 @@
   }
   function userInfo() {
     getInfoHtml("/api/auth/user", (dataJson) => {
+      console.log(dataJson)
       showUser(dataJson.user);
     });
   }

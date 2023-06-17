@@ -73,10 +73,10 @@
             <button
               type="button"
               class="btn btn-light"
-              id="userAcount"
+              id="userAccount"
             ></button>
             <ul>
-              <li><a href="/user_info">User Acount</a></li>
+              <li><a href="/user_info">User Account</a></li>
               <li><a href="#" onclick="userLogout()">Logout</a></li>
             </ul>
           </li>
@@ -97,8 +97,8 @@
 
   if (localStorage.token_AIRSENSE) {
     document.getElementById("linktoLogin").style.visibility = "hidden";
-    document.getElementById("userAcount").style.visibility = "visible";
-    document.getElementById("userAcount").innerText = localStorage.user_name;
+    document.getElementById("userAccount").style.visibility = "visible";
+    document.getElementById("userAccount").innerText = localStorage.user_name;
   } else {
     document.getElementById("userAcount").style.visibility = "hidden";
     document.getElementById("linktoLogin").style.visibility = "visible";
