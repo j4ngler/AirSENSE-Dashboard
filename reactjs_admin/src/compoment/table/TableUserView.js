@@ -20,6 +20,7 @@ import AddNomalDialogue from '../dialogue/AddNomalDialogue.js';
 import {ActionControl} from '../../utils/commonUtil';
 
 class TableDataView extends Component {
+
     static propTypes = {
         selectChange: PropTypes.func.isRequired,
         table: PropTypes.string.isRequired,

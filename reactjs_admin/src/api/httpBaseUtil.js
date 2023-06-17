@@ -152,6 +152,7 @@ export const deleteOneDataToTable = (table, data) => {
 };
 
 export const updateOneDataInfoTable = (table, data) => {
+  console.log("data",data)
   return httpPostData(
     API_URL + 'users/manager_update',
     Object.assign(data, { table: table })

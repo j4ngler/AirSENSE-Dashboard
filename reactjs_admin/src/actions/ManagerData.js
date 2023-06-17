@@ -30,12 +30,12 @@ let ManagerData = {
   saveInfoUser: {},
   dialogueNomalSave: {},
   dialogueCustomizationSave: {},
-  pubblishMessage(data) {
+  pubblishMessage (data) {
     if (ManagerData.mqtt.client != null) {
       ManagerData.mqtt.client.publish(ManagerData.mqtt.topic_pub, data);
     }
   },
-  checkTableInfoUpdate(table, data) {
+  checkTableInfoUpdate (table, data) {
     if (!!!ManagerData.lstData[table])
       ManagerData.lstData[table] = {
         data: [],
@@ -44,9 +44,8 @@ let ManagerData = {
         dataToFindMain: {},
       };
     ManagerData.lstData[table].data = data;
-    console.log('...', table, data);
   },
-  getTable(table) {
+  getTable (table) {
     if (!!!ManagerData.lstData[table])
       ManagerData.lstData[table] = {
         data: [],
@@ -56,7 +55,7 @@ let ManagerData = {
       };
     return ManagerData.lstData[table].data;
   },
-  setNumberPagesData(table, data) {
+  setNumberPagesData (table, data) {
     if (!!!ManagerData.lstData[table])
       ManagerData.lstData[table] = {
         data: [],
@@ -66,7 +65,7 @@ let ManagerData = {
       };
     ManagerData.lstData[table]['numberPage'] = data;
   },
-  setFindMainData(table, data) {
+  setFindMainData (table, data) {
     if (!!!ManagerData.lstData[table])
       ManagerData.lstData[table] = {
         data: [],
@@ -76,14 +75,15 @@ let ManagerData = {
       };
     ManagerData.lstData[table]['dataToFindMain'] = data;
   },
-  checkDataExistting(table) {
+  checkDataExistting (table) {
     return !!ManagerData.lstData[table];
   },
-  getLstDataPromise(tableName, fillter = null) {
+  getLstDataPromise (tableName, fillter = null) {
     return new Promise((resolve, reject) => {
       getallInfoTable(tableName, fillter)
-        .then((result) => {
+        .then(result => {
           let data = result.data;
+          console.log('data', data);
           if (data.result[0] && data.result[0].id !== undefined)
             for (var i = 0; i < data.result.length; i++) data.result[i].idf = i;
           else {
@@ -95,17 +95,17 @@ let ManagerData = {
           ManagerData.checkTableInfoUpdate(tableName, data.result);
           resolve(data.result);
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error);
         });
     });
   },
-  getDairyChange(tableName, fillter = null) {
+  getDairyChange (tableName, filter = null) {
     return new Promise((resolve, reject) => {
-      getChangeLog(tableName, fillter)
-        .then((result) => {
+      getChangeLog(tableName, filter)
+        .then(result => {
           let data = result.data;
-          if (data.result[0].id !== undefined)
+          if (data?.result[0]?.id !== undefined)
             for (var i = 0; i < data.result.length; i++) data.result[i].idf = i;
           else
             for (var i = 0; i < data.result.length; i++) data.result[i].id = i;
@@ -113,15 +113,15 @@ let ManagerData = {
           ManagerData.checkTableInfoUpdate(tableName, data.result);
           resolve(data.result);
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error);
         });
     });
   },
-  getNumberDataTableDetail(table, addInfo = null) {
+  getNumberDataTableDetail (table, addInfo = null) {
     return new Promise((resolve, reject) => {
       getNumberPageOnTable(table, addInfo)
-        .then((result) => {
+        .then(result => {
           var dataFillter = {};
           for (var i = 0; i < result.detailFillter.length; i++) {
             let dataExame = result.detailFillter[i];
@@ -133,12 +133,12 @@ let ManagerData = {
           ManagerData.setNumberPagesData(table, result.numberPage);
           resolve(result.numberPage);
         })
-        .catch((error) => {
+        .catch(error => {
           reject(error);
         });
     });
   },
-  initdialogueNomal(table, inputToSheetX) {
+  initdialogueNomal (table, inputToSheetX) {
     ManagerData.dialogueNomalSave = {
       titleDialogue: '',
       action: ActionControl.NO_ACTION,
@@ -147,7 +147,7 @@ let ManagerData = {
       tableToManager: table,
     };
   },
-  actionChangeInfoDataDialogueNomal(name, actionSelect) {
+  actionChangeInfoDataDialogueNomal (name, actionSelect) {
     ManagerData.dialogueNomalSave.titleDialogue = name;
     ManagerData.dialogueNomalSave.action = actionSelect;
     if (actionSelect == ActionControl.ACTION_ADD) {
@@ -158,7 +158,7 @@ let ManagerData = {
         ] = null;
     }
   },
-  initdialogueCustomization(table) {
+  initdialogueCustomization (table) {
     ManagerData.dialogueCustomizationSave = {
       titleDialogue: '',
       action: ActionControl.NO_ACTION,
@@ -166,7 +166,7 @@ let ManagerData = {
       tableToManager: table,
     };
   },
-  actionChangeInfoDataDialogueCustomization(name, actionSelect) {
+  actionChangeInfoDataDialogueCustomization (name, actionSelect) {
     ManagerData.dialogueCustomizationSave.titleDialogue = name;
     ManagerData.dialogueCustomizationSave.action = actionSelect;
     if (actionSelect == ActionControl.ACTION_ADD) {
@@ -174,17 +174,17 @@ let ManagerData = {
     }
   },
 
-  selectActionManager(action) {
+  selectActionManager (action) {
     if (ManagerData.callBackFunc != null) ManagerData.callBackFunc(action);
   },
-  getInfoUser() {
+  getInfoUser () {
     if (
       !!!ManagerData.saveInfoUser.is_checked ||
       ManagerData.saveInfoUser.is_checked
     ) {
       ManagerData.saveInfoUser.is_checked = false;
       console.log('Alo');
-      getCurUser().then((infoUser) => {
+      getCurUser().then(infoUser => {
         console.log(infoUser);
         for (var k in infoUser.data.user) {
           ManagerData.saveInfoUser[k] = infoUser.data.user[k];
