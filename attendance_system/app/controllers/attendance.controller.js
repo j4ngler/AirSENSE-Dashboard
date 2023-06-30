@@ -4,7 +4,8 @@ var lastAttendance = []
 class AttendanceController {
     // POST: 
     attendance(req, res,next) {
-        const {user_number} = req.body;
+        const {user_number,ip,mac} = req.body;
+        console.log(req.body);
         lastAttendance.push({user_number:user_number,time: Date.now()});
         var lastAttendance1 = lastAttendance.filter( o => Date.now() - o.time < 1000);
        
@@ -33,6 +34,8 @@ class AttendanceController {
                             user_number: user_number,
                             arrival_time: Date.now(),
                             created_at: Date.now(),
+                            ip: ip ?? null,
+                            
                         })
                         attendance.save()
                             .then(() =>{

@@ -23,6 +23,12 @@ let attendance = new Schema({
       type: Date,
       required: true,
       default: Date.now
+    },
+    ip: {
+      type: String,
+    },
+    mac:{
+      type: String
     }
 });
 
