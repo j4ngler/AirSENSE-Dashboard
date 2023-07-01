@@ -3,25 +3,26 @@ const events = require('events')
 emitter = new events.EventEmitter()
 const config = require('./config/default.json')
 var data = require('./config/data.config')
-const mongoose = require('mongoose')
-const mongoConfig = require('./config/mongoConfig.js')
+// const mongoose = require('mongoose')
+// const mongoConfig = require('./config/mongoConfig.js')
 const BlockMemory = require('./models/BlockMemory')
 require('dotenv').config()
 const cron = require('node-cron')
+
 // Connecting to the database
-mongoose
-  .connect(mongoConfig.dbConfig, {
-    user: mongoConfig.username,
-    pass: mongoConfig.password,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log('Successfully connected to the database')
-  })
-  .catch(err => {
-    console.log('Could not connect to the database. Exiting now...', err)
-  })
+// mongoose
+//   .connect(mongoConfig.dbConfig, {
+//     user: mongoConfig.username,
+//     pass: mongoConfig.password,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+//   })
+//   .then(() => {
+//     console.log('Successfully connected to the database')
+//   })
+//   .catch(err => {
+//     console.log('Could not connect to the database. Exiting now...', err)
+//   })
 
 var SaveFactory = (function () {
   class Save {
@@ -111,27 +112,27 @@ clients.map(client => {
       }
       console.log(infoSave);
 
-      save.save(infoSave)
+      // save.save(infoSave)
     } catch (e) {}
   })
 })
 
 // delete data
-const task = cron.schedule('0 0 0 * * *', async () => {
-  console.log('Cron job chạy vào lúc 12:00AM mỗi ngày!')
-  var current = +new Date()
-  current = Math.floor(current / 1000)
-  const dataGet = await data.findOne().sort('time').exec()
-  const fromTimeDelete = dataGet.time
-  const toTimeDelete = fromTimeDelete + 24 * 3600
-  console.log(fromTimeDelete)
-  const dataDelete = await data
-    .deleteMany({
-      time: { $gte: fromTimeDelete },
-      time: { $lte: toTimeDelete }
-    })
-    .exec()
-  if (dataDelete && dataDelete.acknowledged === true) {
-    console.log('Đã xóa', dataDelete.deletedCount, 'bản ghi')
-  }
-})
+// const task = cron.schedule('*/5 * * * * *', async () => {
+//   console.log('Cron job chạy vào lúc 12:00AM mỗi ngày!')
+//   var current = +new Date()
+//   current = Math.floor(current / 1000)
+//   const dataGet = await data.findOne().sort('time').exec()
+//   const fromTimeDelete = dataGet.time
+//   const toTimeDelete = fromTimeDelete + 24 * 3600
+//   console.log(fromTimeDelete)
+//   const dataDelete = await data
+//     .deleteMany({
+//       time: { $gte: fromTimeDelete },
+//       time: { $lte: toTimeDelete }
+//     })
+//     .exec()
+//   if (dataDelete && dataDelete.acknowledged === true) {
+//     console.log('Đã xóa', dataDelete.deletedCount, 'bản ghi')
+//   }
+// })

@@ -697,13 +697,13 @@ function getAllInfoProductInList(product_group, start, end) {
 
 //update customer information
 customerCtrl.updateInfo = async(req, res) => {
-  const customer_id = req.body.customer_id;
+  const customer_id = req.currentUser.customer_id;
   // const email = req.body.email;
-  const fullname = req.body.fullName;
-  const username = req.body.userName;
+  const fullname = req.body.fullname;
+  const username = req.body.username;
   const address = req.body.address;
   const contact = req.body.contact;
-  const phone_number = req.body.phoneNumber;
+  const phone_number = req.body.phone_number;
   // const is_updated = new Date();
 
   const checkCustomer= squel.select().from("customer")

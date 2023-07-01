@@ -84,11 +84,11 @@ module.exports = {
   updateCustomerInfo: Joi.object({
     customer_id: Joi.number(),
     // email: Joi.string(),
-    userName: Joi.string(),
-    fullName: Joi.string(),
+    username: Joi.string(),
+    fullname: Joi.string(),
     contact: Joi.string(),
     address: Joi.string(),
-    phoneNumber: Joi.string(),
+    phone_number: Joi.string(),
     updated_at: Joi.date()
   }),
 
