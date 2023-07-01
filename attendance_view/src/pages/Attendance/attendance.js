@@ -7,7 +7,7 @@ const Attendance = () => {
   const [time,setTime] = useState();
    const [date,setDate] = useState();
    const [isValid,setIsValud] = useState(false);
-   const [isSuccess,setIsSuccess] = useState(true);
+   const [isSuccess,setIsSuccess] = useState(false);
 
    const [ip1,setIp] =useState();
    const [studentNumber,setStudentNumber] = useState();
