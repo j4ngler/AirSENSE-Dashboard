@@ -2,13 +2,14 @@ import React, { useState,useCallback, useEffect } from "react";
 import axios from 'axios';
 import { HOST_HTTP_ATTENDANCE } from "../../config/config";
 import { getLocalIPAddress } from "../../utils/commonUtils";
+
 import './style.scss'
 const Attendance = () => {
   const [time,setTime] = useState();
    const [date,setDate] = useState();
    const [isValid,setIsValud] = useState(false);
    const [isSuccess,setIsSuccess] = useState(false);
-
+    const [location,setLocation] = useState();
    const [ip1,setIp] =useState();
    const [studentNumber,setStudentNumber] = useState();
    useEffect(() => {
@@ -36,7 +37,14 @@ const Attendance = () => {
       console.log('Địa chỉ IP của máy hiện tại:', ip1)
      })
     }, []);
-
+    useEffect(()=>{
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        const location1 = `${latitude}, ${longitude}`;
+      setLocation(location1)
+      console.log(location);
+      })
+    },[location])
     const sendDataToAPI = async (data) => {
       try {
        
