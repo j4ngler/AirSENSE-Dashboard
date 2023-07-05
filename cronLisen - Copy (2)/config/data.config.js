@@ -6,7 +6,7 @@ const url = "http://localhost:8086";
 
 const client = new InfluxDB({ url, token });
 let org = `SparcLab`;
-let bucket = `sensor`;
+let bucket = `airsense`;
 
 let writeClient = client.getWriteApi(org, bucket, "ns");
 let queryClient = client.getQueryApi(org);

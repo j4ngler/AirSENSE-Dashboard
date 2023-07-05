@@ -11,6 +11,7 @@ const urlStaticLink = require("../config/urlSetting.js");
 const validate = require("../config/joi.validate.js");
 const schema = require("../utils/validator.js");
 const { Schema } = require("mongoose");
+const { isAuthenticatedAll } = require("../middlewares/authenticateAll.js");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -42,6 +43,7 @@ const storageImgUser = multer.diskStorage({
 
 let upload = multer({ storage: storage, fileFilter: files.excelFilter });
 
+//server
 router
   .route("/import-data")
   .post(isAuthenticated, upload.single("file"), (req, res) => {
@@ -52,15 +54,13 @@ let uploadImage = multer({ storage: storage, fileFilter: files.imageFilter });
 
 router
   .route("/import-image")
-  .post(isAuthenticated, uploadImage.single("file"), (req, res) => {
+  .post(isAuthenticatedAll, uploadImage.single("file"), (req, res) => {
     customerCtrl.importDataInfo(req, res);
   });
 
-  router
-  .route("/upload-image")
-  .post( uploadImage.single("file"), (req, res) => {
-    customerCtrl.importDataInfo(req, res);
-  });
+router.route("/upload-image").post(uploadImage.single("file"), (req, res) => {
+  customerCtrl.importDataInfo(req, res);
+});
 
 let uploadImageUser = multer({
   storage: storageImgUser,
@@ -105,16 +105,24 @@ router.route("/register").post(isAuthenticated, (req, res) => {
   customerCtrl.registerUser(req, res);
 });
 
-router.route("/update_info").put(validate(schema.updateCustomerInfo), isAuthenticatedCustomer, (req, res) => {
-  customerCtrl.updateInfo(req,res);
-});
+router
+  .route("/update_info")
+  .put(
+    validate(schema.updateCustomerInfo),
+    isAuthenticatedCustomer,
+    (req, res) => {
+      customerCtrl.updateInfo(req, res);
+    }
+  );
 
-router.route("/change_password").put(validate(schema.changeCusPass), isAuthenticatedCustomer, (req, res) => {
-  customerCtrl.changePassword(req, res);
-})
+router
+  .route("/change_password")
+  .put(validate(schema.changeCusPass), isAuthenticatedCustomer, (req, res) => {
+    customerCtrl.changePassword(req, res);
+  });
 
-
-
+//dashboard
+router.route("/dashboard-data-average").get(customerCtrl.getDataAverage);
 
 // education
 

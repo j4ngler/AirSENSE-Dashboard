@@ -6,18 +6,35 @@ class groupContent {
     getColumnShow() {
         const columns = [
             {
-                field: 'content_group_id',
-                title: 'id chuyên mục bài báo',
+                field: 'station_id',
+                title: 'Tên trạm',
+                width: '200'
             },
             {
-                field: 'title',
-                title: 'chuyên mục bài báo',
-
+                field: 'station_id',
+                title: 'Tên trạm',
+                width: '200'
             },
             {
-                field: 'content',
-                title: 'chi tiết chuyên mục bài báo',
+                field: 'station_id',
+                title: 'Tên trạm',
+                width: '200'
             },
+            {
+                field: 'station_id',
+                title: 'Tên trạm',
+                width: '200'
+            },
+            {
+                field: 'station_id',
+                title: 'Tên trạm',
+                width: '200'
+            },
+            {
+                field: 'station_id',
+                title: 'Tên trạm',
+                width: '200'
+            }
         ]
 
         return columns;        

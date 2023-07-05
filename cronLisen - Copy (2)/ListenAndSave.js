@@ -75,9 +75,10 @@ clients.map((client) => {
     try {
       message = JSON.parse(message.toString("utf-8"));
       // giang changes init
+      console.log(message);
       var current = +new Date();
       current /= 1000;
-      message.Time = message.Time - 7 * 60 * 60;
+      message.Time = message.Time * 1000;
       if (
         message.Time < current + 24 * 60 * 3600 &&
         message.station_id != null &&

@@ -11,7 +11,7 @@ const Customer = require("../models/database/customer.model.js");
 const router = express.Router();
 const squel = require("squel");
 const knex = require("../config/knex");
-const permissionMappings = require('../utils/customerPermission.js');
+const permissionMappings = require("../utils/customerPermission.js");
 const { login } = require("../controllers/auth.controller.js");
 const customerCtrl = require("../controllers/customer.controller.js");
 const { registerCustomer } = require("../controllers/customer.controller.js");
@@ -26,7 +26,7 @@ router.get("/giang", (req, res) => {
   res.render("authen/sendEmailForgotPass", { route: "register" });
 });
 
-// register new User 
+// register new User
 router
   .route("/register")
   .post(validate(schema.register), authenNewUser, (req, res) => {
@@ -36,7 +36,6 @@ router
 // router.get("/register", (req, res) => {
 //   res.render("/authen/register");
 // })
-
 
 //change information for admin
 router
@@ -125,7 +124,6 @@ router.route("/user").get(isAuthenticated, (req, res) => {
 });
 
 router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
-  console.log("req.currentCustomer", req.currentUser);
   Customer.query({
     where: { customer_id: req.currentUser.customer_id },
     select: [
@@ -143,30 +141,30 @@ router.route("/customer").get(isAuthenticateCustomer, (req, res) => {
     .then(async (user) => {
       if (!user) {
         res.status(HttpStatus.NOT_FOUND).json({ error: "No such customer" });
-      } 
-      else {
+      } else {
         let customer = new Customer();
         const permissions = await customer.getPermissionCustomer(4);
-        const customerSidebar = await permissionMappings.defineSideBar(permissions);
+        const customerSidebar = await permissionMappings.defineSideBar(
+          permissions
+        );
         res.status(200).json({
           user: user,
           permissions: permissions,
-          sidebar: customerSidebar
+          sidebar: customerSidebar,
         });
       }
     });
 });
 
-
-router.route('/permission').get( async (req, res) => {
+router.route("/permission").get(async (req, res) => {
   let customer = new Customer();
   const permissions = await customer.getPermissionCustomer(4);
   const customerSidebar = await permissionMappings.defineSideBar(permissions);
   res.status(200).json({
     permissions: permissions,
-    sidebar: customerSidebar
+    sidebar: customerSidebar,
   });
-})
+});
 
 router.route("/getInfo").post((req, res) => {
   User.query({
@@ -265,7 +263,7 @@ router.route("/generateTocken").post((req, res) => {
 router
   .route("/customer_register")
   .post(validate(schema.registerCustomer), async (req, res, next) => {
-    console.log('abc',registerCustomer[0]);
+    console.log("abc", registerCustomer[0]);
     customerCtrl.registerCustomer(req, res);
   });
 

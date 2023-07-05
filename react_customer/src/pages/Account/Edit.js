@@ -32,6 +32,7 @@ export default function () {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token_AirSENSE")}`,
+            // 'X-XSRF-TOKEN': localStorage.getItem("token_AirSENSE")
           },
         }
       );

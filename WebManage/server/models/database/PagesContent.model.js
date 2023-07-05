@@ -81,4 +81,4 @@ class PagesContent extends CommonModel {
   }
 }
 
-module.exports = PagesContent;
+module.exports = new PagesContent();

@@ -1,11 +1,9 @@
 import { Col, Row, Form, Input, Button } from "antd";
-import { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo/airsense.jpg";
 import "./register.css";
 const Register = () => {
-  const navigate = useNavigate();
   const onFinish = async (values) => {
     const {
       username,

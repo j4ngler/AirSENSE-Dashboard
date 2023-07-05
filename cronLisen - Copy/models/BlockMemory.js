@@ -38,9 +38,26 @@ class BlockMemory {
     return new Promise(async (resolve, reject) => {
       try {
         datas.forEach((data) => {
-          const point = new Point("sensor")
+          let point = new Point("sensorAir")
             .tag("topic", data.topic)
-            .floatFields(data.content);
+            .floatField("PM2p5", content.PM2p5 || 0)
+            .floatField("PM10", content.PM10 || 0)
+            .floatField("PM1", content.PM1 || 0)
+            .floatField("Humidity", content.Humidity || 0)
+            .floatField("Temperature", content.Temperature || 0)
+            .floatField("Pressure", content.Pressure || 0)
+            .floatField("SO2", content.SO2 || 0)
+            .floatField("NO2", content.NO2 || 0)
+            .floatField("CO2", content.CO2 || 0)
+            .floatField("CO", content.CO || 0)
+            .floatField("O3", content.O3 || 0)
+            .floatField("NO2W", content.NO2W || 0)
+            .floatField("O3W", content.O3W || 0)
+            .floatField("COW", content.COW || 0)
+            .floatField("COA", content.COA || 0)
+            .floatField("SO2W", content.SO2W || 0)
+            .floatField("SO2A", content.SO2A || 0)
+            .timestamp(data.time);
 
           // Ghi điểm dữ liệu vào write client
           writeClient.writePoint(point);
@@ -48,9 +65,6 @@ class BlockMemory {
 
         // Gửi dữ liệu từ buffer vào InfluxDB
         await writeClient.flush();
-
-        // Đóng kết nối write client
-        writeClient.close();
 
         resolve();
       } catch (error) {

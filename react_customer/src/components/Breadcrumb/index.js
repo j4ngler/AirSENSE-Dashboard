@@ -13,8 +13,8 @@ const ReBreadcrumb = (menuList, url) => {
     return (
         <Breadcrumb>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
-            {address.map((addressItem) => 
-                <Breadcrumb.Item>
+            {address.map((addressItem,index) => 
+                <Breadcrumb.Item key={index}>
                     <Link to={URLMapping[addressItem].url}>
                         {URLMapping[addressItem].title}
                     </Link>

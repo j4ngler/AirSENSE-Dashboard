@@ -1,13 +1,13 @@
-const mqtt = require('mqtt')
-const events = require('events')
-emitter = new events.EventEmitter()
-const config = require('./config/default.json')
-var data = require('./config/data.config')
+const mqtt = require("mqtt");
+const events = require("events");
+emitter = new events.EventEmitter();
+const config = require("./config/default.json");
+var data = require("./config/data.config");
 // const mongoose = require('mongoose')
 // const mongoConfig = require('./config/mongoConfig.js')
-const BlockMemory = require('./models/BlockMemory')
-require('dotenv').config()
-const cron = require('node-cron')
+const BlockMemory = require("./models/BlockMemory");
+require("dotenv").config();
+const cron = require("node-cron");
 
 // Connecting to the database
 // mongoose
@@ -26,66 +26,66 @@ const cron = require('node-cron')
 
 var SaveFactory = (function () {
   class Save {
-    constructor () {
-      this.memFirst = new BlockMemory()
-      this.memSecond = new BlockMemory()
+    constructor() {
+      this.memFirst = new BlockMemory();
+      this.memSecond = new BlockMemory();
     }
 
-    save (record) {
+    save(record) {
       if (this.memFirst.isAvailable()) {
-        this.memFirst.add(record)
-      } else this.memSecond.add(record)
+        this.memFirst.add(record);
+      } else this.memSecond.add(record);
     }
   }
 
-  var instance
+  var instance;
   return {
     getInstance: function () {
       if (!instance) {
-        instance = new Save()
-        delete instance.constructor
+        instance = new Save();
+        delete instance.constructor;
       }
-      return instance
-    }
-  }
-})()
+      return instance;
+    },
+  };
+})();
 
-var clients = []
-const mqttConfig = require('./config/default.json').mqtt
-mqttConfig.map(config => {
-  config.clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
-  var client = mqtt.connect(process.env.APP_MQTT, config)
-  clients.push(client)
-  client.on('connect', function () {
-    console.log(config.port)
-    client.subscribe('#', function (err) {
+var clients = [];
+const mqttConfig = require("./config/default.json").mqtt;
+mqttConfig.map((config) => {
+  config.clientId = "mqttjs_" + Math.random().toString(16).substr(2, 8);
+  var client = mqtt.connect(process.env.APP_MQTT, config);
+  clients.push(client);
+  client.on("connect", function () {
+    console.log(config.port);
+    client.subscribe("#", function (err) {
       // console.log(config.port)
       if (!err) {
-        console.log('Connect mqtt successfully in port:', config.port)
-      } else console.log(err)
-    })
-  })
-})
+        console.log("Connect mqtt successfully in port:", config.port);
+      } else console.log(err);
+    });
+  });
+});
 
-var save = SaveFactory.getInstance()
+var save = SaveFactory.getInstance();
 
-clients.map(client => {
-  client.on('message', function (topic, message, packet) {
+clients.map((client) => {
+  client.on("message", function (topic, message, packet) {
     try {
-      message = JSON.parse(message.toString('utf-8'))
-      console.log(message)
+      message = JSON.parse(message.toString("utf-8"));
+      console.log(message);
       // giang changes init
-      var current = +new Date()
-      current /= 1000
-      message.Time = message.Time - 7 * 60 * 60
+      var current = +new Date();
+      current /= 1000;
+      message.Time = message.Time * 1000;
       if (
         message.Time < current + 24 * 60 * 3600 &&
         message.station_id != null &&
-        message.station_id != ''
+        message.station_id != ""
       ) {
-        let stationID = parseInt(message.station_id, 16)
+        let stationID = parseInt(message.station_id, 16);
         var infoSave = {
-          topic: 'sensor/' + stationID,
+          topic: "sensor/" + stationID,
           time: message.Time,
           content: {
             PM2p5: message.PM2p5,
@@ -106,16 +106,16 @@ clients.map(client => {
             COW: message.COW,
             COA: message.COA,
             SO2W: message.SO2W,
-            SO2A: message.SO2A
-          }
-        }
+            SO2A: message.SO2A,
+          },
+        };
       }
       console.log(infoSave);
 
-      // save.save(infoSave)
+      save.save(infoSave)
     } catch (e) {}
-  })
-})
+  });
+});
 
 // delete data
 // const task = cron.schedule('*/5 * * * * *', async () => {

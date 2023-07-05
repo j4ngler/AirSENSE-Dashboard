@@ -41,7 +41,7 @@ exports.addService = function (req, res) {
 };
 
 exports.getAllService = function (req, res) {
-  knex("service")
+  knex("service_collection")
     .select("*")
     .then((rows) => {
       res.status(HttpStatus.OK).json(rows);

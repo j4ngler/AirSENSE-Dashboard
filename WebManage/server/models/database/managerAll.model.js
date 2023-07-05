@@ -77,6 +77,7 @@ const classesFactorryMappingUser = {
   sensor_device_type: "SparcGroupLocationSensor",
   sparc_aqi: "SparcAqi",
   device_sensor: "DeviceSensor",
+  customer:"Customer"
 };
 
 exports.mangerModelAdmin = function (table) {
