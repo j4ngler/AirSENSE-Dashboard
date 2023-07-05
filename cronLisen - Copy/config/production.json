@@ -1,0 +1,9 @@
+{
+    "database": {
+        "host": "localhost",
+        "database": "admin_python",
+        "user": "sparclab",
+        "password": "LabSPARC"
+    },
+    "maxItemMemory": 20
+}

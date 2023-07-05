@@ -37,7 +37,6 @@ class oAuthen2Customer extends CommonModel {
                         .where("time_release > NOW()");
         return new Promise( ( resolve, reject ) => {
             knex.raw(authen.toString()).then(function(result) {
-               console.log("checkInvalUserExistingTocken ok",result[0]);
                 resolve( result[0] );
             }).catch(function(err){
                 console.log("check Inval User Existing Token erro", token);

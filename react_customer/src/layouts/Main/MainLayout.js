@@ -1,39 +1,18 @@
-import React, { useEffect } from "react";
-import { LikeFilled, UserOutlined } from "@ant-design/icons";
+import React from "react";
+import { UserOutlined } from "@ant-design/icons";
 import HeaderCustomer from "../../components/Header";
-import { Breadcrumb, Layout } from "antd";
+import { Layout } from "antd";
 import MenuBar from "../../components/MenuBar";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import "./MainLayout.css";
-import ReBreadcrumb from "../../components/Breadcrumb";
 import { Col } from "antd";
-import { useSelector } from "react-redux";
 const { Header, Content, Sider } = Layout;
 
-const checkRole = (list, ...permissions) => {
-  if (list !== undefined){
-    if (list.includes("1") || list.includes("2"))
-      return false;
-    else {
-      if (permissions[0] === undefined)
-        return true;
-      else {
-        let check = true;
-        for(let i = 0; i < permissions.length; i++){
-          let num = permissions[i];
-          let perID = num.toString();
-          if (list.includes(perID)){
-            check = false;
-            break;
-          }
-        }
-        return check;
-      }
-    } 
-  }
+const checkRole = (permissions) => {
+  return false;
 };
 
-const MenuList = (list) => [
+const MenuList = (permissions) => [
   {
     id: "/dashboard",
     title: "Dashboard",
@@ -50,19 +29,19 @@ const MenuList = (list) => [
       {
         id: "manage_account/type_customer",
         title: "Người dùng",
-        isHide: checkRole(list,20,21,22,23),
+        isHide: checkRole(permissions),
         url: "/customer/station/user",
       },
       {
         id: "/admin/list_station/type-adminLocation",
         title: "Danh sách trạm",
-        isHide: checkRole(list,20,21,22,23),
+        isHide: checkRole(permissions),
         url: "/customer/station/list_station",
       },
       {
         id: "/admin/data_station/type-adminLocation",
         title: "Dữ liệu trạm",
-        isHide: checkRole(list,20,21,22,23),
+        isHide: checkRole(permissions),
         url: "/customer/station/station_data",
       },
     ],
@@ -76,13 +55,13 @@ const MenuList = (list) => [
       {
         id: "my_newspaper/type_customer",
         title: "Bài báo của tôi",
-        isHide: checkRole(list,30,31,32,33),
+        isHide: checkRole(permissions),
         url: "/customer/my_newspaper",
       },
       {
         id: "/admin/register_newspaper/type-adminLocation",
         title: "Viết bài",
-        isHide: checkRole(list,30,34),
+        isHide: checkRole(permissions),
         url: "/customer/register_newspaper",
       },
     ],
@@ -96,25 +75,25 @@ const MenuList = (list) => [
       {
         id: "courses/type_customer",
         title: "Khóa học",
-        isHide: checkRole(list),
+        isHide: checkRole(permissions),
         url: "/customer/courses",
       },
       {
         id: "/admin/create-course/type-adminLocation",
         title: "Tạo khóa học",
-        isHide: checkRole(list),
+        isHide: checkRole(permissions),
         url: "/customer/courses/create_course",
       },
       {
         id: "exercises/type_customer",
         title: "Bài tập",
-        isHide: checkRole(list),
+        isHide: checkRole(permissions),
         url: "/customer/courses/exercises",
       },
       {
         id: "/admin/create-exercise/type-adminLocation",
         title: "Tạo bài tập",
-        isHide: checkRole(list),
+        isHide: checkRole(permissions),
         url: "/customer/courses/create_exercises",
       },
     ],
@@ -128,13 +107,13 @@ const MenuList = (list) => [
       {
         id: "station_information/type_customer",
         title: "Thông tin đặt trạm",
-        isHide: checkRole(list),
+        isHide: checkRole(permissions),
         url: "/customer/invoice/station_information",
       },
       {
         id: "admin/create-invoice/type-adminLocation",
         title: "Tạo hóa đơn",
-        isHide: checkRole(list),
+        isHide: checkRole(permissions),
         url: "/customer/invoice/create_invoice",
       },
     ],
@@ -170,11 +149,8 @@ const MenuList = (list) => [
 ];
 
 const MainLayout = () => {
-  // const { authenticate, permissions, clearAuthenticate} = useUser();
-  const navigate = useNavigate();
+  // const { authenticate, permissions, clearAuthenticate} = useUser()
 
-  let customer_info = useSelector(state => state.authSlice.userInformation);
-  let sidebarList = customer_info.sidebar;
   // useEffect(() => {
   //   const token = localStorage.getItem("token_AirSENSE");
   //   const username = localStorage.getItem("username");
@@ -191,7 +167,7 @@ const MainLayout = () => {
       </Header>
       <Layout>
         <Sider width={215} className="site-layout-background" theme="light">
-          <MenuBar menuList={MenuList(sidebarList)} mode="inline" />
+          <MenuBar menuList={MenuList("admin")} mode="inline" />
         </Sider>
 
         <Content className="customer-main-content">

@@ -2,13 +2,14 @@ const express = require("express");
 const multer = require("multer");
 const router = express.Router();
 const isAuthenticated = require("../middlewares/authenticate.js");
-const path = require('path');
+const path = require("path");
 const { uploadFileS3 } = require("../models/S3UploadFile.js");
 const documentCtrl = require("../controllers/document.controller.js");
 const urlStaticLink = require("../config/urlSetting.js");
-const { returnFalse, returnOKCustom} = require('../utils/returnResponse.js')
-const WarningInfo = require('../utils/warningInfo.js')
-
+const { returnFalse, returnOKCustom } = require("../utils/returnResponse.js");
+const WarningInfo = require("../utils/warningInfo.js");
+const { isAuthenticatedAll } = require("../middlewares/authenticateAll.js");
+var squel = require("squel");
 
 var detail_X = process.env.APP_PORT || 3000;
 var detailLink = process.env.APP_HOST + ":" + detail_X;
@@ -24,25 +25,31 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-router.post("/uploadimage", upload.single("resumeFileBrowser"), async function (req, res) {
-  console.log("uploadimage", req);
-  let url = await uploadFileS3(req.file.path, req.file.filename);
-  if(url!=null) returnOKCustom(res,{url:url});
-  else returnFalse(res,{error: true,data: { message: "Not upload file" } },WarningInfo.NOT_UPLOAD_FILE);
-});
+router.post(
+  "/uploadimage",
+  upload.single("resumeFileBrowser"),
+  async function (req, res) {
+    console.log("uploadimage", req);
+    let url = await uploadFileS3(req.file.path, req.file.filename);
+    if (url != null) returnOKCustom(res, { url: url });
+    else
+      returnFalse(
+        res,
+        { error: true, data: { message: "Not upload file" } },
+        WarningInfo.NOT_UPLOAD_FILE
+      );
+  }
+);
 
-
-router.route('/uploadFile').post((req, res) => {
+router.route("/uploadFile").post((req, res) => {
   let image = req.files.uploadFile;
   console.log(image);
-  image.mv(path.resolve(__dirname, '/public/upload', image.name), (error) => {
-    let fileName = '/upload/'+ image.name;
-    console.log(fileName)
+  image.mv(path.resolve(__dirname, "/public/upload", image.name), (error) => {
+    let fileName = "/upload/" + image.name;
+    console.log(fileName);
     res.send(fileName);
-  })
-})
-
-
+  });
+});
 
 // writer pages
 router
@@ -50,7 +57,7 @@ router
   .get((req, res) => {
     res.render("document/registerPages");
   })
-  .post(isAuthenticated, (req, res) => {
+  .post(isAuthenticatedAll, (req, res) => {
     documentCtrl.postAddPageToDataBase(req, res);
   });
 
@@ -58,7 +65,9 @@ router
 router.route("/updatePages").post(isAuthenticated, (req, res) => {
   documentCtrl.postUpdatePageToDataBase(req, res);
 });
-router.route('/registerProductPages').post(isAuthenticated,  documentCtrl.postAddProductPageToDataBase)
+router
+  .route("/registerProductPages")
+  .post(isAuthenticated, documentCtrl.postAddProductPageToDataBase);
 // update Course
 router.route("/updateCourse").post(isAuthenticated, (req, res) => {
   documentCtrl.postUpdateCourseToDataBase(req, res);
@@ -116,6 +125,11 @@ router.route("/lastest_detail/:typePage").get(async (req, res) => {
 
 router.route("/group_page").post(async (req, res) => {
   var data = await documentCtrl.getAllInGroupPage(req);
+  res.send(JSON.stringify(data));
+});
+
+router.route("/list_blog").get(async (req, res) => {
+  const data = await documentCtrl.getListBlog();
   res.send(JSON.stringify(data));
 });
 

@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
   }, [localStorage.getItem('token_AirSENSE'), localStorage.getItem('username')])
 
   return (
-    <authContext.Provider>
+    <authContext.Provider value={""}>
       {children}
     </authContext.Provider>
   );

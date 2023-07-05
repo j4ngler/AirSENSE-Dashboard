@@ -13,7 +13,6 @@ export const login = createAsyncThunk('auth/login', async (params, { rejectWithV
 
 export const getPersonalInformation = createAsyncThunk('auth/getInformationCustomer', async (params, { rejectWithValue }) => {
   try {
-    
     const response = await AuthApi.getAPIInformationCustomer({ ...params });
     return response.data;
   } 
@@ -55,6 +54,8 @@ export const authSlice = createSlice({
       .addCase(getPersonalInformation.fulfilled, (state, action) => {
         state.userInformation = action.payload;
       })
+
+     
   }
 });
 

@@ -257,26 +257,12 @@ class CommonModel extends bookshelf.Model {
       getInfoData.where(
         dataUser.locationSelect + "='" + data[dataUser.locationSelect] + "'"
       );
-    console.log(
-      " req.currentUser req.currentUser getInfoData.toString()",
-      getInfoData.toString()
-    );
     var result = await knex.raw(getInfoData.toString());
-    console.log(
-      " req.currentUser req.currentUser 1 ",
-      req.currentUser,
-      result[0][0]
-    );
     if (result == null || result[0].length == 0) {
       return false;
     }
     if (req.body.table == "users") {
       //console.log(" req.currentUser req.currentUser  2",req.currentUser,result[0][0]);
-      console.log(
-        " req.currentUser req.currentUser 2",
-        result[0][0].manifestid,
-        req.currentUser.manifestid
-      );
       if (result[0][0].permission_id == req.currentUser.manifestid) {
         console.log(" req.currentUser req.currentUser 1");
         if (result[0][0].users_id == req.currentUser.users_id) return true;

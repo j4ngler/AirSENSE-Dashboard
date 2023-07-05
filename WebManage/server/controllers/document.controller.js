@@ -4,6 +4,7 @@ const DocumentFileAndFloder = require("../models/DocumentFileAndFloder.js");
 const { returnFalse, returnOKCustom } = require("../utils/returnResponse");
 const WarningInfo = require("../utils/warningInfo.js");
 const { DEFINE_DOCUMENT, uploadFileS3 } = require("../models/S3UploadFile.js");
+const pagesContent = require("../models/database/PagesContent.model.js");
 var documentFileAndFloder = new DocumentFileAndFloder();
 var squel = require("squel");
 const knex = require("../config/knex.js");
@@ -12,13 +13,16 @@ const urlHost =
   (process.env.APP_HOST || "localhost") + ":" + (process.env.APP_PORT || 3000);
 async function queryInfoSql(sql, res = null) {
   try {
-    var x = await knex.raw(sql).then(rs=>{
-      console.log("rs: ",result)
-    }).catch(err=>{
-      console.log("err>>>",err)
-    });
+    var x = await knex
+      .raw(sql)
+      .then((rs) => {
+        console.log("rs: ", result);
+      })
+      .catch((err) => {
+        console.log("err>>>", err);
+      });
     var data = [];
-    console.log("x",x)
+    console.log("x", x);
     if (x != null && x.length > 0) {
       data = x[0];
     }
@@ -34,7 +38,6 @@ async function queryInfoSql(sql, res = null) {
 }
 
 documentCtrl.postAddPageToDataBase = function (request, res) {
-  let content = request.body["content"];
   let content_html = request.body["content_html"];
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
@@ -51,16 +54,23 @@ documentCtrl.postAddPageToDataBase = function (request, res) {
     addData
       .set("content_sub_id", content_sub_id)
       .set("group_file", group)
-      .set("filesave", link)
+      .set("file_save", link)
       .set("title", request.body["title"])
-      .set("content", request.body["content"])
-      .set("is_main_pages_id", request.body["is_main_pages_id"])
+      .set("description", request.body["content"])
+      .set("set_to_first", request.body["set_to_first"])
       .set("content_img", request.body["content_img"])
-      .set("id_created", request.currentUser.users_id)
-      .set("id_updated", request.currentUser.users_id)
+      .set(
+        "id_created",
+        request.currentUser.users_id || request.currentUser.customer_id
+      )
+      .set(
+        "id_updated",
+        request.currentUser.users_id || request.currentUser.customer_id
+      )
       .set("created_at", "NOW()", { dontQuote: true })
       .set("updated_at", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0);
+      .set("delete_flag", 0)
+      .set("old_id", 0);
     knex
       .raw(addData.toString())
       .then(function (x) {
@@ -344,7 +354,7 @@ documentCtrl.postUpdateExamToDataBase = function (request, res) {
   }
 };
 
-//
+//Advertisement
 
 documentCtrl.postAddAdvertisementToDataBase = function (request, res) {
   let content = request.body["content"];
@@ -434,6 +444,21 @@ documentCtrl.postUpdateAdvertisementToDataBase = function (request, res) {
         });
       });
   }
+};
+
+//Blog
+
+documentCtrl.getListBlog = async function () {
+  const sqlString = squel
+    .select()
+    .from("content_page")
+    .order("created_at",false)
+    .toString();
+  const data = await knex.raw(sqlString);
+  if (data) {
+    return data[0];
+  }
+  return [];
 };
 
 documentCtrl.getAllInMenuPage = async function (listID) {
@@ -596,31 +621,6 @@ documentCtrl.getAllInGroupPage = async function (request) {
   if (x != null && x.length > 0) {
     for (var i = 0; i < x[0].length; i++) {
       x[0][i].filesave = "/detail_page/" + x[0][i].filesave.replace("/", "+");
-    }
-    return x[0];
-  }
-  return [];
-};
-
-// Course
-documentCtrl.getAllInGroupCourse = async function (request) {
-  console.log("sqlraw.toString() ........... request.body..", request.body);
-  var is_main_pages_id = request.body["is_main_pages_id"];
-  var sqlraw = squel
-    .select()
-    .from("course_page")
-    .where("deleteflag=0")
-    .where(
-      "is_main_pages_id=" +
-        is_main_pages_id +
-        " OR course_page_id =" +
-        is_main_pages_id
-    );
-  console.log("sqlraw.toString() .............", sqlraw.toString());
-  var x = await knex.raw(sqlraw.toString());
-  if (x != null && x.length > 0) {
-    for (var i = 0; i < x[0].length; i++) {
-      x[0][i].filesave = "/detail_lesson/" + x[0][i].filesave.replace("/", "+");
     }
     return x[0];
   }

@@ -1,6 +1,5 @@
-import { Col, Row, Form, Input, Button } from "antd";
-import { Link, useSearchParams, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { Form, Input, Button } from "antd";
+import {useSearchParams, useParams } from "react-router-dom";
 import React from "react";
 import "./ForgotPassword.css";
 import axios from "axios";

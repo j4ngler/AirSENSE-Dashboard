@@ -91,7 +91,6 @@
                         contentType: false,
                         cache: false,
                         success: (data1) => {
-                            console.log(data1);
                             if (data1.filename) {  
                                 resolve({
                                     default: 'http://localhost:3000/image/' +data1.filename
@@ -138,7 +137,6 @@
         }
 
         function onSelectClick(value){
-            console.log(value);
             var title=$('#titleInput').val();
             var startHtml= "<html> <head><title>"+ title+"</title> </head><body> ";
             var endHtml="</body></html>";
@@ -156,7 +154,6 @@
                     xhr.setRequestHeader('Authorization', 'Bearer '+mname);
                 },
                 success: function (loadcofig) {
-                    console.log(loadcofig);
                     var string ="Đăng bài ";
                     if(loadcofig)  string+="thành công";
                     else string+="thất bại";
