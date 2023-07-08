@@ -1,14 +1,19 @@
 import React, { useState,useCallback, useEffect } from "react";
 import axios from 'axios';
 import { HOST_HTTP_ATTENDANCE } from "../../config/config";
+
 import { getGeolocation, getLocalIPAddress } from "../../utils/commonUtils";
+
+
 import './style.scss'
 const Attendance = () => {
   const [time,setTime] = useState();
    const [date,setDate] = useState();
    const [isValid,setIsValud] = useState(false);
    const [isSuccess,setIsSuccess] = useState(false);
+
    const [isArrival,setIsArrival] = useState();
+
 
    const [ip1,setIp] =useState();
    const [studentNumber,setStudentNumber] = useState();
@@ -33,10 +38,16 @@ const Attendance = () => {
     useEffect(() => {
       getIp()
     }, []);
-    const getIp = async () => {
-      let ips = await getGeolocation()
-      setIp(ips);
-    }
+
+    useEffect(()=>{
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        const location1 = `${latitude}, ${longitude}`;
+      setLocation(location1)
+      console.log(location);
+      })
+    },[location])
+
     const sendDataToAPI = async (data) => {
          await axios.post('http://127.0.0.1:3003/api/attendance', data)
           .then((res)=> {

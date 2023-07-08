@@ -7,6 +7,7 @@ var oauthen2 = new oAuthen2();
 var oauthen2customer = new oAuthen2Customer();
 function isAuthenticatedAll(req, res,next) {
     const authorizationHeader = req.headers["authorization"];
+    console.log("auth",authorizationHeader)
     let token;
     if (authorizationHeader) {
         token = authorizationHeader.split(" ")[1];

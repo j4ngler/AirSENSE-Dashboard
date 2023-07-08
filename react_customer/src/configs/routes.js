@@ -21,6 +21,7 @@ import EnterEmail from "../pages/ForgotPassword/EnterEmail";
 import EnterNewPassword from "../pages/ForgotPassword/EnterNewPassword";
 import CreateInvoice from "../pages/Invoice/CreateInvoice";
 import Ads from "../pages/Advertisement/CreateAdvertisement";
+import ResultPage from "../components/Result";
 
 const routes = [
   {
@@ -43,6 +44,7 @@ const routes = [
       { path: "account", element: <Account /> },
       { path: "support", element: <Support /> },
       { path: "settings", element: <Settings /> },
+      { path: "result", element: <ResultPage /> },
       { path: "404", element: <NotFoundPage /> },
       { path: "*", element: <Navigate to="/customer/404" /> },
     ],
@@ -63,9 +65,7 @@ const routes = [
   {
     path: "*",
     element: <MainLayout />,
-    children: [
-      { path: "*", element: <NotFoundPage /> } 
-    ]
+    children: [{ path: "*", element: <NotFoundPage /> }],
   },
 ];
 

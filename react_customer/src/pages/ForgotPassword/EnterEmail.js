@@ -1,4 +1,4 @@
-import { Col, Row, Form, Input, Button } from "antd";
+import { Form, Input, Button } from "antd";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import "./ForgotPassword.css";

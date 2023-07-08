@@ -30,7 +30,7 @@ const Header = () => {
   const items = [
     {
       label: (
-        <a href="" style={{ display: "flex", justifyContent: "start" }}>
+        <a href="#" style={{ display: "flex", justifyContent: "start" }}>
           Account
         </a>
       ),
@@ -39,7 +39,7 @@ const Header = () => {
     },
     {
       label: (
-        <a href="" style={{ display: "flex", justifyContent: "start" }}>
+        <a href="#" style={{ display: "flex", justifyContent: "start" }}>
           Setting
         </a>
       ),
@@ -48,7 +48,7 @@ const Header = () => {
     },
     {
       label: (
-        <a href="" style={{ display: "flex" }} onClick={handleLogOut}>
+        <a href="#" style={{ display: "flex" }} onClick={handleLogOut}>
           Sign out
         </a>
       ),

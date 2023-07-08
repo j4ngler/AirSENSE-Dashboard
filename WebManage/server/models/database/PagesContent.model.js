@@ -58,9 +58,9 @@ class PagesContent extends CommonModel {
       arrayCoppy: [
         "content_sub_id",
         "group_file",
-        "filesave",
+        "file_save",
         "title",
-        "content",
+        "description",
         "content_img",
         "set_to_first",
         "created_at",
@@ -74,6 +74,11 @@ class PagesContent extends CommonModel {
 
   getSQLReport(currentUser) {
     return "SELECT content_page.* FROM content_page ";
+    //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  }
+  
+  getSQLCustomerReport(currentUser) {
+    return "SELECT content_page.* FROM content_page where delete_flag =0 ";
     //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
   getJsonTofind() {
