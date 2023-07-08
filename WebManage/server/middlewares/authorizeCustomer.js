@@ -40,10 +40,10 @@ module.exports = (req, res, next) => {
         let serviceCustomerFilter;
         allServiceCustomer.forEach((serviceCustomer) => {
           if (serviceCustomer.slice(0, -1) === permissionValue.slice(0, -1)) {
-            serviceCustomerFilter.push(parseInt(serviceCustomer.split("/")[1]));
+            serviceCustomerFilter = parseInt(serviceCustomer.split("/")[1]);
           }
         });
-
+        console.log(serviceCustomerFilter);
         //Nếu quyền customer <= quyền yêu cầu từ client
         if (serviceCustomerFilter <= parseInt(permissionValue.split("/")[1])) {
           next();

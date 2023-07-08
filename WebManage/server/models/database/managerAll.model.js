@@ -90,7 +90,6 @@ exports.mangerModelAdmin = function (table) {
 };
 
 exports.mangerModelUser = function (table) {
-  console.log("table",table)
   var nameConvert = classesFactorryMappingUser[table];
   if (!!nameConvert) {
     var tableSelect = new classesFactory[nameConvert]();

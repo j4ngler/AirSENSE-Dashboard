@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Timeline, Divider, Statistic, Space } from "antd";
 import { ArrowUpOutlined } from "@ant-design/icons";
 import "./dashboard.css";
-import LineChart from "../../components/Chart";
-import axios from "axios";
 import { Column } from "@ant-design/plots";
+import { httpGetData } from "../../features/API/httpBaseUtils";
 const Dashboard = () => {
   const [dataAverage, setDataAverage] = useState({});
   const fetchData = async () => {
-    const data = await axios.get(
+    const data = await httpGetData(
       "http://localhost:3000/api/customers/dashboard-data-average"
     );
     setDataAverage(data.data);
@@ -66,13 +65,13 @@ const Dashboard = () => {
   ];
   const config = {
     data,
-    xField: 'type',
-    yField: 'data_average',
+    xField: "type",
+    yField: "data_average",
     label: {
-      position: 'middle',
+      position: "middle",
       // 'top', 'bottom', 'middle',
       style: {
-        fill: '#FFFFFF',
+        fill: "#FFFFFF",
         opacity: 0.6,
       },
     },
@@ -84,10 +83,10 @@ const Dashboard = () => {
     },
     meta: {
       type: {
-        alias: 'type',
+        alias: "type",
       },
       data_average: {
-        alias: 'data_average',
+        alias: "data_average",
       },
     },
   };
