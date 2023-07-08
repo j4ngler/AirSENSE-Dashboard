@@ -452,8 +452,10 @@ documentCtrl.getListBlog = async function () {
   const sqlString = squel
     .select()
     .from("content_page")
-    .order("created_at",false)
+    .order("created_at", false)
+    .where("delete_flag=0")
     .toString();
+    console.log(sqlString)
   const data = await knex.raw(sqlString);
   if (data) {
     return data[0];

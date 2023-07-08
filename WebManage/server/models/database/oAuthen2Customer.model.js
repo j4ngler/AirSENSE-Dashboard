@@ -44,7 +44,7 @@ class oAuthen2Customer extends CommonModel {
             } )
         } );
     }
-
+    //{"2":34,"3":31}
     async responseLogin(res,user){
         const dataTocken= getRamdomData(256);
         var current_id=user.get('customer_id');

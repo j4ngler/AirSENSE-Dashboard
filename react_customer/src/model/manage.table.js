@@ -18,7 +18,7 @@ const classesFactoryMapping = {
   device_sensor: "deviceSensor",
   content_group: "groupContent",
   content_sub: "groupContentSub",
-  page_content: "pageContent",
+  content_page: "pageContent",
   order: "order",
   customer: "customer",
 };
@@ -32,8 +32,22 @@ export const exportColumnTable = (table, callback = null) => {
   return [];
 };
 
-export const exportFieldToEdit = (table, callback = null) => {};
-
+export const exportFieldToEdit = (table) => {
+  var nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    var tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) return tableSelect.getInfomationToEdit();
+  }
+  return {};
+};
+export const exportFieldCheckDelete =(table) =>{
+  var nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    var tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) return tableSelect.getInfomationCheckDelete();
+  }
+  return {};
+}
 export const exportFieldtoAdd = (table) => {};
 
 export const checkValidateValue = () => {};

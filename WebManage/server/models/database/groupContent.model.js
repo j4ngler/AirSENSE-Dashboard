@@ -59,7 +59,7 @@ class GroupContent extends CommonModel {
     //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
 
-  getSQLCustomer() {
+  getSQLCustomerReport() {
     // console.log("getSQLReport...2....... ", currentUser.manifestid);
     return "SELECT content_group.content_group_id, content_group.content FROM content_group WHERE delete_flag = 0";
   }

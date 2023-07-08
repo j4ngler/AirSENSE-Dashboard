@@ -3,6 +3,7 @@ const fs = require("fs");
 const customerCtrl = require("../controllers/customer.controller.js");
 const isAuthenticated = require("../middlewares/authenticate.js");
 const isAuthenticatedCustomer = require("../middlewares/authenticateCustomer.js");
+const isAuthorizedCustomer = require("../middlewares/authorizeCustomer.js")
 const mangerModel = require("../models/database/managerAll.model.js");
 const router = express.Router();
 const multer = require("multer");
@@ -94,7 +95,7 @@ router.route("/report-page").post(isAuthenticatedCustomer, (req, res) => {
 router.route("/manager_add").post(isAuthenticatedCustomer, (req, res) => {
   customerCtrl.addDataToTable(req, res);
 });
-router.route("/manager_delete").post(isAuthenticatedCustomer, (req, res) => {
+router.route("/manager_delete").post(isAuthorizedCustomer, (req, res) => {
   customerCtrl.deleteData(req, res);
 });
 router.route("/manager_update").post(isAuthenticatedCustomer, (req, res) => {
