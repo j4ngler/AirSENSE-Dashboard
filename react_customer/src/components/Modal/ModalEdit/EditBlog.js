@@ -94,7 +94,7 @@ const EditBlog = ({
           <Upload
             listType="picture-card"
             fileList={fileList}
-            
+            previewFile={previewImage}
             onPreview={handlePreview}
             onChange={handleChangeImg}
             beforeUpload={async (file) => {
