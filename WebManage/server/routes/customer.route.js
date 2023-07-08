@@ -3,7 +3,7 @@ const fs = require("fs");
 const customerCtrl = require("../controllers/customer.controller.js");
 const isAuthenticated = require("../middlewares/authenticate.js");
 const isAuthenticatedCustomer = require("../middlewares/authenticateCustomer.js");
-const isAuthorizedCustomer = require("../middlewares/authorizeCustomer.js")
+const isAuthorizedCustomer = require("../middlewares/authorizeCustomer.js");
 const mangerModel = require("../models/database/managerAll.model.js");
 const router = express.Router();
 const multer = require("multer");
@@ -13,6 +13,7 @@ const validate = require("../config/joi.validate.js");
 const schema = require("../utils/validator.js");
 const { Schema } = require("mongoose");
 const { isAuthenticatedAll } = require("../middlewares/authenticateAll.js");
+const authorizeCustomerDevice = require("../middlewares/authorizeCustomerDevice.js");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -123,7 +124,7 @@ router
   });
 
 //dashboard
-router.route("/dashboard-data-average").get(customerCtrl.getDataAverage);
+router.route("/dashboard-data-average").get(isAuthenticatedCustomer,customerCtrl.getDataAverage);
 
 // education
 
@@ -170,5 +171,12 @@ router.route("/page_product").get(customerCtrl.getDetailProductPages);
 router.get("/sale/cart", (req, res) => {
   res.render("sale/invoiceInfoProduct");
 });
+
+//test device_id
+router
+  .route("/test_device")
+  .get(authorizeCustomerDevice, (req, res) => {
+    res.status(200).json("ok")
+  });
 
 module.exports = router;
