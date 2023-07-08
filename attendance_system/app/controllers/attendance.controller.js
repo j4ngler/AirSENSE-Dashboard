@@ -27,6 +27,7 @@ class AttendanceController {
                     if(attendance != null) {
                         return res.json({
                             success: true,
+                            is_arrival: false,
                             message: "update successfully"})
                     }
                     else{
@@ -41,6 +42,7 @@ class AttendanceController {
                             .then(() =>{
                                 return res.json({
                                     success: true,
+                                    is_arrival: true,
                                     message: 'Success Attendance'})
                             })
                             .catch(err => {
