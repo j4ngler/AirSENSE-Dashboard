@@ -134,7 +134,6 @@ export default function News() {
         <Col span={10} offset={1}>
           <div>Ảnh bài báo</div>
           <Upload
-            // action="http://localhost:3006/customer/register_newspaper"
             listType="picture-card"
             fileList={fileList}
             onPreview={handlePreview}

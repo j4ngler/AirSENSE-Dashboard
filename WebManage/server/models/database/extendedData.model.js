@@ -55,6 +55,11 @@ class ExtendedData extends CommonModel {
       return ('SELECT extended_data.* FROM extended_data ');
        //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
+  getSQLCustomerReport(currentUser){
+    console.log("getSQLReport...2....... " ,currentUser.manifestid); 
+      return ('SELECT extended_data.* FROM extended_data ');
+       //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  }
   getJsonTofind(){
       return [];
   }

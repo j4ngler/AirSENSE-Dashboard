@@ -80,7 +80,6 @@ class CommonModel extends bookshelf.Model {
     }
     return false;
   }
-
   addFormToTableSQL(data) {
     var userid = 0;
     let dataUser = this.getFieldToAdd(); //  DataTableFieldAdd[table];
@@ -218,7 +217,7 @@ class CommonModel extends bookshelf.Model {
     return sqlQuery.toString();
   }
 
-  checkManifestSpecialCustomer(action) {
+  heckManifestSpecialCustomer(action) {
     var acess = this.customerAcess();
     var detail = acess[action];
     switch (detail) {
@@ -322,12 +321,7 @@ class CommonModel extends bookshelf.Model {
     var stringData = "";
     var arrayTofind = this.getJsonTofind();
     var tableSelect = this.getNameTable();
-    console.log(
-      "getValueToSelectToFind .........",
-      data,
-      arrayTofind,
-      tableSelect
-    );
+
     if (!!data) {
       for (var i = 0; i < arrayTofind.length; i++) {
         if (!!data[arrayTofind[i]]) {
@@ -357,11 +351,9 @@ class CommonModel extends bookshelf.Model {
       .field("manifest_id")
       .from("ref_manifest")
       .where("customer_id = " + user_id);
-    console.log(mysql.toString());
     let result = await knex.raw(mysql.toString());
     if (!!result) {
       let dataPermssion = "";
-      console.log(result[0]);
       result[0].map((obj) => {
         dataPermssion += obj.value_id + "/" + obj.manifest_id + ",";
       });

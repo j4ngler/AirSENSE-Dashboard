@@ -5,9 +5,8 @@ import TableData from "../../../components/Table/dataTable";
 const MyNewspaper = () => {
   return (
     <>
-      <div>MyNewSpaper</div>
       <Row>
-          <TableData table={'device_sensor'}/>
+          <TableData table={'content_page'}/>
       </Row>
     </>
   )
