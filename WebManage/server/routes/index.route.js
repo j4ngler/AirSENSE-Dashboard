@@ -7,7 +7,7 @@ const customerRoutes = require("./customer.route.js");
 const documentRoutes = require("./document.route.js");
 const serviceRoutes = require("./service.api.route.js");
 const socialRoutes = require("./social.route.js");
-
+const deviceRoutes = require("./device.route.js");
 const router = express.Router();
 
 // mount auth routes at /auth
@@ -29,5 +29,8 @@ router.use("/customers", customerRoutes);
 router.use("/service", serviceRoutes);
 router.use("/social", socialRoutes);
 
+
+// manage eclectic devices routes
+router.use("/device", deviceRoutes);
 
 module.exports = router;

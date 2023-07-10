@@ -547,105 +547,105 @@ userCtrl.registerUser = async function (req, res) {
     })
 }
 
-userCtrl.resetPass = async function (req, res) {
-  const data = req.body
-  User.query({
-    where: { email: data.email },
-    select: ['userid', 'fullname', 'manifestid']
-  })
-    .fetch({ require: false })
-    .then(user => {
-      if (!user) {
-        res.status(HttpStatus.NOT_FOUND).json({ error: 'No such this email' })
-      } else {
-        const userid = user.get('userid')
-        const nameUser = user.get('fullname')
-        var transporter = nodemailer.createTransport({
-          // cofig mail server
-          host: 'smtp.gmail.com',
-          port: 465,
-          secure: true,
-          auth: {
-            user: 'testairsense@gmail.com', //Tài khoản gmail Airsense
-            pass: 'giang2001' //Mật khẩu  gmail Airsense
-          },
-          tls: {
-            // do not fail on invalid certs
-            rejectUnauthorized: false
-          }
-        })
-        let token = getRamdomData(90)
-        const port = process.env.APP_PORT || 3000
-        const host = process.env.APP_HOST || 'localhost'
-        let URLtogetLink =
-          'http://' +
-          host +
-          ':' +
-          port +
-          '/api/auth/resetPassword/' +
-          userid +
-          '/' +
-          token
-        console.log(URLtogetLink)
-        var content = ''
-        content += ''
-        // const router = express.Router();
-        // content= router.get('/giang', (req, res) => {
-        //   res.render('authen/sendEmailForgotPass');
-        // });
-        // thiết lập đối tượng, nội dung gửi email
-        var mainOptions = {
-          from: 'NQH-Test nodemailer',
-          to: req.body.email,
-          subject: 'Reset Password',
-          html: content //Nội dung html mình đã tạo trên kia
-        }
+// userCtrl.resetPass = async function (req, res) {
+//   const data = req.body
+//   User.query({
+//     where: { email: data.email },
+//     select: ['userid', 'fullname', 'manifestid']
+//   })
+//     .fetch({ require: false })
+//     .then(user => {
+//       if (!user) {
+//         res.status(HttpStatus.NOT_FOUND).json({ error: 'No such this email' })
+//       } else {
+//         const userid = user.get('userid')
+//         const nameUser = user.get('fullname')
+//         var transporter = nodemailer.createTransport({
+//           // cofig mail server
+//           host: 'smtp.gmail.com',
+//           port: 465,
+//           secure: true,
+//           auth: {
+//             user: 'testairsense@gmail.com', //Tài khoản gmail Airsense
+//             pass: 'giang2001' //Mật khẩu  gmail Airsense
+//           },
+//           tls: {
+//             // do not fail on invalid certs
+//             rejectUnauthorized: false
+//           }
+//         })
+//         let token = getRamdomData(90)
+//         const port = process.env.APP_PORT || 3000
+//         const host = process.env.APP_HOST || 'localhost'
+//         let URLtogetLink =
+//           'http://' +
+//           host +
+//           ':' +
+//           port +
+//           '/api/auth/resetPassword/' +
+//           userid +
+//           '/' +
+//           token
+//         console.log(URLtogetLink)
+//         var content = ''
+//         content += ''
+//         // const router = express.Router();
+//         // content= router.get('/giang', (req, res) => {
+//         //   res.render('authen/sendEmailForgotPass');
+//         // });
+//         // thiết lập đối tượng, nội dung gửi email
+//         var mainOptions = {
+//           from: 'NQH-Test nodemailer',
+//           to: req.body.email,
+//           subject: 'Reset Password',
+//           html: content //Nội dung html mình đã tạo trên kia
+//         }
 
-        transporter.sendMail(mainOptions, function (err, info) {
-          if (err) {
-            console.log(err)
-            req.flash('mess', 'Lỗi gửi mail: ' + err) //Gửi thông báo đến người dùng
-            res.redirect('/')
-          } else {
-            console.log('Message sent: ' + info.response)
-            const current_id = userid
-            const manifestId = user.get('manifestid')
-            var authen2 = squel
-              .insert()
-              .into('oauthen2')
-              .set('manifestid', manifestid)
-              .set('userid', current_id)
-              .set('tocken', token)
-              .set('id_updated', current_id)
-              .set('id_created', current_id)
-              .set('delete_flag', 0)
-              .set('created_at', 'NOW()', { dontQuote: true })
-              .set('updated_at', 'NOW()', { dontQuote: true })
-              .set('delete_flag', 0)
-              .set('time_relase', 'NOW() + INTERVAL 1 DAY', { dontQuote: true })
-              .set('check_reset', 'reset')
-            console.log(authen2.toString())
-            knex
-              .raw(authen2.toString())
-              .then(function (x) {
-                res.json({
-                  success: true,
-                  message: 'Gửi email thành công'
-                })
-              })
-              .catch(function (err1) {
-                res.status(HttpStatus.UNAUTHORIZED).json({
-                  success: false,
-                  message: 'Problem SQL.'
-                })
-              })
+//         transporter.sendMail(mainOptions, function (err, info) {
+//           if (err) {
+//             console.log(err)
+//             req.flash('mess', 'Lỗi gửi mail: ' + err) //Gửi thông báo đến người dùng
+//             res.redirect('/')
+//           } else {
+//             console.log('Message sent: ' + info.response)
+//             const current_id = userid
+//             const manifestId = user.get('manifestid')
+//             var authen2 = squel
+//               .insert()
+//               .into('oauthen2')
+//               .set('manifestid', manifestid)
+//               .set('userid', current_id)
+//               .set('tocken', token)
+//               .set('id_updated', current_id)
+//               .set('id_created', current_id)
+//               .set('delete_flag', 0)
+//               .set('created_at', 'NOW()', { dontQuote: true })
+//               .set('updated_at', 'NOW()', { dontQuote: true })
+//               .set('delete_flag', 0)
+//               .set('time_relase', 'NOW() + INTERVAL 1 DAY', { dontQuote: true })
+//               .set('check_reset', 'reset')
+//             console.log(authen2.toString())
+//             knex
+//               .raw(authen2.toString())
+//               .then(function (x) {
+//                 res.json({
+//                   success: true,
+//                   message: 'Gửi email thành công'
+//                 })
+//               })
+//               .catch(function (err1) {
+//                 res.status(HttpStatus.UNAUTHORIZED).json({
+//                   success: false,
+//                   message: 'Problem SQL.'
+//                 })
+//               })
 
-            res.redirect('/')
-          }
-        })
-      }
-    })
-}
+//             res.redirect('/')
+//           }
+//         })
+//       }
+//     })
+// }
 
 userCtrl.newResetPassword = async function (req, res) {
   const data = req.body
