@@ -13,18 +13,10 @@ class Ref_home_device extends CommonModel {
   /**
    * Get table name.
    */
-  get tableName() {
+  get TableName() {
     return TABLE_NAME;
   }
-
-
-  get hasTimestamps() {
-    return true;
-  }
- 
-
- 
 }
 
 
-module.exports = User;
+module.exports = new Ref_home_device;
