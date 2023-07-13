@@ -109,6 +109,39 @@ async function postInfoData (urlLink, dataInfo, callBack) {
     }
   })
 }
+
+async function putInfoData (urlLink, dataInfo, callBack) {
+  // debugger;
+  await $.ajax({
+    type: 'put',
+    method: 'PUT',
+    url: urlLink,
+    body: JSON.stringify(dataInfo), // body data type must match "Content-Type" header
+    data: JSON.stringify(dataInfo), // body data type must match "Content-Type" header
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    dataType: 'json',
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Beard ' + localStorage.getItem('token_AirSENSE')
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    success: function (dataReturn) {
+      callBack(dataReturn)
+    },
+    error: function (loadcofig, error) {
+      console.log('error',error);
+      callBack([]);
+    }
+  })
+}
+
 function setItemFormITemAds (item) {
   var html =
     ' <div class="sb-img-hust-tech ">  <img class="image-hust-tech" src ="' +
@@ -667,3 +700,5 @@ function notify (message, status) {
   }, 3000)
   document.getElementById('snackbar').classList.add(status)
 }
+
+

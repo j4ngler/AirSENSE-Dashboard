@@ -698,52 +698,52 @@ userCtrl.changePassword1 = async function (req, res) {
 
 // code airsense
 
-userCtrl.changePassword = async (req, res) => {
-  var tableSelect = mangerModelAdmin(req.body.table)
-  if (!!!tableSelect) {
-    return returnNotFound(res, { message: 'Database inval' })
-  }
-  if (
-    !tableSelect.checkDataEditDatabase(
-      req.currentUser.manifestid,
-      tableSelect.getTypeTable()
-    )
-  ) {
-    return returnNotFound(res, { message: 'Database not Acess 1' })
-  }
-  let data = req.body
-  let dataUser = tableSelect.getFieldToDelete()
-  User.query({
-    where: { userid: data[dataUser.locationSelect] },
-    select: ['password']
-  })
-    .fetch({ require: false })
-    .then(user => {
-      if (!user) {
-        res.status(HttpStatus.NOT_FOUND).json({ error: 'No such user' })
-      } else {
-        const password = user.get('password')
-        if (password === data.oldPassword) {
-          var authen = squel.update().table(tableSelect.getNameTable())
-          authen
-            .where(
-              dataUser.locationSelect + '=' + data[dataUser.locationSelect]
-            )
-            .set('password', data.newPassword)
-            .set('updated_at', 'NOW()', { dontQuote: true })
-          console.log('updateDataauthen.toString() ', authen.toString())
-          knex
-            .raw(authen.toString())
-            .then(function (x) {
-              return returnOK(res, 'Thay đổi mật khẩu thành công')
-            })
-            .catch(function (err) {
-              return returnFalse(res, err)
-            })
-        }
-      }
-    })
-}
+// userCtrl.changePassword = async (req, res) => {
+//   var tableSelect = mangerModelAdmin(req.body.table)
+//   if (!!!tableSelect) {
+//     return returnNotFound(res, { message: 'Database inval' })
+//   }
+//   if (
+//     !tableSelect.checkDataEditDatabase(
+//       req.currentUser.manifestid,
+//       tableSelect.getTypeTable()
+//     )
+//   ) {
+//     return returnNotFound(res, { message: 'Database not Acess 1' })
+//   }
+//   let data = req.body
+//   let dataUser = tableSelect.getFieldToDelete()
+//   User.query({
+//     where: { userid: data[dataUser.locationSelect] },
+//     select: ['password']
+//   })
+//     .fetch({ require: false })
+//     .then(user => {
+//       if (!user) {
+//         res.status(HttpStatus.NOT_FOUND).json({ error: 'No such user' })
+//       } else {
+//         const password = user.get('password')
+//         if (password === data.oldPassword) {
+//           var authen = squel.update().table(tableSelect.getNameTable())
+//           authen
+//             .where(
+//               dataUser.locationSelect + '=' + data[dataUser.locationSelect]
+//             )
+//             .set('password', data.newPassword)
+//             .set('updated_at', 'NOW()', { dontQuote: true })
+//           console.log('updateDataauthen.toString() ', authen.toString())
+//           knex
+//             .raw(authen.toString())
+//             .then(function (x) {
+//               return returnOK(res, 'Thay đổi mật khẩu thành công')
+//             })
+//             .catch(function (err) {
+//               return returnFalse(res, err)
+//             })
+//         }
+//       }
+//     })
+// }
 
 userCtrl.listUser = async (req, res) => {
   var table = 'user'
@@ -830,14 +830,14 @@ userCtrl.getListUser = (req, res) => {
 
 //update user information
 userCtrl.updateInfo = async (req, res) => {
-  const user_id = req.body.user_id
-  // const email = req.body.email;
-  const fullname = req.body.fullName
-  const username = req.body.userName
+  const user_id = req.currentUser.user_id
+  const fullname = req.body.fullname
+  const username = req.body.username
   const address = req.body.address
-  const phone_number = req.body.phoneNumber
+  const phone_number = req.body.phone_number
   // const is_updated = new Date();
 
+  console.log('check', user_id)
   //check if user existed
   const checkUser = squel
     .select()
@@ -870,6 +870,49 @@ userCtrl.updateInfo = async (req, res) => {
       console.log(error)
       return res.status(500).json({ message: 'Update failed !', error })
     })
+}
+
+//change user password after login
+userCtrl.changePassword = async(req, res) => {
+  const user_id = req.currentUser.user_id;
+  const {old_password, new_password} = req.body;
+
+  try {
+    
+    // Check if user existed
+    const checkUser= squel.select().from("user")
+                          .where("user_id='"+ user_id +"'")
+                          .where("delete_flag = 0");
+    const existedUser = await knex.raw(checkUser.toString());
+
+    if(!existedUser) {
+      return res.status(208).json({ message: "user not existed!"});
+    }
+    
+
+    //Change customer password
+    const passwordMatch = await bcrypt.compare(old_password, existedUser[0][0].password);
+
+    if(!passwordMatch) {
+      console.log('invalid password');
+      return res.status(401).json({ message: 'Invalid password!' });
+    }
+
+    const hashPass = await bcrypt.hash(new_password, 12);
+
+    // customer.password = hashPass;
+    await knex("user").where({"user_id": user_id})
+                          .update({"password": hashPass})
+                          .then(() => {
+                            return res.status(200).json({ message: 'Password change successfully!' });
+                          })
+                          .catch((error) => {
+                            console.log('error',error);
+                          })
+                          
+  } catch(error) {
+    return res.status(500).json({ message: 'An error occured!',error });
+  }
 }
 
 module.exports = userCtrl
