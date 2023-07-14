@@ -53,7 +53,7 @@ const Register = () => {
     >
       <Col span={12} offset={6} className="register-form-container">
         <div className="logo-form">
-          <img src={logo} width="50%" />
+          <img src={logo} width="50%" alt=""/>
         </div>
         <Row>
           <Col span={12}>

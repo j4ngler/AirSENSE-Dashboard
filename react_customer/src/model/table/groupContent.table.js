@@ -40,7 +40,7 @@ class groupContent {
         return columns;        
     }
 
-    getInfomationToEdit() {
+    getInformationToEdit() {
 
     }
 

@@ -58,7 +58,7 @@ class receiptInformation {
         return columns;        
     }
 
-    getInfomationToEdit() {
+    getInformationToEdit() {
 
     }
 

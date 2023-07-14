@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal, Upload } from "antd";
 import React from "react";
-import { uploadfileDataImage } from "../../../features/API/httpBaseUtils";
+import { uploadFileDataImage } from "../../../features/API/httpBaseUtils";
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -12,9 +12,11 @@ const EditBlog = ({
   setRefresh,
 }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState(dataRow?.content_img);
+  const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState([
+    { uid: "-1", name: "image.png", status: "done", url: dataRow?.content_img },
+  ]);
   const [contentImg, setContentImg] = useState("");
 
   const [form] = Form.useForm();
@@ -94,13 +96,12 @@ const EditBlog = ({
           <Upload
             listType="picture-card"
             fileList={fileList}
-            previewFile={previewImage}
             onPreview={handlePreview}
             onChange={handleChangeImg}
             beforeUpload={async (file) => {
               const data = new FormData();
               data.append("file", file);
-              const dataImg = await uploadfileDataImage(data);
+              const dataImg = await uploadFileDataImage(data);
               setContentImg(dataImg.data.url);
               return false;
             }}

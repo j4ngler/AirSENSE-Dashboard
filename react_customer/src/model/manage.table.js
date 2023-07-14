@@ -36,18 +36,31 @@ export const exportFieldToEdit = (table) => {
   var nameConvert = classesFactoryMapping[table];
   if (!!nameConvert) {
     var tableSelect = new classesFactory[nameConvert]();
-    if (!!tableSelect) return tableSelect.getInfomationToEdit();
+    if (!!tableSelect) return tableSelect.getInformationToEdit();
   }
   return {};
 };
-export const exportFieldCheckDelete =(table) =>{
+export const exportFieldCheckDelete = (table) => {
   var nameConvert = classesFactoryMapping[table];
   if (!!nameConvert) {
     var tableSelect = new classesFactory[nameConvert]();
-    if (!!tableSelect) return tableSelect.getInfomationCheckDelete();
+    if (!!tableSelect) return tableSelect.getInformationCheckDelete();
   }
   return {};
-}
-export const exportFieldtoAdd = (table) => {};
+};
 
-export const checkValidateValue = () => {};
+export const exportFieldToAdd = (table) => {
+  var nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    var tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) {
+      var dataValue = {};
+      dataValue.view = tableSelect.getInformationToAdd();
+      dataValue.html = tableSelect.getHTMLToAdd();
+      dataValue.selectTable = tableSelect.getTypeSelectTableToAdd();
+      dataValue.selectValidate = tableSelect.getInformationToValidate();
+      return dataValue;
+    }
+  }
+  return {};
+};

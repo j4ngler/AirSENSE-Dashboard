@@ -107,7 +107,7 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
     addData
       .set("content_sub_id", content_sub_id)
       .set("group_file", group)
-      .set("filesave", link)
+      .set("file_save", link)
       .set("title", request.body["title"])
       .set("content", request.body["content"])
       .set("is_main_pages_id", request.body["is_main_pages_id"])
@@ -159,7 +159,7 @@ documentCtrl.postAddProductPageToDataBase = async function (request, res) {
     // save data Sql
     addData
       .set("product_id", product_id)
-      .set("filesave", link)
+      .set("file_save", link)
       .set("id_created", request.currentUser.users_id)
       .set("id_updated", request.currentUser.users_id)
       .set("created_at", "NOW()", { dontQuote: true })
@@ -261,7 +261,6 @@ documentCtrl.postUpdateCourseToDataBase = function (request, res) {
   }
 };
 
-//
 
 // Exam
 documentCtrl.postAddExamToDataBase = function (request, res) {

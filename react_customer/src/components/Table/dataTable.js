@@ -6,6 +6,7 @@ import { httpGetDataTable } from "../../features/API/httpBaseUtils";
 import ModalComponent from "../Modal";
 import ModalDelete from "../Modal/ModalDelete";
 import ModalEdit from "../Modal/ModalEdit";
+import EditModal from "../Modal/EditModal";
 
 const TableData = ({ table, searchText = "" }) => {
   const [dataTable, setDataTable] = useState([]);
@@ -71,7 +72,7 @@ const TableData = ({ table, searchText = "" }) => {
         ""
       )}
       {showModalEdit ? (
-        <ModalEdit
+        <EditModal
           setShowModalEdit={setShowModalEdit}
           showModalEdit={showModalEdit}
           table={table}

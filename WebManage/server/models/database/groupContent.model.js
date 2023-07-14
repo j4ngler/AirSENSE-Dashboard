@@ -61,7 +61,7 @@ class GroupContent extends CommonModel {
 
   getSQLCustomerReport() {
     // console.log("getSQLReport...2....... ", currentUser.manifestid);
-    return "SELECT content_group.content_group_id, content_group.content FROM content_group WHERE delete_flag = 0";
+    return "SELECT content_group.* FROM content_group WHERE delete_flag = 0";
   }
   getJsonTofind() {
     return [];

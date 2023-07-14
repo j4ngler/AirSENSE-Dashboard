@@ -41,7 +41,7 @@ class user {
     return columns;
   }
 
-  getInfomationToEdit() {}
+  getInformationToEdit() {}
 
   getInformationToAdd() {}
 

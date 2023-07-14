@@ -67,7 +67,7 @@ class deviceSensor {
         return columns;        
     }
 
-    getInfomationToEdit() {
+    getInformationToEdit() {
 
     }
 

@@ -14,6 +14,7 @@ const schema = require("../utils/validator.js");
 const { Schema } = require("mongoose");
 const { isAuthenticatedAll } = require("../middlewares/authenticateAll.js");
 const authorizeCustomerDevice = require("../middlewares/authorizeCustomerDevice.js");
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -124,7 +125,7 @@ router
   });
 
 //dashboard
-router.route("/dashboard-data-average").get(isAuthenticatedCustomer,customerCtrl.getDataAverage);
+router.route("/dashboard-data-average").get(isAuthenticatedCustomer, customerCtrl.getDataAverage);
 
 // education
 
@@ -163,6 +164,25 @@ router.route("/detail_bill").post((req, res) => {
 
 router.route("/services").get((req, res) => {
   customerCtrl.getAllInfoServices(req, res);
+});
+
+//blog
+router.route("/get-content-blog/:id").get(async (req, res) => {
+  try {
+    var data = req.params.id;
+
+    const storeHtmlFilePath = path.join(
+      __dirname,
+      "../../public",
+      `storeHtml/${data}`
+    );
+    const htmlContent = fs.readFileSync(storeHtmlFilePath, "utf8");
+    return res.status(200).json({ message: "ok", data: htmlContent });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ message: "Server error" })
+  }
+
 });
 
 //sale

@@ -38,7 +38,7 @@ export const httpGetData = (url, data) => {
   });
 };
 
-export const uploadfileDataImage = (data, permissionValue) => {
+export const uploadFileDataImage = (data, permissionValue) => {
   return new Promise((resolve, reject) => {
     axios
       .post(API_URL + "customers/import-image", Object.assign(data), {
