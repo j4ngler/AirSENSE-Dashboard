@@ -76,7 +76,12 @@ export const TableManifest = {
   SUPPORT: 3, //  kế toán, chỉ có thể xem và sửa liên quan nghieep vụ kinh doanh
   ACCOUNT: 4, //  kế toán, chỉ có thể xem và sửa liên quan nghieep vụ kinh doanh
   ADMIN: 10, // Quản trị trang có thể thêm sửa  trang web
+
   NEW_REGISTER: 11, //Ghi danh
+  ADMIN_STATION: 21,
+  GET_DATA_STATION: 22,
+  SUPER_VIEW: 23,
+  VIEW: 24,
   MANAGER_BLOG: 31,
   DELETE_BLOG: 32,
   EDIT_BLOG: 33,

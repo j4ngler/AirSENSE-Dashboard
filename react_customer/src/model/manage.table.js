@@ -4,7 +4,7 @@ import groupContentSub from "./table/groupContentSub.table";
 import pageContent from "./table/pageContent.table";
 import order from "./table/order.table";
 import customer from "./table/customer.table";
-
+import sensorDeviceType from "./table/sensorDeviceType";
 const classesFactory = {
   deviceSensor,
   groupContent,
@@ -12,6 +12,7 @@ const classesFactory = {
   pageContent,
   order,
   customer,
+  sensorDeviceType
 };
 
 const classesFactoryMapping = {
@@ -21,6 +22,7 @@ const classesFactoryMapping = {
   content_page: "pageContent",
   order: "order",
   customer: "customer",
+  sensor_device_type: "sensorDeviceType"
 };
 
 export const exportColumnTable = (table, callback = null) => {
@@ -58,17 +60,30 @@ export const exportFieldCheckEdit = (table) => {
 };
 
 export const exportFieldToAdd = (table) => {
-  var nameConvert = classesFactoryMapping[table];
+  const nameConvert = classesFactoryMapping[table];
   if (!!nameConvert) {
-    var tableSelect = new classesFactory[nameConvert]();
+    const tableSelect = new classesFactory[nameConvert]();
     if (!!tableSelect) {
-      var dataValue = {};
-      dataValue.view = tableSelect.getInformationToAdd();
-      dataValue.html = tableSelect.getHTMLToAdd();
-      dataValue.selectTable = tableSelect.getTypeSelectTableToAdd();
-      dataValue.selectValidate = tableSelect.getInformationToValidate();
-      return dataValue;
+      let fieldExport = {};
+      fieldExport.view = tableSelect.getInformationToAdd();
+      fieldExport.html = tableSelect.getHTMLToAdd();
+      fieldExport.selectTable = tableSelect.getTypeSelectTableToAdd();
+      fieldExport.selectValidate = tableSelect.getInformationToValidate();
+      return fieldExport;
     }
   }
   return {};
 };
+export const exportFieldSelectTable = (table) => {
+  const nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    const tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) {
+      let fieldExport = {}
+      fieldExport.main_id = tableSelect.getInformationToEdit().mainID
+      fieldExport.main_info_title = tableSelect.getInformationToEdit().mainInfo.dataIndex
+      return fieldExport
+    }
+  }
+  return {}
+}

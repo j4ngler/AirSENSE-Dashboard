@@ -66,7 +66,7 @@ customerCtrl.getTableData = function (req, res) {
         return returnNotFound(res, error);
       }
     );
-  } else return returnNotFound(res, { message: "Database inval" });
+  } else return returnNotFound(res, { message: "Database invalid" });
 };
 
 customerCtrl.getTableDataByGroup = function (req, res) {
@@ -766,10 +766,11 @@ customerCtrl.getDataAverage = async (req, res) => {
 
 //blog 
 customerCtrl.postUpdatePageToDataBase = function (request, res) {
-  console.log("request.body",request.body)
+  console.log("request.body", request.body)
   let content_html = request.body["content_html"];
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
+
   // save file
   var link = documentFileAndFolder.createNewFile(content_html, "storeHtml");
   if (link == null) {
@@ -788,16 +789,16 @@ customerCtrl.postUpdatePageToDataBase = function (request, res) {
       .set("description", request.body["description"])
       .set("set_to_first", request.body["set_to_first"])
       .set("content_img", request.body["content_img"])
-      .set("id_created", request.currentUser.users_id)
-      .set("id_updated", request.currentUser.users_id)
+      .set("id_created", request.currentUser.customer_id)
+      .set("id_updated", request.currentUser.customer_id)
       .set("updated_at", "NOW()", { dontQuote: true })
       .set("delete_flag", 0)
       .where("content_page_id=" + request.body["content_page_id"]);
     knex
       .raw(addData.toString())
-      .then(function (x) {
+      .then(function (data) {
         return res.status(HttpStatus.OK).json({
-          data: x,
+          data
         });
       })
       .catch(function (err) {

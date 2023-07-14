@@ -9,6 +9,8 @@ import {
 import { useState } from "react";
 import DynamicForm from "../Form/DynamicForm";
 import { editBlog, editTable } from "../../features/API/httpBaseUtils";
+import { message } from "antd";
+import { openNotification, typeNotify } from "../../utils/notification";
 const EditModal = ({
   table,
   dataRow,
@@ -17,6 +19,7 @@ const EditModal = ({
   refresh,
   setRefresh,
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
   let infoCheckEditPermission = exportFieldCheckEdit(table);
   //matching table config with data
   const infoTitleAdd = exportFieldToAdd(table);
@@ -77,41 +80,48 @@ const EditModal = ({
       infoCheckEditPermission.edit_permission;
     if (table === "content_page") {
 
-      const data = await editBlog(dataEdit, permissionValue)
-      console.log(data)
+      const data = await editBlog(dataEdit, permissionValue).then(() => {  openNotification(typeNotify.SUCCESS, "Chỉnh sửa bài báo thành công!"); })
+        .catch(err => message.error("Đã có lỗi xảy ra!"))
+      setRefresh(!refresh)
+      handleCancel()
     }
     else {
       const data = await editTable(table, dataEdit, permissionValue)
       console.log(data)
     }
   }
-  return (
-    <Modal
-      width={800}
-      title={titleModal}
-      onCancel={handleCancel}
-      footer={[
-      ]}
-      open={showModalEdit}
-    >
-      <Form form={form} layout="vertical" onFinish={onSave} scrollToFirstError  >
-        {state.header.map((variantInput) => (
-          <DynamicForm form={form}
-            key={variantInput.view.dataIndex}
-            variantInput={variantInput}
-            valueInput={state.value[variantInput.view.dataIndex]}
-            selectTable={variantInput.selectTable}
-          />
-        ))}
 
-        <Button key="cancel" onClick={handleCancel}>
-          Cancel
-        </Button>,
-        <Button key="save" type="primary" htmlType="submit">
-          Save
-        </Button>,
-      </Form>
-    </Modal >
+
+  return (
+    <>
+      <Modal
+        width={800}
+        title={titleModal}
+        onCancel={handleCancel}
+        footer={[
+        ]}
+        open={showModalEdit}
+      >
+
+        <Form form={form} layout="vertical" onFinish={onSave} scrollToFirstError  >
+          {state.header.map((variantInput) => (
+            <DynamicForm form={form}
+              key={variantInput.view.dataIndex}
+              variantInput={variantInput}
+              valueInput={state.value[variantInput.view.dataIndex]}
+              selectTable={variantInput.selectTable}
+            />
+          ))}
+
+          <Button key="cancel" onClick={handleCancel}>
+            Cancel
+          </Button>,
+          <Button key="save" type="primary" htmlType="submit">
+            Save
+          </Button>,
+        </Form>
+      </Modal >
+    </>
   );
 };
 

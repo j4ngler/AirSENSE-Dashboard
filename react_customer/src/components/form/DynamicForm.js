@@ -4,8 +4,10 @@ import { Form, Input, Switch } from "antd";
 import UploadImage from "./UploadImage";
 import SelectGroupContentSub from "./SelectGroupContentSub";
 import DocumentForm from "./DocumentForm";
+import SelectType from "./SelectType";
 
 const DynamicForm = ({ variantInput, valueInput, selectTable, form }) => {
+  console.log(variantInput)
   if (variantInput.html === TypeDialogueShow.NO_CHECK) {
     return <></>;
   } else if (variantInput.html === TypeDialogueShow.EDIT_TEXT) {
@@ -74,6 +76,18 @@ const DynamicForm = ({ variantInput, valueInput, selectTable, form }) => {
       initialValue={valueInput === 1 ? true : false}
     >
       <Switch defaultChecked={valueInput === 1 ? true : false} />
+    </Form.Item>;
+  }
+  else if (variantInput.html === TypeDialogueShow.SELECT_TYPE) {
+    return <Form.Item
+      label={
+        <span style={{ fontWeight: "bold" }}>{variantInput.view.title}</span>
+      }
+      name={variantInput.view.dataIndex}
+      rules={variantInput.selectValidate}
+      key={variantInput.view.dataIndex}
+    >
+      <SelectType table={variantInput.table} initialValue={valueInput} />
     </Form.Item>;
   }
   return <></>;

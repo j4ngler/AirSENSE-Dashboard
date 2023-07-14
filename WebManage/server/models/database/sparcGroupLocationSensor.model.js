@@ -58,6 +58,11 @@ class sparcGroupLocationSensor extends CommonModel {
     return "SELECT sensor_device_type.* FROM sensor_device_type ";
     //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
+  getSQLCustomerReport(currentUser) {
+    console.log("getSQLReport...2....... ", currentUser.manifestid);
+    return "SELECT sensor_device_type.* FROM sensor_device_type ";
+    //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  }
   getJsonTofind() {
     return [];
   }
