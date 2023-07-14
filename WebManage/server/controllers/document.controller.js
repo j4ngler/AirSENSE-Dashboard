@@ -1,11 +1,11 @@
 const bookshelf = require("../config/bookshelf.js");
 const HttpStatus = require("http-status-codes");
-const DocumentFileAndFloder = require("../models/DocumentFileAndFloder.js");
+const DocumentFileAndFolder = require("../models/DocumentFileAndFolder.js");
 const { returnFalse, returnOKCustom } = require("../utils/returnResponse");
 const WarningInfo = require("../utils/warningInfo.js");
 const { DEFINE_DOCUMENT, uploadFileS3 } = require("../models/S3UploadFile.js");
 const pagesContent = require("../models/database/PagesContent.model.js");
-var documentFileAndFloder = new DocumentFileAndFloder();
+var documentFileAndFolder = new DocumentFileAndFolder();
 var squel = require("squel");
 const knex = require("../config/knex.js");
 var documentCtrl = {};
@@ -42,7 +42,7 @@ documentCtrl.postAddPageToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -56,7 +56,7 @@ documentCtrl.postAddPageToDataBase = function (request, res) {
       .set("group_file", group)
       .set("file_save", link)
       .set("title", request.body["title"])
-      .set("description", request.body["content"])
+      .set("description", request.body["description"])
       .set("set_to_first", request.body["set_to_first"])
       .set("content_img", request.body["content_img"])
       .set(
@@ -82,20 +82,18 @@ documentCtrl.postAddPageToDataBase = function (request, res) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           error: true,
           detail: err,
-          data: "Database inval",
+          data: "Database invalid",
         });
       });
   }
 };
 
 documentCtrl.postUpdatePageToDataBase = function (request, res) {
-  console.log(request.body);
-  let content = request.body["content"];
   let content_html = request.body["content_html"];
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewFile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -109,13 +107,13 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
       .set("group_file", group)
       .set("file_save", link)
       .set("title", request.body["title"])
-      .set("content", request.body["content"])
-      .set("is_main_pages_id", request.body["is_main_pages_id"])
+      .set("description", request.body["description"])
+      .set("set_to_first", request.body["set_to_first"])
       .set("content_img", request.body["content_img"])
       .set("id_created", request.currentUser.users_id)
       .set("id_updated", request.currentUser.users_id)
       .set("updated_at", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0)
+      .set("delete_flag", 0)
       .where("content_page_id=" + request.body["content_page_id"]);
     knex
       .raw(addData.toString())
@@ -128,7 +126,7 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           error: true,
           detail: err,
-          data: "Database inval",
+          data: "Database invalid",
         });
       });
   }
@@ -136,7 +134,7 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
 async function saveDocumentFileHtml(res, content_html, dirSave) {
   try {
     console.log(content_html);
-    var link = await documentFileAndFloder.createNewFileToS3(
+    var link = await documentFileAndFolder.createNewFileToS3(
       content_html,
       dirSave
     );
@@ -151,6 +149,7 @@ async function saveDocumentFileHtml(res, content_html, dirSave) {
   }
 }
 documentCtrl.postAddProductPageToDataBase = async function (request, res) {
+  console.log("request.body", request.body)
   let content_html = request.body["content_html"];
   let product_id = request.body["product_id"];
   var link = await saveDocumentFileHtml(res, content_html, "storeHtml");
@@ -177,7 +176,7 @@ documentCtrl.postAddCourseToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let course_id = request.body["course_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -222,7 +221,7 @@ documentCtrl.postUpdateCourseToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let course_id = request.body["course_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -269,7 +268,7 @@ documentCtrl.postAddExamToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let exam_id = request.body["exam_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -314,7 +313,7 @@ documentCtrl.postUpdateExamToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let course_id = request.body["exam_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -361,7 +360,7 @@ documentCtrl.postAddAdvertisementToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -406,7 +405,7 @@ documentCtrl.postUpdateAdvertisementToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -454,7 +453,7 @@ documentCtrl.getListBlog = async function () {
     .order("created_at", false)
     .where("delete_flag=0")
     .toString();
-    console.log(sqlString)
+  console.log(sqlString)
   const data = await knex.raw(sqlString);
   if (data) {
     return data[0];
@@ -613,9 +612,9 @@ documentCtrl.getAllInGroupPage = async function (request) {
     .where("deleteflag=0")
     .where(
       "is_main_pages_id=" +
-        is_main_pages_id +
-        " OR content_page_id =" +
-        is_main_pages_id
+      is_main_pages_id +
+      " OR content_page_id =" +
+      is_main_pages_id
     );
   console.log("sqlraw.toString() .............", sqlraw.toString());
   var x = await knex.raw(sqlraw.toString());
@@ -638,9 +637,9 @@ documentCtrl.getAllInGroupExam = async function (request) {
     .where("deleteflag=0")
     .where(
       "is_main_pages_id=" +
-        is_main_pages_id +
-        " OR exam_detail_id =" +
-        is_main_pages_id
+      is_main_pages_id +
+      " OR exam_detail_id =" +
+      is_main_pages_id
     );
   console.log("sqlraw.toString() .............", sqlraw.toString());
   var x = await knex.raw(sqlraw.toString());

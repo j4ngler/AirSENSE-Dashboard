@@ -1,4 +1,4 @@
-import { Form, Input, Select } from "antd";
+import { Form, Input, Select, Space } from "antd";
 import React from "react";
 import { ruleValidates } from "../../configs/constants";
 import { useEffect } from "react";
@@ -65,7 +65,7 @@ const SelectGroupContentSub = ({ initSubId }) => {
     fetchInitial();
   }, []);
   return (
-    <Input.Group>
+    <Space.Compact direction="vertical" block={true}>
       {initialGroupValue && <Form.Item
         name="content_group_id"
         label={"Chuyên mục (Menu)"}
@@ -95,7 +95,7 @@ const SelectGroupContentSub = ({ initSubId }) => {
           options={contentSubOptions}
         />
       </Form.Item>}
-    </Input.Group>
+    </Space.Compact >
   );
 };
 

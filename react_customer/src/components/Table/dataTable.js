@@ -4,8 +4,7 @@ import { exportColumnTable } from "../../model/manage.table";
 import { ActionControl } from "../../utils/commonUtils";
 import { httpGetDataTable } from "../../features/API/httpBaseUtils";
 import ModalComponent from "../Modal";
-import ModalDelete from "../Modal/ModalDelete";
-import ModalEdit from "../Modal/ModalEdit";
+import ModalDelete from "../Modal/DeleteModal";
 import EditModal from "../Modal/EditModal";
 
 const TableData = ({ table, searchText = "" }) => {

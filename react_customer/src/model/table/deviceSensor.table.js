@@ -1,8 +1,6 @@
 import ButtonComponent from "../../components/Button";
 import { ActionControl } from "../../utils/commonUtils";
 
-
-
 class deviceSensor {
     getColumnShow = (callBack) => {
         const columns = [

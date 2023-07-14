@@ -1,12 +1,14 @@
 import { Button, Form, Input, Modal } from "antd";
 import React from "react";
 import {
+  exportFieldCheckEdit,
   exportFieldToAdd,
   exportFieldToEdit,
   exportFieldToValidate,
 } from "../../model/manage.table";
 import { useState } from "react";
-import DynamicForm from "../form/DynamicForm";
+import DynamicForm from "../Form/DynamicForm";
+import { editBlog, editTable } from "../../features/API/httpBaseUtils";
 const EditModal = ({
   table,
   dataRow,
@@ -15,11 +17,11 @@ const EditModal = ({
   refresh,
   setRefresh,
 }) => {
+  let infoCheckEditPermission = exportFieldCheckEdit(table);
   //matching table config with data
   const infoTitleAdd = exportFieldToAdd(table);
   let newInfo = {}; //information matched with data
   let header = []; //information of column config
-  console.log("dataRow", dataRow)
   for (let i = 0; i < infoTitleAdd.view.length; i++) {
     newInfo[infoTitleAdd.view[i].dataIndex] =
       dataRow[infoTitleAdd.view[i].dataIndex];
@@ -44,13 +46,7 @@ const EditModal = ({
   var dataDetail = { header: header, value: newInfo };
   const [state, setState] = useState(dataDetail);
   const [form] = Form.useForm();
-  const onSave = (data) => { console.log("data", data) };
-  const handleSave = () => {
-    form.validateFields().then((values) => {
-      onSave(values);
-      form.resetFields();
-    });
-  };
+
   const handleCancel = () => {
     setShowModalEdit(false);
   };
@@ -73,22 +69,32 @@ const EditModal = ({
       value: dataRow.content_group_id
     }
   }
+  const onSave = async (values) => {
+    const dataEdit = { ...state.value, ...values }
+    const permissionValue =
+      dataRow[infoCheckEditPermission.dataIndex] +
+      "/" +
+      infoCheckEditPermission.edit_permission;
+    if (table === "content_page") {
+
+      const data = await editBlog(dataEdit, permissionValue)
+      console.log(data)
+    }
+    else {
+      const data = await editTable(table, dataEdit, permissionValue)
+      console.log(data)
+    }
+  }
   return (
     <Modal
       width={800}
       title={titleModal}
       onCancel={handleCancel}
       footer={[
-        <Button key="cancel" onClick={handleCancel}>
-          Cancel
-        </Button>,
-        <Button key="save" type="primary" onClick={handleSave}>
-          Save
-        </Button>,
       ]}
       open={showModalEdit}
     >
-      <Form form={form} layout="vertical">
+      <Form form={form} layout="vertical" onFinish={onSave} scrollToFirstError  >
         {state.header.map((variantInput) => (
           <DynamicForm form={form}
             key={variantInput.view.dataIndex}
@@ -97,8 +103,15 @@ const EditModal = ({
             selectTable={variantInput.selectTable}
           />
         ))}
+
+        <Button key="cancel" onClick={handleCancel}>
+          Cancel
+        </Button>,
+        <Button key="save" type="primary" htmlType="submit">
+          Save
+        </Button>,
       </Form>
-    </Modal>
+    </Modal >
   );
 };
 

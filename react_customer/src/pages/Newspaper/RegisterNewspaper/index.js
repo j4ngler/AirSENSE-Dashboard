@@ -8,7 +8,6 @@ import ButtonComponent from "../../../components/Button";
 import { PlusOutlined } from "@ant-design/icons";
 import {} from "antd";
 import {
-  httpGetData,
   httpPostData,
   registerPageToWriter,
   uploadFileDataImage,
@@ -101,7 +100,7 @@ export default function News() {
   const handleSubmit = () => {
     let data = {
       title,
-      content: description,
+      description: description,
       content_sub_id: contentSub,
       content_group_id: contentGroup,
       content_img: contentImg,

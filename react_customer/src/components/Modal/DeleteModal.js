@@ -8,7 +8,7 @@ import { useState } from "react";
 import { deleteOneTable } from "../../features/API/httpBaseUtils";
 import { openNotification, typeNotify } from "../../utils/notification";
 
-const ModalDelete = ({
+const DeleteModal = ({
   table,
   dataRow,
   showModalDelete,
@@ -17,7 +17,7 @@ const ModalDelete = ({
   setRefresh,
 }) => {
   let infoTitle = exportFieldToEdit(table);
-  let infoCheckDelete = exportFieldCheckDelete(table);
+  let infoCheckDeletePermission = exportFieldCheckDelete(table);
   let dataInfo = "";
   let infoSent = {};
   if (!!infoTitle.mainInfo) {
@@ -26,17 +26,16 @@ const ModalDelete = ({
       " :" +
       dataRow[infoTitle.mainInfo.dataIndex];
   }
-  if (!!infoTitle.mainID && infoCheckDelete.dataIndex) {
+  if (!!infoTitle.mainID && infoCheckDeletePermission.dataIndex) {
     infoSent[infoTitle.mainID] = dataRow[infoTitle.mainID];
-    infoSent[infoCheckDelete.dataIndex] = dataRow[infoCheckDelete.dataIndex];
+    infoSent[infoCheckDeletePermission.dataIndex] = dataRow[infoCheckDeletePermission.dataIndex];
   }
 
   const handleOk = () => {
     const permissionValue =
-      dataRow[infoCheckDelete.dataIndex] +
+      dataRow[infoCheckDeletePermission.dataIndex] +
       "/" +
-      infoCheckDelete.delete_permission;
-    console.log(permissionValue);
+      infoCheckDeletePermission.delete_permission;
     deleteOneTable(table, infoSent, permissionValue).then(() => {
       openNotification(typeNotify.SUCCESS, "Xóa dữ liệu thành công!");
       handleCancel();
@@ -57,4 +56,4 @@ const ModalDelete = ({
   );
 };
 
-export default ModalDelete;
+export default DeleteModal;

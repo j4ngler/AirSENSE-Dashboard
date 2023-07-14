@@ -12,6 +12,8 @@ const {
   returnOKCustom,
 } = require("../utils/returnResponse.js");
 const { uploadFileS3 } = require("../models/S3UploadFile.js");
+const DocumentFileAndFolder = require("../models/DocumentFileAndFolder.js");
+var documentFileAndFolder = new DocumentFileAndFolder();
 // const customer = require("../models/database/customer.model");
 
 var customerCtrl = {};
@@ -511,7 +513,7 @@ customerCtrl.getDetailProductPages = async function (req, res) {
     return returnNotFound(
       res,
       { message: "acao Not exitting " },
-      WarningInfo.DATA_NOT_EXSITING
+      WarningInfo.ACCOUNT_NOT_EXIST
     );
   }
   return returnOK(res, result[0]);
@@ -532,6 +534,7 @@ const { CostExplorer } = require("aws-sdk");
 const { exceptions, error } = require("winston");
 const User = require("../models/database/user.model.js");
 const Customer = require("../models/database/customer.model.js");
+const WarningInfo = require("../utils/warningInfo.js");
 
 customerCtrl.setTheBillData = async function (req, res) {
   try {
@@ -758,5 +761,51 @@ customerCtrl.getDataAverage = async (req, res) => {
     res.status(500).json({
       message: error,
     });
+  }
+};
+
+//blog 
+customerCtrl.postUpdatePageToDataBase = function (request, res) {
+  console.log("request.body",request.body)
+  let content_html = request.body["content_html"];
+  let group = request.body["group_file"];
+  let content_sub_id = request.body["content_sub_id"];
+  // save file
+  var link = documentFileAndFolder.createNewFile(content_html, "storeHtml");
+  if (link == null) {
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      error: true,
+      data: { message: err.message },
+    });
+  } else {
+    var addData = squel.update().table("content_page");
+    // save data Sql
+    addData
+      .set("content_sub_id", content_sub_id)
+      .set("group_file", group)
+      .set("file_save", link)
+      .set("title", request.body["title"])
+      .set("description", request.body["description"])
+      .set("set_to_first", request.body["set_to_first"])
+      .set("content_img", request.body["content_img"])
+      .set("id_created", request.currentUser.users_id)
+      .set("id_updated", request.currentUser.users_id)
+      .set("updated_at", "NOW()", { dontQuote: true })
+      .set("delete_flag", 0)
+      .where("content_page_id=" + request.body["content_page_id"]);
+    knex
+      .raw(addData.toString())
+      .then(function (x) {
+        return res.status(HttpStatus.OK).json({
+          data: x,
+        });
+      })
+      .catch(function (err) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          error: true,
+          detail: err,
+          data: "Database invalid",
+        });
+      });
   }
 };

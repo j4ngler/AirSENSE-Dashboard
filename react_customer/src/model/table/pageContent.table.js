@@ -162,6 +162,12 @@ class pageContent {
       delete_permission: TableManifest.DELETE_BLOG,
     };
   }
+  getInformationCheckEdit() {
+    return {
+      dataIndex: "content_sub_id",
+      edit_permission: TableManifest.EDIT_BLOG,
+    };
+  }
   getInformationToValidate() {
     return [
       [ruleValidates.requiredValue],

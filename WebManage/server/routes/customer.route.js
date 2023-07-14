@@ -184,7 +184,9 @@ router.route("/get-content-blog/:id").get(async (req, res) => {
   }
 
 });
-
+router.route("/updatePages").post(isAuthorizedCustomer, (req, res) => {
+  documentCtrl.postUpdatePageToDataBase(req, res);
+});
 //sale
 router.route("/lst_product").post(customerCtrl.getInfoProductStore);
 router.route("/page_product").get(customerCtrl.getDetailProductPages);

@@ -7,11 +7,11 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { httpGetData } from '../../features/API/httpBaseUtils';
 import { MyCustomUploadAdapterPlugin } from '../../features/API/uploadAdapter';
 import { useState } from 'react';
-const DocumentForm = ({ idBlog }) => {
+const DocumentForm = ({ idBlog, form }) => {
     const [contentHtml, setContentHtml] = useState("")
     const fetchContent = async () => {
         const data = await httpGetData(`http://localhost:3000/api/customers/get-content-blog/${idBlog.split('/')[1]}`)
-
+        form.setFieldsValue({ "content_html": data.data.data })
         setContentHtml(data.data.data)
     }
     const custom_config = {
@@ -34,13 +34,14 @@ const DocumentForm = ({ idBlog }) => {
                 onChange={(event, editor) => {
                     const data = editor.getData();
                     setContentHtml(data);
-                    console.log({ event, editor, data });
+                    console.log(typeof data)
+                    form.setFieldsValue({ "content_html": data })
                 }}
                 onBlur={(event, editor) => {
-                    console.log("Blur.", editor);
+
                 }}
                 onFocus={(event, editor) => {
-                    console.log("Focus.", editor);
+
                 }}
             />
         </div>

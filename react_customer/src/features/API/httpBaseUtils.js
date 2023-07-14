@@ -96,3 +96,19 @@ export const deleteOneTable = (table, data, permissionValue) => {
     permissionValue
   );
 };
+export const editTable = (table, data, permissionValue) => {
+  return httpPostData(
+    API_URL + "customers/manager_delete",
+    Object.assign(data, { table: table }),
+    permissionValue
+  );
+};
+
+//database 
+export const editBlog = (data, permissionValue) => {
+  return httpPostData(
+    API_URL + "customers/updatePages",
+    data,
+    permissionValue
+  );
+};

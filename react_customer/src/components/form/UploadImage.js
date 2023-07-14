@@ -1,9 +1,9 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { uploadFileDataImage } from "../../features/API/httpBaseUtils";
 
-const UploadImage = ({ url,form }) => {
+const UploadImage = ({ url, form }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -32,7 +32,9 @@ const UploadImage = ({ url,form }) => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-
+  useEffect(() => {
+    form.setFieldsValue({ "content_img": url })
+  },[])
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -57,7 +59,7 @@ const UploadImage = ({ url,form }) => {
           const data = new FormData();
           data.append("file", file);
           const dataImg = await uploadFileDataImage(data);
-          form.setFieldsValue({"content_img": dataImg})
+          form.setFieldsValue({ "content_img": dataImg?.data?.url })
           setContentImg(dataImg.data.url);
           return false;
         }}

@@ -48,6 +48,14 @@ export const exportFieldCheckDelete = (table) => {
   }
   return {};
 };
+export const exportFieldCheckEdit = (table) => {
+  var nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    var tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) return tableSelect.getInformationCheckEdit();
+  }
+  return {};
+};
 
 export const exportFieldToAdd = (table) => {
   var nameConvert = classesFactoryMapping[table];
