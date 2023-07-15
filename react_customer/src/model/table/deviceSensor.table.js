@@ -55,9 +55,9 @@ class deviceSensor {
               width: 100,
               render: () => (
                 <div>
-                    <ButtonComponent content={'Report'} size={'small'} handle={callBack(ActionControl.ACTION_REPORT)} />
+                    {/* <ButtonComponent content={'Report'} size={'small'} handle={callBack(ActionControl.ACTION_REPORT)} />
                     <ButtonComponent content={'Edit'} size={'small'} handle={callBack(ActionControl.ACTION_UPDATE)} />
-                    <ButtonComponent content={'Delete'} danger={true} size={'small'} handle={callBack(ActionControl.ACTION_DELETE)} />
+                    <ButtonComponent content={'Delete'} danger={true} size={'small'} handle={callBack(ActionControl.ACTION_DELETE)} /> */}
                 </div>
               )
             }

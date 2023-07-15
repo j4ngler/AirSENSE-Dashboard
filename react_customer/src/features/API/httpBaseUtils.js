@@ -1,7 +1,5 @@
 import { API_URL, JWT_TOKEN } from "../../configs/config";
-import {
-  getLocalStorage,
-} from "../../utils/storageUltils";
+import { getLocalStorage } from "../../utils/storageUltils";
 import { axiosRequest, axiosMethod } from "../../utils/handleApiRequest";
 import { checkErrorReturn } from "../../utils/commonUtils";
 import { SpinLoading } from "../../components/Spin/SpinLoading";
@@ -10,11 +8,10 @@ import "../../configs/config.js";
 export const showLoading = () => {
   <SpinLoading />;
 };
-export const httpPostData = (url, data) => {
+export const httpPostData = (url, data, permissionValue) => {
   const token = getLocalStorage(JWT_TOKEN);
-  console.log("token",token)
   return new Promise((resolve, reject) => {
-    axiosRequest(url, axiosMethod.POST, token, data)
+    axiosRequest(url, axiosMethod.POST, token, data, permissionValue)
       .then((response) => {
         resolve(response);
       })
@@ -41,6 +38,31 @@ export const httpGetData = (url, data) => {
   });
 };
 
+export const uploadfileDataImage = (data, permissionValue) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(API_URL + "customers/import-image", Object.assign(data), {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          "X-XSRF-TOKEN": getLocalStorage(JWT_TOKEN),
+          authorization: "Beard " + getLocalStorage(JWT_TOKEN),
+          "X-Authorized-Permission": permissionValue,
+        },
+      })
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+export const registerPageToWriter = (data) => {
+  return httpPostData(API_URL + "document/registerPages", data);
+};
+
+//table
 export const httpGetDataTable = async (table, filter = null) => {
   return new Promise((resolve, reject) => {
     let dataUpload = null;
@@ -66,26 +88,11 @@ export const httpGetDataTable = async (table, filter = null) => {
       });
   });
 };
-
-export const uploadfileDataImage = (data) => {
-  return new Promise((resolve, reject) => {
-    axios
-      .post(API_URL + "customers/import-image", Object.assign(data), {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-          "X-XSRF-TOKEN": getLocalStorage(JWT_TOKEN),
-          authorization: "Beard " + getLocalStorage(JWT_TOKEN),
-        },
-      })
-      .then((response) => {
-        resolve(response);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
-export const registerPageToWriter = (data) => {
-  return httpPostData(API_URL + 'document/registerPages', data);
+export const deleteOneTable = (table, data, permissionValue) => {
+  console.log("dataDelete", data);
+  return httpPostData(
+    API_URL + "customers/manager_delete",
+    Object.assign(data, { table: table }),
+    permissionValue
+  );
 };

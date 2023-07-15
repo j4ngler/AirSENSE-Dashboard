@@ -160,13 +160,6 @@ export const checkErrorReturn = (error) => {
       console.log("error ... error . ", error.response.request.response);
       localStorage.removeItem(JWT_TOKEN);
       openNotification(typeNotify.WARNING, "Bạn đã quá phiên đăng nhập");
-
-      //   Swal.fire(jsonValue.error.message).then((value) => {
-      // localStorage.removeItem('username');
-      //localStorage.removeItem('username');
-      // window.location.href = window.location.protocol +'////'+ window.location.host +'/customer/login';
-      //   });
-
       return;
     }
     if (404 === error.response.status) {
@@ -187,21 +180,7 @@ export const checkErrorReturn = (error) => {
       }, 6000);
       return;
     }
-    // var dataAcess=" Lỗi chi tiết "+ error;
-    // if(!!error.response.data)
-    // {
-    //     if((!!error.response.data.data)&&(!!error.response.data.data.message)){
-    //       dataAcess += "\r\n ||" +error.response.data.data.message;
-    //     }
-    //     if(!!error.response.data.error){
-    //       dataAcess += "\r\n ||" +error.response.data.error.message;
-    //     }
-    //     if((!!error.response.data.error)&&(!!error.response.data.error.sqlMessage)){
-    //       dataAcess += "\r\n ||" +error.response.data.error.sqlMessage;
-    //     }
-    // }
     console.log("error ... error . ", error.response);
     openNotification(typeNotify.ERROR, error.response);
-    //   Swal.fire( " Lỗi",dataAcess,"ok");
   }
 };

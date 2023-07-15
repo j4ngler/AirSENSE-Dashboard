@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [dataAverage, setDataAverage] = useState([]);
   const [dataStationPick, setDataStationPick] = useState({})
   const fetchData = async () => {
-    const data = await axios.get(
+    const data = await httpGetData(
       "http://localhost:3000/api/customers/dashboard-data-average"
     );
     setDataAverage(data.data);

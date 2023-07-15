@@ -4,6 +4,8 @@ import { exportColumnTable } from "../../model/manage.table";
 import { ActionControl } from "../../utils/commonUtils";
 import { httpGetDataTable } from "../../features/API/httpBaseUtils";
 import ModalComponent from "../Modal";
+import ModalDelete from "../Modal/ModalDelete";
+import ModalEdit from "../Modal/ModalEdit";
 
 const TableData = ({ table, searchText = "" }) => {
   const [dataTable, setDataTable] = useState([]);
@@ -13,6 +15,7 @@ const TableData = ({ table, searchText = "" }) => {
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [dataRow, setDataRow] = useState({});
   const [dataFilter, setDataFilter] = useState([]);
   async function fetchData() {
     const data = await httpGetDataTable(table);
@@ -21,16 +24,14 @@ const TableData = ({ table, searchText = "" }) => {
   useEffect(() => {
     const columnTable = exportColumnTable(table, callBack);
     setColumn(columnTable);
-    console.log(columnTable);
     fetchData();
   }, [refresh]);
   useEffect(() => {
     const dataSet = dataTable.filter((item) => {
       return item?.fullname?.toLowerCase().includes(searchText?.toLowerCase());
     });
-    console.log(dataSet);
     setDataFilter(dataSet);
-  }, [searchText]);
+  }, [searchText, dataTable]);
   const callBack = (type) => {
     if (ActionControl.ACTION_REPORT === type) setShowModalReport(true);
     if (ActionControl.ACTION_UPDATE === type) setShowModalEdit(true);
@@ -49,7 +50,38 @@ const TableData = ({ table, searchText = "" }) => {
         dataSource={searchText === "" || !searchText ? dataTable : dataFilter}
         scroll={{ x: 1500, y: 300 }}
         pagination={paginationConfig}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              setDataRow(record);
+            },
+          };
+        }}
       />
+      {showModalDelete ? (
+        <ModalDelete
+          setShowModalDelete={setShowModalDelete}
+          showModalDelete={showModalDelete}
+          table={table}
+          dataRow={dataRow}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+      ) : (
+        ""
+      )}
+      {showModalEdit ? (
+        <ModalEdit
+          setShowModalEdit={setShowModalEdit}
+          showModalEdit={showModalEdit}
+          table={table}
+          dataRow={dataRow}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+      ) : (
+        ""
+      )}
       {showModalReport ? <ModalComponent /> : ""}
     </>
   );
