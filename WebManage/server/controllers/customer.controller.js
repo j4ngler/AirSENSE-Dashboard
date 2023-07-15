@@ -790,12 +790,12 @@ customerCtrl.getDataAverage = async (req, res) => {
       .select()
       .from("data_average")
       .order("time", false)
-      .limit(1)
+      .limit(3)
       .toString();
       //query vao database
     const data = await knex.raw(sqlString)
    //gui ve cho nguoi dung
-    res.status(200).json(data[0][0]);
+    res.status(200).json(data[0]);
   } catch (error) {
     res.status(500).json({
       message:error
