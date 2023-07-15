@@ -1,95 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card, Timeline, Divider, Statistic, Space } from "antd";
+import { Row, Col, Card, Timeline, Divider, Statistic, Space, Select } from "antd";
 import { ArrowUpOutlined } from "@ant-design/icons";
 import "./dashboard.css";
-import { Column } from "@ant-design/plots";
-import { httpGetData } from "../../features/API/httpBaseUtils";
+import LineChart from "../../components/Chart";
+import axios from "axios";
 const Dashboard = () => {
-  const [dataAverage, setDataAverage] = useState({});
+  const [dataAverage, setDataAverage] = useState([]);
+  const [dataStationPick, setDataStationPick] = useState({})
   const fetchData = async () => {
     const data = await httpGetData(
       "http://localhost:3000/api/customers/dashboard-data-average"
     );
     setDataAverage(data.data);
-    console.log(data.data);
+    setDataStationPick(data.data[0])
   };
-  const data = [
-    {
-      type: "NO2",
-      data_average: dataAverage?.NO2,
-    },
-    {
-      type: "O3",
-      data_average: dataAverage?.O3,
-    },
-    {
-      type: "SO2",
-      data_average: dataAverage?.SO2,
-    },
-    {
-      type: "CO",
-      data_average: dataAverage?.CO,
-    },
-    {
-      type: "PM2p5",
-      data_average: dataAverage?.PM2p5,
-    },
-    {
-      type: "PM1",
-      data_average: dataAverage?.PM1,
-    },
-    {
-      type: "PM10",
-      data_average: dataAverage?.CO,
-    },
-    {
-      type: "Humidity",
-      data_average: dataAverage?.humidity,
-    },
-    {
-      type: "temperature",
-      data_average: dataAverage?.temperature,
-    },
-    {
-      type: "pressure",
-      data_average: dataAverage?.pressure,
-    },
-    {
-      type: "wind_speed",
-      data_average: dataAverage?.wind_speed,
-    },
-    {
-      type: "sound_noise",
-      data_average: dataAverage?.sound_noise,
-    },
-  ];
-  const config = {
-    data,
-    xField: "type",
-    yField: "data_average",
-    label: {
-      position: "middle",
-      // 'top', 'bottom', 'middle',
-      style: {
-        fill: "#FFFFFF",
-        opacity: 0.6,
-      },
-    },
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
-      },
-    },
-    meta: {
-      type: {
-        alias: "type",
-      },
-      data_average: {
-        alias: "data_average",
-      },
-    },
-  };
+  const handleChangeStation = (value) => {
+
+    dataAverage.forEach((item) => {
+      if (item.station_id === value) {
+        setDataStationPick(item)
+      }
+    })
+  }
   useEffect(() => {
     fetchData();
   }, []);
@@ -99,17 +31,51 @@ const Dashboard = () => {
         <Space direction="vertical">
           <Row gutter={[16, 16]}>
             <Col>
-              <Card title="Customer" style={{ width: 300 }}>
-                <Statistic
-                  title="Active"
-                  value={11.28}
-                  precision={2}
-                  valueStyle={{
-                    color: "#3f8600",
+              <Card title="Chất lượng không khí" style={{ width: 300 }}>
+                <Select
+                  defaultValue={dataAverage[0]?.station_id}
+                  style={{
+                    width: 120,
                   }}
-                  prefix={<ArrowUpOutlined />}
-                  suffix="%"
+                  onChange={handleChangeStation}
+                  options={dataAverage?.map((item) => {
+                    return {
+                      value: item.station_id,
+                      label: `Trạm ${item.station_id}`
+                    }
+                  })}
                 />
+                <br />
+                <br />
+                <br />
+                <Row>
+                  <Col span={16}>Nhiệt độ</Col>
+                  <Col span={8}>{dataStationPick.temperature}</Col>
+                </Row>
+                <Row>
+                  <Col span={16}>Độ ẩm</Col>
+                  <Col span={8}>{dataStationPick.humidity}</Col>
+                </Row>
+                <Row>
+                  <Col span={16}>CO</Col>
+                  <Col span={8}>{dataStationPick.CO}</Col>
+                </Row>
+                <Row>
+                  <Col span={16}>PM10</Col>
+                  <Col span={8}>{dataStationPick.PM10}</Col>
+                </Row>
+                <Row>
+                  <Col span={16}>Pm2p5</Col>
+                  <Col span={8}>{dataStationPick.PM2p5}</Col>
+                </Row>
+                <Row>
+                  <Col span={16}>PM1</Col>
+                  <Col span={8}>{dataStationPick.PM1}</Col>
+                </Row>
+                <Row>
+                  <Col span={16}>Pressure</Col>
+                  <Col span={8}>{dataStationPick.pressure}</Col>
+                </Row>
               </Card>
             </Col>
             <Col>
@@ -144,7 +110,7 @@ const Dashboard = () => {
           <Row>
             <Col span={24}>
               <Card>
-                <Column {...config} />
+
               </Card>
             </Col>
           </Row>
