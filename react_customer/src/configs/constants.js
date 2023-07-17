@@ -95,7 +95,7 @@ export const ruleValidates = {
     message: "Chỉ được nhập chữ và số",
   },
   requiredPhone: {
-    pattern: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/,
+    pattern: new RegExp("^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$"),
     message: "Vui lòng nhập đúng định dạng số điện thoại!",
   },
   requiredEmail: { type: "email", message: "Email không hợp lệ" },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { UserOutlined } from "@ant-design/icons";
 import HeaderCustomer from "../../components/Header";
 import { Layout } from "antd";

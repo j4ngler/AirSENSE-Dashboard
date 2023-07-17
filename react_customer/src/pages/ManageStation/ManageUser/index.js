@@ -11,6 +11,8 @@ const ManageUser = () => {
   const onSearch = (value) => {
     setSearchText(value);
   };
+  const [showModalAdd, setShowModalAdd] = useState(false);
+
   return (
     <>
       <div className="search-user">
@@ -30,9 +32,15 @@ const ManageUser = () => {
           right: 110,
           top: 120,
         }}
+        onClick={() => setShowModalAdd(!showModalAdd)}
         tooltip={<div>Thêm mới người dùng</div>}
       />
-      <TableData table={"customer"} searchText={searchText} />
+      <TableData
+        table={"customer"}
+        searchText={searchText}
+        showModalAdd={showModalAdd}
+        setShowModalAdd={setShowModalAdd}
+      />
     </>
   );
 };

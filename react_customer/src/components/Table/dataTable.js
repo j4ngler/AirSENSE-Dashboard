@@ -6,8 +6,9 @@ import { httpGetDataTable } from "../../features/API/httpBaseUtils";
 import ModalComponent from "../Modal";
 import ModalDelete from "../Modal/DeleteModal";
 import EditModal from "../Modal/EditModal";
+import AddModal from "../Modal/AddModal";
 
-const TableData = ({ table, searchText = "" }) => {
+const TableData = ({ table, searchText = "", showModalAdd = false,setShowModalAdd }) => {
   const [dataTable, setDataTable] = useState([]);
   const [column, setColumn] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -75,6 +76,18 @@ const TableData = ({ table, searchText = "" }) => {
           setShowModalEdit={setShowModalEdit}
           showModalEdit={showModalEdit}
           table={table}
+          dataRow={dataRow}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+      ) : (
+        ""
+      )}
+      {showModalAdd ? (
+        <AddModal
+        table={table}
+          setShowModalAdd={setShowModalAdd}
+          showModalAdd={showModalAdd}
           dataRow={dataRow}
           refresh={refresh}
           setRefresh={setRefresh}

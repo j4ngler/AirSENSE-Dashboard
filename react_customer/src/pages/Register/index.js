@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo/airsense.jpg";
 import "./register.css";
+import { API_URL } from "../../configs/config";
 const Register = () => {
   const onFinish = async (values) => {
     const {
@@ -18,7 +19,7 @@ const Register = () => {
     };
     try {
       await axios
-        .post("http://localhost:3000/api/auth/customer_register", {
+        .post(API_URL+"auth/customer_register", {
           username,
           email,
           password,

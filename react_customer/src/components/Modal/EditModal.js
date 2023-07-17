@@ -19,8 +19,16 @@ const EditModal = ({
   refresh,
   setRefresh,
 }) => {
-  const [messageApi, contextHolder] = message.useMessage();
-  let infoCheckEditPermission = exportFieldCheckEdit(table);
+  let infoCheckEditPermission
+  if (table !== "customer") {
+    infoCheckEditPermission = exportFieldCheckEdit(table);
+  }
+  else if (table === "customer") {
+    infoCheckEditPermission = {
+      dataIndex:0,
+      edit_permission:2
+    }
+  }
   //matching table config with data
   const infoTitleAdd = exportFieldToAdd(table);
   let newInfo = {}; //information matched with data
@@ -28,7 +36,7 @@ const EditModal = ({
   for (let i = 0; i < infoTitleAdd.view.length; i++) {
     newInfo[infoTitleAdd.view[i].dataIndex] =
       dataRow[infoTitleAdd.view[i].dataIndex];
-    let detail = {};
+    var detail = {};
     detail.view = infoTitleAdd.view[i];
     detail.html = infoTitleAdd.html[i];
     detail.selectTable = infoTitleAdd.selectTable[i];
@@ -63,34 +71,42 @@ const EditModal = ({
   if (dataRow.content_sub_id) {
     initialValues.content_sub_id = {
       label: dataRow.content_sub_title,
-      value: dataRow.content_sub_id
-    }
+      value: dataRow.content_sub_id,
+    };
   }
   if (dataRow.content_group_id) {
     initialValues.content_group_id = {
       label: dataRow.content_group_title,
-      value: dataRow.content_group_id
-    }
+      value: dataRow.content_group_id,
+    };
   }
   const onSave = async (values) => {
-    const dataEdit = { ...state.value, ...values }
+    const dataEdit = { ...state.value, ...values };
     const permissionValue =
       dataRow[infoCheckEditPermission.dataIndex] +
       "/" +
       infoCheckEditPermission.edit_permission;
     if (table === "content_page") {
-
-      const data = await editBlog(dataEdit, permissionValue).then(() => {  openNotification(typeNotify.SUCCESS, "Chỉnh sửa bài báo thành công!"); })
-        .catch(err => message.error("Đã có lỗi xảy ra!"))
-      setRefresh(!refresh)
-      handleCancel()
+      await editBlog(dataEdit, permissionValue)
+        .then(() => {
+          openNotification(typeNotify.SUCCESS, "Chỉnh sửa bài báo thành công!");
+        })
+        .catch((err) => {
+          message.error("Đã có lỗi xảy ra!");
+          console.log(err);
+        });
+      setRefresh(!refresh);
+      handleCancel();
+    } else {
+      const data = await editTable(table, dataEdit, permissionValue).then(() => {
+        openNotification(typeNotify.SUCCESS, "Chỉnh sửa thông tin thành công!");
+      })
+        .catch((err) => {
+          message.error("Đã có lỗi xảy ra!");
+          console.log(err);
+        });;
     }
-    else {
-      const data = await editTable(table, dataEdit, permissionValue)
-      console.log(data)
-    }
-  }
-
+  };
 
   return (
     <>
@@ -98,29 +114,34 @@ const EditModal = ({
         width={800}
         title={titleModal}
         onCancel={handleCancel}
-        footer={[
-        ]}
+        footer={[]}
         open={showModalEdit}
       >
-
-        <Form form={form} layout="vertical" onFinish={onSave} scrollToFirstError  >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onSave}
+          scrollToFirstError
+        >
           {state.header.map((variantInput) => (
-            <DynamicForm form={form}
+            <DynamicForm
+              form={form}
               key={variantInput.view.dataIndex}
               variantInput={variantInput}
               valueInput={state.value[variantInput.view.dataIndex]}
               selectTable={variantInput.selectTable}
             />
           ))}
-
           <Button key="cancel" onClick={handleCancel}>
             Cancel
-          </Button>,
+          </Button>
+          ,
           <Button key="save" type="primary" htmlType="submit">
             Save
-          </Button>,
+          </Button>
+          ,
         </Form>
-      </Modal >
+      </Modal>
     </>
   );
 };

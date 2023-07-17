@@ -1,4 +1,4 @@
-import { Select } from 'antd'
+import { Form, Select } from 'antd'
 import React from 'react'
 import { exportFieldSelectTable } from '../../model/manage.table'
 import { httpGetDataTable, httpPostData } from '../../features/API/httpBaseUtils'
@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { API_URL } from '../../configs/config'
 import { useState } from 'react'
 
-const SelectType = ({ table, initialValue }) => {
+const SelectType = ({ table, initialValue,variantInput }) => {
     const { main_id, main_info_title } = exportFieldSelectTable(table)
     const [typeOptions, setTypeOptions] = useState([])
     const fetchInitial = async () => {
@@ -21,23 +21,32 @@ const SelectType = ({ table, initialValue }) => {
         })
         setTypeOptions(dataOptionFilter)
     }
-    const handleChange = () => {
+    // const handleChange = (value) => {
 
-    }
+    // }
     useEffect(() => {
         fetchInitial()
     }, [])
     return (
+        <Form.Item
+            label={
+                <span style={{ fontWeight: "bold" }}>{variantInput.view.title}</span>
+            }
+            name={variantInput.view.dataIndex}
+            rules={variantInput.selectValidate}
+            key={variantInput.view.dataIndex}
+            initialValue={initialValue}
+        >
+            <Select
+                placeholder="Please select"
+                style={{
+                    width: "100%",
+                }}
+                // onChange={handleChange}
+                options={typeOptions}
 
-        <Select
-            placeholder="Please select"
-            style={{
-                width: "100%",
-            }}
-            // onChange={handleChange}
-            options={typeOptions}
-            defaultValue={initialValue}
-        />
+            />
+        </Form.Item>
     )
 }
 

@@ -5,6 +5,7 @@ import pageContent from "./table/pageContent.table";
 import order from "./table/order.table";
 import customer from "./table/customer.table";
 import sensorDeviceType from "./table/sensorDeviceType";
+import permission from "./table/permission";
 const classesFactory = {
   deviceSensor,
   groupContent,
@@ -12,7 +13,8 @@ const classesFactory = {
   pageContent,
   order,
   customer,
-  sensorDeviceType
+  sensorDeviceType,
+  permission,
 };
 
 const classesFactoryMapping = {
@@ -22,7 +24,8 @@ const classesFactoryMapping = {
   content_page: "pageContent",
   order: "order",
   customer: "customer",
-  sensor_device_type: "sensorDeviceType"
+  sensor_device_type: "sensorDeviceType",
+  permission:"permission"
 };
 
 export const exportColumnTable = (table, callback = null) => {
@@ -79,11 +82,11 @@ export const exportFieldSelectTable = (table) => {
   if (!!nameConvert) {
     const tableSelect = new classesFactory[nameConvert]();
     if (!!tableSelect) {
-      let fieldExport = {}
-      fieldExport.main_id = tableSelect.getInformationToEdit().mainID
-      fieldExport.main_info_title = tableSelect.getInformationToEdit().mainInfo.dataIndex
-      return fieldExport
+      let fieldExport = {};
+      fieldExport.main_id = tableSelect.getInformationToEdit().mainID;
+      fieldExport.main_info_title =tableSelect.getInformationToEdit().mainInfo.dataIndex;
+      return fieldExport;
     }
   }
-  return {}
-}
+  return {};
+};

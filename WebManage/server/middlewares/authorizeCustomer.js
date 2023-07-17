@@ -43,7 +43,6 @@ module.exports = (req, res, next) => {
             serviceCustomerFilter = parseInt(serviceCustomer.split("/")[1]);
           }
         });
-        console.log(serviceCustomerFilter);
         //Nếu quyền customer <= quyền yêu cầu từ client
         if (serviceCustomerFilter <= parseInt(permissionValue.split("/")[1])) {
           next();

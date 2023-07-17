@@ -8,11 +8,12 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-export default function () {
+import { API_URL } from "../../configs/config";
+export default function Edit() {
   const customerInfo_gs = useSelector(
     (state) => state.authSlice.userInformation
   );
-  const [fullname, setFullname] = useState("");
+  const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -21,13 +22,13 @@ export default function () {
     event.preventDefault();
     const data = {
       username: username,
-      fullname: fullname,
+      fullName: fullName,
       address: address,
       phone_number: phoneNumber,
     };
     try {
-      const res = await axios.put(
-        "http://localhost:3000/api/customers/update_info",
+      await axios.put(
+        API_URL + "customers/update_info",
         data,
         {
           headers: {
@@ -91,11 +92,11 @@ export default function () {
   );
   // const navigate = useNavigate();
   useEffect(() => {
-    setFullname(customerInfo_gs?.user?.fullname);
+    setFullName(customerInfo_gs?.user?.fullName);
     setUsername(customerInfo_gs?.user?.username);
     setAddress(customerInfo_gs?.user?.address);
     setPhoneNumber(customerInfo_gs?.user?.phone_number);
-  }, []);
+  }, [customerInfo_gs?.user?.fullName, customerInfo_gs?.user?.username, customerInfo_gs?.user?.address, customerInfo_gs?.user?.phone_number]);
   return (
     <div>
       {customerInfo_gs && (
@@ -137,9 +138,9 @@ export default function () {
               <Col span={10}>
                 <Form.Item label="Họ và tên">
                   <Input
-                    value={fullname}
-                    name="fullname"
-                    onChange={(e) => setFullname(e.target.value)}
+                    value={fullName}
+                    name="fullName"
+                    onChange={(e) => setFullName(e.target.value)}
                   />
                 </Form.Item>
               </Col>
