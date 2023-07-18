@@ -693,7 +693,7 @@ customerCtrl.addCustomer = async (req, res) => {
   // check email and phone number existed?
   const customerExist = await knex.raw(" SELECT * FROM customer WHERE email = ?", [email])
   if (customerExist[0].length > 0) {
-    return res.status(208).json({ message: "Email existed!" });
+    return res.status(208).json({ message: "Email người dùng đã được đăng ký!" });
   } else {
     try {
       const customer = await knex("customer")
@@ -716,17 +716,30 @@ customerCtrl.addCustomer = async (req, res) => {
           await knex("ref_manifest")
             .insert({
               customer_id: customer[0],
-              value_id: station_id,
               manifest_id: manifest[i].manifest_id,
-              value_id:manifest[i].value_id,
+              value_id: manifest[i].value_id,
               created_at,
               updated_at,
               id_created,
               id_updated,
               delete_flag,
               old_id: 0
+            }).catch(async (err) => {
+              await knex("customer")
+                .where('customer_id', customer[0])
+                .del()
+                .then((numDeleted) => {
+                  console.log(`Đã xóa ${numDeleted} người dùng`);
+                })
+                .catch((err) => {
+                  console.error('Lỗi khi xóa người dùng:', err);
+                })
+              return res
+                .status(500)
+                .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
             })
         }
+        return res.status(200).json({message:"Thêm dữ liệu người dùng thành công!"})
       }
     }
     catch (err) {
