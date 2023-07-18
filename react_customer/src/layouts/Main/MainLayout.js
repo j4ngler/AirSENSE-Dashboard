@@ -1,5 +1,5 @@
 import React from "react";
-import { UserOutlined } from "@ant-design/icons";
+import { ClusterOutlined, ContainerOutlined, LineChartOutlined, ShakeOutlined, UserOutlined } from "@ant-design/icons";
 import HeaderCustomer from "../../components/Header";
 import { Layout } from "antd";
 import MenuBar from "../../components/MenuBar";
@@ -16,14 +16,14 @@ const MenuList = (permissions) => [
   {
     id: "/dashboard",
     title: "Dashboard",
-    icon: <UserOutlined />,
+    icon: <LineChartOutlined />,
     isHide: false,
     url: "/customer/dashboard",
   },
   {
     id: "/manage_station",
     title: "Quản lí trạm",
-    icon: <UserOutlined />,
+    icon: <ClusterOutlined />,
     isHide: false,
     children: [
       {
@@ -49,7 +49,7 @@ const MenuList = (permissions) => [
   {
     id: "/newspaper",
     title: "Quản lí bài báo",
-    icon: <UserOutlined />,
+    icon: <ContainerOutlined />,
     isHide: false,
     children: [
       {
@@ -66,42 +66,42 @@ const MenuList = (permissions) => [
       },
     ],
   },
-  {
-    id: "/manage_courses",
-    title: "Quản lí khóa học",
-    icon: <UserOutlined />,
-    isHide: false,
-    children: [
-      {
-        id: "courses/type_customer",
-        title: "Khóa học",
-        isHide: checkRole(permissions),
-        url: "/customer/courses",
-      },
-      {
-        id: "/admin/create-course/type-adminLocation",
-        title: "Tạo khóa học",
-        isHide: checkRole(permissions),
-        url: "/customer/courses/create_course",
-      },
-      {
-        id: "exercises/type_customer",
-        title: "Bài tập",
-        isHide: checkRole(permissions),
-        url: "/customer/courses/exercises",
-      },
-      {
-        id: "/admin/create-exercise/type-adminLocation",
-        title: "Tạo bài tập",
-        isHide: checkRole(permissions),
-        url: "/customer/courses/create_exercises",
-      },
-    ],
-  },
+  // {
+  //   id: "/manage_courses",
+  //   title: "Quản lí khóa học",
+  //   icon: <UserOutlined />,
+  //   isHide: false,
+  //   children: [
+  //     {
+  //       id: "courses/type_customer",
+  //       title: "Khóa học",
+  //       isHide: checkRole(permissions),
+  //       url: "/customer/courses",
+  //     },
+  //     {
+  //       id: "/admin/create-course/type-adminLocation",
+  //       title: "Tạo khóa học",
+  //       isHide: checkRole(permissions),
+  //       url: "/customer/courses/create_course",
+  //     },
+  //     {
+  //       id: "exercises/type_customer",
+  //       title: "Bài tập",
+  //       isHide: checkRole(permissions),
+  //       url: "/customer/courses/exercises",
+  //     },
+  //     {
+  //       id: "/admin/create-exercise/type-adminLocation",
+  //       title: "Tạo bài tập",
+  //       isHide: checkRole(permissions),
+  //       url: "/customer/courses/create_exercises",
+  //     },
+  //   ],
+  // },
   {
     id: "/invoice",
     title: "Hóa đơn",
-    icon: <UserOutlined />,
+    icon: <ShakeOutlined />,
     isHide: false,
     children: [
       {

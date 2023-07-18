@@ -191,6 +191,7 @@ router.route("/updatePages").post(isAuthorizedCustomer, (req, res) => {
 router.route("/lst_product").post(customerCtrl.getInfoProductStore);
 router.route("/page_product").get(customerCtrl.getDetailProductPages);
 router.get("/sale/cart", (req, res) => {
+  console.log("render")
   res.render("sale/invoiceInfoProduct");
 });
 
