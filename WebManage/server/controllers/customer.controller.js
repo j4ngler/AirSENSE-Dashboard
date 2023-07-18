@@ -511,7 +511,7 @@ customerCtrl.getDetailProduct = async function (req, res) {
 customerCtrl.getDetailProductPages = async function (req, res) {
   var product_pages =
     "select product_spec.*,product.product_id from product_spec " +
-    "join product on product.product_id = product_spec.product_id " +
+    "join product on product.product_id = product_spec.product_variant_id " +
     "where product_spec.delete_flag=0 and product.product_id = " +
     req.query.type;
   var result = await knex.raw(product_pages);
@@ -641,6 +641,7 @@ customerCtrl.getInfoProductStore = async function (req, res) {
     req.body["end"]
   );
   var x = await knex.raw(sql);
+  console.log("product group", req.body["product_group"], x[0]);
   if (x != null && x.length > 0) {
     return returnOK(res, x[0]);
   }
@@ -653,14 +654,15 @@ function getAllInfoProductInList(product_group, start, end) {
     "JOIN product_variant on product.product_id= product_variant.product_id " +
     "JOIN product_store on product_variant.product_variant_id=product_store.product_variant_id " +
     "JOIN product_image on product_variant.product_variant_id=product_image.product_variant_id " +
-    "WHERE product.delete_flag = 0  " +
-    "AND product.group_sub_id = " +
-    product_group +
-    " LIMIT " +
-    start +
-    "," +
-    end +
-    ";";
+    "JOIN product_sub on product.group_sub_id=product_sub.product_sub_id";
+  // "WHERE product.delete_flag = 0  " +
+  //   "AND product_sub.product_group_id = " +
+  //   product_group +
+  //   " LIMIT " +
+  //   start +
+  //   "," +
+  //   end +
+  //   ";";
   return sql;
 }
 
