@@ -106,7 +106,7 @@ async function postInfoData(urlLink, dataInfo, callBack) {
       "Content-Type": "application/json",
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "Beard " + localStorage.getItem("token"),
+      Authorization: "Beard " + localStorage.getItem("token_AirSENSE"),
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     success: function (dataReturn) {

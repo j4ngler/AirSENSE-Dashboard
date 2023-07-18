@@ -14,8 +14,6 @@ const {
 const { uploadFileS3 } = require("../models/S3UploadFile.js");
 // const customer = require("../models/database/customer.model");
 
-
-
 var customerCtrl = {};
 
 customerCtrl.importDataInfo = async function (req, res) {
@@ -388,7 +386,7 @@ customerCtrl.updateData = async function (req, res) {
 // };
 
 //register new customer
-customerCtrl.registerCustomer = async function( req, res ) {
+customerCtrl.registerCustomer = async function (req, res) {
   const username = req.body.userName ? req.body.userName : null;
   const fullname = req.body.fullName ? req.body.fullName : null;
   const phone_number = req.body.phoneNumber ? req.body.phoneNumber : null;
@@ -401,20 +399,19 @@ customerCtrl.registerCustomer = async function( req, res ) {
   const id_created = 0;
   const id_updated = 0;
   const delete_flag = 0;
-  
+
   //hash password before save to database
   const salt = bcrypt.genSaltSync(12);
-  const hashPass = await bcrypt.hash(password, salt); 
+  const hashPass = await bcrypt.hash(password, salt);
 
   //check email and phone number existed?
   await knex
     .raw(" SELECT * FROM customer WHERE email = ?", [email])
     .then(async (customer) => {
-      if( customer[0].length > 0 ) {
-        console.log('123',customer[0]);
-        return res.status(208).json({ message: "Email existed!"});
-      }
-      else {
+      if (customer[0].length > 0) {
+        console.log("123", customer[0]);
+        return res.status(208).json({ message: "Email existed!" });
+      } else {
         await knex("customer")
           .insert({
             username,
@@ -429,14 +426,16 @@ customerCtrl.registerCustomer = async function( req, res ) {
             updated_at,
             id_created,
             id_updated,
-            delete_flag
+            delete_flag,
           })
           .then((customer) => {
             return res.status(200).json({ message: "Register succesfully!" });
           })
           .catch((err) => {
             console.log(err);
-            return res.status(500).json({ message: "An error occured, please try again!"})
+            return res
+              .status(500)
+              .json({ message: "An error occured, please try again!" });
           });
       }
     });
@@ -531,7 +530,7 @@ customerCtrl.getDetailProductPages = async function (req, res) {
   // console.log("req.query.type ==", req.query.type);
   var product_pages =
     "select product_spec.*,product.product_id from product_spec " +
-    "join product on product.product_id = product_spec.product_id " +
+    "join product on product.product_id = product_spec.product_variant_id " +
     "where product_spec.delete_flag=0 and product.product_id = " +
     req.query.type;
   var result = await knex.raw(product_pages);
@@ -672,6 +671,7 @@ customerCtrl.getInfoProductStore = async function (req, res) {
     req.body["end"]
   );
   var x = await knex.raw(sql);
+  console.log("product group", req.body["product_group"], x[0]);
   if (x != null && x.length > 0) {
     return returnOK(res, x[0]);
   }
@@ -684,101 +684,115 @@ function getAllInfoProductInList(product_group, start, end) {
     "JOIN product_variant on product.product_id= product_variant.product_id " +
     "JOIN product_store on product_variant.product_variant_id=product_store.product_variant_id " +
     "JOIN product_image on product_variant.product_variant_id=product_image.product_variant_id " +
-    "WHERE product.delete_flag = 0  " +
-    "AND product.group_sub_id = " +
-    product_group +
-    " LIMIT " +
-    start +
-    "," +
-    end +
-    ";";
+    "JOIN product_sub on product.group_sub_id=product_sub.product_sub_id";
+  // "WHERE product.delete_flag = 0  " +
+  //   "AND product_sub.product_group_id = " +
+  //   product_group +
+  //   " LIMIT " +
+  //   start +
+  //   "," +
+  //   end +
+  //   ";";
   return sql;
 }
 
 //update customer information
-customerCtrl.updateInfo = async(req, res) => {
-  const customer_id = req.body.customer_id;
+customerCtrl.updateInfo = async (req, res) => {
+  const customer_id = req.currentUser.customer_id;
   // const email = req.body.email;
-  const fullname = req.body.fullName;
-  const username = req.body.userName;
+  const fullname = req.body.fullname;
+  const username = req.body.username;
   const address = req.body.address;
   const contact = req.body.contact;
-  const phone_number = req.body.phoneNumber;
+  const phone_number = req.body.phone_number;
   // const is_updated = new Date();
 
-  const checkCustomer= squel.select().from("customer")
-                            .where("customer_id='"+ customer_id +"'")
-                            .where("delete_flag = 0");
+  const checkCustomer = squel
+    .select()
+    .from("customer")
+    .where("customer_id='" + customer_id + "'")
+    .where("delete_flag = 0");
   const existedCustomer = await knex.raw(checkCustomer.toString());
   // console.log('abcde', existedCustomer[0]);
 
   // const existedCustomer = customer.existedCustomer();
   // console.log(existedCustomer)
 
-
-  if(!existedCustomer) {
-    return res.status(208).json({ message: "Customer not existed!"});
+  if (!existedCustomer) {
+    return res.status(208).json({ message: "Customer not existed!" });
   }
 
-//update customer info
+  //update customer info
   await knex("customer")
-    .where({'customer_id': customer_id})
+    .where({ customer_id: customer_id })
     .update({
-      'fullname':fullname, 
-      'username':username, 
-      'address':address, 
-      'contact':contact,
-      'phone_number': phone_number,
-      'updated_at': new Date(),
+      fullname: fullname,
+      username: username,
+      address: address,
+      contact: contact,
+      phone_number: phone_number,
+      updated_at: new Date(),
     })
     .then((customer) => {
-      console.log('check',customer)
+      console.log("check", customer);
       return res.status(200).json({
-        message: 'Update customer info successfully !'
+        message: "Update customer info successfully !",
       });
     })
     .catch((error) => {
       console.log(error);
-      return res.status(500).json({message: 'Update failed !', error});
-    })
-  };
-
-
+      console.log(customer_id);
+      return res.status(500).json({ message: "Update failed !", error });
+    });
+};
 
 //change customer password after login
-  customerCtrl.changePassword = async(req, res) => {
-    const {email, old_password, new_password} = req.body;
+customerCtrl.changePassword = async (req, res) => {
+  const customer_id = req.currentUser.customer_id;
+  const { old_password, new_password } = req.body;
 
-    //check old password if correct
-    await Customer.query({'email': {email} })
-                  .then(()=> {
-                    bcrypt.compare(old_password, Customer.get("password"), (result, error) => {
-                      if(error) {
-                        return res.status(500).json('Error occured');
-                      }
-                      if(!result) {
-                        return res.status(401).json('Invalid password');
-                      }
-                    })
-                  })
-    console.log('email', email)
+  try {
+    // Check if customer existed
+    const checkCustomer = squel
+      .select()
+      .from("customer")
+      .where("customer_id='" + customer_id + "'")
+      .where("delete_flag = 0");
+    const existedCustomer = await knex.raw(checkCustomer.toString());
 
-    const newPass = await bcrypt.hash(new_password, 12, (error, hash) => {
-      console.log('new pass', hash)
-      if(error) {
-        return res.status(500).json('Error occured');
-      }
-      knex("customer").where({email: {email} })
-                      .update({'password': hash})
-                      .then(() => {
-                        return res.status(200).json('Change password succesfully')
-                      })
-                      .catch((err) => {
-                        return res.json({err})
-                      })
-    })
-    return newPass;                                     
+    if (!existedCustomer) {
+      return res.status(208).json({ message: "Customer not existed!" });
+    }
+
+    //Change customer password
+    const passwordMatch = await bcrypt.compare(
+      old_password,
+      existedCustomer[0][0].password
+    );
+
+    if (!passwordMatch) {
+      console.log("invalid password");
+      return res.status(401).json({ message: "Invalid password!" });
+    }
+
+    const hashPass = await bcrypt.hash(new_password, 12);
+    console.log("new pass", hashPass);
+
+    // customer.password = hashPass;
+    await knex("customer")
+      .where({ customer_id: customer_id })
+      .update({ password: hashPass })
+      .then(() => {
+        return res
+          .status(200)
+          .json({ message: "Password change successfully!" });
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  } catch (error) {
+    return res.status(500).json({ message: "An error occured!", error });
   }
-
+};
 
 module.exports = customerCtrl;
