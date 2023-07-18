@@ -666,6 +666,7 @@ function getAllInfoProductInList(product_group, start, end) {
 
 // customer information
 customerCtrl.addCustomer = async (req, res) => {
+  console.log(req.body);
   const username = req.body.username ? req.body.username : null;
   const fullname = req.body.fullname ? req.body.fullname : null;
   const phone_number = req.body.phone_number ? req.body.phone_number : null;
@@ -677,69 +678,64 @@ customerCtrl.addCustomer = async (req, res) => {
   const updated_at = new Date();
   const id_created = req.currentUser.customer_id;
   const id_updated = req.currentUser.customer_id;
-  const permission_id = req.body.permission_id;
   const delete_flag = 0;
-  const station_id = req.body.station_id
+  const permission = req.body.permission ? req.body.permission : null;
   //hash password before save to database
   const salt = bcrypt.genSaltSync(12);
   const hashPass = await bcrypt.hash(password, salt);
-
+  const manifest = permission.map((item) => {
+    return {
+      manifest_id: item.permission,
+      value_id: item.contentSub ? item.contentSub : item.station
+    }
+  })
+  console.log("manifest", manifest)
   // check email and phone number existed?
-  await knex
-    .raw(" SELECT * FROM customer WHERE email = ?", [email])
-    .then(async (customer) => {
-      if (customer[0].length > 0) {
-        return res.status(208).json({ message: "Email existed!" });
-      } else {
-        await knex("customer")
-          .insert({
-            username,
-            fullname,
-            phone_number,
-            email,
-            password: hashPass,
-            address,
-            contact,
-            created_at,
-            updated_at,
-            id_created,
-            id_updated,
-            delete_flag,
-          })
-          .then(async (customer) => {
-            await knex("ref_manifest")
-              .insert({
-                customer_id: customer[0],
-                value_id: station_id,
-                manifest_id: permission_id,
-                created_at,
-                updated_at,
-                id_created,
-                id_updated,
-                delete_flag,
-                old_id: 0
-              })
-              .then((data) => {
-                return res
-                  .status(200)
-                  .json({ data: customer[0], message: "Thêm mới người dùng thành công!" });
-              })
-              .catch((err) => {
-                console.log(err);
-                return res
-                  .status(500)
-                  .json({ message: "Có lỗi xảy ra, vui lòng thử lại!" });
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-            return res
-              .status(500)
-              .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
-          });
+  const customerExist = await knex.raw(" SELECT * FROM customer WHERE email = ?", [email])
+  if (customerExist[0].length > 0) {
+    return res.status(208).json({ message: "Email existed!" });
+  } else {
+    try {
+      const customer = await knex("customer")
+        .insert({
+          username,
+          fullname,
+          phone_number,
+          email,
+          password: hashPass,
+          address,
+          contact,
+          created_at,
+          updated_at,
+          id_created,
+          id_updated,
+          delete_flag,
+        })
+      if (customer && customer[0]) {
+        for (let i = 0; i < manifest.length; i++) {
+          await knex("ref_manifest")
+            .insert({
+              customer_id: customer[0],
+              value_id: station_id,
+              manifest_id: manifest[i].manifest_id,
+              value_id:manifest[i].value_id,
+              created_at,
+              updated_at,
+              id_created,
+              id_updated,
+              delete_flag,
+              old_id: 0
+            })
+        }
       }
-    });
-  console.log(req.body);
+    }
+    catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
+    }
+  };
 };
 
 customerCtrl.updateInfo = async (req, res) => {

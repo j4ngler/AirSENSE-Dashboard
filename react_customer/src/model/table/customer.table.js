@@ -79,7 +79,7 @@ class user {
           width: 200,
         },
         {
-          dataIndex: "permission_id",
+          dataIndex: "permission",
           title: "Quyền",
           width: 200,
         },
@@ -120,7 +120,7 @@ class user {
         width: 200,
       },
       {
-        dataIndex: "permission_id",
+        dataIndex: "permission",
         title: "Quyền",
         width: 200,
       }
@@ -153,7 +153,7 @@ class user {
       [ruleValidates.requiredValue, ruleValidates.requiredEmail],
       [ruleValidates.requiredValue],
       [ruleValidates.requiredValue],
-      [ruleValidates.requiredValue],
+      [ruleValidates.requiredValue,ruleValidates.notFalse],
     ];
   }
   getColumnToSearch() {

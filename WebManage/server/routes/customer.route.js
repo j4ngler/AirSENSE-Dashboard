@@ -198,11 +198,4 @@ router.get("/sale/cart", (req, res) => {
   res.render("sale/invoiceInfoProduct");
 });
 
-//test device_id
-router
-  .route("/test_device")
-  .get(authorizeCustomerDevice, (req, res) => {
-    res.status(200).json("ok")
-  });
-
 module.exports = router;

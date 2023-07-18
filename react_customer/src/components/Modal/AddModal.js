@@ -53,29 +53,28 @@ const AddModal = ({
             infoCheckEditPermission.dataIndex +
             "/" +
             infoCheckEditPermission.edit_permission;
-        console.log(value)
-        // setIsLoading(true);
-        // if (table === "customer") {
-        //     await httpPostData(
-        //         API_URL + "customers/add-customer",
-        //         value,
-        //         permissionValue
-        //     )
-        //         .then((data) => {
-        //             setIsLoading(false);
-        //             if (data && data.data) {
-        //                 console.log("data.message", data)
-        //                 openNotification(typeNotify.SUCCESS, data.data.message);
-        //             } else {
-        //                 openNotification(typeNotify.ERROR, data.data.message);
-        //             }
-        //             handleCancel();
-        //         })
-        //         .catch((err) => {
-        //             setIsLoading(false);
-        //             openNotification(typeNotify.ERROR, err);
-        //         });
-        // }
+        setIsLoading(true);
+        if (table === "customer") {
+            await httpPostData(
+                API_URL + "customers/add-customer",
+                value,
+                permissionValue
+            )
+                .then((data) => {
+                    setIsLoading(false);
+                    if (data && data.data) {
+                        console.log("data.message", data)
+                        openNotification(typeNotify.SUCCESS, data.data.message);
+                    } else {
+                        openNotification(typeNotify.ERROR, data.data.message);
+                    }
+                    handleCancel();
+                })
+                .catch((err) => {
+                    setIsLoading(false);
+                    openNotification(typeNotify.ERROR, err);
+                });
+        }
     };
     const loadingIcon = (
         <LoadingOutlined

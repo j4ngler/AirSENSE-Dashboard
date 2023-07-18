@@ -99,4 +99,14 @@ export const ruleValidates = {
     message: "Vui lòng nhập đúng định dạng số điện thoại!",
   },
   requiredEmail: { type: "email", message: "Email không hợp lệ" },
+  notFalse:
+  {
+    validator: (_, value) => {
+      if (value === false) {
+        return Promise.reject('Vui lòng điền đủ hoặc xóa các trường không cần thiết');
+      }
+      return Promise.resolve();
+    },
+  },
+
 };

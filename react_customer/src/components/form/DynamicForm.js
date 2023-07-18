@@ -11,7 +11,6 @@ const DynamicForm = ({ variantInput, valueInput, selectTable, form }) => {
   if (variantInput.html === TypeDialogueShow.NO_CHECK) {
     return <></>;
   } else if (variantInput.html === TypeDialogueShow.EDIT_TEXT) {
-    console.log(variantInput.selectValidate)
     return (
       <Form.Item
         label={
@@ -90,7 +89,14 @@ const DynamicForm = ({ variantInput, valueInput, selectTable, form }) => {
   }
   else if (variantInput.html === TypeDialogueShow.SELECT_GROUP_PERMISSION) {
     return (
-      <SelectGroupPermission variantInput={variantInput} form={form}/>
+      <Form.Item label={<span style={{ fontWeight: "bold" }}>{variantInput.view.title}</span>
+      }
+        name={"permission"}
+        rules={variantInput.selectValidate}
+        key={variantInput.view.dataIndex}
+        initialValue={valueInput === 1 ? true : false}>
+        <SelectGroupPermission variantInput={variantInput} />
+      </Form.Item>
     )
   }
   return <></>;
