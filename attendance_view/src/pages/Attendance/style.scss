@@ -170,6 +170,7 @@
   margin-top: 10px;
   text-align: center;
   border-radius:30px;
+  z-index: 10;
 }
 .warning{
   color: rgb(165, 52, 52);
@@ -305,6 +306,7 @@ $borderW: 2px;
   width: 100%;
   height: 100%;
   visibility: hidden;
+  z-index: 1;
 }
 
 .modal_wrapper .shadow {

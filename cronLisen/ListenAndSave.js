@@ -109,7 +109,7 @@ clients.map(client => {
           }
         }
       }
-      // console.log(infoSave);
+      console.log(infoSave);
 
       save.save(infoSave)
     } catch (e) {}
@@ -117,7 +117,7 @@ clients.map(client => {
 })
 
 // delete data
-const task = cron.schedule('*/5 * * * * *', async () => {
+const task = cron.schedule('0 0 0 * * *', async () => {
   console.log('Cron job chạy vào lúc 12:00AM mỗi ngày!')
   var current = +new Date()
   current = Math.floor(current / 1000)

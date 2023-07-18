@@ -1,10 +1,11 @@
 const bookshelf = require("../config/bookshelf.js");
 const HttpStatus = require("http-status-codes");
-const DocumentFileAndFloder = require("../models/DocumentFileAndFloder.js");
+const DocumentFileAndFolder = require("../models/DocumentFileAndFolder.js");
 const { returnFalse, returnOKCustom } = require("../utils/returnResponse");
 const WarningInfo = require("../utils/warningInfo.js");
 const { DEFINE_DOCUMENT, uploadFileS3 } = require("../models/S3UploadFile.js");
-var documentFileAndFloder = new DocumentFileAndFloder();
+const pagesContent = require("../models/database/PagesContent.model.js");
+var documentFileAndFolder = new DocumentFileAndFolder();
 var squel = require("squel");
 const knex = require("../config/knex.js");
 var documentCtrl = {};
@@ -12,13 +13,16 @@ const urlHost =
   (process.env.APP_HOST || "localhost") + ":" + (process.env.APP_PORT || 3000);
 async function queryInfoSql(sql, res = null) {
   try {
-    var x = await knex.raw(sql).then(rs=>{
-      console.log("rs: ",result)
-    }).catch(err=>{
-      console.log("err>>>",err)
-    });
+    var x = await knex
+      .raw(sql)
+      .then((rs) => {
+        console.log("rs: ", result);
+      })
+      .catch((err) => {
+        console.log("err>>>", err);
+      });
     var data = [];
-    console.log("x",x)
+    console.log("x", x);
     if (x != null && x.length > 0) {
       data = x[0];
     }
@@ -34,12 +38,11 @@ async function queryInfoSql(sql, res = null) {
 }
 
 documentCtrl.postAddPageToDataBase = function (request, res) {
-  let content = request.body["content"];
   let content_html = request.body["content_html"];
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -51,16 +54,23 @@ documentCtrl.postAddPageToDataBase = function (request, res) {
     addData
       .set("content_sub_id", content_sub_id)
       .set("group_file", group)
-      .set("filesave", link)
+      .set("file_save", link)
       .set("title", request.body["title"])
-      .set("content", request.body["content"])
-      .set("is_main_pages_id", request.body["is_main_pages_id"])
+      .set("description", request.body["description"])
+      .set("set_to_first", request.body["set_to_first"])
       .set("content_img", request.body["content_img"])
-      .set("id_created", request.currentUser.users_id)
-      .set("id_updated", request.currentUser.users_id)
+      .set(
+        "id_created",
+        request.currentUser.users_id || request.currentUser.customer_id
+      )
+      .set(
+        "id_updated",
+        request.currentUser.users_id || request.currentUser.customer_id
+      )
       .set("created_at", "NOW()", { dontQuote: true })
       .set("updated_at", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0);
+      .set("delete_flag", 0)
+      .set("old_id", 0);
     knex
       .raw(addData.toString())
       .then(function (x) {
@@ -72,20 +82,18 @@ documentCtrl.postAddPageToDataBase = function (request, res) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           error: true,
           detail: err,
-          data: "Database inval",
+          data: "Database invalid",
         });
       });
   }
 };
 
 documentCtrl.postUpdatePageToDataBase = function (request, res) {
-  console.log(request.body);
-  let content = request.body["content"];
   let content_html = request.body["content_html"];
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewFile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -97,15 +105,15 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
     addData
       .set("content_sub_id", content_sub_id)
       .set("group_file", group)
-      .set("filesave", link)
+      .set("file_save", link)
       .set("title", request.body["title"])
-      .set("content", request.body["content"])
-      .set("is_main_pages_id", request.body["is_main_pages_id"])
+      .set("description", request.body["description"])
+      .set("set_to_first", request.body["set_to_first"])
       .set("content_img", request.body["content_img"])
       .set("id_created", request.currentUser.users_id)
       .set("id_updated", request.currentUser.users_id)
       .set("updated_at", "NOW()", { dontQuote: true })
-      .set("deleteflag", 0)
+      .set("delete_flag", 0)
       .where("content_page_id=" + request.body["content_page_id"]);
     knex
       .raw(addData.toString())
@@ -118,7 +126,7 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           error: true,
           detail: err,
-          data: "Database inval",
+          data: "Database invalid",
         });
       });
   }
@@ -126,7 +134,7 @@ documentCtrl.postUpdatePageToDataBase = function (request, res) {
 async function saveDocumentFileHtml(res, content_html, dirSave) {
   try {
     console.log(content_html);
-    var link = await documentFileAndFloder.createNewFileToS3(
+    var link = await documentFileAndFolder.createNewFileToS3(
       content_html,
       dirSave
     );
@@ -141,6 +149,7 @@ async function saveDocumentFileHtml(res, content_html, dirSave) {
   }
 }
 documentCtrl.postAddProductPageToDataBase = async function (request, res) {
+  console.log("request.body", request.body)
   let content_html = request.body["content_html"];
   let product_id = request.body["product_id"];
   var link = await saveDocumentFileHtml(res, content_html, "storeHtml");
@@ -149,7 +158,7 @@ documentCtrl.postAddProductPageToDataBase = async function (request, res) {
     // save data Sql
     addData
       .set("product_id", product_id)
-      .set("filesave", link)
+      .set("file_save", link)
       .set("id_created", request.currentUser.users_id)
       .set("id_updated", request.currentUser.users_id)
       .set("created_at", "NOW()", { dontQuote: true })
@@ -167,7 +176,7 @@ documentCtrl.postAddCourseToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let course_id = request.body["course_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -212,7 +221,7 @@ documentCtrl.postUpdateCourseToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let course_id = request.body["course_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -251,7 +260,6 @@ documentCtrl.postUpdateCourseToDataBase = function (request, res) {
   }
 };
 
-//
 
 // Exam
 documentCtrl.postAddExamToDataBase = function (request, res) {
@@ -260,7 +268,7 @@ documentCtrl.postAddExamToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let exam_id = request.body["exam_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -305,7 +313,7 @@ documentCtrl.postUpdateExamToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let course_id = request.body["exam_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -344,7 +352,7 @@ documentCtrl.postUpdateExamToDataBase = function (request, res) {
   }
 };
 
-//
+//Advertisement
 
 documentCtrl.postAddAdvertisementToDataBase = function (request, res) {
   let content = request.body["content"];
@@ -352,7 +360,7 @@ documentCtrl.postAddAdvertisementToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -397,7 +405,7 @@ documentCtrl.postUpdateAdvertisementToDataBase = function (request, res) {
   let group = request.body["group_file"];
   let content_sub_id = request.body["content_sub_id"];
   // save file
-  var link = documentFileAndFloder.createNewfile(content_html, "storeHtml");
+  var link = documentFileAndFolder.createNewfile(content_html, "storeHtml");
   if (link == null) {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       error: true,
@@ -434,6 +442,23 @@ documentCtrl.postUpdateAdvertisementToDataBase = function (request, res) {
         });
       });
   }
+};
+
+//Blog
+
+documentCtrl.getListBlog = async function () {
+  const sqlString = squel
+    .select()
+    .from("content_page")
+    .order("created_at", false)
+    .where("delete_flag=0")
+    .toString();
+  console.log(sqlString)
+  const data = await knex.raw(sqlString);
+  if (data) {
+    return data[0];
+  }
+  return [];
 };
 
 documentCtrl.getAllInMenuPage = async function (listID) {
@@ -587,40 +612,15 @@ documentCtrl.getAllInGroupPage = async function (request) {
     .where("deleteflag=0")
     .where(
       "is_main_pages_id=" +
-        is_main_pages_id +
-        " OR content_page_id =" +
-        is_main_pages_id
+      is_main_pages_id +
+      " OR content_page_id =" +
+      is_main_pages_id
     );
   console.log("sqlraw.toString() .............", sqlraw.toString());
   var x = await knex.raw(sqlraw.toString());
   if (x != null && x.length > 0) {
     for (var i = 0; i < x[0].length; i++) {
       x[0][i].filesave = "/detail_page/" + x[0][i].filesave.replace("/", "+");
-    }
-    return x[0];
-  }
-  return [];
-};
-
-// Course
-documentCtrl.getAllInGroupCourse = async function (request) {
-  console.log("sqlraw.toString() ........... request.body..", request.body);
-  var is_main_pages_id = request.body["is_main_pages_id"];
-  var sqlraw = squel
-    .select()
-    .from("course_page")
-    .where("deleteflag=0")
-    .where(
-      "is_main_pages_id=" +
-        is_main_pages_id +
-        " OR course_page_id =" +
-        is_main_pages_id
-    );
-  console.log("sqlraw.toString() .............", sqlraw.toString());
-  var x = await knex.raw(sqlraw.toString());
-  if (x != null && x.length > 0) {
-    for (var i = 0; i < x[0].length; i++) {
-      x[0][i].filesave = "/detail_lesson/" + x[0][i].filesave.replace("/", "+");
     }
     return x[0];
   }
@@ -637,9 +637,9 @@ documentCtrl.getAllInGroupExam = async function (request) {
     .where("deleteflag=0")
     .where(
       "is_main_pages_id=" +
-        is_main_pages_id +
-        " OR exam_detail_id =" +
-        is_main_pages_id
+      is_main_pages_id +
+      " OR exam_detail_id =" +
+      is_main_pages_id
     );
   console.log("sqlraw.toString() .............", sqlraw.toString());
   var x = await knex.raw(sqlraw.toString());

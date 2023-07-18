@@ -12,19 +12,27 @@ const {
   returnOKCustom,
 } = require("../utils/returnResponse.js");
 const { uploadFileS3 } = require("../models/S3UploadFile.js");
+const DocumentFileAndFolder = require("../models/DocumentFileAndFolder.js");
+var documentFileAndFolder = new DocumentFileAndFolder();
 // const customer = require("../models/database/customer.model");
+const oAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
+const { CostExplorer } = require("aws-sdk");
+const { exceptions, error } = require("winston");
+const User = require("../models/database/user.model.js");
+const Customer = require("../models/database/customer.model.js");
+const WarningInfo = require("../utils/warningInfo.js");
 
 var customerCtrl = {};
 
 customerCtrl.importDataInfo = async function (req, res) {
-  console.log("importDataInfo", req.file);
   var url = await uploadFileS3(req.file.path, req.file.filename);
-  console.log("importDataInfo s ==>", url);
-  if (url != null) returnOKCustom(res, { url: url });
-  else returnNotFound(res, "Not upload file", WarningInfo.NOT_UPLOAD_FILE);
+
+  if (url != null) {
+    returnOKCustom(res, { url: url });
+  } else returnNotFound(res, "Not upload file", WarningInfo.NOT_UPLOAD_FILE);
 };
 
-customerCtrl.importDataExel = async function (req, res) {
+customerCtrl.importDataExcel = async function (req, res) {
   res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
     error: true,
     data: { message: err.message },
@@ -39,7 +47,6 @@ customerCtrl.importData = function (req, res) {
 };
 
 customerCtrl.getTableData = function (req, res) {
-  console.log(req.body);
   var startPage = 0;
   if (!!req.body.startPage) startPage = req.body.startPage;
   var tableSelect = mangerModelUser(req.body.table);
@@ -53,14 +60,10 @@ customerCtrl.getTableData = function (req, res) {
     ) {
       return returnNotFound(res, { message: "No permission to access" });
     }
-    // var checkInaval = tableSelect.checkManifestSpecialCustomer("view");
-    // if (!checkInaval) {
-    //   return returnNotFound(res, { message: "Database Not Acess 2" });
-    // }
 
     startPage = startPage * 1000;
     var itemSelect = tableSelect.getValueToSelectToFind(req.body.dataFind);
-    var dataTableSQL = tableSelect.getSQLReport(req.currentUser);
+    var dataTableSQL = tableSelect.getSQLCustomerReport(req.currentUser);
     knex.raw(dataTableSQL).then(
       (result) => {
         return returnOK(res, result[0]);
@@ -69,7 +72,7 @@ customerCtrl.getTableData = function (req, res) {
         return returnNotFound(res, error);
       }
     );
-  } else return returnNotFound(res, { message: "Database inval" });
+  } else return returnNotFound(res, { message: "Database invalid" });
 };
 
 customerCtrl.getTableDataByGroup = function (req, res) {
@@ -103,7 +106,6 @@ customerCtrl.getTableDataByGroup = function (req, res) {
       tableSelect.getNameTable() +
       ".groups_id = " +
       req.body.groups_id;
-    console.log(dataTableSQL);
     knex.raw(dataTableSQL).then(
       (result) => {
         return returnOK(res, result[0]);
@@ -165,8 +167,8 @@ customerCtrl.addDataToTable = async function (req, res) {
     ) {
       return returnNotFound(res, { message: "Database inval" });
     }
-    var checkInaval = tableSelect.checkManifestSpecialCustomer("add");
-    if (!checkInaval) {
+    var checkInvalid = tableSelect.checkManifestSpecialCustomer("add");
+    if (!checkInvalid) {
       return returnNotFound(res, { message: "Database Not Acess 2" });
     }
     var userid = req.currentUser.users_id;
@@ -197,42 +199,31 @@ customerCtrl.addDataToTable = async function (req, res) {
 };
 
 customerCtrl.deleteData = async function (req, res) {
-  var tableSelect = mangerModelUser(req.body.table);
-  if (!!!tableSelect) {
-    return returnNotFound(res, { message: "Database inval" });
-  }
-  if (
-    !tableSelect.checkDataDeleteDatabase(
-      req.currentUser.manifestid,
-      tableSelect.getTypeTable()
-    )
-  ) {
-    return returnFalse(res, { message: "Database not access lv1" });
-  }
-  var checkInaval = tableSelect.checkManifestSpecialCustomer("edit");
-  if (!checkInaval) {
-    return returnNotFound(res, { message: "Database Not Acess 2" });
-  }
-  if (!(await tableSelect.checkDataToEdit(req))) {
-    return returnFalse(res, { message: "Database not access lv2" });
-  }
-  let data = req.body;
-  let dataUser = tableSelect.getFieldToDelete();
-  var deleteSQL = squel
-    .update()
-    .table(tableSelect.getNameTable())
-    .set("id_updated", req.currentUser.users_id)
-    .set("updated_at", "NOW()", { dontQuote: true })
-    .set("delete_flag", 1)
-    .where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
-  knex
-    .raw(deleteSQL.toString())
-    .then(function (x) {
-      return returnOK(res, x);
-    })
-    .catch(function (err) {
+  const tableSelect = mangerModelUser(req.body.table);
+  try {
+    if (!!!tableSelect) {
       return returnNotFound(res, { message: "Database inval" });
-    });
+    }
+    let data = req.body;
+    let dataUser = tableSelect.getFieldToDelete();
+    var deleteSQL = squel
+      .update()
+      .table(tableSelect.getNameTable())
+      .set("id_updated", req.currentUser.customer_id)
+      .set("updated_at", "NOW()", { dontQuote: true })
+      .set("delete_flag", 1)
+      .where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
+    knex
+      .raw(deleteSQL.toString())
+      .then(function (x) {
+        return returnOK(res, x);
+      })
+      .catch(function (err) {
+        return returnNotFound(res, { message: "Database inval" });
+      });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 customerCtrl.updateData = async function (req, res) {
@@ -269,12 +260,10 @@ customerCtrl.updateData = async function (req, res) {
     squelGet.field(item);
   }
   squelGet.where(dataUser.locationSelect + "=" + data[dataUser.locationSelect]);
-  console.log("sqelGet", squelGet);
   var authen = squel
     .insert()
     .into(tableSelect.getNameTable())
     .fromQuery(dataUser.arrayCoppy, squelGet);
-  console.log("updateDataauthen.toString() ", authen.toString());
   knex
     .raw(authen.toString())
     .then(function (x) {
@@ -409,7 +398,6 @@ customerCtrl.registerCustomer = async function (req, res) {
     .raw(" SELECT * FROM customer WHERE email = ?", [email])
     .then(async (customer) => {
       if (customer[0].length > 0) {
-        console.log("123", customer[0]);
         return res.status(208).json({ message: "Email existed!" });
       } else {
         await knex("customer")
@@ -448,7 +436,7 @@ customerCtrl.resetPass = async function (req, res) {
     .from("customer")
     .where("email='" + data["email"] + "'")
     .where("forgot_pass_token='" + data["forgot_pass_token"] + "'")
-    .where("delete_flag=0");
+    .where("=0");
   var result = await knex.raw(authen.toString());
   if (result == null || result.length == 0) {
     return returnNotFound(res, { message: "acao Not exitting " });
@@ -507,7 +495,6 @@ customerCtrl.getInfoProduct = async function (req, res) {
 };
 
 customerCtrl.getDetailProduct = async function (req, res) {
-  console.log("req ...xxx....getDetailProduct...", req.query.type);
   var sql =
     "SELECT product_store.*,product_image.*,product.title,product.description,product.thumbnail,product_variant.* FROM product_image " +
     "LEFT JOIN product_variant on product_image.product_variant_id=product_variant.product_variant_id " +
@@ -522,12 +509,6 @@ customerCtrl.getDetailProduct = async function (req, res) {
   return returnOK(res, []);
 };
 customerCtrl.getDetailProductPages = async function (req, res) {
-  // var product_pages = squel
-  //   .select()
-  //   .from("product_spec")
-  //   .where("product_id=" + req.query.type)
-  //   .where("deleteflag=0");
-  // console.log("req.query.type ==", req.query.type);
   var product_pages =
     "select product_spec.*,product.product_id from product_spec " +
     "join product on product.product_id = product_spec.product_variant_id " +
@@ -538,7 +519,7 @@ customerCtrl.getDetailProductPages = async function (req, res) {
     return returnNotFound(
       res,
       { message: "acao Not exitting " },
-      WarningInfo.DATA_NOT_EXSITING
+      WarningInfo.ACCOUNT_NOT_EXIST
     );
   }
   return returnOK(res, result[0]);
@@ -553,12 +534,6 @@ customerCtrl.getAllInfoServices = async function (req, res) {
   }
   return returnOK(res, []);
 };
-
-const oAuthen2Customer = require("../models/database/oAuthen2Customer.model.js");
-const { CostExplorer } = require("aws-sdk");
-const { exceptions, error } = require("winston");
-const User = require("../models/database/user.model.js");
-const Customer = require("../models/database/customer.model.js");
 
 customerCtrl.setTheBillData = async function (req, res) {
   try {
@@ -622,9 +597,7 @@ customerCtrl.setTheBillData = async function (req, res) {
       sqlStringProduct = sqlStringProduct + addCustomer;
       thefist = true;
     });
-    console.log("sqlStringProduct,,,,", sqlStringProduct);
     var databuyProduct = await knex.raw(sqlStringProduct);
-    console.log("databuyProduct,, databuyProduct,,", databuyProduct);
     if (databuyProduct != null && databuyProduct.length > 0) {
       return returnOK(res, x[0].insertId);
     }
@@ -635,11 +608,9 @@ customerCtrl.setTheBillData = async function (req, res) {
 };
 
 customerCtrl.getDetailTheBill = async function (req, res) {
-  console.log("req ...xxx....getDetailProduct...", req.body);
   var sql =
     "SELECT buyproductdetail.*,product.name,product.detail,product_image.* FROM buyproductdetail LEFT JOIN product on buyproductdetail.product_id=product.product_id LEFT JOIN product_image on buyproductdetail.product_image=product_image.image_id WHERE buyproductdetail.delete_flag =0 AND buyproductdetail.buyproduct_id=" +
     req.body["bill"];
-  console.log("req ...xxx....getDetailProduct...sql", sql);
   var x = await knex.raw(sql);
   if (x != null && x.length > 0) {
     return returnOK(res, x[0]);
@@ -648,7 +619,6 @@ customerCtrl.getDetailTheBill = async function (req, res) {
 };
 
 customerCtrl.getAllCourses = async function (req, res) {
-  console.log("get all courses");
   var sql = "SELECT ";
 };
 
@@ -696,7 +666,93 @@ function getAllInfoProductInList(product_group, start, end) {
   return sql;
 }
 
-//update customer information
+// customer information
+customerCtrl.addCustomer = async (req, res) => {
+  console.log(req.body);
+  const username = req.body.username ? req.body.username : null;
+  const fullname = req.body.fullname ? req.body.fullname : null;
+  const phone_number = req.body.phone_number ? req.body.phone_number : null;
+  const email = req.body.email ? req.body.email : null;
+  const password = "123456";
+  const address = req.body.address ? req.body.address : null;
+  const contact = req.body.contact ? req.body.contact : null;
+  const created_at = new Date();
+  const updated_at = new Date();
+  const id_created = req.currentUser.customer_id;
+  const id_updated = req.currentUser.customer_id;
+  const delete_flag = 0;
+  const permission = req.body.permission ? req.body.permission : null;
+  //hash password before save to database
+  const salt = bcrypt.genSaltSync(12);
+  const hashPass = await bcrypt.hash(password, salt);
+  const manifest = permission.map((item) => {
+    return {
+      manifest_id: item.permission,
+      value_id: item.contentSub ? item.contentSub : item.station
+    }
+  })
+  console.log("manifest", manifest)
+  // check email and phone number existed?
+  const customerExist = await knex.raw(" SELECT * FROM customer WHERE email = ?", [email])
+  if (customerExist[0].length > 0) {
+    return res.status(208).json({ message: "Email người dùng đã được đăng ký!" });
+  } else {
+    try {
+      const customer = await knex("customer")
+        .insert({
+          username,
+          fullname,
+          phone_number,
+          email,
+          password: hashPass,
+          address,
+          contact,
+          created_at,
+          updated_at,
+          id_created,
+          id_updated,
+          delete_flag,
+        })
+      if (customer && customer[0]) {
+        for (let i = 0; i < manifest.length; i++) {
+          await knex("ref_manifest")
+            .insert({
+              customer_id: customer[0],
+              manifest_id: manifest[i].manifest_id,
+              value_id: manifest[i].value_id,
+              created_at,
+              updated_at,
+              id_created,
+              id_updated,
+              delete_flag,
+              old_id: 0
+            }).catch(async (err) => {
+              await knex("customer")
+                .where('customer_id', customer[0])
+                .del()
+                .then((numDeleted) => {
+                  console.log(`Đã xóa ${numDeleted} người dùng`);
+                })
+                .catch((err) => {
+                  console.error('Lỗi khi xóa người dùng:', err);
+                })
+              return res
+                .status(500)
+                .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
+            })
+        }
+        return res.status(200).json({message:"Thêm dữ liệu người dùng thành công!"})
+      }
+    }
+    catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
+    }
+  };
+};
+
 customerCtrl.updateInfo = async (req, res) => {
   const customer_id = req.currentUser.customer_id;
   // const email = req.body.email;
@@ -713,10 +769,6 @@ customerCtrl.updateInfo = async (req, res) => {
     .where("customer_id='" + customer_id + "'")
     .where("delete_flag = 0");
   const existedCustomer = await knex.raw(checkCustomer.toString());
-  // console.log('abcde', existedCustomer[0]);
-
-  // const existedCustomer = customer.existedCustomer();
-  // console.log(existedCustomer)
 
   if (!existedCustomer) {
     return res.status(208).json({ message: "Customer not existed!" });
@@ -734,65 +786,120 @@ customerCtrl.updateInfo = async (req, res) => {
       updated_at: new Date(),
     })
     .then((customer) => {
-      console.log("check", customer);
       return res.status(200).json({
         message: "Update customer info successfully !",
       });
     })
     .catch((error) => {
       console.log(error);
-      console.log(customer_id);
       return res.status(500).json({ message: "Update failed !", error });
     });
 };
 
 //change customer password after login
 customerCtrl.changePassword = async (req, res) => {
-  const customer_id = req.currentUser.customer_id;
-  const { old_password, new_password } = req.body;
+  const { email, old_password, new_password } = req.body;
 
-  try {
-    // Check if customer existed
-    const checkCustomer = squel
-      .select()
-      .from("customer")
-      .where("customer_id='" + customer_id + "'")
-      .where("delete_flag = 0");
-    const existedCustomer = await knex.raw(checkCustomer.toString());
+  //check old password if correct
+  await Customer.query({ email: { email } }).then(() => {
+    bcrypt.compare(old_password, Customer.get("password"), (result, error) => {
+      if (error) {
+        return res.status(500).json("Error occured");
+      }
+      if (!result) {
+        return res.status(401).json("Invalid password");
+      }
+    });
+  });
 
-    if (!existedCustomer) {
-      return res.status(208).json({ message: "Customer not existed!" });
+  const newPass = await bcrypt.hash(new_password, 12, (error, hash) => {
+    if (error) {
+      return res.status(500).json("Error occured");
     }
-
-    //Change customer password
-    const passwordMatch = await bcrypt.compare(
-      old_password,
-      existedCustomer[0][0].password
-    );
-
-    if (!passwordMatch) {
-      console.log("invalid password");
-      return res.status(401).json({ message: "Invalid password!" });
-    }
-
-    const hashPass = await bcrypt.hash(new_password, 12);
-    console.log("new pass", hashPass);
-
-    // customer.password = hashPass;
-    await knex("customer")
-      .where({ customer_id: customer_id })
-      .update({ password: hashPass })
+    knex("customer")
+      .where({ email: { email } })
+      .update({ password: hash })
       .then(() => {
-        return res
-          .status(200)
-          .json({ message: "Password change successfully!" });
+        return res.status(200).json("Change password succesfully");
       })
-      .catch((error) => {
-        console.log("error", error);
+      .catch((err) => {
+        return res.json({ err });
       });
+  });
+  return newPass;
+};
+
+//dashboard
+customerCtrl.getDataAverage = async (req, res) => {
+  try {
+    const sqlStringAve = squel
+      .select()
+      .from("data_average")
+      .order("time", false)
+      .limit(3)
+      .toString();
+    const sqlStringAQI = squel
+      .select()
+      .from("aqi_data")
+      .order("time", false)
+      .limit(3)
+      .toString();
+    //query vao database
+    const dataAve = await knex.raw(sqlStringAve);
+    const dataAQI = await knex.raw(sqlStringAQI);
+    //gui ve cho nguoi dung
+    res.status(200).json({ dataAverage: dataAve[0], dataAQI: dataAQI[0] });
   } catch (error) {
-    return res.status(500).json({ message: "An error occured!", error });
+    res.status(500).json({
+      message: error,
+    });
   }
 };
 
+//blog
+customerCtrl.postUpdatePageToDataBase = function (request, res) {
+  console.log("request.body", request.body);
+  let content_html = request.body["content_html"];
+  let group = request.body["group_file"];
+  let content_sub_id = request.body["content_sub_id"];
+
+  // save file
+  var link = documentFileAndFolder.createNewFile(content_html, "storeHtml");
+  if (link == null) {
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      error: true,
+      data: { message: err.message },
+    });
+  } else {
+    var addData = squel.update().table("content_page");
+    // save data Sql
+    addData
+      .set("content_sub_id", content_sub_id)
+      .set("group_file", group)
+      .set("file_save", link)
+      .set("title", request.body["title"])
+      .set("description", request.body["description"])
+      .set("set_to_first", request.body["set_to_first"])
+      .set("content_img", request.body["content_img"])
+      .set("id_created", request.currentUser.customer_id)
+      .set("id_updated", request.currentUser.customer_id)
+      .set("updated_at", "NOW()", { dontQuote: true })
+      .set("delete_flag", 0)
+      .where("content_page_id=" + request.body["content_page_id"]);
+    knex
+      .raw(addData.toString())
+      .then(function (data) {
+        return res.status(HttpStatus.OK).json({
+          data,
+        });
+      })
+      .catch(function (err) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          error: true,
+          detail: err,
+          data: "Database invalid",
+        });
+      });
+  }
+};
 module.exports = customerCtrl;

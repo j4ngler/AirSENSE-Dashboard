@@ -1,11 +1,10 @@
 import { Col, Row, Form, Input, Button } from "antd";
-import { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo/airsense.jpg";
 import "./register.css";
+import { API_URL } from "../../configs/config";
 const Register = () => {
-  const navigate = useNavigate();
   const onFinish = async (values) => {
     const {
       username,
@@ -20,7 +19,7 @@ const Register = () => {
     };
     try {
       await axios
-        .post("http://localhost:3000/api/auth/customer_register", {
+        .post(API_URL+"auth/customer_register", {
           username,
           email,
           password,
@@ -55,7 +54,7 @@ const Register = () => {
     >
       <Col span={12} offset={6} className="register-form-container">
         <div className="logo-form">
-          <img src={logo} width="50%" />
+          <img src={logo} width="50%" alt=""/>
         </div>
         <Row>
           <Col span={12}>

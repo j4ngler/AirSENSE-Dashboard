@@ -1,13 +1,19 @@
 import React, { useState,useCallback, useEffect } from "react";
 import axios from 'axios';
 import { HOST_HTTP_ATTENDANCE } from "../../config/config";
-import { getLocalIPAddress } from "../../utils/commonUtils";
+
+import { getGeolocation, getLocalIPAddress } from "../../utils/commonUtils";
+
+
 import './style.scss'
 const Attendance = () => {
   const [time,setTime] = useState();
    const [date,setDate] = useState();
    const [isValid,setIsValud] = useState(false);
    const [isSuccess,setIsSuccess] = useState(false);
+
+   const [isArrival,setIsArrival] = useState();
+
 
    const [ip1,setIp] =useState();
    const [studentNumber,setStudentNumber] = useState();
@@ -30,30 +36,34 @@ const Attendance = () => {
       
     }, []);
     useEffect(() => {
-     getLocalIPAddress((ip)=>
-     {
-      setIp(ip);
-      console.log('Địa chỉ IP của máy hiện tại:', ip1)
-     })
+      getIp()
     }, []);
 
-    const sendDataToAPI = async (data) => {
-      try {
-       
-        const response = await axios.post('http://127.0.0.1:3003/api/attendance', data);
-        console.log(response.data);
-        setIsSuccess(true);
-      } catch (error) {
+    useEffect(()=>{
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        const location1 = `${latitude}, ${longitude}`;
+      setLocation(location1)
+      console.log(location);
+      })
+    },[location])
 
-        console.error(error);
-        
-      }
+    const sendDataToAPI = async (data) => {
+         await axios.post('http://127.0.0.1:3003/api/attendance', data)
+          .then((res)=> {
+            console.log(res.data);
+            setIsArrival(res.data.is_arrival);
+            setIsSuccess(res.data.success);
+          })
+          .catch((err) => {console.log(err);});
+
+       
     };
     const isNumber = (str) => {
       return /^\d+$/.test(str);
     };
    const butonClick = useCallback(()=>{
-      if(studentNumber == null || !isNumber(studentNumber)) {
+      if(studentNumber == null || !isNumber(studentNumber) || studentNumber.length < 7 || studentNumber.length > 12) {
          setIsValud(true);
       }
       else 
@@ -84,7 +94,7 @@ const Attendance = () => {
          <div className="tab">                    
                       <input placeholder="Enter Student Numbers..."  onChange={(e)=>{setStudentNumber(e.target.value)}}/>
                 </div>
-                {isValid ? <p className="warning">Please input your number </p> : ""}
+                {isValid ? <p className="warning">Please input your number again</p> : ""}
                 <div className="buttons">
                   <button className="blob-btn" onClick={()=> butonClick()}>
                      Attendances
@@ -103,21 +113,21 @@ const Attendance = () => {
       <footer className="cd__credit">Author: Sparc Software Team - Distributed By: Tmtuan</footer>
       
 
- {isSuccess ?  <div class="modal_wrapper active">
-    <div class="shadow close_btn active"  onClick={()=> setIsSuccess(false)}></div>
+ {isSuccess ?  <div className="modal_wrapper active">
+    <div className="shadow close_btn active"  onClick={()=> setIsSuccess(false)}></div>
     
-    <div class="modal" >
-      <div class="modal_item s_modal active">
-        <div class="close close_btn"  onClick={()=> setIsSuccess(false)}>
+    <div className="modal" >
+      <div className="modal_item s_modal active">
+        <div className="close close_btn"  onClick={()=> setIsSuccess(false)}>
           <ion-icon name="close"></ion-icon>
         </div>
-        <div class="modal_body">
-           <div class="s_icon">
+        <div className="modal_body">
+           <div className="s_icon">
           <ion-icon name="checkmark"></ion-icon>
         </div>
-        <div class="s_text">
+        <div className="s_text">
           <h2>Attendance Success</h2>
-          <p> {studentNumber} attendance done, Have a good day</p>
+          {isArrival ? <p> {studentNumber} attend successfully, Welcome to Sparc Lab</p> : <p> See you again, {studentNumber}</p>}
         </div>
         </div>
         
@@ -134,3 +144,25 @@ const Attendance = () => {
 
 
 export default Attendance;
+
+// <div className="modal_wrapper active">
+// <div className="shadow close_btn active"></div>
+
+// <div className="modal">
+  
+//   <div className="modal_item e_modal active">
+//     <div className="close close_btn">
+//       <ion-icon name="close"></ion-icon>
+//     </div>
+//     <div className="modal_body">
+//       <div className="s_icon">
+//       <ion-icon name="help"></ion-icon>
+//     </div>
+//     <div className="s_text">
+//       <h2>ERROR</h2>
+//       <p>Unfortunately we have an issue with your attendance, try again later.</p>
+//     </div>
+//     </div>
+//   </div>
+// </div>
+// </div>

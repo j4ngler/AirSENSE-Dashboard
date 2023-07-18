@@ -40,7 +40,7 @@ class AQIData {
         return columns;        
     }
 
-    getInfomationToEdit() {
+    getInformationToEdit() {
 
     }
 

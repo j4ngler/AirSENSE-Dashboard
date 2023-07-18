@@ -1,15 +1,16 @@
-import { Col, Row, Form, Input, Button } from "antd";
+import { Form, Input, Button } from "antd";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import "./ForgotPassword.css";
 import axios from "axios";
+import { API_URL } from "../../configs/config";
 const ResetPassword = () => {
   const [isSentEmail, setIsSentEmail] = useState(false);
   const onFinish = async (values) => {
     setIsSentEmail(true);
     const { email } = { ...values };
     await axios
-      .post("http://localhost:3000/api/auth/reset_password", {
+      .post(API_URL+"auth/reset_password", {
         email,
       })
       .then((res) => {

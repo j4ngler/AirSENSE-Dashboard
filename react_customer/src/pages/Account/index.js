@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs } from "antd";
 import "./account.css";
 import Edit from "./Edit";
-import { Col, Row } from "antd";
+import { Col } from "antd";
 import ChangePassword from "./ChangePassword";
 import Detail from "./Detail";
 const onChange = (key) => {

@@ -1,7 +1,9 @@
 const express = require("express");
 const documentCtrl = require("../controllers/document.controller.js");
 const router = express.Router();
-
+const ejs = require("ejs");
+const fs = require("fs");
+const path = require("path");
 router.get("/", (req, res) => {
   res.render("home/home", { route: "home" });
 });
@@ -14,7 +16,6 @@ router.get("/customer_register", (req, res) => {
 router.get("/user_register", (req, res) => {
   res.render("authen/user_register", { route: "register" });
 });
-
 
 var arrayMenuPages = [
   {
@@ -61,18 +62,17 @@ router.get("/education/:typePage", async (req, res) => {
   var data = req.params.typePage;
   var itemvalue = ["head", "news", "documentary"];
   var index = itemvalue.findIndex((o) => o == data);
-  var dataMAin = 10 + index;
+  var dataMain = 10 + index;
   if (index < 10) {
-    dataMAin = "11,12";
+    dataMain = "11,12";
   }
-  res.render("tech/tech", { detail: dataMAin, route: "tech" });
+  res.render("tech/tech", { detail: dataMain, route: "tech" });
 });
-
 // router.get("/blog/:typePage", async (req, res) => {
 //   var data = req.params.typePage;
 //   var itemvalue = ["head", "stem", "environment", "climate"];
 //   var index = itemvalue.findIndex((o) => o == data);
-//   var dataMAin = index;
+//   var dataMain = index;
 //   if (dataMAin < 1) {
 //     dataMAin = "1,2,3";
 //   }
@@ -80,20 +80,20 @@ router.get("/education/:typePage", async (req, res) => {
 //   res.render("document/blog", { detail: dataMAin, route: "document" });
 // });
 
-router.get("/blog/detail-blog/:id", async (req, res) => {
+router.get("/blog/environment/storeHtml/:id", async (req, res) => {
   var data = req.params.id;
-  console.log(typeof data);
-  if (data == 1) {
-    res.render("document/blog-detail-1");
-  } else if (data == 2) {
-    res.render("document/blog-detail-2");
-  } else if (data == 3) {
-    res.render("document/blog-detail-3");
-  }
+
+  const storeHtmlFilePath = path.join(
+    __dirname,
+    "../../public",
+    `storeHtml/${data}`
+  );
+  const htmlContent = fs.readFileSync(storeHtmlFilePath, "utf8");
+  return res.render("document/environment/blog-detail.ejs", { htmlContent });
 });
 
-router.get("/blog", async (req, res) => {
-  res.render("document/blog");
+router.get("/blog/environment", async (req, res) => {
+  res.render("document/environment");
 });
 
 router.get("/detail_page/:typePage", (req, res) => {
@@ -180,7 +180,6 @@ router.get("/map", (req, res) => {
   res.render("home/map");
 });
 
-
 router.get("/faq", (req, res) => {
   res.render("ManagerStation/reportStation");
 });
@@ -189,7 +188,6 @@ router.get("/report_station", (req, res) => {
   res.render("ManagerStation/reportStation");
 });
 
-
 router.get("/test123", (req, res) => {
   res.render("old/Account/login");
 });
@@ -197,7 +195,6 @@ router.get("/test123", (req, res) => {
 // router.get('/comment', (req, res) => {
 //   res.render('home/comment');
 // })
-
 
 /* commonSale */
 router.get("/product", (req, res) => {
@@ -221,7 +218,7 @@ router.get("/sale/finish", (req, res) => {
 router.get("/sale/history", (req, res) => {
   res.render("sale/historyInvoice");
 });
-//Login 
+//Login
 router.get("/login/admin", (req, res) => {
   res.render("admin/admin");
 });
@@ -234,5 +231,5 @@ router.get("/login/user", (req, res) => {
 
 router.get("/user_info", (req, res) => {
   res.render("user/userInfo");
-})
+});
 module.exports = router;

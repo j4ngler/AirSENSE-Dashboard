@@ -24,9 +24,9 @@ const LeafletMap = () => {
                     url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
                 <ZoomControl position='bottomright' />
-                {dataMap.map(data => {
+                {dataMap.map((data,index) => {
                     return (
-                        <Marker position={[data.latitude, data.longtitude]}>
+                        <Marker position={[data.latitude, data.longitude]} key={index}>
                             <Popup>
                                 <p>
                                     {data.title}<br></br>

@@ -17,6 +17,7 @@ const ProductStore = require("./productStore.model");
 const ProductVariant = require("./productVariant.model");
 const ProductImage = require('./productImage.model')
 const ProductSpec = require('./productSpec.model')
+const Permission = require("./permission.model")
 // customer
 const Customer = require("./customer.model.js");
 const classesFactory = {
@@ -39,7 +40,8 @@ const classesFactory = {
   ProductStore,
   ProductVariant,
   ProductImage,
-  ProductSpec
+  ProductSpec,
+  Permission
 };
 const classesFactorryMapping = {
   user: "User",
@@ -77,6 +79,8 @@ const classesFactorryMappingUser = {
   sensor_device_type: "SparcGroupLocationSensor",
   sparc_aqi: "SparcAqi",
   device_sensor: "DeviceSensor",
+  customer: "Customer",
+  permission:"Permission"
 };
 
 exports.mangerModelAdmin = function (table) {

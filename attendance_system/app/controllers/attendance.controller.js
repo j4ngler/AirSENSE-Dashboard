@@ -1,21 +1,13 @@
 const Attendance = require('./../models/attendance.model');
 const HttpStatus = require('http-status-codes');
+const LocationSupport   = require('../../utils/locationSupport');
+const locationSupport = require('../../utils/locationSupport');
 var lastAttendance = []
 class AttendanceController {
     // POST: 
     attendance(req, res,next) {
         const {user_number,ip,mac} = req.body;
         console.log(req.body);
-        lastAttendance.push({user_number:user_number,time: Date.now()});
-        var lastAttendance1 = lastAttendance.filter( o => Date.now() - o.time < 1000);
-       
-        if(lastAttendance1.length > 1){
-            return res.status(HttpStatus.StatusCodes.FORBIDDEN).json(
-                {
-                    error: {message: 'Can not attendance within 2 seconds, try again later'}
-                }
-            )
-        }
         if(user_number) {
             Attendance.findOneAndUpdate(
                 
@@ -27,6 +19,7 @@ class AttendanceController {
                     if(attendance != null) {
                         return res.json({
                             success: true,
+                            is_arrival: false,
                             message: "update successfully"})
                     }
                     else{
@@ -41,6 +34,7 @@ class AttendanceController {
                             .then(() =>{
                                 return res.json({
                                     success: true,
+                                    is_arrival: true,
                                     message: 'Success Attendance'})
                             })
                             .catch(err => {
@@ -68,7 +62,41 @@ class AttendanceController {
         }
        
     }
-    
+    // POST: Attendance Middleware
+    checkLocation(req, res, next) {
+        const {user_number,location} = req.body
+        lastAttendance.push({user_number:user_number,time: Date.now()});
+        var lastAttendance1 = lastAttendance.filter( o => Date.now() - o.time < 1000);
+       
+        if(lastAttendance1.length > 1){
+            return res.status(HttpStatus.StatusCodes.FORBIDDEN).json(
+                {
+                    error: {message: 'Can not attendance within 2 seconds, try again later'}
+                }
+            )
+        }
+        if ( location.latitude && location.longtitude ) { 
+            console.log(location.latitude, location.longtitude);
+            if ( locationSupport.checkDistance(location.latitude, location.longtitude) ) {
+                console.log("location check true");
+                next();
+            }
+            else {
+                return res.json({
+                    success: false,
+                    error: {message: 'location too far'}
+
+                })
+            }
+        }
+        else{
+            return res.json({
+                success: false,
+                error: {message: 'Invalid location'}
+
+            })
+        }
+    }
 }
 
 module.exports = new AttendanceController;

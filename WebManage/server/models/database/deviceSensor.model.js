@@ -35,12 +35,12 @@ class DeviceSensor extends CommonModel {
   }
   getFieldToAdd(){
       return {
-          valueSetup: ["mac","station_id","longtitude","latitude","address","title","type_id"]
+          valueSetup: ["mac","station_id","longitude","latitude","address","title","type_id"]
       };
   }
   getFieldToDelete(){
       return {
-          arrayCoppy:["mac","station_id","longtitude","latitude","address","title","type_id","created_at","id_created"],
+          arrayCoppy:["mac","station_id","longitude","latitude","address","title","type_id","created_at","id_created"],
           locationSelect:"station_id",
           valueSelect:"delete_flag",
           userUpdate:"id_updated"
@@ -50,14 +50,13 @@ class DeviceSensor extends CommonModel {
   
   getSQLReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser); 
-      return ('SELECT device_sensor.station_id, device_sensor.mac, device_sensor.longtitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id');
+      return ('SELECT device_sensor.station_id, device_sensor.mac, device_sensor.longitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id');
        //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
       }
 
 
-  getSQLCustomer(customerID) {
-    console.log(customerID);
-    return ('SELECT device_sensor.station_id, device_sensor.mac, device_sensor.longtitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id');
+  getSQLCustomerReport(customerID) {
+    return ('SELECT device_sensor.station_id, device_sensor.mac, device_sensor.longitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id');
   }
   getJsonTofind(){
       return [];

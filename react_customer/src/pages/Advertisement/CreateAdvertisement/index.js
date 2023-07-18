@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Select, Input, Modal, Upload, Button, message, Col, Row } from "antd";
+import { Select, Input, Modal, Upload, Button, Col, Row } from "antd";
 import { FormOutlined, UploadOutlined } from "@ant-design/icons";
 import ButtonComponent from "../../../components/Button";
-import { PlusOutlined } from "@ant-design/icons";
 import {} from "antd";
 
 export default function Ads() {

@@ -1,36 +1,32 @@
-import { uploadfileDataImage } from "./httpBaseUtils.js";
-class UploadAdapter {
-  constructor(loader) {
-    this.loader = loader;
-  }
-  upload() {
-    return this.loader.file.then(
-      (file) =>
-        new Promise((resolve, reject) => {
-          const data = new FormData();
+import { uploadFileDataImage } from "./httpBaseUtils.js";
+import "../../configs/config.js";
+
+function uploadAdapter(loader) {
+  return {
+    upload: function () {
+      return new Promise((resolve, reject) => {
+        const data = new FormData();
+        loader.file.then((file) => {
           data.append("file", file);
-          uploadfileDataImage(data)
+          uploadFileDataImage(data)
             .then((response) => {
-              if (!!response.data.path) {
-                var image_head = response.data.url;
-                resolve({
-                  default: image_head,
-                });
-              } else {
-                reject(false);
-              }
+              var image_head = response.data.url;
+              resolve({
+                default: image_head,
+              });
             })
             .catch((error) => {
+              console.log("error", error);
               reject(false);
             });
-        })
-    );
-  }
-  abort() {}
+        });
+      });
+    },
+  };
 }
 
-export const MyCustomUploadAdapterPlugin = (editor) => {
+export function MyCustomUploadAdapterPlugin(editor) {
   editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-    return new UploadAdapter(loader);
+    return uploadAdapter(loader);
   };
-};
+}

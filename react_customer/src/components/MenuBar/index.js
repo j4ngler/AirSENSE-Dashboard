@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import {
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 // function getItem(label, key, icon, children = null, type = null) {
 //   return {
 //     key,
@@ -52,61 +56,56 @@ import { useNavigate } from 'react-router-dom';
 //   );
 // };
 
-
 const MenuBar = ({ menuList, mode, className, ...props }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Menu
-    mode={mode}
-    className={className}
-    selectedKeys={[]}
-    defaultOpenKeys={[]}
+      mode={mode}
+      className={className}
+      selectedKeys={[]}
+      defaultOpenKeys={[]}
     >
-      {
-        menuList.filter(item=> !item.isHide)
-        .map(item => {
-          if(item.children && item.children.length > 0) {
+      {menuList
+        .filter((item) => !item.isHide)
+        .map((item,index) => {
+          if (item.children && item.children.length > 0) {
             return (
               <Menu.SubMenu
-              title={item.title}
-              key={item.title}
-              icon={item.icon}
+                title={item.title}
+                key={index}
+                icon={item.icon}
               >
-                {
-                  item.children.filter(subMenu => !subMenu.isHide)
-                  .map(subMenu => (
-                    
+                {item.children
+                  .filter((subMenu) => !subMenu.isHide)
+                  .map((subMenu) => (
                     <Menu.Item
-                    onClick={() => {
-                      navigate(subMenu.url)
-                    }}
-                    key={subMenu.id}
+                      onClick={() => {
+                        navigate(subMenu.url);
+                      }}
+                      key={subMenu.id}
                     >
                       {subMenu.title}
                     </Menu.Item>
-                    )
-                  )}
+                  ))}
               </Menu.SubMenu>
-            )
-          }
-          else {
+            );
+          } else {
             return (
               <Menu.Item
-              key={item.id}
-              icon={item.icon}
-              onClick={() => {
-                navigate(item.url)
-              }}
+                key={item.id}
+                icon={item.icon}
+                onClick={() => {
+                  navigate(item.url);
+                }}
               >
                 {item.title}
               </Menu.Item>
-            )
+            );
           }
-        })
-      }
+        })}
     </Menu>
-  )
-}
+  );
+};
 
 export default MenuBar;

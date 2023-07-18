@@ -82,7 +82,9 @@ class Customer extends CommonModel {
     );
     //       + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
-
+  getSQLCustomerReport(currentUser){
+    return "SELECT customer.* from customer "
+  }
   getConditionManisfest(info) {
     return "customer.delete_flag=0";
   }
