@@ -1,25 +1,26 @@
-import axios from 'axios';
 import React from 'react'
 import { useEffect } from 'react';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useCallback } from 'react';
 
 import { httpGetData } from '../../features/API/httpBaseUtils';
 import { MyCustomUploadAdapterPlugin } from '../../features/API/uploadAdapter';
 import { useState } from 'react';
+import { API_URL } from '../../configs/config';
 const DocumentForm = ({ idBlog, form }) => {
     const [contentHtml, setContentHtml] = useState("")
-    const fetchContent = async () => {
-        const data = await httpGetData(`http://localhost:3000/api/customers/get-content-blog/${idBlog.split('/')[1]}`)
+    const fetchContent = useCallback(async () => {
+        const data = await httpGetData(API_URL + `customers/get-content-blog/${idBlog.split('/')[1]}`)
         form.setFieldsValue({ "content_html": data.data.data })
         setContentHtml(data.data.data)
-    }
+    }, [form,idBlog])
     const custom_config = {
         extraPlugins: [MyCustomUploadAdapterPlugin],
     };
     useEffect(() => {
         fetchContent()
-    }, [])
+    }, [fetchContent])
     return (
         <div className={"document-editor"}>
             <div id="toolbar-container"></div>

@@ -50,7 +50,7 @@ let upload = multer({ storage: storage, fileFilter: files.excelFilter });
 router
   .route("/import-data")
   .post(isAuthenticated, upload.single("file"), (req, res) => {
-    customerCtrl.importDataExel(req, res);
+    customerCtrl.importDataExcel(req, res);
   });
 
 let uploadImage = multer({ storage: storage, fileFilter: files.imageFilter });
@@ -127,6 +127,9 @@ router
 //dashboard
 router.route("/dashboard-data-average").get(isAuthenticatedCustomer, customerCtrl.getDataAverage);
 
+//manageCustomer
+router.route("/add-customer").post(isAuthorizedCustomer,customerCtrl.addCustomer)
+
 // education
 
 router.route("/getAllCourses").get(isAuthenticatedCustomer, (req, res) => {
@@ -185,7 +188,7 @@ router.route("/get-content-blog/:id").get(async (req, res) => {
 
 });
 router.route("/updatePages").post(isAuthorizedCustomer, (req, res) => {
-  documentCtrl.postUpdatePageToDataBase(req, res);
+  customerCtrl.postUpdatePageToDataBase(req, res);
 });
 //sale
 router.route("/lst_product").post(customerCtrl.getInfoProductStore);
