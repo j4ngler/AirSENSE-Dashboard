@@ -137,6 +137,7 @@
                   class="form-control"
                   id="email"
                   placeholder="Email"
+                  disabled
                 />
               </div>
               <div class="form-group col-md-6">
@@ -240,7 +241,7 @@
     $("#address").val(data.address);
   }
 
-  function editUser() {
+  async function editUser() {
     var newFullName = $("#fullname").val();
     var newUserName = $("#username").val();
     var newPhoneNumber = $("#phone_number").val();
@@ -255,9 +256,10 @@
 
     console.log("check", dataInfo);
 
-    putInfoData("/api/users/update_info", dataInfo, (dataJson) => {
-      showEditUser(dataJson.user);
-    });
+    // putInfoData("/api/users/update_info", dataInfo, (dataJson) => {
+    //   showEditUser(dataJson.user);
+    // });
+    // const res = await axios.put("/api/users/update_info", dataInfo);
   }
 
   //get user information
@@ -265,7 +267,7 @@
     await getInfoHtml("/api/auth/user", async (dataJson) => {
       console.log("check user info", dataJson);
       await showUser(dataJson.user);
-      await showEditUser(dataJson.user);
+      // await showEditUser(dataJson.user);
     });
   }
 
