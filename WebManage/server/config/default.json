@@ -1,0 +1,12 @@
+{
+  "mqtt": [
+      {
+          "port": 1885,
+          "clientId": "mqtt_1885_default_key",
+          "username": "test",
+          "useNewUrlParser": true,
+          "password": "testadmin"
+      }
+  ],
+  "maxItemMemory": 1
+}
