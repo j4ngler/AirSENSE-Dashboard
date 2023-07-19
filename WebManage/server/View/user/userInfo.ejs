@@ -72,7 +72,7 @@
             class="nav-link"
             id="nav-profile-tab"
             data-bs-toggle="tab"
-            data-bs-target="#nav-profile"
+            data-bs-target="#change-info"
             type="button"
             role="tab"
             aria-controls="nav-profile"
@@ -84,7 +84,7 @@
             class="nav-link"
             id="nav-profile-tab"
             data-bs-toggle="tab"
-            data-bs-target="#nav-profile"
+            data-bs-target="#change-password"
             type="button"
             role="tab"
             aria-controls="nav-profile"
@@ -94,22 +94,111 @@
           </button>
         </div>
       </nav>
-      <div class="tab-content" id="nav-tabContent" style="margin-top: 20px;">
+      <div class="tab-content" id="nav-tabContent" style="margin-top: 20px">
         <div
           class="tab-pane fade show active"
           id="user-info"
           role="tabpanel"
           aria-labelledby="nav-home-tab"
-        >
-          ...
-        </div>
+        ></div>
+
         <div
           class="tab-pane fade"
-          id="nav-profile"
+          id="change-info"
           role="tabpanel"
           aria-labelledby="nav-profile-tab"
         >
-          ...
+          <form>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="fullname">Họ và tên</label>
+                <input
+                  type="fullname"
+                  class="form-control"
+                  id="fullname"
+                  placeholder="Fullname"
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="username">Username</label>
+                <input
+                  type="username"
+                  class="form-control"
+                  id="username"
+                  placeholder="Username"
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  placeholder="Email"
+                  disabled
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="phone_number">Số điện thoại</label>
+                <input
+                  type="phone_number"
+                  class="form-control"
+                  id="phone_number"
+                  placeholder="Phone number"
+                />
+              </div>
+              <div class="form-group col-md-6">
+                <label for="address">Địa chỉ</label>
+                <input
+                  type="address"
+                  class="form-control"
+                  id="address"
+                  placeholder="Address"
+                />
+              </div>
+            </div>
+            <button onclick="editUser()" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+
+        <div
+          class="tab-pane fade"
+          id="change-password"
+          role="tabpanel"
+          aria-labelledby="nav-profile-tab"
+        >
+          <form>
+            <div class="form-group">
+              <label for="oldPassword">Mật khẩu cũ</label>
+              <input
+                type="password"
+                class="form-control"
+                id="oldPassword"
+                placeholder="Enter password"
+              />
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Mật khẩu mới</label>
+              <input
+                type="password"
+                class="form-control"
+                id="newPassword"
+                placeholder="Enter password"
+              />
+            </div>
+            <div class="form-group">
+              <label for="new_password">Nhập lại mật khẩu mới</label>
+              <input
+                type="password"
+                class="form-control"
+                id="reNewPassword"
+                placeholder="Enter password"
+              />
+            </div>
+            <button onclick="" class="btn btn-primary">Submit</button>
+          </form>
         </div>
       </div>
     </div>
@@ -117,6 +206,7 @@
 </html>
 
 <script>
+  //show user information
   function showUser(loadconf) {
     const data = `
     <div class="container">
@@ -142,12 +232,45 @@
     </div>`;
     $("#user-info").html(data);
   }
-  function userInfo() {
-    getInfoHtml("/api/auth/user", (dataJson) => {
-      console.log(dataJson)
-      showUser(dataJson.user);
+
+  function showEditUser(data) {
+    $("#fullname").val(data.fullname);
+    $("#username").val(data.username);
+    $("#email").val(data.email);
+    $("#phone_number").val(data.phone_number);
+    $("#address").val(data.address);
+  }
+
+  async function editUser() {
+    var newFullName = $("#fullname").val();
+    var newUserName = $("#username").val();
+    var newPhoneNumber = $("#phone_number").val();
+    var newAddress = $("#address").val();
+
+    const dataInfo = {
+      username: newUserName,
+      fullname: newFullName,
+      phone_number: newPhoneNumber,
+      address: newAddress,
+    };
+
+    console.log("check", dataInfo);
+
+    // putInfoData("/api/users/update_info", dataInfo, (dataJson) => {
+    //   showEditUser(dataJson.user);
+    // });
+    // const res = await axios.put("/api/users/update_info", dataInfo);
+  }
+
+  //get user information
+  async function userInfo() {
+    await getInfoHtml("/api/auth/user", async (dataJson) => {
+      console.log("check user info", dataJson);
+      await showUser(dataJson.user);
+      // await showEditUser(dataJson.user);
     });
   }
 
+  editUser();
   userInfo();
 </script>

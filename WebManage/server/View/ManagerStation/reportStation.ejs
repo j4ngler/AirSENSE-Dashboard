@@ -19,7 +19,7 @@
         <div id="primary" class="content-area">
           <main id="main" class="site-main" role="main">
             <section class="mag-posts-area d-flex flex-wrap">
-              <h5 style="margin-bottom: 20px;">Hỗ trợ trích xuất dữ liệu trạm:</h5>
+              <h5>Hỗ trợ trích xuất dữ liệu trạm:</h5>
               <div class="mag-posts-content mt-30 mb-30 p-30 box-shadow">
                 <div style="width: 100%" class="select-section">
                   <label class="label-header"> Danh sách trạm </label>
@@ -81,16 +81,16 @@
               </div>
             </section>
 
-            <div class="container section-title-container">
+            <!-- <div class="container section-title-container">
               <h3 class="section-title section-title-center">
                 <b></b
                 ><span class="section-title-main" style="font-size: 150%"
                   >Bảng quy đổi giá trị AQI</span
                 ><b></b>
               </h3>
-            </div>
+            </div> -->
             <!-- .section-title -->
-            <div class="row" id="row-850150603">
+            <!-- <div class="row" id="row-850150603">
               <div class="col small-12 large-12">
                 <div class="col-inner">
                   <div
@@ -315,7 +315,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div
               class="gap-element"
@@ -468,53 +468,53 @@
       //     "emptyTable": "No data available in table"
       //     }
       // });
-      const url = location.href
-      const itemUrl = url.split('/')
-      const tokenAdmin = itemUrl[itemUrl.length - 1]
-      var mname = 'no token'
-      var allInfoStation = null
-      loadAllContent()
+      const url = location.href;
+      const itemUrl = url.split("/");
+      const tokenAdmin = itemUrl[itemUrl.length - 1];
+      var mname = "no token";
+      var allInfoStation = null;
+      loadAllContent();
 
       function loadAllContent() {
-        var Link = '/api/social/getStationHome'
+        var Link = "/api/social/getStationHome";
         $.ajax({
-          type: 'get',
-          dataType: 'json',
+          type: "get",
+          dataType: "json",
           url: Link,
           data: {},
           success: function (loadcofig) {
-            console.log(loadcofig)
-            var showData = '<option value="">None</option>'
-            var groupID = []
-            var nameGroupID = []
-            allInfoStation = loadcofig.result
-            defaultStation = loadcofig.result.station_id
+            console.log(loadcofig);
+            var showData = '<option value="">None</option>';
+            var groupID = [];
+            var nameGroupID = [];
+            allInfoStation = loadcofig.result;
+            defaultStation = loadcofig.result.station_id;
             for (var k = 0; k < allInfoStation.length; k++) {
-              let v = allInfoStation[k]
+              let v = allInfoStation[k];
               if (k === 0) {
                 showData +=
                   '<option selected value="' +
                   v.station_id +
                   '">' +
                   v.title +
-                  '</option>'
+                  "</option>";
               } else
                 showData +=
                   '<option value="' +
                   v.station_id +
                   '">' +
                   v.title +
-                  '</option>'
+                  "</option>";
             }
 
             for (var l = 0; l < groupID.length; l++) {
-              let dataChoice = groupID[l]
-              var itemData = ''
+              let dataChoice = groupID[l];
+              var itemData = "";
               for (var k = 0; k < loadcofig.result.length; k++) {
-                let v = loadcofig.result[k]
+                let v = loadcofig.result[k];
                 if (v.id_group == dataChoice) {
-                  if (itemData.length > 1) itemData += ','
-                  itemData += '' + v.station_id + ''
+                  if (itemData.length > 1) itemData += ",";
+                  itemData += "" + v.station_id + "";
                 }
               }
               showData +=
@@ -522,21 +522,21 @@
                 itemData +
                 '">' +
                 nameGroupID[l] +
-                '</option>'
+                "</option>";
             }
-            $('#selectTable').html(showData)
-            gotoCheckData()
+            $("#selectTable").html(showData);
+            gotoCheckData();
           },
           error: function (loadcofig) {
-            console.log('error')
-            console.log(loadcofig)
-            console.log('end error')
-          }
-        })
+            console.log("error");
+            console.log(loadcofig);
+            console.log("end error");
+          },
+        });
       }
-      var actionDataSelect = null
-      var dataSelectEdit = null
-      var dataClick = null
+      var actionDataSelect = null;
+      var dataSelectEdit = null;
+      var dataClick = null;
       function assetDataBase(result) {
         var showData = `<thead>
                     <tr>
@@ -563,45 +563,45 @@
                        <th>SO2A</th>
                     </tr>
                 </thead>
-                <tbody>`
-        result.map(item => {
-          var d = new Date(item.Time * 1000)
+                <tbody>`;
+        result.map((item) => {
+          var d = new Date(item.Time * 1000);
           var date =
             d.getDate() +
-            '/' +
+            "/" +
             (d.getMonth() + 1) +
-            '/' +
+            "/" +
             d.getFullYear() +
-            ' ' +
+            " " +
             d.getHours() +
-            ':' +
+            ":" +
             d.getMinutes() +
-            ':00'
-          showData += '<tr>'
-          showData += '<td>' + item.station_id + '</td>'
-          showData += '<td>' + date + '</td>'
-          showData += '<td>' + item.PM2p5 + '</td>'
-          showData += '<td>' + item.PM10 + '</td>'
-          showData += '<td>' + item.PM1 + '</td>'
-          showData += '<td>' + item.Temperature + '</td>'
-          showData += '<td>' + item.Humidity + '</td>'
-          showData += '<td>' + item.Pressure + '</td>'
-          showData += '<td>' + item.SO2 + '</td>'
-          showData += '<td>' + item.NO2 + '</td>'
-          showData += '<td>' + item.CO2 + '</td>'
-          showData += '<td>' + item.CO + '</td>'
-          showData += '<td>' + item.O3 + '</td>'
-          showData += '<td>' + item.NO2A + '</td>'
-          showData += '<td>' + item.NO2W + '</td>'
-          showData += '<td>' + item.O3W + '</td>'
-          showData += '<td>' + item.O3A + '</td>'
-          showData += '<td>' + item.COW + '</td>'
-          showData += '<td>' + item.COA + '</td>'
-          showData += '<td>' + item.SO2W + '</td>'
-          showData += '<td>' + item.SO2A + '</td>'
-          showData += '</tr>'
-        })
-        $('#datatable').html(showData)
+            ":00";
+          showData += "<tr>";
+          showData += "<td>" + item.station_id + "</td>";
+          showData += "<td>" + date + "</td>";
+          showData += "<td>" + item.PM2p5 + "</td>";
+          showData += "<td>" + item.PM10 + "</td>";
+          showData += "<td>" + item.PM1 + "</td>";
+          showData += "<td>" + item.Temperature + "</td>";
+          showData += "<td>" + item.Humidity + "</td>";
+          showData += "<td>" + item.Pressure + "</td>";
+          showData += "<td>" + item.SO2 + "</td>";
+          showData += "<td>" + item.NO2 + "</td>";
+          showData += "<td>" + item.CO2 + "</td>";
+          showData += "<td>" + item.CO + "</td>";
+          showData += "<td>" + item.O3 + "</td>";
+          showData += "<td>" + item.NO2A + "</td>";
+          showData += "<td>" + item.NO2W + "</td>";
+          showData += "<td>" + item.O3W + "</td>";
+          showData += "<td>" + item.O3A + "</td>";
+          showData += "<td>" + item.COW + "</td>";
+          showData += "<td>" + item.COA + "</td>";
+          showData += "<td>" + item.SO2W + "</td>";
+          showData += "<td>" + item.SO2A + "</td>";
+          showData += "</tr>";
+        });
+        $("#datatable").html(showData);
         // $('#datatable').DataTable( { destroy: true } ).destroy();
         // var showData= '<thead> <tr> <th data-field="time">Giờ cập nhật</th><th data-field="broad_temp"> nhiệt độ oC</th>'
         //     +'<th data-field="ch1_temp">CH1 oC</th><th data-field="ch2_temp">CH2 oC</th>'
@@ -625,45 +625,45 @@
       }
 
       function exportReport() {
-        var fromTime = new Date($('#fromTime').val())
-        const getFromTime = fromTime.getTime()
-        var toTime = new Date($('#toTime').val())
-        const getToTime = toTime.getTime()
-        var station_id = document.getElementById('selectTable').value
+        var fromTime = new Date($("#fromTime").val());
+        const getFromTime = fromTime.getTime();
+        var toTime = new Date($("#toTime").val());
+        const getToTime = toTime.getTime();
+        var station_id = document.getElementById("selectTable").value;
         if (!station_id) {
-          alert('Vui lòng chọn trạm để xuất báo cáo')
-          return
+          alert("Vui lòng chọn trạm để xuất báo cáo");
+          return;
         }
         if (isNaN(fromTime.getFullYear())) {
-          fromTime = undefined
+          fromTime = undefined;
         } else
           fromTime =
             fromTime.getFullYear() +
-            '-' +
+            "-" +
             fromTime.getMonth() +
-            '-' +
+            "-" +
             fromTime.getDate() +
-            ' ' +
+            " " +
             fromTime.getHours() +
-            ':' +
+            ":" +
             fromTime.getMinutes() +
-            ':00'
+            ":00";
         if (isNaN(toTime.getFullYear())) {
-          toTime = undefined
+          toTime = undefined;
         } else
           toTime =
             toTime.getFullYear() +
-            '-' +
+            "-" +
             toTime.getMonth() +
-            '-' +
+            "-" +
             toTime.getDate() +
-            ' ' +
+            " " +
             toTime.getHours() +
-            ':' +
+            ":" +
             toTime.getMinutes() +
-            ':00'
+            ":00";
 
-        var now = new Date().getTime() / 1000
+        var now = new Date().getTime() / 1000;
         // if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
         //     $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
         // }
@@ -675,92 +675,49 @@
         //     toTime = undefined;
         // }
         // else toTime = toTime.getTime()/1000;
-        var link = '/api/social/getReportStations'
         var data = {
           fromTime: fromTime,
           toTime: toTime,
           station_id: station_id,
           getFromTime: getFromTime,
-          getToTime: getToTime
-        }
-        if (localStorage.getItem('token_AIRSENSE')) {
-          $.ajax({
-            type: 'post',
-            method: 'POST',
-            url: link,
-            data: JSON.stringify({
-              station_id: station_id,
-              fromTime: fromTime,
-              toTime: toTime,
-              getFromTime: getFromTime / 1000,
-              getToTime: getToTime / 1000
-            }),
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            dataType: 'json',
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: 'Beard ' + mname
-              // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            success: function (result) {
-              // console.log(result.slice(8));
-              console.log(result)
-              const nameExcel = result.filePath.slice(8)
-              assetDataBase(result.data)
-              window.location = '' + nameExcel
-            }
-          })
-        } else {
-          if (getFromTime / 1000 < now - 24 * 3600 * 90) {
-            Swal.fire({
-              title: '<i>Vui lòng nhập giá trị trong khoảng 3 tháng!</i>',
-              html: 'Chú ý',
-              allowOutsideClick: false,
-              showCloseButton: true
-            })
-          } else {
-            $.ajax({
-              type: 'post',
-              method: 'POST',
-              url: link,
-              data: JSON.stringify({
-                station_id: station_id,
-                fromTime: fromTime,
-                toTime: toTime,
-                getFromTime: getFromTime / 1000,
-                getToTime: getToTime / 1000
-              }),
-              cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-              credentials: 'same-origin', // include, *same-origin, omit
-              redirect: 'follow', // manual, *follow, error
-              referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-              dataType: 'json',
-              cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-              credentials: 'same-origin', // include, *same-origin, omit
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: 'Beard ' + mname
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              success: function (result) {
-                // console.log(result.slice(8));
-                console.log(result)
-                const nameExcel = result.filePath.slice(8)
-                assetDataBase(result.data)
-                window.location = '' + nameExcel
-              }
-            })
-          }
-        }
+          getToTime: getToTime,
+        };
+
+        var link = "/api/social/getReportStations";
+        console.log(data);
+        $.ajax({
+          type: "post",
+          method: "POST",
+          url: link,
+          data: JSON.stringify({
+            station_id: station_id,
+            fromTime: fromTime,
+            toTime: toTime,
+            getFromTime: getFromTime / 1000,
+            getToTime: getToTime / 1000,
+          }),
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          dataType: "json",
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Beard " + mname,
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          success: function (result) {
+            // console.log(result.slice(8));
+            console.log(result);
+            const nameExcel = result.filePath.slice(8);
+            assetDataBase(result.data);
+            window.location = "" + nameExcel;
+          },
+        });
       }
     </script>
   </body>

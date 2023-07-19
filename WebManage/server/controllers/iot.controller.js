@@ -11,6 +11,8 @@ const {mangerModelAdmin} = require('../models/database/managerAll.model.js');
 const ReportManager = require("../models/manager/ReportManager.js");
 const AQIManager = require("../models/manager/AQIManager");
 const DataSensor = require('../models/schemaMongo/dataSensor');
+const {mqttMessage} = require("../utils/mqttMessage.js");
+
 
 var aqiManager = new AQIManager();
 const Excel = require('exceljs');
@@ -129,6 +131,8 @@ iotCtrl.getStationServer = function(request, response) {
 
 iotCtrl.getStationHome = function(request, response) {
     //if (request.currentUser.manifestid < 4) {
+        const station_data = request.body;
+        console.log('data', station_data)
         var tableSelect = mangerModelAdmin("device_sensor");
         var dataTableSQL=tableSelect.getSQLReport(request.currentUser);
         //var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);  
@@ -145,6 +149,7 @@ iotCtrl.getStationHome = function(request, response) {
     //}
 };
 
+
 iotCtrl.reportDataStationLimit = function(request, response) {
     var dataTableSQL= 'SELECT * FROM `sparc_sensor_data`  ORDER BY Time DESC LIMIT '+request.body["data"];
     knex.raw(dataTableSQL)
@@ -157,14 +162,18 @@ iotCtrl.reportDataStationLimit = function(request, response) {
 };
 
 iotCtrl.getReportStations = function(request, response) {
-            console.log("abc",request.body)
+            // console.log("abc",request.body)
             let fromTime = request.body.fromTime;
             let toTime = request.body.toTime;
-            let station_id = request.body.station_id;
+            let station_id = request.body.topic;
             let convertFromTime = request.body.getFromTime;
             let convertToTime =  request.body.getToTime;
             let stationTitle = 'rell';
             let stationMAC = '';
+
+            console.log('abc', station_id)
+            mqttMessage(station_id, convertFromTime, convertToTime);
+
             reportManager.getStation(station_id).then(function(station) {
                 stationTitle = station[0].title;
                 stationMAC = station[0].mac

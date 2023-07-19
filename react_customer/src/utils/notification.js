@@ -8,6 +8,8 @@ export const typeNotify = {
 };
 
 export const openNotification = (type, message) => {
+  console.log("type", type)
+  console.log("message", message)
   notification.config({
     maxCount: 3,
   });

@@ -4,7 +4,8 @@ import groupContentSub from "./table/groupContentSub.table";
 import pageContent from "./table/pageContent.table";
 import order from "./table/order.table";
 import customer from "./table/customer.table";
-
+import sensorDeviceType from "./table/sensorDeviceType";
+import permission from "./table/permission";
 const classesFactory = {
   deviceSensor,
   groupContent,
@@ -12,6 +13,8 @@ const classesFactory = {
   pageContent,
   order,
   customer,
+  sensorDeviceType,
+  permission,
 };
 
 const classesFactoryMapping = {
@@ -21,6 +24,8 @@ const classesFactoryMapping = {
   content_page: "pageContent",
   order: "order",
   customer: "customer",
+  sensor_device_type: "sensorDeviceType",
+  permission:"permission"
 };
 
 export const exportColumnTable = (table, callback = null) => {
@@ -36,18 +41,52 @@ export const exportFieldToEdit = (table) => {
   var nameConvert = classesFactoryMapping[table];
   if (!!nameConvert) {
     var tableSelect = new classesFactory[nameConvert]();
-    if (!!tableSelect) return tableSelect.getInfomationToEdit();
+    if (!!tableSelect) return tableSelect.getInformationToEdit();
   }
   return {};
 };
-export const exportFieldCheckDelete =(table) =>{
+export const exportFieldCheckDelete = (table) => {
   var nameConvert = classesFactoryMapping[table];
   if (!!nameConvert) {
     var tableSelect = new classesFactory[nameConvert]();
-    if (!!tableSelect) return tableSelect.getInfomationCheckDelete();
+    if (!!tableSelect) return tableSelect.getInformationCheckDelete();
   }
   return {};
-}
-export const exportFieldtoAdd = (table) => {};
+};
+export const exportFieldCheckEdit = (table) => {
+  var nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    var tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) return tableSelect.getInformationCheckEdit();
+  }
+  return {};
+};
 
-export const checkValidateValue = () => {};
+export const exportFieldToAdd = (table) => {
+  const nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    const tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) {
+      let fieldExport = {};
+      fieldExport.view = tableSelect.getInformationToAdd();
+      fieldExport.html = tableSelect.getHTMLToAdd();
+      fieldExport.selectTable = tableSelect.getTypeSelectTableToAdd();
+      fieldExport.selectValidate = tableSelect.getInformationToValidate();
+      return fieldExport;
+    }
+  }
+  return {};
+};
+export const exportFieldSelectTable = (table) => {
+  const nameConvert = classesFactoryMapping[table];
+  if (!!nameConvert) {
+    const tableSelect = new classesFactory[nameConvert]();
+    if (!!tableSelect) {
+      let fieldExport = {};
+      fieldExport.main_id = tableSelect.getInformationToEdit().mainID;
+      fieldExport.main_info_title =tableSelect.getInformationToEdit().mainInfo.dataIndex;
+      return fieldExport;
+    }
+  }
+  return {};
+};

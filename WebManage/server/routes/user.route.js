@@ -13,9 +13,15 @@ router.route('/mqtt').post((req, res) => {
 router
   .route('/update_info')
   .put(validate(schema.updateUserInfo), isAuthenticated, (req, res) => {
-    userCtrl.updateInfo(req, res)
+    userCtrl.updateInfo(req, res);
   })
 
+//change user password after login
+router
+  .route('/change_password')
+  .put(validate(schema.changeUserPass), isAuthenticated, (req, res) => {
+    userCtrl.changePassword(req, res);
+  });
 //
 router.route('/report').post(isAuthenticated, (req, res) => {
   userCtrl.getTableData(req, res)

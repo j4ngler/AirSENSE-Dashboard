@@ -2,23 +2,22 @@ import "./News.css";
 import React, { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Select, Input, Modal, Upload,Col, Row } from "antd";
+import { Select, Input, Modal, Upload, Col, Row } from "antd";
 import { FormOutlined } from "@ant-design/icons";
 import ButtonComponent from "../../../components/Button";
 import { PlusOutlined } from "@ant-design/icons";
-import { } from "antd";
+import {} from "antd";
 import {
-  httpGetData,
   httpPostData,
   registerPageToWriter,
-  uploadfileDataImage,
+  uploadFileDataImage,
 } from "../../../features/API/httpBaseUtils";
 import { API_URL } from "../../../configs/config";
 import { MyCustomUploadAdapterPlugin } from "../../../features/API/uploadAdapter";
 import { useNavigate } from "react-router-dom";
 
 export default function News() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -27,11 +26,11 @@ export default function News() {
   const [contentSubs, setContentSubs] = useState();
   const [contentSub, setContentSub] = useState();
   const [contentSubOptions, setContentSubOptions] = useState([]);
-  const [contentImg, setContentImg] = useState("")
+  const [contentImg, setContentImg] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [fileList, setFileList] = useState([]);
-  const [contentHtml, setContentHtml] = useState()
+  const [contentHtml, setContentHtml] = useState();
   const fetchInitial = async () => {
     const dataGroups = await httpPostData(API_URL + "customers/report", {
       table: "content_group",
@@ -82,6 +81,7 @@ export default function News() {
     </div>
   );
   const onChangeGroup = (value) => {
+    setContentSub("")
     setContentSubOptions(
       contentSubs
         .filter((item) => item.content_group_id === value)
@@ -100,15 +100,15 @@ export default function News() {
   const handleSubmit = () => {
     let data = {
       title,
-      content: description,
+      description: description,
       content_sub_id: contentSub,
       content_group_id: contentGroup,
       content_img: contentImg,
       group_file: "group_file",
       content_html: contentHtml,
-      set_to_first: "1"
+      set_to_first: "1",
     };
-    registerPageToWriter(data).then(response => {
+    registerPageToWriter(data).then((response) => {
       navigate("/customer/result", {
         state: {
           status: "success",
@@ -117,7 +117,7 @@ export default function News() {
           againBtn: "Tiếp tục đăng báo",
         },
       });
-    })
+    });
   };
   const custom_config = {
     extraPlugins: [MyCustomUploadAdapterPlugin],
@@ -141,8 +141,8 @@ export default function News() {
             beforeUpload={async (file) => {
               const data = new FormData();
               data.append("file", file);
-              const dataImg = await uploadfileDataImage(data);
-              setContentImg(dataImg.data.url)
+              const dataImg = await uploadFileDataImage(data);
+              setContentImg(dataImg.data.url);
               return false;
             }}
           >
@@ -174,6 +174,7 @@ export default function News() {
             style={{
               width: "100%",
             }}
+            value={contentGroup}
             options={contentGroupOptions}
           />
         </Col>
@@ -183,6 +184,7 @@ export default function News() {
             size="large"
             placeholder="Please select"
             onChange={onChangeSub}
+            value={contentSub}
             style={{
               width: "100%",
             }}
@@ -230,7 +232,7 @@ export default function News() {
               }}
               onChange={(event, editor) => {
                 const data = editor.getData();
-                setContentHtml(data)
+                setContentHtml(data);
                 console.log({ event, editor, data });
               }}
               onBlur={(event, editor) => {

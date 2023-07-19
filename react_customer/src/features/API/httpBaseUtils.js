@@ -38,7 +38,7 @@ export const httpGetData = (url, data) => {
   });
 };
 
-export const uploadfileDataImage = (data, permissionValue) => {
+export const uploadFileDataImage = (data, permissionValue) => {
   return new Promise((resolve, reject) => {
     axios
       .post(API_URL + "customers/import-image", Object.assign(data), {
@@ -93,6 +93,22 @@ export const deleteOneTable = (table, data, permissionValue) => {
   return httpPostData(
     API_URL + "customers/manager_delete",
     Object.assign(data, { table: table }),
+    permissionValue
+  );
+};
+export const editTable = (table, data, permissionValue) => {
+  return httpPostData(
+    API_URL + "customers/manager_delete",
+    Object.assign(data, { table: table }),
+    permissionValue
+  );
+};
+
+//database 
+export const editBlog = (data, permissionValue) => {
+  return httpPostData(
+    API_URL + "customers/updatePages",
+    data,
     permissionValue
   );
 };

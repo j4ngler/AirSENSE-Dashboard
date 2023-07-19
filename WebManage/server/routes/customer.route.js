@@ -14,6 +14,7 @@ const schema = require("../utils/validator.js");
 const { Schema } = require("mongoose");
 const { isAuthenticatedAll } = require("../middlewares/authenticateAll.js");
 const authorizeCustomerDevice = require("../middlewares/authorizeCustomerDevice.js");
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -49,7 +50,7 @@ let upload = multer({ storage: storage, fileFilter: files.excelFilter });
 router
   .route("/import-data")
   .post(isAuthenticated, upload.single("file"), (req, res) => {
-    customerCtrl.importDataExel(req, res);
+    customerCtrl.importDataExcel(req, res);
   });
 
 let uploadImage = multer({ storage: storage, fileFilter: files.imageFilter });
@@ -124,7 +125,10 @@ router
   });
 
 //dashboard
-router.route("/dashboard-data-average").get(isAuthenticatedCustomer,customerCtrl.getDataAverage);
+router.route("/dashboard-data-average").get(isAuthenticatedCustomer, customerCtrl.getDataAverage);
+
+//manageCustomer
+router.route("/add-customer").post(isAuthorizedCustomer,customerCtrl.addCustomer)
 
 // education
 
@@ -165,18 +169,33 @@ router.route("/services").get((req, res) => {
   customerCtrl.getAllInfoServices(req, res);
 });
 
+//blog
+router.route("/get-content-blog/:id").get(async (req, res) => {
+  try {
+    var data = req.params.id;
+
+    const storeHtmlFilePath = path.join(
+      __dirname,
+      "../../public",
+      `storeHtml/${data}`
+    );
+    const htmlContent = fs.readFileSync(storeHtmlFilePath, "utf8");
+    return res.status(200).json({ message: "ok", data: htmlContent });
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ message: "Server error" })
+  }
+
+});
+router.route("/updatePages").post(isAuthorizedCustomer, (req, res) => {
+  customerCtrl.postUpdatePageToDataBase(req, res);
+});
 //sale
 router.route("/lst_product").post(customerCtrl.getInfoProductStore);
 router.route("/page_product").get(customerCtrl.getDetailProductPages);
 router.get("/sale/cart", (req, res) => {
+  console.log("render")
   res.render("sale/invoiceInfoProduct");
 });
-
-//test device_id
-router
-  .route("/test_device")
-  .get(authorizeCustomerDevice, (req, res) => {
-    res.status(200).json("ok")
-  });
 
 module.exports = router;

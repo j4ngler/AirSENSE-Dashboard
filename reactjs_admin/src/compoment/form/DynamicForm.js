@@ -15,10 +15,6 @@ import {
 } from '../../utils/commonUtil';
 
 const DynamicForm = ({ value, valueDetail, selectTabble, onChange }) => {
-  // const [ handleClose] = useState()
-  //   console.log('value', value);
-  //   console.log('valueDetail', valueDetail);
-  //   console.log('selectTable', selectTabble);
 
   if (value.html == TypeDialgueShow.NO_CHECK) {
     return <></>;

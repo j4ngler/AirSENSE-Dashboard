@@ -9,7 +9,7 @@ class AQIManager  {
 
     getCurrentAQIFromDb() {
         return new Promise((resolve,reject)=> {
-            var query = "SELECT a.station_id as station_id, a.aqi as aqi, l.latitude as lat, l.longtitude as lon, l.title as content FROM aqi_data a "+
+            var query = "SELECT a.station_id as station_id, a.aqi as aqi, l.latitude as lat, l.longitude as lon, l.title as content FROM aqi_data a "+
                         "JOIN device_sensor l "+
                         "WHERE a.station_id = l.station_id AND time = (SELECT time FROM aqi_data ORDER BY time DESC LIMIT 1) AND l.delete_flag !=1";
             knex.raw(query.toString()).then((result)=> {

@@ -25,21 +25,17 @@ export const ActionControl = {
   ACTION_REPORT: 5,
 };
 
-export const TypeDialgueShow = {
+export const TypeDialogueShow = {
   NO_CHECK: 0,
   EDIT_TEXT: 1,
-  EDIT_CUSTOM: 2,
+  EDIT_DOCUMENT: 2,
   SELECT_TYPE: 3,
   SELECT_TABLE: 4,
-  SELECT_CUSTOM: 5,
-};
-
-export const SelectHTml = {
-  NOT_CHECK_HTML: 0,
-  SelectPermision: 1,
-  SelectGroupContentSub: 2,
-  SELECT_IMAGE_UP_LOAD: 3,
-  CUSTOMER_PERMISION: 4,
+  SELECT_PERMISSION: 5,
+  SELECT_GROUP_CONTENT_SUB: 6,
+  SELECT_IMAGE_UP_LOAD: 7,
+  SELECT_GROUP_PERMISSION: 8,
+  SELECT_TOGGLE: 9,
 };
 
 export const LOADING = {

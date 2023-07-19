@@ -52,7 +52,6 @@ class oAuthen2Customer extends CommonModel {
           resolve(result[0]);
         })
         .catch(function (err) {
-          console.log("check Inval User Existing Token erro", token);
           return reject(err);
         });
     });

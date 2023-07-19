@@ -23,7 +23,7 @@ const Header = () => {
     dispatch(getPersonalInformation());
   }, [dispatch])
   console.log(customerInfo_gs)
-  
+
   const handleLogOut = () => {
     dispatch(logOutAction());
   };
@@ -59,22 +59,22 @@ const Header = () => {
   return (
     <>
       <header className="header-customer">
-        <img src={logo} height={"45px"} />
+        <img src={logo} alt="" height={"45px"} />
         <Input
           placeholder="Tìm kiếm nội dung"
           prefix={<SearchOutlined />}
           className="input-search"
         />
         <span className="customer-button-header">
-          <img src={refreshIcon} />
-          <img src={ringingIcon} />
+          <img src={refreshIcon} alt="" />
+          <img src={ringingIcon} alt="" />
           <Dropdown
             menu={{
               items,
             }}
             trigger={["hover"]}
           >
-            <img src={avatar} />
+            <img src={avatar} alt="" />
           </Dropdown>
         </span>
       </header>

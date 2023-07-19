@@ -26,7 +26,7 @@ const LeafletMap = () => {
                 <ZoomControl position='bottomright' />
                 {dataMap.map((data,index) => {
                     return (
-                        <Marker position={[data.latitude, data.longtitude]} key={index}>
+                        <Marker position={[data.latitude, data.longitude]} key={index}>
                             <Popup>
                                 <p>
                                     {data.title}<br></br>

@@ -1,9 +1,9 @@
 var fs = require("fs");
 var dataView = "";
 
-class DocumentFileAndFloder {
+class documentFileAndFolder {
   constructor() {
-    this.checkfileAndWrite = this.checkfileAndWrite.bind(this);
+    this.checkFileAndWrite = this.checkFileAndWrite.bind(this);
     this.setPathData = this.setPathData.bind(this);
     this.generateRandomString = this.generateRandomString.bind(this);
   }
@@ -22,9 +22,9 @@ class DocumentFileAndFloder {
     // console.log(text);
     return text;
   }
-  checkfileAndWriteLocal(floder, path, content) {
+  checkFileAndWriteLocal(folder, path, content) {
     return new Promise((resolve, reject) => {
-      var dir = "./public/" + floder;
+      var dir = "./public/" + folder;
       try {
         console.log("Lyric dataView .............!", dir);
         if (!fs.existsSync(dir)) {
@@ -37,7 +37,7 @@ class DocumentFileAndFloder {
         fs.writeFile(dir, content, (err) => {
           // throws an error, you could also catch it here
           if (err) reject(err);
-          else resolve(floder + "/" + path);
+          else resolve(folder + "/" + path);
         });
       } catch (err) {
         reject(err);
@@ -45,8 +45,8 @@ class DocumentFileAndFloder {
     });
   }
 
-  checkfileAndWrite(floder, path, content) {
-    var dir = "./public/" + floder;
+  checkFileAndWrite(folder, path, content) {
+    var dir = "./public/" + folder;
     try {
       console.log("Lyric dataView .............!", dir);
       if (!fs.existsSync(dir)) {
@@ -65,17 +65,17 @@ class DocumentFileAndFloder {
       console.error(err);
       return null;
     }
-    return floder + "/" + path;
+    return folder + "/" + path;
   }
-  async createNewFileToS3(content, floder) {
+  async createNewFileToS3(content, folder) {
     var ts =
       "file" + this.generateRandomString(20) + new Date().getTime() + ".html";
-    return await this.checkfileAndWriteLocal(floder, ts, content);
+    return await this.checkFileAndWriteLocal(folder, ts, content);
   }
-  createNewfile(content, floder) {
+  createNewFile(content, folder) {
     var ts =
       "file" + this.generateRandomString(20) + new Date().getTime() + ".html";
-    return this.checkfileAndWrite(floder, ts, content);
+    return this.checkFileAndWrite(folder, ts, content);
   }
   readFileInFolder(input) {
     var dir = dataView + "\\storeHtml\\" + input;
@@ -96,4 +96,4 @@ class DocumentFileAndFloder {
   }
 }
 
-module.exports = DocumentFileAndFloder;
+module.exports = documentFileAndFolder;

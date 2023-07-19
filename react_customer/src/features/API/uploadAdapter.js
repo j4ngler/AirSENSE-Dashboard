@@ -1,4 +1,4 @@
-import { uploadfileDataImage } from "./httpBaseUtils.js";
+import { uploadFileDataImage } from "./httpBaseUtils.js";
 import "../../configs/config.js";
 
 function uploadAdapter(loader) {
@@ -8,7 +8,7 @@ function uploadAdapter(loader) {
         const data = new FormData();
         loader.file.then((file) => {
           data.append("file", file);
-          uploadfileDataImage(data)
+          uploadFileDataImage(data)
             .then((response) => {
               var image_head = response.data.url;
               resolve({

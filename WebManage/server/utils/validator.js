@@ -95,17 +95,24 @@ module.exports = {
   //validate user info
   updateUserInfo: Joi.object({
     user_id: Joi.number(),
-    userName: Joi.string(),
-    fullName: Joi.string(),
+    username: Joi.string(),
+    fullname: Joi.string(),
     address: Joi.string(),
-    phoneNumber: Joi.string(),
+    phone_number: Joi.string(),
     updated_at: Joi.date()
   }),
 
 
   //validate password after changing
   changeCusPass: Joi.object({
-    email: Joi.string(),
+    customer_id: Joi.number(),
+    old_password: Joi.string(),
+    new_password: Joi.string()
+  }),
+  
+  //validate password after changing
+  changeUserPass: Joi.object({
+    user_id: Joi.number(),
     old_password: Joi.string(),
     new_password: Joi.string()
   })

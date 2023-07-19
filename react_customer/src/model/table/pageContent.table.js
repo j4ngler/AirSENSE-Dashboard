@@ -1,7 +1,10 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { ActionControl } from "../../utils/commonUtils";
+import {
+  ActionControl,
+  TypeDialogueShow,
+} from "../../utils/commonUtils";
 import { TableManifest } from "../../configs/constants";
-
+import { ruleValidates } from "../../configs/constants";
 class pageContent {
   getColumnShow(callback) {
     const columns = [
@@ -11,12 +14,6 @@ class pageContent {
         key: "content_page_id",
         width: 200,
         fixed: "left",
-      },
-      {
-        dataIndex: "file_save",
-        key: "file_save",
-        title: "File nội dung",
-        width: 200,
       },
       {
         dataIndex: "title",
@@ -66,7 +63,7 @@ class pageContent {
     return columns;
   }
 
-  getInfomationToEdit() {
+  getInformationToEdit() {
     return {
       mainID: "content_page_id",
       mainInfo: {
@@ -109,18 +106,78 @@ class pageContent {
     };
   }
 
-  getInformationToAdd() {}
+  getInformationToAdd() {
+    return [
+      {
+        dataIndex: "content_img",
+        title: "Ảnh bài báo",
+        width: 200,
+      },
+      { dataIndex: "title", title: "Tiêu đề bài báo", width: 200 },
+      {
+        dataIndex: "content_sub_id",
+        title: "Chuyên mục chi tiết",
+        width: 200,
+      },
+      {
+        dataIndex: "group_file",
+        title: "File lưu ở server",
+        width: 200,
+      },
+      {
+        dataIndex: "description",
+        title: "Miêu tả",
+        width: 200,
+      },
+      {
+        dataIndex: "set_to_first",
+        title: "Đưa lên đầu trang",
+        width: 200,
+      },
+      {
+        dataIndex: "file_save",
+        title: "Nội dung của bài báo",
+        width: 200,
+      },
+    ];
+  }
 
-  getHTMLToAdd() {}
-
-  getTypeSelectToAdd() {}
-
-  getColumnValidate() {}
-  getInfomationCheckDelete() {
+  getHTMLToAdd() {
+    return [
+      TypeDialogueShow.SELECT_IMAGE_UP_LOAD,
+      TypeDialogueShow.EDIT_TEXT,
+      TypeDialogueShow.SELECT_GROUP_CONTENT_SUB,
+      TypeDialogueShow.EDIT_TEXT,
+      TypeDialogueShow.EDIT_TEXT,
+      TypeDialogueShow.SELECT_TOGGLE,
+      TypeDialogueShow.EDIT_DOCUMENT,
+    ];
+  }
+  getTypeSelectTableToAdd() {
+    return ["", "", "content_group", "content_sub", "", "", "", ""];
+  }
+  getInformationCheckDelete() {
     return {
       dataIndex: "content_sub_id",
       delete_permission: TableManifest.DELETE_BLOG,
     };
+  }
+  getInformationCheckEdit() {
+    return {
+      dataIndex: "content_sub_id",
+      edit_permission: TableManifest.EDIT_BLOG,
+    };
+  }
+  getInformationToValidate() {
+    return [
+      [ruleValidates.requiredValue],
+      [ruleValidates.requiredValue, ruleValidates.min6],
+      [ruleValidates.requiredValue],
+      [ruleValidates.requiredValue],
+      [ruleValidates.requiredValue],
+      [ruleValidates.requiredValue],
+      [ruleValidates.requiredValue],
+    ];
   }
 }
 export default pageContent;
