@@ -654,7 +654,8 @@ function getAllInfoProductInList(product_group, start, end) {
   JOIN product_image pi ON pv.product_variant_id = pi.product_variant_id
   JOIN product_sub psb ON p.group_sub_id = psb.product_sub_id
   WHERE p.delete_flag = 0
-  AND psb.product_group_id = ${product_group};`;
+  AND psb.product_group_id = ${product_group}
+  LIMIT ${start}, ${end};`;
   return sql;
 }
 
