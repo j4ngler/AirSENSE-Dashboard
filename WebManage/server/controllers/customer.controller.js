@@ -648,21 +648,13 @@ customerCtrl.getInfoProductStore = async function (req, res) {
   return returnOK(res, []);
 };
 function getAllInfoProductInList(product_group, start, end) {
-  var sql =
-    "	SELECT product_store.*,product.group_sub_id,product.thumbnail,product.product_id,product.title,product_image.link_url" +
-    "  FROM product " +
-    "JOIN product_variant on product.product_id= product_variant.product_id " +
-    "JOIN product_store on product_variant.product_variant_id=product_store.product_variant_id " +
-    "JOIN product_image on product_variant.product_variant_id=product_image.product_variant_id " +
-    "JOIN product_sub on product.group_sub_id=product_sub.product_sub_id";
-  // "WHERE product.delete_flag = 0  " +
-  //   "AND product_sub.product_group_id = " +
-  //   product_group +
-  //   " LIMIT " +
-  //   start +
-  //   "," +
-  //   end +
-  //   ";";
+  var sql = `SELECT ps.*, p.group_sub_id, p.thumbnail, p.product_id, p.title, pi.link_url FROM product p
+  JOIN product_variant pv ON p.product_id = pv.product_id
+  JOIN product_store ps ON pv.product_variant_id = ps.product_variant_id
+  JOIN product_image pi ON pv.product_variant_id = pi.product_variant_id
+  JOIN product_sub psb ON p.group_sub_id = psb.product_sub_id
+  WHERE p.delete_flag = 0
+  AND psb.product_group_id = ${product_group};`;
   return sql;
 }
 
@@ -688,31 +680,35 @@ customerCtrl.addCustomer = async (req, res) => {
   const manifest = permission.map((item) => {
     return {
       manifest_id: item.permission,
-      value_id: item.contentSub ? item.contentSub : item.station
-    }
-  })
-  console.log("manifest", manifest)
+      value_id: item.contentSub ? item.contentSub : item.station,
+    };
+  });
+  console.log("manifest", manifest);
   // check email and phone number existed?
-  const customerExist = await knex.raw(" SELECT * FROM customer WHERE email = ?", [email])
+  const customerExist = await knex.raw(
+    " SELECT * FROM customer WHERE email = ?",
+    [email]
+  );
   if (customerExist[0].length > 0) {
-    return res.status(208).json({ message: "Email người dùng đã được đăng ký!" });
+    return res
+      .status(208)
+      .json({ message: "Email người dùng đã được đăng ký!" });
   } else {
     try {
-      const customer = await knex("customer")
-        .insert({
-          username,
-          fullname,
-          phone_number,
-          email,
-          password: hashPass,
-          address,
-          contact,
-          created_at,
-          updated_at,
-          id_created,
-          id_updated,
-          delete_flag,
-        })
+      const customer = await knex("customer").insert({
+        username,
+        fullname,
+        phone_number,
+        email,
+        password: hashPass,
+        address,
+        contact,
+        created_at,
+        updated_at,
+        id_created,
+        id_updated,
+        delete_flag,
+      });
       if (customer && customer[0]) {
         for (let i = 0; i < manifest.length; i++) {
           await knex("ref_manifest")
@@ -725,32 +721,34 @@ customerCtrl.addCustomer = async (req, res) => {
               id_created,
               id_updated,
               delete_flag,
-              old_id: 0
-            }).catch(async (err) => {
+              old_id: 0,
+            })
+            .catch(async (err) => {
               await knex("customer")
-                .where('customer_id', customer[0])
+                .where("customer_id", customer[0])
                 .del()
                 .then((numDeleted) => {
                   console.log(`Đã xóa ${numDeleted} người dùng`);
                 })
                 .catch((err) => {
-                  console.error('Lỗi khi xóa người dùng:', err);
-                })
+                  console.error("Lỗi khi xóa người dùng:", err);
+                });
               return res
                 .status(500)
                 .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
-            })
+            });
         }
-        return res.status(200).json({message:"Thêm dữ liệu người dùng thành công!"})
+        return res
+          .status(200)
+          .json({ message: "Thêm dữ liệu người dùng thành công!" });
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       return res
         .status(500)
         .json({ message: "Có lỗi xảy ra, vui lòng thử lại" });
     }
-  };
+  }
 };
 
 customerCtrl.updateInfo = async (req, res) => {
