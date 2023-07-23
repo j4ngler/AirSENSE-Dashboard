@@ -89,31 +89,30 @@ module.exports = {
     contact: Joi.string(),
     address: Joi.string(),
     phone_number: Joi.string(),
-    updated_at: Joi.date()
+    updated_at: Joi.date(),
   }),
 
   //validate user info
   updateUserInfo: Joi.object({
     user_id: Joi.number(),
-    username: Joi.string(),
-    fullname: Joi.string(),
-    address: Joi.string(),
-    phone_number: Joi.string(),
-    updated_at: Joi.date()
-  }),
-
+    username: Joi.string().optional(),
+    fullname: Joi.string().optional(),
+    address: Joi.string().optional(),
+    phone_number: Joi.string().optional(),
+    updated_at: Joi.date().optional(),
+  }).optional(),
 
   //validate password after changing
   changeCusPass: Joi.object({
     customer_id: Joi.number(),
     old_password: Joi.string(),
-    new_password: Joi.string()
+    new_password: Joi.string(),
   }),
-  
+
   //validate password after changing
   changeUserPass: Joi.object({
     user_id: Joi.number(),
     old_password: Joi.string(),
-    new_password: Joi.string()
-  })
+    new_password: Joi.string(),
+  }),
 };

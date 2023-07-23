@@ -189,7 +189,7 @@
               />
             </div>
             <div class="form-group">
-              <label for="new_password">Nhập lại mật khẩu mới</label>
+              <label for="newPassword">Nhập lại mật khẩu mới</label>
               <input
                 type="password"
                 class="form-control"
@@ -197,7 +197,9 @@
                 placeholder="Enter password"
               />
             </div>
-            <button onclick="" class="btn btn-primary">Submit</button>
+            <button onclick="changePassword()" class="btn btn-primary">
+              Submit
+            </button>
           </form>
         </div>
       </div>
@@ -247,6 +249,9 @@
     var newPhoneNumber = $("#phone_number").val();
     var newAddress = $("#address").val();
 
+    console.log("fullname", newFullName);
+    console.log("username", newUserName);
+
     const dataInfo = {
       username: newUserName,
       fullname: newFullName,
@@ -254,12 +259,11 @@
       address: newAddress,
     };
 
-    console.log("check", dataInfo);
+    console.log("check data info", dataInfo);
 
-    // putInfoData("/api/users/update_info", dataInfo, (dataJson) => {
-    //   showEditUser(dataJson.user);
-    // });
-    // const res = await axios.put("/api/users/update_info", dataInfo);
+    await putInfoData("/api/users/update_info", dataInfo, (dataJson) => {
+      console.log("dataJson", dataJson);
+    });
   }
 
   //get user information
@@ -267,10 +271,22 @@
     await getInfoHtml("/api/auth/user", async (dataJson) => {
       console.log("check user info", dataJson);
       await showUser(dataJson.user);
-      // await showEditUser(dataJson.user);
+      await showEditUser(dataJson.user);
     });
+  }
+
+  async function changePassword() {
+    // var oldPassword = $("#old_password").val();
+    // var newPassword = $("#new_password").val();
+    // const dataInfo = {
+    //   password: newPassword,
+    // };
+    // await putInfoData("/api/users/change_password", dataInfo, (dataJson) => {
+    //   console.log("check123", dataJson);
+    // });
   }
 
   editUser();
   userInfo();
+  // changePassword();
 </script>
