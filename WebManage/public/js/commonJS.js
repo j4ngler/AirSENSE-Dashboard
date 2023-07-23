@@ -137,14 +137,15 @@ async function putInfoData(urlLink, dataInfo, callBack) {
       "Content-Type": "application/json",
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: "Beard " + localStorage.getItem("token_AirSENSE"),
+      Authorization: "Beard " + localStorage.getItem("token_AIRSENSE"),
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     success: function (dataReturn) {
+      console.log("data return", dataReturn);
       callBack(dataReturn);
     },
-    error: function (loadcofig, error) {
-      console.log("error", error);
+    error: function (e) {
+      console.log("error123", e.responseText);
       callBack([]);
     },
   });
