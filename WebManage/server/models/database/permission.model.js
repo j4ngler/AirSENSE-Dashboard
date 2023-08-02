@@ -52,12 +52,12 @@ class manifest_authen extends CommonModel {
   
   getSQLReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT permission.* FROM permission ');
+      return ('SELECT * FROM permission ');
        //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
   getSQLCustomerReport(currentUser){
     console.log("getSQLReport...2....... " ,currentUser.manifestid); 
-      return ('SELECT permission.* FROM permission ');
+      return ('SELECT * FROM permission ');
        //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
   }
   getJsonTofind(){

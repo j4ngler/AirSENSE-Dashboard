@@ -138,9 +138,12 @@ iotCtrl.getStationHome = function(request, response) {
         //var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);  
         knex.raw(dataTableSQL)
         .then(result => {
+            console.log("get data sensor ok");
             return returnOK(response,result[0]);
         }
         , error => {
+            console.log("get data sensor failed");
+
             return returnNotFound(response,error);
         });
    // }

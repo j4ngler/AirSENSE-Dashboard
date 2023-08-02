@@ -179,7 +179,9 @@ router.get("/about", (req, res) => {
 router.get("/map", (req, res) => {
   res.render("home/map");
 });
-
+router.get("/enegry", (req, res) => {
+  res.render("home/enegry");
+});
 router.get("/faq", (req, res) => {
   res.render("ManagerStation/reportStation");
 });
