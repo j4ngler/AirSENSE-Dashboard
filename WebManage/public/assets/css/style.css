@@ -73,6 +73,8 @@ h6 {
   }
 }
 
+
+
 /* sweetalert2 css */
 
 .container-login {
@@ -262,7 +264,8 @@ h6 {
 }
 
 #header .container {
-  max-height: 40px;
+  max-height: 50px;
+  max-width: 1290px;
 }
 /* #header.header-scrolled {
     top: 0;

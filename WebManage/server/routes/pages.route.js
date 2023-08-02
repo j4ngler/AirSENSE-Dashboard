@@ -179,6 +179,22 @@ router.get("/about", (req, res) => {
 router.get("/map", (req, res) => {
   res.render("home/map");
 });
+router.get("/smart_home/power_measure", (req, res) => {
+  res.render("home/enegry");
+});
+
+router.get("/smart_home/report_station", (req, res) => {
+  res.render("ManagerStation/reportPowerStation");
+});
+
+
+router.get("/IoT_dam_tom/measure", (req, res) => {
+  res.render("home/shrimpLake");
+});
+
+router.get("/IoT_dam_tom/report_station", (req, res) => {
+  res.render("ManagerStation/reportShrimpLakeStation");
+});
 
 router.get("/faq", (req, res) => {
   res.render("ManagerStation/reportStation");

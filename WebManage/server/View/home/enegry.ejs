@@ -9,13 +9,7 @@
 
     <div id="wrapper">
         <% include ../Layout/topbar.ejs %>
-        <div class="contain-map">
-            <div id="Map">
-            </div>
-            <div class="scroll-down">
-                <button class="btn-info link-to-chart">View Chart</button>
-            </div>
-        </div>
+        
   
               <main id="main" class="site-main" role="main">
                     <div class="row" style="margin: 0px;">
@@ -34,7 +28,7 @@
                     </div>
                     <div class="container section-title-container">
                         <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
-                                style="font-size:150%;">Biểu đồ dữ liệu trạm</span><b></b></h3>
+                                style="font-size:100%;">Biểu đồ dữ liệu điện năng</span><b></b></h3>
                     </div><!-- .section-title -->
                     <div class="row text-center" id="row-833095485">
                         <div>
@@ -63,21 +57,25 @@
                         <div class="no-data">Không có dữ liệu</div>
                         <div class="dashboard">
                             <div class="PM2p5 block-chart">
-                                <canvas id="PM2p5" style="width: 100%;height: 100%;"></canvas>
+                                <canvas id="Voltage" style="width: 100%;height: 100%;"></canvas>
                             </div>
                             <div class="PM10 block-chart">
-                                <canvas id="PM10" style="width: 100%;height: 100%;"></canvas>
+                                <canvas id="Current" style="width: 100%;height: 100%;"></canvas>
                             </div>
                         
                             <div class="PM1 block-chart">
-                                <canvas id="PM1" style="width: 100%;height: 100%;"></canvas>
+                                <canvas id="Power" style="width: 100%;height: 100%;"></canvas>
                             </div>
                             <div class="Temperature block-chart">
-                                <canvas id="Temperature" style="width: 100%;height: 100%;"></canvas>
+                                <canvas id="Energy" style="width: 100%;height: 100%;"></canvas>
                             </div>
                         
                             <div class="Humidity block-chart">
-                                <canvas id="Humidity" style="width: 100%;height: 100%;"></canvas>
+                                <canvas id="Frequency" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+
+                            <div class="Humidity block-chart">
+                                <canvas id="Power_Factor" style="width: 100%;height: 100%;"></canvas>
                             </div>
                             
                         </div>
@@ -113,129 +111,7 @@
                     </div>
 
 
-                    <div class="container section-title-container">
-                        <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
-                                style="font-size:150%;">Bảng quy đổi giá trị AQI</span><b></b></h3>
-                    </div>
-                    <!-- .section-title -->
-                    <div class="row" id="row-850150603">
-                        <div class="col small-12 large-12">
-                            <div class="col-inner">
-                                <div id="footable_parent_64"
-                                    class="footable_parent ninja_table_wrapper loading_ninja_table wp_table_data_press_parent semantic_ui ">
-                                    <table data-ninja_table_instance="ninja_table_instance_0" data-footable_id="64"
-                                        data-filter-delay="500" id="footable_64"
-                                        class="foo-table ninja_footable foo_table_64 ui table  nt_type_ajax_table selectable striped vertical_centered footable-paging-right ninja_table_search_disabled footable footable-1 breakpoint-lg"
-                                        style="display: table;">
-                                        <thead>
-                                            <tr class="footable-header">
-                                                <th class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    scope="col" style="display: table-cell;">Giá trị AQI</th>
-                                                <th class="ninja_column_1 ninja_clmn_nm_danh_gia" scope="col"
-                                                    style="display: table-cell;">Đánh giá</th>
-                                                <th class="ninja_column_2 ninja_clmn_nm_anh_huong" scope="col"
-                                                    style="display: table-cell;">Ảnh hưởng tới sức khỏe</th>
-                                                <th class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    scope="col" style="display: table-cell;">Màu sắc</th>
-                                            </tr>
-                                        </thead>
-                                        <colgroup>
-                                            <col class="ninja_column_0 ">
-                                            <col class="ninja_column_1 ">
-                                            <col class="ninja_column_2 ">
-                                            <col class="ninja_column_3 ">
-                                        </colgroup>
-                                        <tbody>
-                                            <tr class="ninja_table_row_0 nt_row_id_1">
-                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    style="display: table-cell;">0-50</td>
-                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
-                                                    style="display: table-cell;">TỐT</td>
-                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
-                                                    style="display: table-cell;">Chất lượng không khí tốt, không ảnh
-                                                    hưởng tới sức khỏe.</td>
-                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    style="display: table-cell;">
-                                                    <div id="thupa_xanh" class="color">XANH</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="ninja_table_row_1 nt_row_id_2">
-                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    style="display: table-cell;">51-100</td>
-                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
-                                                    style="display: table-cell;">TRUNG BÌNH</td>
-                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
-                                                    style="display: table-cell;">Chất lượng không khí ở mức chấp nhận
-                                                    được. Tuy nhiên, một số ít người nhạy cảm với ô nhiễm không khí có
-                                                    thể chịu những tác động nhất định tới sức khỏe.</td>
-                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    style="display: table-cell;">
-                                                    <div id="thupa_vang" class="color">VÀNG</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="ninja_table_row_2 nt_row_id_3">
-                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    style="display: table-cell;">101-150</td>
-                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
-                                                    style="display: table-cell;">KÉM</td>
-                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
-                                                    style="display: table-cell;">Những người nhạy cảm có thể gặp phải
-                                                    các vấn đề về sức khỏe. Những người bình thường ít có khả năng bị
-                                                    ảnh hưởng.</td>
-                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    style="display: table-cell;">
-                                                    <div id="thupa_da_cam" class="color">DA CAM</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="ninja_table_row_3 nt_row_id_4">
-                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    style="display: table-cell;">151-200</td>
-                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
-                                                    style="display: table-cell;">XẤU</td>
-                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
-                                                    style="display: table-cell;">Những người bình thường bắt đầu có các
-                                                    ảnh hưởng tới sức khỏe. Những người nhạy cảm có thể gặp những vấn đề
-                                                    sức khỏe nghiêm trọng hơn.</td>
-                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    style="display: table-cell;">
-                                                    <div id="thupa_do" class="color">ĐỎ</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="ninja_table_row_4 nt_row_id_5">
-                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    style="display: table-cell;">201-300</td>
-                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
-                                                    style="display: table-cell;">RẤT XẤU</td>
-                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
-                                                    style="display: table-cell;">Cảnh báo hưởng tới sức khỏe: mọi người
-                                                    có thể bị ảnh hưởng tới sức khỏe nhiều hơn.</td>
-                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    style="display: table-cell;">
-                                                    <div id="thupa_tim" class="color">TÍM</div>
-                                                </td>
-                                            </tr>
-                                            <tr class="ninja_table_row_5 nt_row_id_6">
-                                                <td class="ninja_column_0 ninja_clmn_nm_gia_trị_aqi footable-first-visible"
-                                                    style="display: table-cell;">Từ 301</td>
-                                                <td class="ninja_column_1 ninja_clmn_nm_danh_gia"
-                                                    style="display: table-cell;">NGUY HẠI</td>
-                                                <td class="ninja_column_2 ninja_clmn_nm_anh_huong"
-                                                    style="display: table-cell;">Cảnh báo khẩn cấp về sức khỏe: Mọi
-                                                    người có thể bị ảnh hưởng nghiêm trọng tới sức khỏe.</td>
-                                                <td class="ninja_column_3 ninja_clmn_nm_mau_sac footable-last-visible"
-                                                    style="display: table-cell;">
-                                                    <div id="thupa_nau" class="color">NÂU</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     
                     <div class="gap-element" style="display:block; height:auto; padding-top:20px" class="clearfix">
                     </div>
@@ -320,81 +196,6 @@
 
     </div>
 
-    <div id="popout">
-        <div class="container">
-            <div class="top-section">
-                <span class="close">&times;</span>
-                <div class="tilte-popout">Thông tin chi tiết</div>
-            </div>
-            <div class="index-section">
-                <div class="venue">
-                    <span class="material-icons icon-venue">
-                        room
-                    </span>
-                    <span class="detail-venue">Dai hoc bach khoa ha noi</span>
-                </div>
-                <div class="detail-index">
-                    <div class="col-6">
-                        <div id="aqi-index">
-                            <span style="display: block;padding-top: 12px;padding-bottom: 0px;">AQI</span>
-                            <span class="index-aqi" style="display: block;margin-top: -26px;">69</span>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="temp-humid-index">
-                            <span>Nhiệt độ:</span>
-                            <span id="current-temp">30</span>
-                            <span>&#8451;</span>
-                        </div>
-                        <div style="height: 4%"></div>
-                        <div class="temp-humid-index">
-                            <span>Độ ẩm:</span>
-                            <span id="current-humid">70</span>
-                            <span>%</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="spec">
-                    <div class="graphic">
-                        <div>
-                         <div class="chart">
-                           <span class="block green" title="Category A">
-                                <span class="value">Tốt</span>
-                           </span>
-                           <span class="block yellow" title="Category B">
-                                <span class="value">Trung bình</span>
-                           </span>
-                           <span class="block orange" title="Category C">
-                                <span class="value">Kém</span>
-                           </span>
-                           <span class="block red" title="Category D">
-                                <span class="value">Xấu</span>
-                           </span>
-                           <span class="block purple" title="Category E">
-                                <span class="value">Rất xấu</span>
-                           </span>
-                           <span class="block brown" title="Category F">
-                                <span class="value">Nguy hại</span>
-                           </span>
-                         </div>
-                       </div>
-                     </div>
-                </div>
-            </div>
-            <div class="separator">Dữ liệu trong 24 giờ gần nhất</div>
-            <div class="chart-section">
-                <div class="detail-chart">
-                    <canvas id="aqi-chart" style="width: 100%;height: 100%;"></canvas>
-                </div>
-                <div class="detail-chart">
-                    <canvas id="temp-chart" style="width: 100%;height: 100%;"></canvas>
-                </div>
-                <div class="detail-chart">
-                    <canvas id="humid-chart" style="width: 100%;height: 100%;"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script type="text/javascript">
         window['ninja_table_instance_0'] = { "table_id": "64", "title": "Ch\u1ea5t l\u01b0\u1ee3ng kh\u00f4ng kh\u00ed", "columns": [{ "name": "gia_tr\u1ecb_aqi", "title": "Gi\u00e1 tr\u1ecb AQI", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_0", "ninja_clmn_nm_gia_tr\u1ecb_aqi"], "filterable": true, "sortable": false }, { "name": "danh_gia", "title": "\u0110\u00e1nh gi\u00e1", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_1", "ninja_clmn_nm_danh_gia"], "filterable": true, "sortable": false }, { "name": "anh_huong", "title": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_2", "ninja_clmn_nm_anh_huong"], "filterable": true, "sortable": false }, { "name": "mau_sac", "title": "M\u00e0u s\u1eafc", "breakpoints": "", "type": "html", "visible": true, "classes": ["ninja_column_3", "ninja_clmn_nm_mau_sac"], "filterable": true, "sortable": false }], "original_columns": [{ "name": "Gi\u00e1 tr\u1ecb AQI", "key": "gia_tr\u1ecb_aqi", "breakpoints": "", "data_type": "text", "dateFormat": "", "header_html_content": "", "enable_html_content": "false", "contentAlign": "", "textAlign": "" }, { "name": "\u0110\u00e1nh gi\u00e1", "key": "danh_gia", "breakpoints": "", "data_type": "text", "dateFormat": "", "header_html_content": "", "enable_html_content": "false", "contentAlign": "", "textAlign": "" }, { "name": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "key": "anh_huong", "breakpoints": "", "data_type": "textarea", "dateFormat": "", "header_html_content": "", "enable_html_content": "false" }, { "name": "M\u00e0u s\u1eafc", "key": "mau_sac", "breakpoints": "", "data_type": "html", "dateFormat": "", "header_html_content": "", "enable_html_content": "false" }], "settings": { "filtering": false, "togglePosition": "first", "paging": false, "pager": false, "page_sizes": ["10", "20", "50", "100"], "sorting": true, "default_sorting": "old_first", "defualt_filter": false, "defualt_filter_column": null, "expandFirst": false, "expandAll": false, "i18n": { "search_in": "Search in", "search": "Search", "no_result_text": "No Result Found" }, "shouldNotCache": "no", "skip_rows": 0, "limit_rows": 0, "use_parent_width": false, "info": "", "enable_html_cache": null, "html_caching_minutes": null, "has_formula": "no" }, "render_type": "ajax_table", "custom_css": { "ninja_column_0": [], "ninja_column_1": [], "ninja_column_2": [], "ninja_column_3": [] }, "instance_name": "ninja_table_instance_0", "table_version": "3.5.8", "provider": "default", "init_config": { "toggleColumn": "first", "cascade": true, "useParentWidth": false, "columns": [{ "name": "gia_tr\u1ecb_aqi", "title": "Gi\u00e1 tr\u1ecb AQI", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_0", "ninja_clmn_nm_gia_tr\u1ecb_aqi"], "filterable": true, "sortable": false }, { "name": "danh_gia", "title": "\u0110\u00e1nh gi\u00e1", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_1", "ninja_clmn_nm_danh_gia"], "filterable": true, "sortable": false }, { "name": "anh_huong", "title": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_2", "ninja_clmn_nm_anh_huong"], "filterable": true, "sortable": false }, { "name": "mau_sac", "title": "M\u00e0u s\u1eafc", "breakpoints": "", "type": "html", "visible": true, "classes": ["ninja_column_3", "ninja_clmn_nm_mau_sac"], "filterable": true, "sortable": false }], "expandFirst": null, "expandAll": null, "empty": "No Result Found", "sorting": { "enabled": true }, "data_request_url": "http:\/\/airsense.vn\/wp-admin\/admin-ajax.php?action=wp_ajax_ninja_tables_public_action&table_id=64&target_action=get-all-data&default_sorting=old_first", "filtering": { "enabled": false, "delay": 1, "dropdownTitle": "Search in", "placeholder": "Search", "connectors": false, "ignoreCase": true }, "paging": { "enabled": false, "position": "right", "size": null, "container": "#footable_parent_64 .paging-ui-container", "countFormat": " " } } }           
@@ -611,12 +412,12 @@
                 }
                 // console.log('arrayData: ',arrayData);
                 // console.log('arrayID: ',arrayID);
-                drawSingleChart(arrayID,arrayData,'PM2p5','PM2p5',color);
-                drawSingleChart(arrayID,arrayData,'PM10','PM10',color);
-                drawSingleChart(arrayID,arrayData,'PM1','PM1',color);
-                drawSingleChart(arrayID,arrayData,'Temperature','Temperature',color);
-                drawSingleChart(arrayID,arrayData,'Humidity','Humidity',color);
-                // drawSingleChart(arrayID,arrayData,'Pressure','Pressure',color);
+                drawSingleChart(arrayID,arrayData,'Voltage','Voltage',color);
+                drawSingleChart(arrayID,arrayData,'Current','Current',color);
+                drawSingleChart(arrayID,arrayData,'Power','Power',color);
+                drawSingleChart(arrayID,arrayData,'Energy','Energy',color);
+                drawSingleChart(arrayID,arrayData,'Frequency','Frequency',color);
+                drawSingleChart(arrayID,arrayData,'Power_Factor','Power_Factor',color);
                 reset = 1;
             } 
             else {
@@ -665,7 +466,7 @@
 
         loadAllContent();
         function loadAllContent(){
-            var Link='/api/social/getStationHome';
+            var Link='/api/power/getPowerMeasureStation';
                 $.ajax({
                     type: 'get',
                     dataType: 'json',
@@ -721,7 +522,7 @@
         function gotoCheckData(isShowLoader){  
             console.log("go to check data");
             var data=document.getElementById("selectTable").value;
-            var Link='/api/social/dataSensor';
+            var Link='/api/power/dataSensor';
             var fromTime = new Date($('#fromTime').val());
             var now = new Date().getTime()/1000;
             if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
@@ -1342,7 +1143,6 @@
                 }
             });
         }
-
         // stacked bar
         $('.value').each(function() {
             var text = $(this).text();

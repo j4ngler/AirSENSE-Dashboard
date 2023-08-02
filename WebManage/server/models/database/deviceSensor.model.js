@@ -48,10 +48,9 @@ class DeviceSensor extends CommonModel {
   }
   
   
-  getSQLReport(currentUser){
-    console.log("getSQLReport...2....... " ,currentUser); 
-      return ('SELECT device_sensor.station_id, device_sensor.mac, device_sensor.longitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id');
-       //   + defineManifest.checkManifestTableUser(currentUser.manifestid,currentUser.users_id,currentUser.value_manifest));
+  getSQLReport(group_sub_id){
+    console.log("getSQLReport...2....... " ,group_sub_id); 
+      return ('SELECT device_sensor.station_id, de.title AS group_title, device_sensor.mac, device_sensor.longtitude, device_sensor.latitude, device_sensor.address, device_sensor.type_id, device_sensor.title, db.content AS type_sensor FROM device_sensor LEFT JOIN sensor_device_type db ON device_sensor.type_id=db.device_type_id LEFT JOIN group_device_sub de ON device_sensor.group_sub_id = de.group_device_sub_id ' +  `WHERE device_sensor.group_sub_id = ${group_sub_id};`);
       }
 
 

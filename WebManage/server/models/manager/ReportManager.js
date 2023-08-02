@@ -527,7 +527,7 @@ class ReportManager extends CommonModel {
     var query = squel
       .select()
       .from("device_sensor")
-      .where("station_id = " + stationId);
+      .where("station_id = " + "\"" + stationId + "\"");
     return new Promise((resolve, reject) => {
       // if (stationId.includes(",")) {
       //   var station = { content: "All" };
