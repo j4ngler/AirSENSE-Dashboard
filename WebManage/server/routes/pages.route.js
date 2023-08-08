@@ -179,6 +179,7 @@ router.get("/about", (req, res) => {
 router.get("/map", (req, res) => {
   res.render("home/map");
 });
+
 router.get("/smart_home/power_measure", (req, res) => {
   res.render("home/enegry");
 });

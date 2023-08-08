@@ -29,6 +29,7 @@
                     <div class="container section-title-container">
                         <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
                                 style="font-size:100%;">Biểu đồ dữ liệu điện năng</span><b></b></h3>
+
                     </div><!-- .section-title -->
                     <div class="row text-center" id="row-833095485">
                         <div>
@@ -195,7 +196,6 @@
         <% include ../Layout/footer.ejs %>
 
     </div>
-
 
     <script type="text/javascript">
         window['ninja_table_instance_0'] = { "table_id": "64", "title": "Ch\u1ea5t l\u01b0\u1ee3ng kh\u00f4ng kh\u00ed", "columns": [{ "name": "gia_tr\u1ecb_aqi", "title": "Gi\u00e1 tr\u1ecb AQI", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_0", "ninja_clmn_nm_gia_tr\u1ecb_aqi"], "filterable": true, "sortable": false }, { "name": "danh_gia", "title": "\u0110\u00e1nh gi\u00e1", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_1", "ninja_clmn_nm_danh_gia"], "filterable": true, "sortable": false }, { "name": "anh_huong", "title": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_2", "ninja_clmn_nm_anh_huong"], "filterable": true, "sortable": false }, { "name": "mau_sac", "title": "M\u00e0u s\u1eafc", "breakpoints": "", "type": "html", "visible": true, "classes": ["ninja_column_3", "ninja_clmn_nm_mau_sac"], "filterable": true, "sortable": false }], "original_columns": [{ "name": "Gi\u00e1 tr\u1ecb AQI", "key": "gia_tr\u1ecb_aqi", "breakpoints": "", "data_type": "text", "dateFormat": "", "header_html_content": "", "enable_html_content": "false", "contentAlign": "", "textAlign": "" }, { "name": "\u0110\u00e1nh gi\u00e1", "key": "danh_gia", "breakpoints": "", "data_type": "text", "dateFormat": "", "header_html_content": "", "enable_html_content": "false", "contentAlign": "", "textAlign": "" }, { "name": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "key": "anh_huong", "breakpoints": "", "data_type": "textarea", "dateFormat": "", "header_html_content": "", "enable_html_content": "false" }, { "name": "M\u00e0u s\u1eafc", "key": "mau_sac", "breakpoints": "", "data_type": "html", "dateFormat": "", "header_html_content": "", "enable_html_content": "false" }], "settings": { "filtering": false, "togglePosition": "first", "paging": false, "pager": false, "page_sizes": ["10", "20", "50", "100"], "sorting": true, "default_sorting": "old_first", "defualt_filter": false, "defualt_filter_column": null, "expandFirst": false, "expandAll": false, "i18n": { "search_in": "Search in", "search": "Search", "no_result_text": "No Result Found" }, "shouldNotCache": "no", "skip_rows": 0, "limit_rows": 0, "use_parent_width": false, "info": "", "enable_html_cache": null, "html_caching_minutes": null, "has_formula": "no" }, "render_type": "ajax_table", "custom_css": { "ninja_column_0": [], "ninja_column_1": [], "ninja_column_2": [], "ninja_column_3": [] }, "instance_name": "ninja_table_instance_0", "table_version": "3.5.8", "provider": "default", "init_config": { "toggleColumn": "first", "cascade": true, "useParentWidth": false, "columns": [{ "name": "gia_tr\u1ecb_aqi", "title": "Gi\u00e1 tr\u1ecb AQI", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_0", "ninja_clmn_nm_gia_tr\u1ecb_aqi"], "filterable": true, "sortable": false }, { "name": "danh_gia", "title": "\u0110\u00e1nh gi\u00e1", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_1", "ninja_clmn_nm_danh_gia"], "filterable": true, "sortable": false }, { "name": "anh_huong", "title": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_2", "ninja_clmn_nm_anh_huong"], "filterable": true, "sortable": false }, { "name": "mau_sac", "title": "M\u00e0u s\u1eafc", "breakpoints": "", "type": "html", "visible": true, "classes": ["ninja_column_3", "ninja_clmn_nm_mau_sac"], "filterable": true, "sortable": false }], "expandFirst": null, "expandAll": null, "empty": "No Result Found", "sorting": { "enabled": true }, "data_request_url": "http:\/\/airsense.vn\/wp-admin\/admin-ajax.php?action=wp_ajax_ninja_tables_public_action&table_id=64&target_action=get-all-data&default_sorting=old_first", "filtering": { "enabled": false, "delay": 1, "dropdownTitle": "Search in", "placeholder": "Search", "connectors": false, "ignoreCase": true }, "paging": { "enabled": false, "position": "right", "size": null, "container": "#footable_parent_64 .paging-ui-container", "countFormat": " " } } }           
@@ -418,6 +418,7 @@
                 drawSingleChart(arrayID,arrayData,'Energy','Energy',color);
                 drawSingleChart(arrayID,arrayData,'Frequency','Frequency',color);
                 drawSingleChart(arrayID,arrayData,'Power_Factor','Power_Factor',color);
+
                 reset = 1;
             } 
             else {
@@ -467,6 +468,7 @@
         loadAllContent();
         function loadAllContent(){
             var Link='/api/power/getPowerMeasureStation';
+
                 $.ajax({
                     type: 'get',
                     dataType: 'json',
@@ -522,7 +524,9 @@
         function gotoCheckData(isShowLoader){  
             console.log("go to check data");
             var data=document.getElementById("selectTable").value;
+
             var Link='/api/power/dataSensor';
+
             var fromTime = new Date($('#fromTime').val());
             var now = new Date().getTime()/1000;
             if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
