@@ -134,7 +134,7 @@ iotCtrl.getStationHome = function(request, response) {
         const station_data = request.body;
         console.log('data', station_data)
         var tableSelect = mangerModelAdmin("device_sensor");
-        var dataTableSQL=tableSelect.getSQLReport(request.currentUser);
+        var dataTableSQL=tableSelect.getSQLReport(1);
         //var itemSelect=tableSelect.getValueToSelectToFind(req.body.dataFind);  
         knex.raw(dataTableSQL)
         .then(result => {
@@ -165,17 +165,17 @@ iotCtrl.reportDataStationLimit = function(request, response) {
 };
 
 iotCtrl.getReportStations = function(request, response) {
-            // console.log("abc",request.body)
+            console.log("abc",request.body)
             let fromTime = request.body.fromTime;
             let toTime = request.body.toTime;
-            let station_id = request.body.topic;
+            let station_id = request.body.station_id;
             let convertFromTime = request.body.getFromTime;
             let convertToTime =  request.body.getToTime;
             let stationTitle = 'rell';
             let stationMAC = '';
 
             console.log('abc', station_id)
-            mqttMessage(station_id, convertFromTime, convertToTime);
+            // mqttMessage(station_id, convertFromTime, convertToTime);
 
             reportManager.getStation(station_id).then(function(station) {
                 stationTitle = station[0].title;
@@ -321,9 +321,9 @@ iotCtrl.getDataStation = async (req, res) => {
     },
     { _id: 0, __v: 0, topic: 0 }
   )
-    .hint({ time: 1 })
+    // .hint({ time: 1 })
     .lean();
-    console.log(new Date());
+    // console.log(new Date());
 //   res.send(JSON.stringify(result));
     res.send(JSON.stringify({
         station: stationID,

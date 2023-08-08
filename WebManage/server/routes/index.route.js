@@ -8,6 +8,8 @@ const documentRoutes = require("./document.route.js");
 const serviceRoutes = require("./service.api.route.js");
 const socialRoutes = require("./social.route.js");
 const deviceRoutes = require("./device.route.js");
+const powerRoutes = require("./power.route.js");
+const shrimpLakeRoutes = require("./shrimpLake.route.js");
 const router = express.Router();
 
 // mount auth routes at /auth
@@ -28,6 +30,10 @@ router.use("/customers", customerRoutes);
 
 router.use("/service", serviceRoutes);
 router.use("/social", socialRoutes);
+router.use("/power", powerRoutes);
+router.use("/shrimp_lake", shrimpLakeRoutes);
+
+
 
 
 // manage eclectic devices routes
