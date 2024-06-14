@@ -56,9 +56,9 @@ mqttConfig.map(config => {
   var client = mqtt.connect(process.env.APP_MQTT, config)
   clients.push(client)
   client.on('connect', function () {
-    console.log(config.port)
+    // console.log(config.port)
     client.subscribe('#', function (err) {
-      // console.log(config.port)
+      console.log(config.port)
       if (!err) {
         console.log('Connect mqtt successfully in port:', config.port)
       } else console.log(err)
