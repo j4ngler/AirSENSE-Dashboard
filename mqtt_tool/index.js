@@ -3,6 +3,7 @@ const { CronJob: cronJob } = require("cron");
 const { appConstant } = require("./constant");
 require("dotenv").config();
 
+
 const host = process.env.MQTT_BROKER_URL;
 const port = process.env.MQTT_BROKER_PORT;
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
@@ -17,7 +18,6 @@ const client = mqtt.connect(connectUrl, {
   reconnectPeriod: 1000,
 });
 
-const topic = "696969";
 client.on("connect", () => {
   console.log("Connected");
   //   client.subscribe([topic], () => {
@@ -36,13 +36,16 @@ client.on("connect", () => {
       appConstant.EVERY_10S,
       function () {
         console.log("==job 10s start==");
+        let stationId = 686868;
+        for(let i = 0; i < 10; ++i) {
+        let tempStation = stationId + i;
+        let convertedTempStation = tempStation.toString();
         const time = new Date();
         const timeStamp = Math.floor(time.getTime() / 1000);
-        const stationId = "686868";
         client.publish(
-          "myTopic/1",
+          convertedTempStation,
           JSON.stringify({
-            station_id: stationId,
+            station_id: convertedTempStation,
             Time: timeStamp,
             CO: Math.random() * 50400,
             O3: Math.random() * 604,
@@ -58,15 +61,16 @@ client.on("connect", () => {
           { qos: 2 },
           (error) => {
             if (!error) {
-              res.status(200).json({ msg: "Gửi bản tin thành công" });
+              res.status(200).json({ msg: "Send message successfully" });
             } else {
               console.log(error);
               res
                 .status(500)
-                .json({ msg: "Gửi bản tin thất bại , vui lòng thử lại" });
+                .json({ msg: "Failure , please send message again" });
             }
           }
         );
+      }
       },
       null, // cb when job stop
       true, // auto start
