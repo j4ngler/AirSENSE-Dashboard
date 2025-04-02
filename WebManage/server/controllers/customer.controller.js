@@ -1,6 +1,6 @@
 const bookshelf = require("../config/bookshelf.js");
 const HttpStatus = require("http-status-codes");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const knex = require("../config/knex.js");
 var squel = require("squel");
 const TableManifest = require("../models/middlewareDatabase/TableManifest.js");

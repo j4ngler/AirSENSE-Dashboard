@@ -1,6 +1,6 @@
 const HttpStatus = require("http-status-codes");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 var squel = require("squel");
 const User = require("../models/database/user.model.js");
 const Oauthen2 = require("../models/database/oAuthen2.model.js");

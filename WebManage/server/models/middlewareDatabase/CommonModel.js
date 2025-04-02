@@ -7,7 +7,7 @@ const TABLE_NAME = "address";
 const defineManifest = require("../../middlewares/CheckManifest.js");
 const knex = require("../../config/knex.js");
 const CustomerAcess = require("./CustomerAcess.js");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 class CommonModel extends bookshelf.Model {
   async queryDatabase(sql) {
