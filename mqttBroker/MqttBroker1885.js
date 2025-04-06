@@ -1,6 +1,6 @@
 var mosca = require('mosca')
-var events=require('events');
-emitter=new events.EventEmitter();
+var events = require('events');
+emitter = new events.EventEmitter();
 
 
 let settings = {
@@ -9,20 +9,14 @@ let settings = {
 var server = new mosca.Server(settings);
 server.on('ready', setup);
 
-// thêm funtion check user
-
+// adding function check user
 var authenticate = function(client, username, password, callback) {
-  try{
+  try {
 		var authorized = (username === 'test' && password.toString() === 'testadmin');
-      callback(null, authorized);
-  }
-  catch (ex){
+    callback(null, authorized);
+  } catch (ex) {
     console.log(ex);
   }
-  
-  //console.log(authorized);
-  //var authorized = (username === 'alice' && password.toString() === 'secret');
-  
 }
 
 function publishMessage(topicData,payloadData) {
@@ -40,12 +34,10 @@ function publishMessage(topicData,payloadData) {
 }
 
 var authorizePublish = function(client, topic, payload, callback) {
-  try
-  {
-      callback(null, client.user);
-  }
-  catch (ex){
-   // console.log(ex);
+  try {
+    callback(null, client.user);
+  } catch (ex) {
+    console.log(ex);
   }
 
 }
@@ -60,12 +52,10 @@ server.on('clientConnected', function(client) {
 });
 // fired when a message is received
 server.on('published', function(packet, client) {
-  try{
+  try {
    var stringBuf = packet.payload.toString('utf-8');
    console.log(stringBuf);
-   
-  }
-  catch (ex){
+  } catch (ex) {
   //  console.log(ex);
   }
 });
