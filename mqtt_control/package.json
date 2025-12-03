@@ -1,0 +1,40 @@
+{
+  "name": "mqtt_control",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "aedes": "^0.51.3",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.1",
+    "bookshelf": "^1.2.0",
+    "const": "^1.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "debug": "^4.4.3",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "http-errors": "^2.0.1",
+    "http-status-codes": "^2.3.0",
+    "jade": "^1.11.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
+    "mongoose": "^8.20.1",
+    "morgan": "^1.10.1",
+    "mqtt": "^5.14.1",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "squel": "^5.13.0",
+    "swagger-jsdoc": "^6.2.8",
+    "websocket-stream": "^5.5.2"
+  }
+}
