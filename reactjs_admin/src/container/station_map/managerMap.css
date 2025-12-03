@@ -1,0 +1,26 @@
+
+.report-map-block {
+    margin-top: 40px;
+}
+
+.link-to-map {
+    width: 50%;
+    color: #fff;
+    background-color: #405d9d;
+    padding: 56px 50px;
+    margin-left: 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.link-to-report {
+    width: 50%;
+    color: #000;
+    background-color: yellow;
+    padding: 56px 50px;
+    margin-left: 20px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}

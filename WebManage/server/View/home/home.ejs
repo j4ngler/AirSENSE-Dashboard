@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<% include ../Layout/header.ejs %>
+
+  <head>
+    <style>
+      :root {
+        --lp-primary-color: #5a47ab;
+        --lp-desc-color: #796f6f;
+        --lp-secondary-color: #fbd15b;
+      }
+
+      * {
+        box-sizing: inherit;
+      }
+
+      html {
+        font-size: 100%;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.4;
+      }
+    </style>
+    <style>
+      /*  */
+      .grid {
+        width: 100%;
+        display: block;
+        padding: 0;
+      }
+
+      .grid.wide {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -4px;
+        margin-right: -4px;
+      }
+
+      .col {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+
+      .row.no-gutters .col {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .c-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
+      /* >= Tablet */
+      @media (min-width: 740px) {
+        .row {
+          margin-left: -8px;
+          margin-right: -8px;
+        }
+
+        .col {
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+
+        .m-0 {
+          display: none;
+        }
+
+        .m-1,
+        .m-2,
+        .m-3,
+        .m-4,
+        .m-5,
+        .m-6,
+        .m-7,
+        .m-8,
+        .m-9,
+        .m-10,
+        .m-11,
+        .m-12 {
+          display: block;
+        }
+
+        .m-3 {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+
+        .m-4 {
+          flex: 0 0 33.33333%;
+          max-width: 33.33333%;
+        }
+
+        .m-5 {
+          flex: 0 0 41.66667%;
+          max-width: 41.66667%;
+        }
+
+        .m-6 {
+          flex: 0 0 50%;
+          max-width: 50%;
+        }
+
+        .m-7 {
+          flex: 0 0 58.33333%;
+          max-width: 58.33333%;
+        }
+
+        .m-12 {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+      }
+
+      /* PC medium resolution > */
+      @media (min-width: 1113px) {
+        .row {
+          margin-left: -12px;
+          margin-right: -12px;
+        }
+
+        .col {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .l-0 {
+          display: none;
+        }
+
+        .l-1,
+        .l-2,
+        .l-2-4,
+        .l-3,
+        .l-4,
+        .l-5,
+        .l-6,
+        .l-7,
+        .l-12 {
+          display: block;
+        }
+
+        .l-3 {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+
+        .l-4 {
+          flex: 0 0 33.33333%;
+          max-width: 33.33333%;
+        }
+
+        .l-5 {
+          flex: 0 0 41.66667%;
+          max-width: 41.66667%;
+        }
+
+        .l-6 {
+          flex: 0 0 50%;
+          max-width: 50%;
+        }
+
+        .l-7 {
+          flex: 0 0 58.33333%;
+          max-width: 58.33333%;
+        }
+
+        .l-12 {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+      }
+
+      /* Tablet - PC low resolution */
+      @media (min-width: 740px) and (max-width: 1023px) {
+        .wide {
+          width: 720px;
+        }
+      }
+
+      /* > PC low resolution */
+      @media (min-width: 1024px) and (max-width: 1239px) {
+        .wide {
+          width: 984px;
+        }
+
+        .wide .row {
+          margin-left: -12px;
+          margin-right: -12px;
+        }
+
+        .wide .col {
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+
+        .wide .l-0 {
+          display: none;
+        }
+
+        .wide .l-1,
+        .wide .l-2,
+        .wide .l-2-4,
+        .wide .l-3,
+        .wide .l-4,
+        .wide .l-5,
+        .wide .l-6,
+        .wide .l-7,
+        .wide .l-8,
+        .wide .l-9,
+        .wide .l-10,
+        .wide .l-11,
+        .wide .l-12 {
+          display: block;
+        }
+
+        .wide .l-3 {
+          flex: 0 0 25%;
+          max-width: 25%;
+        }
+
+        .wide .l-4 {
+          flex: 0 0 33.33333%;
+          max-width: 33.33333%;
+        }
+
+        .wide .l-6 {
+          flex: 0 0 50%;
+          max-width: 50%;
+        }
+
+        .wide .l-12 {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="defult-home">
+    <!-- Main content Start -->
+    <% include ../Layout/topbar.ejs %>
+      <div class="landing-page">
+        <section class="landing-page-introduction padding-right-left-12px">
+          <div class="grid wide">
+            <div class="row lp-alignitem-center">
+              <div class="col l-7 m-7 c-12">
+                <p class="introduction-about">Airsense - Dự án nghiên cứu và ứng dụng công nghệ vào việc theo dõi chất lượng không khí.</p>
+                <div class="introduction-btn-wrapper">
+                  <button class="landing-page-btn">Tham gia ngay</button>
+                  <button class="landing-page-btn">Tìm hiểu thêm</button>
+                </div>
+              </div>
+              <div class="col l-5 m-5 c-12" style="margin: 0px!important">
+                <img src="/img/landing-page-img/lp-introduction.svg" class="introduction-img" alt="">
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="landing-page-education padding-right-left-12px">
+          <div class="grid wide">
+            <h2 class="landing-page-section-heading landing-page-title">
+              <span>AIRSENSE</span>
+              ĐÀO TẠO
+            </h2>
+            <p class="landing-page-section-desc landing-page-desc">Hãy thiết lập các trạm trực tuyến và mang niềm
+              vui học tập
+              với cộng đồng lên
+              kỹ
+              thuật số. Đừng bỏ lỡ cơ hội này khi thế giới tiến lên kỹ thuật số.</p>
+            <div class="row">
+              <div class="col l-4 m-6 c-12">
+                <div class="education-item">
+                  <img src="/img/landing-page-img/lp-education1.svg" alt="" class="education-item-img">
+                  <h3 class="education-item-title landing-page-title">Chương trình đào tạo</h3>
+                  <p class="education-item-desc landing-page-desc">Hãy cùng nhau tạo ra một cộng đồng học tập
+                    tuyệt vời với những
+                    người hướng dẫn và thực tập sinh.</p>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="education-item">
+                  <img src="/img/landing-page-img/lp-education2.svg" alt="" class="education-item-img">
+                  <h3 class="education-item-title landing-page-title">Truy cập trực tuyến 24/7</h3>
+                  <p class="education-item-desc landing-page-desc">
+                    Theo dõi các hoạt động của chúng tôi, xem các bài học, tìm giải pháp cho các câu hỏi với
+                    cộng
+                    đồng, tham gia vào các hoạt động và có trải nghiệm học tập tích cực. </p>
+
+                </div>
+              </div>
+              <div class="col l-4 m-12 c-12">
+                <div class="education-item">
+                  <img src="/img/landing-page-img/lp-education3.svg" alt="" class="education-item-img">
+                  <h3 class="education-item-title landing-page-title">Chứng chỉ trực tuyến</h3>
+                  <p class="education-item-desc landing-page-desc">Hoàn thành khóa đào tạo thành công, giành
+                    được
+                    giải thưởng của chúng tôi và tiến gần hơn một chút đến mục tiêu nghề nghiệp của bạn.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="landing-page-featured-course padding-right-left-12px">
+          <div class="grid wide">
+            <h2 class="landing-page-section-heading landing-page-title">Khoá học nổi bật</h2>
+            <p class="landing-page-section-desc landing-page-desc">Dễ dàng tìm thấy khoá học bạn muốn và tham gia
+            </p>
+            <div class="featured-course-see-more">
+              <a href="#" class="featured-course-see-more-link">Xem thêm</a>
+              <i class="featured-course-see-more-icon fas fa-chevron-right"></i>
+            </div>
+            <div class="row">
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">C++ cơ bản</h3>
+                    <p class="featured-course-item-desc landing-page-desc">25 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">C# cơ bản </h3>
+                    <p class="featured-course-item-desc landing-page-desc">15 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Html cơ bản</h3>
+                    <p class="featured-course-item-desc landing-page-desc">25 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Javascript cơ bản</h3>
+                    <p class="featured-course-item-desc landing-page-desc">25 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Css cơ bản</h3>
+                    <p class="featured-course-item-desc landing-page-desc">20 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Làm quen với reactjs</h3>
+                    <p class="featured-course-item-desc landing-page-desc">35 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Python cơ bản</h3>
+                    <p class="featured-course-item-desc landing-page-desc">17 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Machine learning basic</h3>
+                    <p class="featured-course-item-desc landing-page-desc">45 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Github tutorial</h3>
+                    <p class="featured-course-item-desc landing-page-desc">5 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Deep Learning basic</h3>
+                    <p class="featured-course-item-desc landing-page-desc">17 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Machine learning</h3>
+                    <p class="featured-course-item-desc landing-page-desc">40 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Gitlab code</h3>
+                    <p class="featured-course-item-desc landing-page-desc">10 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">C# advanced</h3>
+                    <p class="featured-course-item-desc landing-page-desc">27 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Nodejs basic</h3>
+                    <p class="featured-course-item-desc landing-page-desc">23 bài học</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col l-4 m-6 c-12">
+                <div class="featured-course-item">
+                  <img src="/img/landing-page-img/lp-featured-course.svg" alt="" class="featured-course-item-img">
+                  <div class="featured-course-item-info">
+                    <h3 class="featured-course-item-name landing-page-title">Note-tip-trick python</h3>
+                    <p class="featured-course-item-desc landing-page-desc">5 bài học</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="landing-page-free-training padding-right-left-12px">
+          <div class="grid wide">
+            <h2 class="landing-page-section-heading landing-page-title">
+              <span>AIRSENSE</span>
+              ĐÀO TẠO miễn phí
+            </h2>
+            <div class="row">
+              <div class="col l-6 m-6 c-12">
+                <div class="free-training-item">
+                  <img src="/img/landing-page-img/lp-free-training1.svg" alt="" class="free-training-item-img">
+                  <p class="free-training-item-desc landing-page-desc">Thoát khỏi chương trình giảng dạy nhàm
+                    chán không thay
+                    đổi,
+                    thiết lập hệ thống của riêng bạn. giáo dục miễn phí
+                    trải nghiệm sự phấn khích và niềm vui.</p>
+                  <button class="landing-page-btn free-training-item-btn-left">Tham gia học</button>
+                </div>
+              </div>
+              <div class="col l-6 m-6 c-12">
+                <div class="free-training-item">
+                  <img src="/img/landing-page-img/lp-free-training2.svg" alt="" class="free-training-item-img">
+                  <p class="free-training-item-desc landing-page-desc">Trải nghiệm học tập như một phần của
+                    cộng đồng của chúng tôi. Sản xuất, phát triển, thiết kế, kiếm tiền bằng những gì bạn học
+                    được.</p>
+                  <button class="landing-page-btn free-training-item-btn-right">Tham gia diễn đàn</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+
+
+
+
+
+      <% include ../Layout/footer.ejs %>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+          crossorigin="anonymous"></script>
+
+  </body>
+
+</html>

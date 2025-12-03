@@ -1,0 +1,37 @@
+ {
+    "database": {
+        "host": "localhost",
+        "database": "new_airsense",
+        "user": "root",
+        "password": ""
+    },
+    "fields": {
+        "time": "",
+        "station_id": "",
+        "aqi":"",
+        "PM2p5_aqi": "",
+        "PM10_aqi": "",
+        "PM1_aqi": "",
+        "SO2_aqi": "",
+        "NO2_aqi": "",
+        "CO2_aqi": "",
+        "CO_aqi" : "",
+        "O3_aqi": ""
+    },
+    "average_fields": {
+        "time": "",
+        "station_id": "",
+        "NO2":"",
+        "O3": "",
+        "CO": "",
+        "SO2": "",
+        "PM2p5": "",
+        "PM10": "",
+        "PM1": "",
+        "humidity":"",
+        "temperature": "",
+        "pressure": "",
+        "wind_speed": ""
+    },
+    "maxItemMemory": 1
+}

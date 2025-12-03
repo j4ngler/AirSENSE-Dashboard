@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<!--[if IE 9 ]> <html lang="en-US" class="ie9 loading-site no-js"> <![endif]-->
+<!--[if IE 8 ]> <html lang="en-US" class="ie8 loading-site no-js"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en-US" class="loading-site no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet">
+    <link rel="profile" href="http://gmpg.org/xfn/11" />
+    <link rel="pingback" href="/old/resource/airsense.vn/xmlrpc.php" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+    <!-- <script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/frozen.js"></script> -->
+
+    <script>(function (html) { html.className = html.className.replace(/\bno-js\b/, 'js') })(document.documentElement);</script>
+    <title>Blog &#8211; Airsense</title>
+    <link rel='dns-prefetch' href='//s.w.org' />
+    <link rel="alternate" type="application/rss+xml" title="Airsense &raquo; Feed" href="/old/resource/airsense.vn/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Airsense &raquo; Comments Feed"
+        href="/old/resource/airsense.vn/comments/feed/" />
+    <script type="text/javascript">
+        window._wpemojiSettings = { "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/", "svgExt": ".svg", "source": { "concatemoji": "http:\/\/airsense.vn\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.3.4" } };
+        !function (e, a, t) { var r, n, o, i, p = a.createElement("canvas"), s = p.getContext && p.getContext("2d"); function c(e, t) { var a = String.fromCharCode; s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, e), 0, 0); var r = p.toDataURL(); return s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, t), 0, 0), r === p.toDataURL() } function l(e) { if (!s || !s.fillText) return !1; switch (s.textBaseline = "top", s.font = "600 32px Arial", e) { case "flag": return !c([127987, 65039, 8205, 9895, 65039], [127987, 65039, 8203, 9895, 65039]) && (!c([55356, 56826, 55356, 56819], [55356, 56826, 8203, 55356, 56819]) && !c([55356, 57332, 56128, 56423, 56128, 56418, 56128, 56421, 56128, 56430, 56128, 56423, 56128, 56447], [55356, 57332, 8203, 56128, 56423, 8203, 56128, 56418, 8203, 56128, 56421, 8203, 56128, 56430, 8203, 56128, 56423, 8203, 56128, 56447])); case "emoji": return !c([55357, 56424, 55356, 57342, 8205, 55358, 56605, 8205, 55357, 56424, 55356, 57340], [55357, 56424, 55356, 57342, 8203, 55358, 56605, 8203, 55357, 56424, 55356, 57340]) }return !1 } function d(e) { var t = a.createElement("script"); t.src = e, t.defer = t.type = "text/javascript", a.getElementsByTagName("head")[0].appendChild(t) } for (i = Array("flag", "emoji"), t.supports = { everything: !0, everythingExceptFlag: !0 }, o = 0; o < i.length; o++)t.supports[i[o]] = l(i[o]), t.supports.everything = t.supports.everything && t.supports[i[o]], "flag" !== i[o] && (t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && t.supports[i[o]]); t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && !t.supports.flag, t.DOMReady = !1, t.readyCallback = function () { t.DOMReady = !0 }, t.supports.everything || (n = function () { t.readyCallback() }, a.addEventListener ? (a.addEventListener("DOMContentLoaded", n, !1), e.addEventListener("load", n, !1)) : (e.attachEvent("onload", n), a.attachEvent("onreadystatechange", function () { "complete" === a.readyState && t.readyCallback() })), (r = t.source || {}).concatemoji ? d(r.concatemoji) : r.wpemoji && r.twemoji && (d(r.twemoji), d(r.wpemoji))) }(window, document, window._wpemojiSettings);
+    </script>
+    <link rel="stylesheet" href="/old/css/blog.css">
+    <style type="text/css">
+        img.wp-smiley,
+        img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            margin: 0 .07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+    </style>
+    <link rel='stylesheet' id='wp-block-library-css'
+        href='/old/resource/airsense.vn/wp-includes/css/dist/block-library/style.min.css?ver=5.3.4' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='contact-form-7-css'
+        href='/old/resource/airsense.vn/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.1.5' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='flatsome-icons-css'
+        href='/old/resource/airsense.vn/wp-content/themes/flatsome/assets/css/fl-icons.css?ver=3.3' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='flatsome-main-css'
+        href='/old/resource/airsense.vn/wp-content/themes/flatsome/assets/css/flatsome.css?ver=3.5.3' type='text/css'
+        media='all' />
+    <link rel='stylesheet' id='flatsome-style-css'
+        href='/old/resource/airsense.vn/wp-content/themes/flatsome/style.css?ver=3.5.3' type='text/css' media='all' />
+    <script type='text/javascript' src='/resource/airsense.vn/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp'></script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+    <link rel='https://api.w.org/' href='/old/resource/airsense.vn/wp-json/' />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="/old/resource/airsense.vn/xmlrpc.php?rsd" />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/old/resource/airsense.vn/wp-includes/wlwmanifest.xml" />
+    <meta name="generator" content="WordPress 5.3.4" />
+    <style>
+        .bg {
+            opacity: 0;
+            transition: opacity 1s;
+            -webkit-transition: opacity 1s;
+        }
+
+        .bg-loaded {
+            opacity: 1;
+        }
+    </style>
+    <!--[if IE]><link rel="stylesheet" type="text/css" href="/old/resource/airsense.vn/wp-content/themes/flatsome/assets/css/ie-fallback.css"><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js"></script><script>var head = document.getElementsByTagName('head')[0],style = document.createElement('style');style.type = 'text/css';style.styleSheet.cssText = ':before,:after{content:none !important';head.appendChild(style);setTimeout(function(){head.removeChild(style);}, 0);</script><script src="/old/resource/airsense.vn/wp-content/themes/flatsome/assets/libs/ie-flexibility.js"></script><![endif]-->
+    <script type="text/javascript">
+        WebFontConfig = {
+            google: { families: ["Montserrat:regular,700", "Montserrat:regular,regular", "Montserrat:regular,700", "Dancing+Script",] }
+        };
+        (function () {
+            var wf = document.createElement('script');
+            wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })(); </script>
+    <link rel="icon" href="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed"
+        href="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-180x180.png" />
+    <meta name="msapplication-TileImage"
+        content="/old/resource/airsense.vn/wp-content/uploads/2020/04/cropped-favicon-270x270.png" />
+    <style id="custom-css" type="text/css">
+        :root {
+            --primary-color: #446084;
+        }
+
+        /* Site Width */
+        .header-main {
+            height: 90px
+        }
+
+        #logo img {
+            max-height: 90px
+        }
+
+        #logo {
+            width: 200px;
+        }
+
+        .header-bottom {
+            min-height: 55px
+        }
+
+        .header-top {
+            min-height: 30px
+        }
+
+        .has-transparent+.page-title:first-of-type,
+        .has-transparent+#main>.page-title,
+        .has-transparent+#main>div>.page-title,
+        .has-transparent+#main .page-header-wrapper:first-of-type .page-title {
+            padding-top: 90px;
+        }
+
+        .header.show-on-scroll,
+        .stuck .header-main {
+            height: 70px !important
+        }
+
+        .stuck #logo img {
+            max-height: 70px !important
+        }
+
+        .header-bottom {
+            background-color: #f1f1f1
+        }
+
+        .stuck .header-main .nav>li>a {
+            line-height: 50px
+        }
+
+        @media (max-width: 549px) {
+            .header-main {
+                height: 70px
+            }
+
+            #logo img {
+                max-height: 70px
+            }
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif
+        }
+
+        body {
+            font-weight: 0
+        }
+
+        .nav>li>a {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .nav>li>a {
+            font-weight: 700;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .heading-font,
+        .off-canvas-center .nav-sidebar.nav-vertical>li>a {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .heading-font,
+        .banner h1,
+        .banner h2 {
+            font-weight: 700;
+        }
+
+        .alt-font {
+            font-family: "Dancing Script", sans-serif;
+        }
+
+        .label-new.menu-item>a:after {
+            content: "New";
+        }
+
+        .label-hot.menu-item>a:after {
+            content: "Hot";
+        }
+
+        .label-sale.menu-item>a:after {
+            content: "Sale";
+        }
+
+        .label-popular.menu-item>a:after {
+            content: "Popular";
+        }
+    </style>
+    <script src="/old/training_library/js/jquery/jquery-2.2.4.min.js"></script>
+</head>
+
+
+
+<body class="blog lightbox nav-dropdown-has-arrow">
+
+    <a class="skip-link screen-reader-text" href="#main">Skip to content</a>
+
+    <div id="wrapper">
+
+
+        <header id="header" class="header has-sticky sticky-jump">
+            <div class="header-wrapper">
+                <div id="masthead" class="header-main ">
+                    <div class="header-inner flex-row container logo-left medium-logo-center" role="navigation">
+
+                        <!-- Logo -->
+                        <div id="logo" class="flex-col logo">
+                            <!-- Header logo -->
+                            <a href="/old/resource/airsense.vn/" title="Airsense - Quan trắc chất lượng không khí" rel="home">
+                                <img width="200" height="90"
+                                    src="/old/resource/airsense.vn/wp-content/uploads/2020/04/airsense.png"
+                                    class="header_logo header-logo" alt="Airsense" /><img width="200" height="90"
+                                    src="/old/resource/airsense.vn/wp-content/uploads/2020/04/airsense.png"
+                                    class="header-logo-dark" alt="Airsense" /></a>
+                        </div>
+
+                        <!-- Mobile Left Elements -->
+                        <div class="flex-col show-for-medium flex-left">
+                            <ul class="mobile-nav nav nav-left ">
+                                <li class="nav-icon has-icon">
+                                    <a href="#" data-open="#main-menu" data-pos="left" data-bg="main-menu-overlay"
+                                        data-color="" class="is-small" aria-controls="main-menu" aria-expanded="false">
+
+                                        <i class="icon-menu"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Left Elements -->
+                        <div class="flex-col hide-for-medium flex-left
+            flex-grow">
+                            <ul class="header-nav header-nav-main nav nav-left  nav-uppercase">
+                            </ul>
+                        </div>
+
+                        <!-- Right Elements -->
+                        <div class="flex-col hide-for-medium flex-right">
+                            <ul class="header-nav header-nav-main nav nav-right  nav-uppercase">
+                                <li id="menu-item-78"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home  menu-item-78">
+                                    <a href="/" class="nav-top-link">Trang chủ</a></li>
+                                <li id="menu-item-86"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-82 current_page_item current_page_parent active  menu-item-86">
+                                    <a href="/blog/" class="nav-top-link">Blog</a></li>
+                                <li id="menu-item-142"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page  menu-item-142"><a
+                                        href="/about" class="nav-top-link">Về chúng tôi</a>
+                                </li>
+                                <li id="menu-item-142"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page  menu-item-142"><a
+                                        href="#" class="nav-top-link" id="managerAuthen">Đăng nhập</a>
+                                </li>
+                                <li class="header-divider"></li>
+                                <li
+                                    class="header-search header-search-dropdown has-icon has-dropdown menu-item-has-children">
+                                    <a href="#" class="is-small"><span class="material-icons">search</span></i></a>
+                                    <ul class="nav-dropdown nav-dropdown-default">
+                                        <li class="header-search-form search-form html relative has-icon">
+                                            <div class="header-search-form-wrapper">
+                                                <div class="searchform-wrapper ux-search-box relative form- is-normal">
+                                                    <form method="get" class="searchform" action="/resource/airsense.vn/"
+                                                        role="search">
+                                                        <div class="flex-row relative">
+                                                            <div class="flex-col flex-grow">
+                                                                <input type="search" class="search-field mb-0" name="s"
+                                                                    value="" id="s" placeholder="Search&hellip;" />
+                                                            </div><!-- .flex-col -->
+                                                            <div class="flex-col">
+                                                                <button type="submit"
+                                                                    class="ux-search-submit submit-button secondary button icon mb-0">
+                                                                    <span class="material-icons">search</span></i> </button>
+                                                            </div><!-- .flex-col -->
+                                                        </div><!-- .flex-row -->
+                                                        <div class="live-search-results text-left z-top"></div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul><!-- .nav-dropdown -->
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Mobile Right Elements -->
+                        <div class="flex-col show-for-medium flex-right">
+                            <ul class="mobile-nav nav nav-right ">
+                            </ul>
+                        </div>
+
+                    </div><!-- .header-inner -->
+
+                    <!-- Header divider -->
+                    <div class="container">
+                        <div class="top-divider full-width"></div>
+                    </div>
+                </div><!-- .header-main -->
+                <div class="header-bg-container fill">
+                    <div class="header-bg-image fill"></div>
+                    <div class="header-bg-color fill"></div>
+                </div><!-- .header-bg-container -->
+            </div><!-- header-wrapper-->
+        </header>
+
+
+        <main id="main" class="">
+
+            <div id="content" class="blog-wrapper blog-archive page-wrapper">
+
+                <div class="row align-center">
+                    <div class="large-10 col">
+                        <div id="row-1198733960" class="large-columns-2 medium-columns- small-columns-1 row-masonry"
+                            data-packery-options='{"itemSelector": ".col", "gutter": 0, "presentageWidth" : true}'>
+                            <!-- List Posts -->
+                            <div class="post">
+                                <div class="title">
+                                    <a>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    </a> 
+                                </div>
+                                <div class="detail">
+                                    <div class="image-intro">
+                                        <img style="height: 100px; width: 100px;" src="/old/img/post/intro.png" alt="">
+                                    </div>
+                                    <div class="info">
+                                        <div class="crop">
+                                            Lorem ipsum dolor sit amet, consec adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                        </div>
+                                        <div class="divider"></div>
+                                        <span class="data_info">20-10-2020</span>
+                                        <!-- <p class="etc"> [...] </p> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                    </div> <!-- .large-9 -->
+                    <div class="large-10 col">
+                        <ul class="page-numbers nav-pagination links text-center"></ul>
+                    </div>
+                    
+                </div><!-- .row -->
+
+            </div><!-- .page-wrapper .blog-wrapper -->
+
+
+        </main><!-- #main -->
+
+        <footer id="footer" class="footer-wrapper">
+
+            <section class="section" id="section_1472966635">
+                <div class="bg section-bg fill bg-fill  bg-loaded">
+
+
+
+
+
+                </div><!-- .section-bg -->
+
+                <div class="section-content relative">
+
+
+                    <div class="row align-middle" id="row-1566696482">
+
+                        <div class="col medium-3 large-3">
+                            <div class="col-inner">
+
+                                <div class="ux-logo has-hover align-middle ux_logo inline-block"
+                                    style="max-width: 100%!important; width: 279.79338842975px!important"><a
+                                        class="ux-logo-link block image-" title="" target="_self" href="/"
+                                        style="padding: 15px;"><img
+                                            src="/old/resource/airsense.vn/wp-content/uploads/2020/04/airsense.png" title=""
+                                            alt="" class="ux-logo-image block" style="height:50px;" /></a></div>
+
+
+                            </div>
+                        </div>
+                        <div class="col medium-6 large-6">
+                            <div class="col-inner">
+
+                                <h3><span style="color: #ffffff;">VỀ CHÚNG TÔI</span></h3>
+                                <p><span style="color: #ffffff;">SPARC lab - Viện Điện tử Viễn thông - Đại học Bách Khoa
+                                        Hà Nội</span></p>
+                                <p><span style="color: #ffffff;">Địa chỉ: Phòng 618, Tòa nhà Thư viện Tạ Quang Bửu, Đại
+                                        học Bách Khoa Hà Nội</span></p>
+
+                            </div>
+                        </div>
+                        <div class="col medium-3 large-3">
+                            <div class="col-inner">
+
+                                <div
+                                    class="social-icons share-icons share-row relative icon-style-fill full-width text-center">
+                                    <a href="whatsapp://send?text=AirSENSE%20%26%238211%3B%20%E1%BB%A9ng%20d%E1%BB%A5ng%20t%C6%B0%C6%A1ng%20t%C3%A1c%20tr%E1%BB%B1c%20quan%20h%C3%B3a%20d%E1%BB%AF%20li%E1%BB%87u%20c%E1%BB%A7a%20m%E1%BA%A1ng%20l%C6%B0%E1%BB%9Bi%20m%C3%A1y%20%C4%91o%20AirSENSE - /resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/"
+                                        data-action="share/whatsapp/share"
+                                        class="icon primary button circle tooltip whatsapp show-for-medium"
+                                        title="Share on WhatsApp"><i class="icon-phone"></i></a><a
+                                        href="//www.facebook.com/sharer.php?u=/resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/"
+                                        data-label="Facebook"
+                                        onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px');  return false;"
+                                        rel="nofollow" target="_blank"
+                                        class="icon primary button circle tooltip facebook" title="Share on Facebook"><span class="material-icons" style="padding: 0px;">facebook</span></a><a
+                                        href="//twitter.com/share?url=/resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/"
+                                        onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px');  return false;"
+                                        rel="nofollow" target="_blank"
+                                        class="icon primary button circle tooltip twitter" title="Share on Twitter"><i
+                                            class="icon-twitter"></i></a><a
+                                        href="mailto:enteryour@addresshere.com?subject=AirSENSE%20%26%238211%3B%20%E1%BB%A9ng%20d%E1%BB%A5ng%20t%C6%B0%C6%A1ng%20t%C3%A1c%20tr%E1%BB%B1c%20quan%20h%C3%B3a%20d%E1%BB%AF%20li%E1%BB%87u%20c%E1%BB%A7a%20m%E1%BA%A1ng%20l%C6%B0%E1%BB%9Bi%20m%C3%A1y%20%C4%91o%20AirSENSE&amp;body=Check%20this%20out:%20/resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/"
+                                        rel="nofollow" class="icon primary button circle tooltip email"
+                                        title="Email to a Friend"><i class="icon-envelop"></i></a><a
+                                        href="//pinterest.com/pin/create/button/?url=/resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/&amp;media=&amp;description=AirSENSE%20%26%238211%3B%20%E1%BB%A9ng%20d%E1%BB%A5ng%20t%C6%B0%C6%A1ng%20t%C3%A1c%20tr%E1%BB%B1c%20quan%20h%C3%B3a%20d%E1%BB%AF%20li%E1%BB%87u%20c%E1%BB%A7a%20m%E1%BA%A1ng%20l%C6%B0%E1%BB%9Bi%20m%C3%A1y%20%C4%91o%20AirSENSE"
+                                        onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px');  return false;"
+                                        rel="nofollow" target="_blank"
+                                        class="icon primary button circle tooltip pinterest" title="Pin on Pinterest"><i
+                                            class="icon-pinterest"></i></a><a
+                                        href="//plus.google.com/share?url=/resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/"
+                                        target="_blank" class="icon primary button circle tooltip google-plus"
+                                        onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px');  return false;"
+                                        rel="nofollow" title="Share on Google+"><i class="icon-google-plus"></i></a><a
+                                        href="//www.linkedin.com/shareArticle?mini=true&url=/resource/airsense.vn/airsense-ung-dung-tuong-tac-truc-quan-hoa-du-lieu-cua-mang-luoi-may-do-airsense/&title=AirSENSE%20%26%238211%3B%20%E1%BB%A9ng%20d%E1%BB%A5ng%20t%C6%B0%C6%A1ng%20t%C3%A1c%20tr%E1%BB%B1c%20quan%20h%C3%B3a%20d%E1%BB%AF%20li%E1%BB%87u%20c%E1%BB%A7a%20m%E1%BA%A1ng%20l%C6%B0%E1%BB%9Bi%20m%C3%A1y%20%C4%91o%20AirSENSE"
+                                        onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px');  return false;"
+                                        rel="nofollow" target="_blank"
+                                        class="icon primary button circle tooltip linkedin" title="Share on LinkedIn"><i
+                                            class="icon-linkedin"></i></a></div>
+
+
+                            </div>
+                        </div>
+
+
+                        <style scope="scope">
+
+                        </style>
+                    </div>
+
+                </div><!-- .section-content -->
+
+
+                <style scope="scope">
+                    #section_1472966635 {
+                        padding-top: 30px;
+                        padding-bottom: 30px;
+                        background-color: rgb(41, 41, 41);
+                    }
+                </style>
+            </section>
+
+            <div class="absolute-footer dark medium-text-center small-text-center">
+                <div class="container clearfix">
+
+
+                    <div class="footer-primary pull-left">
+                        <div class="copyright-footer">
+                            Copyright 2020 © <strong>Airsense</strong> | Powered by <a
+                                href="https://vn.aseantech.org/">AseanTech</a> </div>
+                    </div><!-- .left -->
+                </div><!-- .container -->
+            </div><!-- .absolute-footer -->
+            <a href="#top"
+                class="back-to-top button invert plain is-outline hide-for-medium icon circle fixed bottom z-1"
+                id="top-link"><span class="material-icons">keyboard_arrow_up</span></a>
+
+        </footer><!-- .footer-wrapper -->
+
+    </div><!-- #wrapper -->
+
+    <!-- Mobile Sidebar -->
+    <div id="main-menu" class="mobile-sidebar no-scrollbar mfp-hide">
+        <div class="sidebar-menu no-scrollbar ">
+            <ul class="nav nav-sidebar  nav-vertical nav-uppercase">
+                <li class="header-search-form search-form html relative has-icon">
+                    <div class="header-search-form-wrapper">
+                        <div class="searchform-wrapper ux-search-box relative form- is-normal">
+                            <form method="get" class="searchform" action="/resource/airsense.vn/" role="search">
+                                <div class="flex-row relative">
+                                    <div class="flex-col flex-grow">
+                                        <input type="search" class="search-field mb-0" name="s" value="" id="s"
+                                            placeholder="Search&hellip;" />
+                                    </div><!-- .flex-col -->
+                                    <div class="flex-col">
+                                        <button type="submit"
+                                            class="ux-search-submit submit-button secondary button icon mb-0">
+                                            <span class="material-icons">search</span></i> </button>
+                                    </div><!-- .flex-col -->
+                                </div><!-- .flex-row -->
+                                <div class="live-search-results text-left z-top"></div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-78"><a
+                        href="/old/resource/airsense.vn/" class="nav-top-link">Trang chủ</a></li>
+                <li
+                    class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-82 current_page_item current_page_parent menu-item-86">
+                    <a href="/old/resource/airsense.vn/blog/" class="nav-top-link">Blog</a></li>
+                <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-142"><a
+                        href="/old/resource/airsense.vn/ve-chung-toi/" class="nav-top-link">Về chúng tôi</a></li>
+                WooCommerce not Found<li class="header-newsletter-item has-icon">
+
+                    <a href="#header-newsletter-signup" class="tooltip" title="Sign up for Newsletter">
+
+                        <i class="icon-envelop"></i>
+                        <span class="header-newsletter-title">
+                            Newsletter </span>
+                    </a><!-- .newsletter-link -->
+
+                </li>
+                <li class="html header-social-icons ml-0">
+                    <div class="social-icons follow-icons "><a href="http://url" target="_blank" data-label="Facebook"
+                            rel="nofollow" class="icon plain facebook tooltip" title="Follow on Facebook"><i
+                                class="icon-facebook"></i></a><a href="http://url" target="_blank" rel="nofollow"
+                            data-label="Instagram" class="icon plain  instagram tooltip" title="Follow on Instagram"><i
+                                class="icon-instagram"></i></a><a href="http://url" target="_blank" data-label="Twitter"
+                            rel="nofollow" class="icon plain  twitter tooltip" title="Follow on Twitter"><i
+                                class="icon-twitter"></i></a><a href="mailto:your@email" data-label="E-mail"
+                            rel="nofollow" class="icon plain  email tooltip" title="Send us an email"><i
+                                class="icon-envelop"></i></a></div>
+                </li>
+            </ul>
+        </div><!-- inner -->
+    </div><!-- #mobile-menu -->
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var wpcf7 = { "apiSettings": { "root": "http:\/\/airsense.vn\/wp-json\/contact-form-7\/v1", "namespace": "contact-form-7\/v1" }, "cached": "1" };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=5.1.5'></script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/inc/extensions/flatsome-live-search/flatsome-live-search.js?ver=3.5.3'></script>
+    <script type='text/javascript' src='/resource/airsense.vn/wp-includes/js/hoverIntent.min.js?ver=1.8.1'></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var flatsomeVars = { "ajaxurl": "http:\/\/airsense.vn\/wp-admin\/admin-ajax.php", "rtl": "", "sticky_height": "70" };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/assets/js/flatsome.js?ver=3.5.3'></script>
+    <script type='text/javascript' src='/resource/airsense.vn/wp-includes/js/wp-embed.min.js?ver=5.3.4'></script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/assets/libs/packery.pkgd.min.js?ver=3.5.3'></script>
+
+
+    <script>
+        var totalPosts = 0;
+        var pageSize = 10;
+        var currentPage = 1;
+        var totalPages = 0;
+        var getTotalPosts = function() {
+            var Link = '/getTotalPosts';
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: Link,
+                data: {},
+                success: function (result) {
+                    totalPosts = result.total;
+                    totalPages = Math.ceil(totalPosts/pageSize);
+                    choosePage();
+                },
+                error: function (err) { 
+                }
+            });
+        }();
+
+        function choosePage() {
+            var Link = '/getBlogsPagination';
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: Link,
+                data: {
+                    pageNumber: currentPage,
+                    pageSize: pageSize
+                },
+                success: function (posts) {
+                    render(posts);
+                    rederPageLink();
+                },
+                error: function (err) { 
+                }
+            });
+        };
+
+
+        function render(posts) {
+            var html = '';
+            posts.forEach(function(post) {
+                post.post_date = formatDate(post.post_date);
+                html += '<div class="post">'+
+                                '<div class="title">'+
+                                    '<a href="/post?id='+post.ID+'">'+post.post_title+'</a>'+
+                                '</div>'+
+                                '<div class="detail">'+
+                                    '<div class="image-intro">'+
+                                        '<img style="height: 100px; width: 100px;" src="'+post.image_intro+'">'+
+                                    '</div>'+
+                                    '<div class="info">'+
+                                        '<div class="crop">'+
+                                            post.content_intro+
+                                        '</div>'+
+                                        '<div class="divider"></div>'+
+                                        '<span class="data_info">'+post.post_date+'</span>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'
+            });
+            $('#row-1198733960').html(html);
+        }
+
+        function rederPageLink() {
+            let html = '';
+            for(let i=1; i<=totalPages; i++) {
+                if(i == currentPage) {
+                    html += '<li><span aria-current="page" class="page-index page-number current">'+i+'</span></li>';
+                } else if(i==currentPage+2) {
+                    html += '<li><a class="next page-number" href="#"><span class="icon material-icons">navigate_next</span></a></li>';
+                } else if(i==currentPage-2) {
+                    html += '<li><a class="prev page-number" href="#"><span class="icon material-icons">navigate_before</span></a></li>';
+                } else if(i>currentPage+2 || i<currentPage-2) {
+                    continue;
+                } else html+= '<li><a class="page-index page-number" href="#">'+i+'</a></li>';
+            }
+            $('.page-numbers').html(html);
+        }
+
+        $(document).on("click",".page-index",function(event) {
+            event.preventDefault();
+            currentPage = parseInt($(this).text());
+            choosePage();
+        });
+        $(document).on("click",".prev",function(event) {
+            event.preventDefault();
+            currentPage--;
+            choosePage();
+        });
+        $(document).on("click",".next",function(event) {
+            event.preventDefault();
+            currentPage++;
+            choosePage();
+        });
+
+
+        function formatDate(date) {
+            const d = new Date(date)
+            const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d)
+            const mo = new Intl.DateTimeFormat('en', { month: 'long' }).format(d)
+            const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d)
+            date = `${mo} ${da}, ${ye}`;
+            return date;
+        }
+ 
+    </script>
+</body>
+
+</html>
+
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/
+
+
+Served from: airsense.vn @ 2020-08-25 10:09:53 by W3 Total Cache
+-->

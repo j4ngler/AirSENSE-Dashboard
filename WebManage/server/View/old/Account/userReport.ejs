@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="pixelhint.com">
+	<meta name="description" content=""/>
+	<link rel="stylesheet" type="text/css" href="/old/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="/old/js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="/old/js/main.js"></script>
+	<script type="text/javascript" src="/old/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="/old/js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript" src="/old/javascripts/commonView.js"></script>
+
+	<style>
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content */
+		.modal-content {
+		  position: relative;
+		  background-color: #fefefe;
+		  margin: auto;
+		  padding: 0;
+		  border: 1px solid #888;
+		  width: 80%;
+		  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		  -webkit-animation-name: animatetop;
+		  -webkit-animation-duration: 0.4s;
+		  animation-name: animatetop;
+		  animation-duration: 0.4s
+		}
+
+		/* Add Animation */
+		@-webkit-keyframes animatetop {
+		  from {top:-300px; opacity:0} 
+		  to {top:0; opacity:1}
+		}
+
+		@keyframes animatetop {
+		  from {top:-300px; opacity:0}
+		  to {top:0; opacity:1}
+		}
+
+		/* The Close Button */
+		.close {
+		  color: white;
+		  float: right;
+		  font-size: 28px;
+		  font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+		  color: #000;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+
+		.modal-header {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+		.modal-body {padding: 2px 16px;}
+
+		.modal-footer {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+
+		* {box-sizing: border-box}
+
+		/* Set height of body and the document to 100% */
+		body, html {
+		  height: 100%;
+		  margin: 0;
+		  font-family: Arial;
+		}
+
+		/* Style tab links */
+		.tablink {
+		  background-color: #555;
+		  color: white;
+		  float: left;
+		  border: none;
+		  outline: none;
+		  cursor: pointer;
+		  padding: 14px 16px;
+		  font-size: 17px;
+		  width: 25%;
+		}
+
+		.tablink:hover {
+		  background-color: #777;
+		}
+
+		/* Style the tab content (and add height:100% for full page content) */
+		.tabcontent {
+		  display: none;
+		  padding: 100px 20px;
+		  height: 100%;
+		}			
+</style>
+
+</head>
+<body>
+	
+	
+	<h1>Báo cáo Tổng thể</h1>
+	<br/> biêu đổ, số liệu
+	<br/> <label for="cars">Chọn kiểu thông tin:</label>
+
+	<select id="cars">
+	  <option value="volvo">thông tin Thiết bị</option>
+	  <option value="saab">Lich sử giao dịch thiết bị</option>
+	  <option value="opel">Thông tin dịch vụ khách hàng</option>
+	  <option value="audi">Thông tin sản phẩm</option>
+	  <option value="audi">Thông tin sbán hàng</option>
+	  <option value="audi">Thông tin lịch sử giao dịch </option>
+	  <option value="audi">Thông tin đặt hàng </option>
+	  <option value="audi">Thông tin hóa đơn</option>
+	  <option value="audi">Thông tin cấp quyền</option>
+	  <option value="audi">Thông tin thiết kế</option>
+	  <option value="audi">Thông tin dữ liệu thiết kế</option>
+	</select>
+
+	<h1>Báo cáo chi tiêt</h1>
+	<br/> thêm bostrapt Table
+	
+	
+	
+
+	  <script type="text/javascript">
+	  		//https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal2
+	  			var dataShowadd='';
+	  			 var dataCheck =[];
+	  			  var stringdata='<center>';
+				checkUserData();
+				function checkUserData() {
+					var mname = localStorage.getItem("tocken_LVC");
+					console.log("loadcofig........................checkUserAuthen2");
+					console.log(mname);
+					$.ajax({
+						type: 'post',
+						dataType: 'json',
+						url: 'http://localhost:3000/user/',
+						data: {
+							data: "user" 
+						},
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+						},
+						success: function (loadcofig) {
+							console.log("loadcofig........................");
+							console.log(loadcofig);
+							if(loadcofig){
+								console.log("loadcofig........................okkkkkkkkkkkkkkkkk");
+							}
+							else
+							{
+								gotoCheckUserStorage();
+							// window.location.href ="http://localhost:3000/login";
+							}
+						
+						},
+						complete: function (loadcofig) {
+							console.log("loadcofig........................");
+							console.log(loadcofig.responseText);
+						},
+						error: function (loadcofig) {
+							console.log("loadcofig...................errorerrorerror.....");
+							console.log(loadcofig);
+						}
+						});
+				  }
+				  
+				  function checkUserData(typeReport) {
+					var mname = localStorage.getItem("tocken_LVC");
+					console.log("loadcofig........................checkUserAuthen2");
+					console.log(mname);
+					$.ajax({
+						type: 'post',
+						dataType: 'json',
+						url: 'http://localhost:3000/report/'+typeReport,
+						data: {
+							data: "user" 
+							
+						},
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+						},
+						success: function (loadcofig) {
+							console.log("loadcofig........................");
+							console.log(loadcofig);
+							if(loadcofig){
+								console.log("loadcofig........................okkkkkkkkkkkkkkkkk");
+							}
+							else
+							{
+								gotoCheckUserStorage();
+							// window.location.href ="http://localhost:3000/login";
+							}
+						
+						},
+						complete: function (loadcofig) {
+							console.log("loadcofig........................");
+							console.log(loadcofig.responseText);
+						},
+						error: function (loadcofig) {
+							console.log("loadcofig...................errorerrorerror.....");
+							console.log(loadcofig);
+						}
+						});
+  				}
+
+        </script>
+</body>
+</html>                                		                            

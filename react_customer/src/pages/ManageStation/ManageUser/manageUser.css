@@ -1,0 +1,8 @@
+.search-user {
+  margin-bottom: 20px;
+  width: 30%;
+  display: flex;
+}
+.search-input {
+    margin-right: 4px;
+}

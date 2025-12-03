@@ -1,0 +1,191 @@
+/* CSS chung */
+.margin-top-2px{
+    margin-top: 2px !important;
+}
+.padding-l-r-8px{
+    padding: 0 8px;
+}
+.margin-right-50px{
+    margin-right: 50px;
+}
+
+/* CSS riêng */
+.input-comment {
+    margin: 0px 20px;
+    display: flex;
+    align-items: center;
+    /* flex-direction:row; */
+    /* justify-content: flex-start; */
+}
+.avatar-input-comment{
+    /* position: absolute;
+     */
+     display: flex;
+    
+}
+.loading-box{
+    margin: 20px 0;
+    margin-bottom: 20px;
+    padding: 30px 50px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.input-comment .form-control {
+    width: 500px;
+    border: 2px solid #ddd;
+    border-radius: 18px;
+}
+
+.DraftEditor-root {
+    margin: 0 10px;
+    padding: 5px;
+}
+.div-input{
+    display: flex;
+    margin: 0px 10px;
+}
+.div-input .button-submit{
+    max-height: 36px;
+}
+
+.input-image {
+    border: 1px solid #ddd;
+    padding: 0 17px;
+    border-radius: 15px;
+    max-height: 34px;
+    background-color: white;
+}
+svg.w-6.h-6 {
+    width: 20px;
+    margin-top: 8px;
+    opacity: 0.6;
+}
+
+.input-image:hover {
+    cursor: pointer;
+    background-color: #f3f3f3;
+}
+.div-input .button-submit{
+    margin-left: 8px;
+    padding: 0 15px;
+    background-color: #0099FF;
+    color: white;
+    border: none;
+    border-radius: 15px;
+}
+.div-input .button-submit:hover{
+    cursor: pointer;
+    opacity: 0.9;
+}
+.box-info-container{
+    display: flex;
+    flex-direction: column;
+
+
+}
+.box-inf-comment{
+    margin: 5px 50px;
+    float: left;
+    display: block;
+}
+.comment {
+    display: flex;
+    position: relative;
+}
+.comment-option{
+    position: absolute;
+    right: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    padding: 5px;
+    cursor: pointer;
+    border: 1px solid #666666;
+    border-radius: 100px;
+    top: 20px;
+}
+.update {
+    margin: 20px;
+}
+button {
+    border: none;
+    background: white;
+    font-size: 16px;
+    color: #666666;
+}
+.update .popular {
+    text-decoration: underline;
+    color: black;
+}
+.update .newest:hover {
+    color: black;
+}
+.img-user-comment {
+    width: 30px !important;
+    display: block;
+    padding: 10px;
+    background-color: #ddd;
+    border-radius: 50%;
+}
+.svg.w-6.h-6:hover{
+    opacity: 0.8;
+}
+.inf-comment {
+    margin: -10px 0 0 10px;
+}
+h4.username {
+    margin-bottom: 6px;
+}
+h4.username:hover {
+    text-decoration: underline;
+}
+.describe-comment p{
+    margin:0;
+}
+.read-more:hover{
+    color: black;
+    text-decoration: underline;
+}
+.emotion-comment .heart{
+    opacity: 0.4 !important;
+}
+.emotion-comment .heart:hover{
+    opacity: 1;
+}
+.emotion-comment .heart {
+    background-color: white !important;
+    width: 22px !important;
+}
+.emotion-comment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    margin: 0px 0 0 50px;
+}
+.emotion-comment span{
+    padding: 0 4px;
+}
+.emotion-comment .dots{
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.emotion-comment .reply:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+.emotion-comment > span > svg:hover{
+    opacity: 1 !important;
+    cursor: pointer;
+}
+.view-more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+    margin: 10px 0 0 -143px;
+    color: #2600ff;
+}

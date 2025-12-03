@@ -1,0 +1,51 @@
+.line-1 img{
+  width: 70%;
+}
+
+.line-2 img{
+  width: 30%;
+}
+
+.line-3 img{
+  width: 70%;
+}
+
+.line-4 img{
+  width: 80%;
+}
+
+.section-title {
+  position: relative;
+  -js-display: flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.section-title b {
+  display: block;
+  -ms-flex: 1;
+  flex: 1;
+  height: 2px;
+  opacity: .1;
+  background-color: currentColor;
+}
+
+.section-title-container {
+  margin-bottom: 1.5em;
+}
+
+.section-title-center span {
+  margin: 0 15px;
+}
+
+.section-title span {
+  text-transform: uppercase;
+  font-weight: 700;
+}

@@ -1,0 +1,148 @@
+<% include ./Layout/header.ejs %>
+<% include ./Layout/topBar.ejs %>
+<style>
+    .date-input {
+        width: 100%;
+    }
+    .pick {
+        margin-right: 20px;
+        width: 30%;
+    }
+    .report-station {
+        background-color: lightgray;
+    }
+</style>
+<body onload="checkUserAuthenSecsion()">
+    <section class="mag-posts-area d-flex flex-wrap" style="height: 100%;background-color: white;">
+        <% include ./Layout/leftSideBar.ejs %>
+        <div class="mag-posts-content mt-30 mb-30 p-30 box-shadow" >
+            <div class="select-station">
+                <div class="pick">
+                    <label> Danh sách trạm </label>  
+                    <select id="selectTable" class="date-input"></select>
+                </div>
+                <div class="pick">
+                    <label class="label-header">From</label> 
+                    <input type="datetime-local" class="date-input" id="fromTime" >
+                </div>
+                <div class="pick"> 
+                    <label class="label-header">To </label>
+                    <input type="datetime-local" class="date-input" id="toTime">
+                </div>
+                <div class="pick"> 
+                    <label class="label-header">&nbsp;</label>
+                    <button id="report" type="button" class="button-chart">Xuất báo cáo</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <% include ./Layout/footer.ejs %>
+</body>
+
+<script>
+    function showLoader() {
+        document.getElementById("loader-container").style.display = 'block';
+    }
+
+    function hideLoader() {
+        document.getElementById("loader-container").style.display = 'none';
+    }
+    var mname = localStorage.getItem("tocken_LVC");
+    $("#fromTime").val(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
+    $("#report").click(function(){
+        var data=document.getElementById("selectTable").value;
+        var Link='/getReportStations';
+        var fromTime = new Date($('#fromTime').val());
+        var toTime = new Date($('#toTime').val());
+        if(isNaN(fromTime.getFullYear())) {
+            fromTime = undefined;
+        } else fromTime = fromTime.getTime()/1000;
+        if(isNaN(toTime.getFullYear())) {
+            toTime = undefined;
+        } else toTime = toTime.getTime()/1000;
+        showLoader();
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: Link,
+            data: {stationId:data, fromTime: fromTime, toTime: toTime},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+            },
+            success: function (result ) {
+                console.log('fileName: ', result);
+                window.location = '/file/'+result;
+                hideLoader();
+            },
+            error: function (result) {
+                hideLoader();
+            }
+        });
+        
+            
+    });
+    loadAllContent();
+    function loadAllContent(){
+        var Link='/api/social/getStation';
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: Link,
+            data: { },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+            },
+            success: function (loadcofig) {
+                console.log(loadcofig);
+                var showData='<option value="">None</option>';
+                var groupID=[];
+                var nameGroupID=[];
+                allInfoStation=loadcofig.result;
+                defaultStation = loadcofig.result[0].station_id;
+                var allStation = [];
+                for(var k=0;k< loadcofig.result.length;k++) {
+                    let v=loadcofig.result[k];
+                    if(k===0) {
+                        showData+='<option selected value="'+v.station_id+'">'+v.content +'</option>';
+                    } else showData+='<option value="'+v.station_id+'">'+v.content +'</option>';
+                    allStation.push(v.station_id);
+                    // add group
+                    // if((v.id_group>0)&&(!groupID.includes(v.id_group)))
+                    // {
+                    //     groupID.push(v.id_group);
+                    //     nameGroupID.push(v.name_group);
+                    // }
+                    
+                }
+                allStation = '('+allStation.join()+')'
+                showData+='<option selected value="'+allStation+'">Chọn tất cả</option>';
+
+                for(var l=0;l< groupID.length;l++) {
+                    let dataChoice=groupID[l];
+                    var itemData="";
+                    for(var k=0;k< loadcofig.result.length;k++) {
+                        let v=loadcofig.result[k];
+                        if(v.id_group==dataChoice){
+                            if(itemData.length>1) itemData+=","
+                            itemData+=""+v.station_id+"";
+                        }   
+                    }
+                    showData+='<option value="'+itemData+'">'+nameGroupID[l] +'</option>';
+
+                }
+
+                console.log(showData);
+                $('#selectTable').html(showData);
+                // gotoCheckData();
+                
+            },
+                error: function (loadcofig) {
+                console.log('error');
+                    console.log(loadcofig);
+                    console.log('end error');
+                }
+        });
+    }
+</script>
+
+</html>

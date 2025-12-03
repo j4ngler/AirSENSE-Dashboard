@@ -1,0 +1,105 @@
+.custom-menu {
+    margin: 0px !important;
+}
+
+/* .date-input {
+    height: 26px;
+    vertical-align: middle;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+} */
+
+.add-button {
+    height: 30px;
+    width: 60px;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.main-content {
+    font-size: 11px !important;
+}
+
+/* Modal Content */
+.modal-content1 {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    width: 600px;
+    border: 1px solid #888;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+
+  .label-header {
+      font-size: 12px;
+  }
+
+
+  /* toast */
+  #snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1000000;
+    left: 50%;
+    top: 30px;
+    font-size: 17px;
+  }
+  
+  #snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  @-webkit-keyframes fadein {
+    from {top: 0; opacity: 0;} 
+    to {top: 30px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 30px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {top: 30px; opacity: 1;} 
+    to {top: 0; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {top: 30px; opacity: 1;}
+    to {top: 0; opacity: 0;}
+  }
+
+.success {
+    background-color: #63c97b !important;
+}
+
+.error {
+    background-color: rgb(192, 108, 108) !important;
+}
+
+.warning {
+    background-color:rgb(228, 225, 83) !important;
+}

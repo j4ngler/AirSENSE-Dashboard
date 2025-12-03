@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+
+<title>The Man in Blue &gt; Experiments &gt; widgEditor</title>
+
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<meta name="author" content="The Man in Blue" />
+<meta name="robots" content="all" />
+<meta name="MSSmartTagsPreventParsing" content="true" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+
+<style type="text/css" media="all">
+
+	@import "/webTool/css/info.css";
+	@import "/webTool/css/main.css";
+	@import "/webTool/css/widgEditor.css";
+
+   
+</style>
+
+
+<script language="JavaScript" src="https://code.jquery.com/jquery-3.3.1.js" type="text/javascript"></script>
+<script type="text/javascript" src="/webTool/scripts/widgEditor.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+
+
+<body>
+
+   <center> <h2> Đăng bài </h2> </center> 
+   <div style="height: auto;overflow: hidden;">
+        <div style="width: 880px;float: right;">
+            <div style="height: auto;overflow: hidden;">
+                <div style="width: 700px;float: right;">
+                    <div class="wrapper-lvc">   
+                        <div id="sliderUserImage" class="text-center">
+                            
+                        </div>
+                    </div>
+                    <label id="datatoCoppy">coppy </label>
+
+                </div>
+                <div style="width: 180px; float: none;width: auto;overflow: hidden;">
+                    <form method="POST" enctype="multipart/form-data" id="applicationForm">			
+                        <div class="form-group"> 
+                            <div class="form-group">
+                                <input type="file" class="form-control" id="resume" placeholder="Upload File"  name="resume"></input>
+                            </div>
+                            <div>
+                              <button type="submit" class="btn btn-primary" id="btnSubmit">Submit Application</button>
+                            </div>
+                        </div>
+                    </form> 
+                </div>
+            </div>   
+        </div>
+        <div style="width: 100px; float: none;width: auto;overflow: hidden;">
+            chuyên mục chính
+            <select id="selectTable" onclick="selectTableGroup()" >
+                <option value="newProduct"> sản phẩm mới</option>
+                <option value="product">  các sản phẩm   </option>
+                <option value="support">Góc hỗ trợ</option>
+                <option value="video">video</option>
+                <option value="communicate">cộng đồng</option>
+            </select>
+            <br/>
+            chuyên mục phụ
+            <select id="selectTableDetail"  >
+                <option value="newProduct"> sản phẩm mới</option>
+                <option value="product">  các sản phẩm   </option>
+                <option value="support">Góc hỗ trợ</option>
+                <option value="video">video</option>
+                <option value="communicate">cộng đồng</option>
+            </select>
+            </br>
+            Tiêu đề <input id="titleInput"/> 
+        </div>
+    </div>
+    
+<!-- END experimentInfo -->
+
+    
+
+	<div id="content">
+        
+		<form action="" onsubmit="onSelectClick(document.getElementById('noiseChange').value); return false;">
+			<fieldset>
+				<label for="noise">
+					Nội dung bài viết:
+				</label>
+				<textarea id="noiseChange" name="noise" class="widgEditor nothing">
+                    hu doa
+                
+                </textarea>
+			</fieldset>
+			<fieldset class="submit">
+				<input type="submit" value="uploadDataa" />
+			</fieldset>
+        </form>
+        <button onclick="onSelectClick(document.getElementById('noise').value)"> up lpad</button>
+	</div>
+    <!-- END content -->
+    </body>
+
+
+    <script type="text/javascript">
+      	var dataJson = "<%= dataPage %>";
+        var listImage=[];
+        var listSelectContent=[];
+        console.log(dataJson);
+
+       // $('#noiseChange').html(" <p> brr");
+       
+        $(document).ready( () => {
+            $("#btnSubmit").click((event) => {
+                //stop submit the form, we will post it manually.
+                event.preventDefault();
+                doAjax();
+            });
+        
+        });
+        function doAjax() {
+            var form = $('#applicationForm')[0];
+            var data = new FormData(form);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "http://localhost:3000/uploadimage",
+                data: data,
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false,
+                cache: false,
+                success: (data) => {
+                    console.log(data);
+                    var userData= 'http://localhost:3000/image/' +data.filename;
+                    listImage.push(userData);
+                    var stringData="";
+                    for(var i=0;i<listImage.length;i++){
+                         stringData +='<div class="slide-lvc"> <img src="'+listImage[i]+'" width="100px" onClick="coppyDataView('+i+')"/></div>';
+
+                    }
+                    $('#sliderUserImage').html(stringData);
+                    
+                    
+                },
+                error: (e) => {
+                    console.log(e.responseText);
+                }
+            });
+        }
+
+        function coppyDataView(i){
+            $('#datatoCoppy').html(listImage[i]);
+        }
+
+        function selectUserData(){
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: "http://localhost:3000/uploadimage",
+                contentType: false,
+                data: {
+                    file:$('#fileSaveImage').val(),
+                    title:title,
+                    group:group,
+		            maintitle:titleBody
+                 },
+                success: function (loadcofig) {
+                    console.log(loadcofig);
+                    var string ="Đăng bài ";
+                    if(loadcofig)  string+="thành công";
+                    else string+="thất bại";
+                    alert(string); 
+                },
+                error: function (loadcofig) {
+                    console.log('error');
+                    alert("Lỗi  đăng bài");
+                   
+                }
+            });
+        }
+
+
+
+        function onSelectClick(value){
+            console.log(value);
+            var group=$('#selectTableDetail').val();
+            var title=$('#titleInput').val();
+            var titleBody=" du lieu";
+            var startHtml= "<html> <head><title>"+ title+"</title> </head><body> ";
+
+            var endHtml="</body></html";
+
+
+            var valueHtml=startHtml+value+endHtml;
+
+
+           
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: "http://localhost:3000/editPage",
+                data: {
+                    content:valueHtml,
+                    title:title,
+                    group:group,
+                    maintitle:titleBody,
+                    iddelete:dataJson
+                 },
+                success: function (loadcofig) {
+                    console.log(loadcofig);
+                    var string ="Đăng bài ";
+                    if(loadcofig)  string+="thành công";
+                    else string+="thất bại";
+                    alert(string);
+                },
+                error: function (loadcofig) {
+                    console.log('error');
+                    alert("Lỗi  đăng bài");
+                   
+                }
+            });
+
+
+
+           // gotoCheckUser(stringvalue);
+
+        }
+        function selectTableGroup(){
+            var group=$('#selectTable').val();
+            var showDataDetail="";
+            for(var k=0;k< listSelectContent.length;k++) {
+                let v=listSelectContent[k];
+                if((v["content_group"].indexOf("_")>-1)&&(v["content_group"].indexOf(group)>-1))
+                {
+                    showDataDetail+='<option value="'+v["content_group"]+'">'+v["title"] +'</option>';
+                }
+                
+            }
+            $('#selectTableDetail').html(showDataDetail);
+        }
+        loadAllContent();
+        function loadAllContent(){
+            var Link='http://localhost:3000/report/content_group';
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        console.log('ssssssssssss');
+                        var showData="";
+                        var showDataDetail="";
+                        listSelectContent=loadcofig.result;
+                        for(var k=0;k< loadcofig.result.length;k++) {
+                            let v=loadcofig.result[k];
+                            if(v["content_group"].indexOf("_")<0){
+                                showData+='<option value="'+v["content_group"]+'">'+v["title"] +'</option>'
+                            }
+                            else
+                            {
+                                showDataDetail+='<option value="'+v["content_group"]+'">'+v["title"] +'</option>';
+                            }
+                            
+                        }
+
+                        console.log(showData);
+                       
+                        $('#selectTable').html(showData);
+                        $('#selectTableDetail').html(showDataDetail);
+                        
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+        }
+        
+        loadAllPage(dataJson);
+        function loadAllPage(dataJson){
+            var Link='http://localhost:3000/detailPage';
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: Link,
+                    data: { pageid:dataJson},
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        console.log('ssssssssssss');
+                      //  setTimeout(() =>  $('#noiseChange').html("loadcofig.data"), 1000);
+
+                      
+
+                    
+                        if( loadcofig.main.length>0){
+                            document.getElementById("noiseChange").value=loadcofig.data;
+                            var theTextareas = document.getElementsByTagName("textarea");
+                            for (var i = 0; i < theTextareas.length; i++)
+                            {
+                                var theTextarea = theTextareas[i];
+                                
+                                if (theTextarea.className.classExists("widgEditor"))
+                                {
+                                    if (theTextarea.id == "")
+                                    {
+                                        theTextarea.id = theTextarea.name;
+                                    }
+                                	setTimeout("new widgEditor('" + theTextarea.id + "')", 500 * (i));
+                                }
+                            }
+
+                            $('#selectTable').val(loadcofig.main[0].group_file);
+                            $('#selectTableDetail').val(loadcofig.main[0].group_file);
+                           
+                        }  
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+        }
+
+    </script>
+
+
+
+</html>

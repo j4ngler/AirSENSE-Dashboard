@@ -1,0 +1,31 @@
+<section id="best-seller-section">
+    <h2 class="best-seller-caption text-center">Thiết bị thông minh</h2>
+    <div class="row best-seller-group grid" id="best-seller-components">
+
+    </div>
+    <div class="best-seller-load-more text-center">
+      <button type="button" class="btn btn-outline-primary" onclick="loadAnotherComponent()">Load more</button>
+    </div>
+  </section>
+
+  <script type="text/javascript">
+    
+    var jsonItemComponent=[];
+    var lstGroupComponent={product_group:3,start:-5,end:0};
+    loadAnotherComponent();
+    function loadAnotherComponent(){
+      lstGroupComponent.start+=5;
+      lstGroupComponent.end+=5;
+      postInfoData('/api/customers/lst_product',lstGroupComponent,(data)=>{
+        if(!data.error){
+          data.result.forEach((element) => {
+            if(jsonItemComponent.findIndex(o=>(o.product_id==element.product_id))<0) 
+              jsonItemComponent.push(element);
+          });
+          setFillertProductToView(jsonItemComponent,"#best-seller-components");
+        }
+        
+      });
+    }
+    
+  </script>

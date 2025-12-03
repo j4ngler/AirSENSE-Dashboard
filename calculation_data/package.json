@@ -1,0 +1,33 @@
+{
+  "name": "calculation-data-module",
+  "version": "1.0.0",
+  "description": "NoSQL, MySQL",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Sample",
+  "license": "MIT",
+  "dependencies": {
+    "cron": "^2.1.0",
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "mongoose": "^6.8.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "husky": {},
+  "lint-staged": {
+    "./client/**/**/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --trailing-comma es5 --single-quote --write"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.9.0",
+    "npm": ">= 3.10.8"
+  }
+}
