@@ -1,0 +1,12 @@
+
+# Common ignores
+node_modules/
+.DS_Store
+*.log
+.env
+.env.local
+
+# Ignore all .md files except README.md
+*.md
+!README.md
+!**/README.md
