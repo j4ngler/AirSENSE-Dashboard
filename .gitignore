@@ -5,6 +5,8 @@ node_modules/
 *.log
 .env
 .env.local
+venv/
+**/venv/
 
 # Ignore all .md files except README.md
 *.md
