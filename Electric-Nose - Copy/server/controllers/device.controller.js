@@ -571,6 +571,7 @@ deviceCtrl.getActiveMeasurement = async function (req, res) {
     const { device_id } = req.query;
     
     // Chỉ tìm measurement đang chạy (started hoặc in_progress)
+    // Và kiểm tra thời gian: nếu đã quá 45 phút (40 phút đo + 5 phút buffer) thì coi như completed
     let query = {
       status: { $in: ['started', 'in_progress'] }
     };
@@ -585,80 +586,25 @@ deviceCtrl.getActiveMeasurement = async function (req, res) {
       .select('device_id file_name status progress samples_count started_at completed_at duration_ms')
       .lean();
     
-    // Nếu có measurement đang chạy, kiểm tra xem device có còn online không
-    // Nếu device đã offline quá lâu (ví dụ 5 phút), coi như measurement đã bị gián đoạn
     if (activeMeasurement) {
-      try {
-        const deviceStatus = await DeviceStatus.findOne({ 
-          device_id: activeMeasurement.device_id 
-        })
-          .sort({ last_seen: -1 })
-          .lean();
-        
-        if (deviceStatus && deviceStatus.last_seen) {
-          const now = new Date();
-          const lastSeen = new Date(deviceStatus.last_seen);
-          const timeSinceLastSeen = now - lastSeen;
-          const offlineThreshold = 5 * 60 * 1000; // 5 phút
-          
-          // Nếu device đã offline quá 5 phút, coi như measurement đã bị gián đoạn
-          if (timeSinceLastSeen > offlineThreshold) {
-            console.warn(`⚠️ Device ${activeMeasurement.device_id} has been offline for ${Math.round(timeSinceLastSeen/60000)} minutes`);
-            console.warn(`   Measurement ${activeMeasurement.file_name} is likely interrupted - marking as failed`);
-            
-            // Đánh dấu measurement là failed
-            try {
-              await MeasurementData.updateOne(
-                { _id: activeMeasurement._id },
-                {
-                  $set: {
-                    status: 'failed',
-                    completed_at: new Date(),
-                    failure_reason: `Device offline for ${Math.round(timeSinceLastSeen/60000)} minutes - measurement interrupted`
-                  }
-                }
-              );
-              
-              // Trả về như không có measurement active
-              return returnOK(res, {
-                active: false,
-                measurement: null,
-                reason: 'device_offline'
-              });
-            } catch (updateError) {
-              console.error('Error updating measurement status:', updateError);
-            }
-          }
-        }
-      } catch (deviceStatusError) {
-        // Nếu không lấy được device status, tiếp tục với logic kiểm tra thời gian
-        console.warn('⚠️ Could not check device status:', deviceStatusError.message);
-      }
-    }
-    
-    if (activeMeasurement) {
-      // Kiểm tra nếu measurement đã quá thời gian
+      // Kiểm tra nếu measurement đã quá thời gian (45 phút = 2700000 ms)
       const now = new Date();
       const startedAt = new Date(activeMeasurement.started_at);
       const elapsed = now - startedAt;
-      const maxDuration = 40 * 60 * 1000; // 40 phút
+      const maxDuration = 45 * 60 * 1000; // 45 phút
       
       if (elapsed > maxDuration) {
-        // Measurement đã quá thời gian, có thể ESP32 đã restart hoặc mất nguồn
-        // Đánh dấu là 'failed' thay vì 'completed' để cho phép start mới ngay
-        console.warn(`⚠️ Measurement ${activeMeasurement.file_name} đã quá thời gian (${Math.round(elapsed/60000)} phút)`);
-        console.warn(`   Possible reasons: Device restarted, power loss, or measurement timeout`);
-        console.warn(`   Marking as FAILED to allow new measurement to start`);
+        // Measurement đã quá thời gian, coi như completed
+        console.log(`⚠️ Measurement ${activeMeasurement.file_name} đã quá thời gian (${Math.round(elapsed/60000)} phút), coi như completed`);
         
-        // Cập nhật status thành failed
+        // Cập nhật status thành completed
         try {
           await MeasurementData.updateOne(
             { _id: activeMeasurement._id },
             { 
               $set: { 
-                status: 'failed',
-                completed_at: new Date(),
-                failure_reason: `Measurement timeout after ${Math.round(elapsed/60000)} minutes - possibly device restarted`
+                status: 'completed',
+                completed_at: new Date(startedAt.getTime() + (activeMeasurement.duration_ms || 40 * 60 * 1000))
               }
             }
           );
@@ -666,75 +612,16 @@ deviceCtrl.getActiveMeasurement = async function (req, res) {
           console.error('Error updating measurement status:', updateError);
         }
         
-        // Trả về như không có measurement active (để frontend có thể start mới)
-        // KHÔNG trả về measurement cũ để frontend không hiển thị
+        // Trả về như không có measurement active
+        const lastCompleted = await MeasurementData.findOne({ status: 'completed', device_id: device_id || { $exists: true } })
+          .sort({ completed_at: -1 })
+          .select('device_id file_name status progress samples_count started_at completed_at duration_ms')
+          .lean();
+        
         return returnOK(res, {
           active: false,
-          measurement: null, // Không trả về measurement cũ
-          reason: 'timeout_or_restart'
+          measurement: lastCompleted || null
         });
-      }
-      
-      // QUAN TRỌNG: Kiểm tra xem có nhận được measurement/data từ ESP32 không
-      // Nếu measurement đã chạy quá 3 phút nhưng không nhận được measurement/data mới → đánh dấu failed
-      // Vì ESP32 vẫn gửi sensor data (temperature/humidity) ngay cả khi không đo,
-      // nên cần kiểm tra measurement/data để biết thực sự đang đo hay không
-      const measurementDataCheckDuration = 3 * 60 * 1000; // 3 phút
-      if (elapsed > measurementDataCheckDuration) {
-        try {
-          // Kiểm tra xem có measurement/data mới trong 3 phút gần đây không
-          // Measurement/data thường có status 'in_progress' và có samples_count
-          // Lấy lại measurement để kiểm tra updatedAt (MongoDB tự động tạo từ timestamps: true)
-          const currentMeasurement = await MeasurementData.findById(activeMeasurement._id).lean();
-          
-          if (currentMeasurement) {
-            const updatedAt = currentMeasurement.updatedAt || currentMeasurement.updated_at;
-            const timeSinceUpdate = updatedAt ? (now.getTime() - new Date(updatedAt).getTime()) : elapsed;
-            const samplesIncreased = currentMeasurement.samples_count > (activeMeasurement.samples_count || 0);
-            
-            // Nếu không có cập nhật trong 3 phút và samples_count không tăng → có thể không đang đo
-            if (timeSinceUpdate > measurementDataCheckDuration && !samplesIncreased) {
-              // Không có cập nhật measurement/data trong 3 phút gần đây
-              // Có thể ESP32 không thực sự đang đo (chỉ gửi sensor data bình thường)
-              console.warn(`⚠️ Measurement ${activeMeasurement.file_name} đã chạy ${Math.round(elapsed/60000)} phút nhưng không nhận được measurement/data mới trong ${Math.round(timeSinceUpdate/60000)} phút`);
-              console.warn(`   ESP32 có thể chỉ gửi sensor data (temperature/humidity) mà không thực sự đang đo`);
-              console.warn(`   Samples count: ${activeMeasurement.samples_count || 0} → ${currentMeasurement.samples_count} (${samplesIncreased ? 'increased' : 'not increased'})`);
-              console.warn(`   Marking as FAILED - measurement may not be actually running`);
-              
-              // Đánh dấu measurement là failed
-              try {
-                await MeasurementData.updateOne(
-                  { _id: activeMeasurement._id },
-                  {
-                    $set: {
-                      status: 'failed',
-                      completed_at: new Date(),
-                      failure_reason: `No measurement/data received in last ${Math.round(timeSinceUpdate/60000)} minutes - ESP32 may not be actually sampling`
-                    }
-                  }
-                );
-                
-                // Trả về như không có measurement active
-                return returnOK(res, {
-                  active: false,
-                  measurement: null,
-                  reason: 'no_measurement_data'
-                });
-              } catch (updateError) {
-                console.error('Error updating measurement status:', updateError);
-              }
-            }
-          }
-        } catch (measurementDataCheckError) {
-          // Nếu không kiểm tra được, tiếp tục với logic bình thường
-          console.warn('⚠️ Could not check recent measurement/data:', measurementDataCheckError.message);
-        }
-      }
-      
-      // Kiểm tra thêm: Nếu measurement đã chạy quá 35 phút nhưng chưa đến 40 phút, cảnh báo
-      const warningDuration = 35 * 60 * 1000; // 35 phút
-      if (elapsed > warningDuration && elapsed <= maxDuration) {
-        console.warn(`⚠️ Measurement ${activeMeasurement.file_name} đã chạy ${Math.round(elapsed/60000)} phút - approaching timeout`);
       }
       
       return returnOK(res, {
@@ -743,8 +630,7 @@ deviceCtrl.getActiveMeasurement = async function (req, res) {
       });
     }
     
-    // Nếu không có measurement đang chạy, chỉ trả về completed gần nhất (KHÔNG trả về failed)
-    // Vì failed measurement thường là do restart/interrupt, không cần hiển thị cho user
+    // Nếu không có measurement đang chạy, lấy measurement completed gần nhất để hiển thị thông báo
     let completedQuery = {
       status: 'completed'
     };
@@ -753,21 +639,14 @@ deviceCtrl.getActiveMeasurement = async function (req, res) {
       completedQuery.device_id = device_id;
     }
     
-    // Chỉ lấy completed measurement gần nhất (trong 2 giờ gần đây) để hiển thị
-    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
-    completedQuery.completed_at = { $gte: twoHoursAgo };
-    
     const lastCompleted = await MeasurementData.findOne(completedQuery)
       .sort({ completed_at: -1 })
-      .select('device_id file_name status progress samples_count started_at completed_at duration_ms failure_reason')
+      .select('device_id file_name status progress samples_count started_at completed_at duration_ms')
       .lean();
     
-    // Chỉ trả về completed measurement gần đây, KHÔNG trả về failed
-    // Nếu không có completed gần đây, trả về null để frontend hiển thị "Ready"
     return returnOK(res, {
       active: false,
-      measurement: lastCompleted || null, // Chỉ trả về completed, không trả về failed
-      canStart: true // Cho phép start measurement mới
+      measurement: lastCompleted || null
     });
   } catch (error) {
     console.error("Get active measurement error:", error);
@@ -897,48 +776,17 @@ deviceCtrl.getLatestSensorDataFromAirSENSE = async function (req, res) {
     logThrottle('query_airsense_all', () => `🔍 Querying AirSENSE collection for device: ${deviceId || 'all'}, topic pattern: ${topicPattern}`);
     
     // Sort theo cả time và _id để đảm bảo lấy record mới nhất (nếu có nhiều records cùng time)
-    // QUAN TRỌNG: Chỉ lấy record trong 30 giây gần nhất để tránh trả về dữ liệu cũ khi ESP32 đã tắt
-    const currentTime = Math.floor(Date.now() / 1000);
-    const maxAge = 30; // 30 giây - nếu record quá cũ, coi như ESP32 đã tắt
-    
-    const queryWithTime = {
-      ...query,
-      time: { $gte: currentTime - maxAge } // Chỉ lấy record trong 30 giây gần nhất
-    };
-    
     const latest = await Sensor
-      .findOne(queryWithTime)
+      .findOne(query)
       .sort({ time: -1, _id: -1 })
       .lean();
     
-    // QUAN TRỌNG: Chỉ merge ADC từ record cũ nếu có measurement đang chạy
-    // Nếu không có measurement đang chạy, chỉ trả về dữ liệu mới nhất (không merge ADC cũ)
+    // Nếu record mới nhất không có ADC values, tìm record có ADC trong 15 giây gần nhất
+    // (vì ESP32 gửi full data mỗi 10 giây khi đang đo, nhưng temperature/humidity mỗi 2 giây)
     let recordWithADC = latest;
-    
-    // Kiểm tra xem có measurement đang chạy không
-    let hasActiveMeasurement = false;
-    if (latest) {
-      try {
-        const deviceIdFromLatest = latest.topic.split('/')[2] || deviceId;
-        const activeMeasurement = await MeasurementData.findOne({
-          device_id: deviceIdFromLatest,
-          status: { $in: ['started', 'in_progress'] }
-        }).lean();
-        
-        hasActiveMeasurement = !!activeMeasurement;
-      } catch (measurementCheckError) {
-        // Nếu không kiểm tra được, coi như không có measurement đang chạy
-        hasActiveMeasurement = false;
-      }
-    }
-    
-    // Chỉ merge ADC nếu:
-    // 1. Record mới nhất không có ADC
-    // 2. CÓ measurement đang chạy (để biết ESP32 đang đo)
-    // 3. Tìm record có ADC trong 10 giây gần nhất (giảm từ 15 giây để tránh lấy dữ liệu cũ)
-    if (latest && !latest.content?.ADC0 && !latest.content?.ADC1 && !latest.content?.ADC2 && hasActiveMeasurement) {
+    if (latest && (!latest.content?.ADC0 && !latest.content?.ADC1 && !latest.content?.ADC2)) {
       const currentTime = Math.floor(Date.now() / 1000);
-      const timeWindow = 10; // 10 giây gần nhất (giảm từ 15 để tránh lấy dữ liệu cũ)
+      const timeWindow = 15; // 15 giây gần nhất
       
       const queryWithADC = {
         ...query,
@@ -951,30 +799,16 @@ deviceCtrl.getLatestSensorDataFromAirSENSE = async function (req, res) {
         .sort({ time: -1, _id: -1 })
         .lean();
       
-      // Nếu tìm thấy record có ADC trong 10 giây gần nhất, merge với temperature/humidity mới nhất
+      // Nếu tìm thấy record có ADC, dùng nó nhưng vẫn dùng temperature/humidity từ record mới nhất
       if (recordWithADC && latest) {
-        // Kiểm tra thêm: record có ADC phải gần đây (trong 10 giây)
-        const adcRecordAge = currentTime - recordWithADC.time;
-        if (adcRecordAge <= timeWindow) {
-          // Merge: dùng ADC từ record có ADC gần đây, nhưng dùng temperature/humidity từ record mới nhất
-          recordWithADC.content = {
-            ...recordWithADC.content,
-            Temperature: latest.content?.Temperature || latest.content?.temperature || recordWithADC.content?.Temperature,
-            Humidity: latest.content?.Humidity || latest.content?.humidity || recordWithADC.content?.Humidity
-          };
-          recordWithADC.time = latest.time; // Dùng time mới nhất
-        } else {
-          // Record có ADC quá cũ (> 10 giây) → không dùng, chỉ dùng record mới nhất (không có ADC)
-          recordWithADC = latest;
-        }
-      } else {
-        // Không tìm thấy record có ADC trong 10 giây gần nhất → dùng record mới nhất (không có ADC)
-        recordWithADC = latest;
+        // Merge: dùng ADC từ record cũ, nhưng dùng temperature/humidity từ record mới nhất
+        recordWithADC.content = {
+          ...recordWithADC.content,
+          Temperature: latest.content?.Temperature || latest.content?.temperature || recordWithADC.content?.Temperature,
+          Humidity: latest.content?.Humidity || latest.content?.humidity || recordWithADC.content?.Humidity
+        };
+        recordWithADC.time = latest.time; // Dùng time mới nhất
       }
-    } else if (latest && !hasActiveMeasurement) {
-      // Không có measurement đang chạy → chỉ trả về record mới nhất (không merge ADC cũ)
-      // Điều này đảm bảo khi không đo, không hiển thị ADC values từ lần đo trước
-      recordWithADC = latest;
     }
     
     const finalRecord = recordWithADC || latest;
@@ -1002,46 +836,22 @@ deviceCtrl.getLatestSensorDataFromAirSENSE = async function (req, res) {
       ? topicParts[2] 
       : (topicParts[1] || deviceId);
     
-    // QUAN TRỌNG: Chỉ trả về ADC values nếu có measurement đang chạy
-    // Nếu không có measurement đang chạy, KHÔNG trả về ADC array (hoặc trả về null nhưng không log)
-    let adcArray = null; // Mặc định là null (không có ADC)
-    
-    if (hasActiveMeasurement) {
-      // Có measurement đang chạy → lấy ADC values từ record
-      adcArray = [
-        finalRecord.content?.ADC0,
-        finalRecord.content?.ADC1,
-        finalRecord.content?.ADC2,
-        finalRecord.content?.ADC3,
-        finalRecord.content?.ADC4,
-        finalRecord.content?.ADC5,
-        finalRecord.content?.ADC6,
-        finalRecord.content?.ADC7,
-      ].map(val => {
-        // Convert sang số nguyên, nếu null/undefined thì trả về null (không phải 0)
-        if (val === null || val === undefined) return null;
-        const numVal = parseInt(val);
-        return isNaN(numVal) ? null : numVal;
-      });
-      
-      // Kiểm tra thêm: ADC values phải gần đây (trong 30 giây)
-      const currentTime = Math.floor(Date.now() / 1000);
-      const recordAge = currentTime - finalRecord.time;
-      const maxAge = 30; // 30 giây
-      
-      if (recordAge > maxAge) {
-        // Record quá cũ (> 30 giây) → không trả về ADC
-        adcArray = null;
-      } else {
-        // Kiểm tra xem có ít nhất 1 ADC value khác null không
-        const hasValidADC = adcArray.some(val => val !== null && val !== undefined);
-        if (!hasValidADC) {
-          // Tất cả ADC đều null → trả về null (không phải array)
-          adcArray = null;
-        }
-      }
-    }
-    // Nếu không có measurement đang chạy → adcArray vẫn là null (không log gì)
+    // Lấy ADC values từ content, đảm bảo là số nguyên
+    const adcArray = [
+      finalRecord.content?.ADC0,
+      finalRecord.content?.ADC1,
+      finalRecord.content?.ADC2,
+      finalRecord.content?.ADC3,
+      finalRecord.content?.ADC4,
+      finalRecord.content?.ADC5,
+      finalRecord.content?.ADC6,
+      finalRecord.content?.ADC7,
+    ].map(val => {
+      // Convert sang số nguyên, nếu null/undefined thì trả về null (không phải 0)
+      if (val === null || val === undefined) return null;
+      const numVal = parseInt(val);
+      return isNaN(numVal) ? null : numVal;
+    });
     
     // Extract temperature and humidity từ content
     const temperature = finalRecord.content?.Temperature !== undefined && finalRecord.content?.Temperature !== null 
@@ -1056,15 +866,7 @@ deviceCtrl.getLatestSensorDataFromAirSENSE = async function (req, res) {
           ? parseFloat(finalRecord.content.humidity)
           : null);
     
-    // Chỉ log ADC values nếu có (không log null để tránh spam)
-    if (adcArray && adcArray.some(val => val !== null)) {
-      console.log(`📊 AirSENSE API - Device: ${deviceIdFromTopic}, Temperature: ${temperature}, Humidity: ${humidity}, ADC values:`, adcArray);
-    } else {
-      // Chỉ log temperature và humidity khi không có ADC (hoặc không đang đo)
-      logThrottle('airsense_api_no_adc', () => 
-        `📊 AirSENSE API - Device: ${deviceIdFromTopic}, Temperature: ${temperature}, Humidity: ${humidity} (no ADC - not measuring)`
-      );
-    }
+    console.log(`📊 AirSENSE API - Device: ${deviceIdFromTopic}, Temperature: ${temperature}, Humidity: ${humidity}, ADC values:`, adcArray);
     
     return returnOK(res, {
       success: true,
@@ -1074,7 +876,7 @@ deviceCtrl.getLatestSensorDataFromAirSENSE = async function (req, res) {
         timestamp_iso: new Date(finalRecord.time * 1000).toISOString(),
         temperature: temperature,
         humidity: humidity,
-        adc: adcArray  // null nếu không đang đo, array nếu đang đo
+        adc: adcArray
       }
     });
   } catch (error) {

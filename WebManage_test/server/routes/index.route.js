@@ -1,0 +1,45 @@
+const express = require("express");
+const authRoutes = require("./auth.route.js");
+const userRoutes = require("./user.route.js");
+const enterpriseRoutes = require("./enterprise.route.js");
+const groupRoutes = require("./group.route.js");
+const customerRoutes = require("./customer.route.js");
+const documentRoutes = require("./document.route.js");
+const serviceRoutes = require("./service.api.route.js");
+const socialRoutes = require("./social.route.js");
+const deviceRoutes = require("./device.route.js");
+const powerRoutes = require("./power.route.js");
+const shrimpLakeRoutes = require("./shrimpLake.route.js");
+const enoseRoutes = require("./enose.route.js");
+const router = express.Router();
+
+// mount auth routes at /auth
+router.use("/auth", authRoutes);
+
+router.use("/document", documentRoutes);
+// mount user routes at /users
+router.use("/users", userRoutes);
+
+// mount enterprise routes at /enterprises
+router.use("/enterprises", enterpriseRoutes);
+
+// mount group routes at /groups
+router.use("/groups", groupRoutes);
+
+// mount customer routes at /customers
+router.use("/customers", customerRoutes);
+
+router.use("/service", serviceRoutes);
+router.use("/social", socialRoutes);
+router.use("/power", powerRoutes);
+router.use("/shrimp_lake", shrimpLakeRoutes);
+
+
+
+
+// manage eclectic devices routes
+router.use("/device", deviceRoutes);
+// E-Nose API (dùng chung auth/token WebManage, dùng bảng enose_*)
+router.use("/enose", enoseRoutes);
+
+module.exports = router;
