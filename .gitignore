@@ -29,3 +29,11 @@ Thumbs.db
 dist/
 build/
 *.log
+
+# Python virtual environments
+venv/
+**/venv/
+env/
+**/env/
+.venv/
+**/.venv/
