@@ -470,29 +470,6 @@
     </div>
 
     <script>
-        // Helper function để throttle log (chỉ log mỗi interval giây)
-        const logThrottle = (() => {
-            const lastLogTimes = new Map();
-            const LOG_INTERVAL_MS = 10000; // 10 giây
-            
-            return (key, message, force = false) => {
-                const now = Date.now();
-                const lastTime = lastLogTimes.get(key) || 0;
-                const elapsed = now - lastTime;
-                
-                if (force || elapsed >= LOG_INTERVAL_MS) {
-                    lastLogTimes.set(key, now);
-                    if (typeof message === 'function') {
-                        console.log(message());
-                    } else {
-                        console.log(message);
-                    }
-                    return true;
-                }
-                return false;
-            };
-        })();
-        
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = '/login/user';
@@ -550,12 +527,6 @@
                 const activeRes = await fetch('/api/devices/measurements/active', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                
-                if (!activeRes.ok) {
-                    console.error('Error fetching active measurement:', activeRes.status, activeRes.statusText);
-                    return;
-                }
-                
                 const activeData = await activeRes.json();
                 
                 const startBtn = document.getElementById('startMeasurementBtn');
@@ -563,21 +534,13 @@
                 const activeAlert = document.getElementById('activeMeasurementAlert');
                 const activeFileName = document.getElementById('activeMeasurementFileName');
                 
-                // Kiểm tra xem có button không (tránh lỗi nếu chưa load)
-                if (!startBtn) {
-                    console.warn('⚠️ startMeasurementBtn not found');
-                    return;
-                }
-                
-                // QUAN TRỌNG: Kiểm tra activeData.result.active trước
-                // Nếu active = true → chắc chắn có measurement đang chạy → disable button
-                if (activeData.result && activeData.result.active === true && activeData.result.measurement) {
+                if (activeData.result && activeData.result.active && activeData.result.measurement) {
                     // Có measurement đang chạy
                     const measurement = activeData.result.measurement;
                     
-                    // Kiểm tra nếu measurement đã completed hoặc failed
-                    if (measurement.status === 'completed' || measurement.status === 'failed') {
-                        // Measurement đã hoàn thành hoặc failed - enable button ngay
+                    // Kiểm tra nếu measurement đã completed
+                    if (measurement.status === 'completed') {
+                        // Measurement đã hoàn thành
                         startBtn.disabled = false;
                         startBtn.style.opacity = '1';
                         startBtn.style.cursor = 'pointer';
@@ -585,44 +548,37 @@
                         // Ẩn alert "Đang đo"
                         activeAlert.style.display = 'none';
                         
-                        // Hiển thị thông báo
-                        if (measurement.status === 'completed') {
-                            let completionMessage = '✅ Đã hoàn thành';
-                            if (measurement.duration_ms) {
-                                const durationMinutes = Math.round(measurement.duration_ms / 60000);
-                                completionMessage += ` (${durationMinutes} phút)`;
-                            }
-                            statusContent.textContent = completionMessage;
-                            statusContent.style.color = '#16a34a'; // Green color
-                        } else if (measurement.status === 'failed') {
-                            statusContent.textContent = '⚠️ Đo bị gián đoạn - Có thể bắt đầu đo mới';
-                            statusContent.style.color = '#dc2626'; // Red color
+                        // Hiển thị thông báo hoàn thành với thời gian đo
+                        let completionMessage = '✅ Đã hoàn thành';
+                        if (measurement.duration_ms) {
+                            const durationMinutes = Math.round(measurement.duration_ms / 60000);
+                            completionMessage += ` (${durationMinutes} phút)`;
                         }
+                        statusContent.textContent = completionMessage;
+                        statusContent.style.color = '#16a34a'; // Green color
                         
-                        // Reset MEMS sensors về "--" khi measurement completed/failed
+                        // Reset MEMS sensors về "--" khi measurement completed
                         resetMEMSSensors();
                         
                         // Reload last measurement info để hiển thị file mới nhất
                         loadLastMeasurementInfo();
                     } else {
-                        // Kiểm tra thời gian: nếu đã quá 40 phút thì coi như failed (ESP32 có thể đã restart)
+                        // Kiểm tra thời gian: nếu đã quá 45 phút thì coi như completed
                         const startedAt = new Date(measurement.started_at);
                         const now = new Date();
                         const elapsedMinutes = (now - startedAt) / 60000;
                         
-                        if (elapsedMinutes > 40) {
-                            // Đã quá thời gian, coi như failed (có thể ESP32 đã restart)
-                            console.log(`⚠️ Measurement ${measurement.file_name} đã quá ${Math.round(elapsedMinutes)} phút, coi như failed`);
+                        if (elapsedMinutes > 45) {
+                            // Đã quá thời gian, coi như completed
+                            console.log(`⚠️ Measurement ${measurement.file_name} đã quá ${Math.round(elapsedMinutes)} phút, coi như completed`);
                             startBtn.disabled = false;
                             startBtn.style.opacity = '1';
                             startBtn.style.cursor = 'pointer';
                             activeAlert.style.display = 'none';
-                            statusContent.textContent = '⚠️ Đo bị gián đoạn (quá thời gian) - Có thể bắt đầu đo mới';
-                            statusContent.style.color = '#dc2626';
-                            resetMEMSSensors();
+                            statusContent.textContent = '✅ Đã hoàn thành (quá thời gian)';
+                            statusContent.style.color = '#16a34a';
                         } else {
-                            // Measurement đang chạy (status = 'started' hoặc 'in_progress')
-                            // QUAN TRỌNG: Luôn disable button khi đang đo
+                            // Measurement đang chạy
                             startBtn.disabled = true;
                             startBtn.style.opacity = '0.6';
                             startBtn.style.cursor = 'not-allowed';
@@ -632,92 +588,45 @@
                             activeFileName.textContent = measurement.file_name || 'Unknown';
                             statusContent.textContent = `Đang đo: ${measurement.file_name || 'Unknown'}`;
                             statusContent.style.color = '#2563eb';
-                            
-                            // Log để debug (mỗi 10 giây)
-                            logThrottle('measurement_active', () => 
-                                `✅ Measurement đang chạy: ${measurement.file_name}, button đã được disable`
-                            );
                         }
                     }
                 } else {
-                    // Không có measurement đang chạy (active = false hoặc không có measurement)
-                    // QUAN TRỌNG: Luôn enable button khi không có measurement đang chạy
+                    // Không có measurement đang chạy
                     startBtn.disabled = false;
                     startBtn.style.opacity = '1';
                     startBtn.style.cursor = 'pointer';
                     
-                    // Ẩn alert "Đang đo"
+                    // Ẩn thông báo
                     activeAlert.style.display = 'none';
                     
-                    // Nếu có reason từ backend (timeout, device_offline, no_recent_data), không hiển thị measurement cũ
-                    if (activeData.result && activeData.result.reason) {
-                        // Có lý do đặc biệt (timeout, device offline, etc.) - không hiển thị measurement cũ
-                        if (activeData.result.reason === 'timeout_or_restart' || 
-                            activeData.result.reason === 'device_offline' || 
-                            activeData.result.reason === 'no_recent_data') {
-                            statusContent.textContent = 'Ready - Có thể bắt đầu đo mới';
-                            statusContent.style.color = '#1f2937';
-                            resetMEMSSensors();
-                            return; // Không cần xử lý thêm
-                        }
-                    }
-                    
-                    // Hiển thị thông báo completed/failed nếu có measurement (và không có reason đặc biệt)
-                    if (activeData.result && activeData.result.measurement) {
+                    // Hiển thị thông báo completed nếu có measurement completed
+                    if (activeData.result && activeData.result.measurement && activeData.result.measurement.status === 'completed') {
                         const measurement = activeData.result.measurement;
+                        let completionMessage = '✅ Đã hoàn thành';
+                        if (measurement.duration_ms) {
+                            const durationMinutes = Math.round(measurement.duration_ms / 60000);
+                            completionMessage += ` (${durationMinutes} phút)`;
+                        }
+                        statusContent.textContent = completionMessage;
+                        statusContent.style.color = '#16a34a';
                         
-                        if (measurement.status === 'completed') {
-                            let completionMessage = '✅ Đã hoàn thành';
-                            if (measurement.duration_ms) {
-                                const durationMinutes = Math.round(measurement.duration_ms / 60000);
-                                completionMessage += ` (${durationMinutes} phút)`;
-                            }
-                            statusContent.textContent = completionMessage;
-                            statusContent.style.color = '#16a34a';
-                            
-                            // Reset MEMS sensors về "--" khi measurement completed
-                            resetMEMSSensors();
-                            
-                            // Reload last measurement info để hiển thị file mới nhất
-                            loadLastMeasurementInfo();
-                        } else if (measurement.status === 'failed') {
-                            // Chỉ hiển thị failed nếu là measurement gần đây (trong 1 giờ)
-                            const failedAt = measurement.completed_at ? new Date(measurement.completed_at) : null;
-                            if (failedAt && (Date.now() - failedAt.getTime()) < 60 * 60 * 1000) {
-                                // Failed trong 1 giờ gần đây
-                                statusContent.textContent = '⚠️ Đo bị gián đoạn - Có thể bắt đầu đo mới';
-                                statusContent.style.color = '#dc2626';
-                            } else {
-                                // Failed quá lâu, không hiển thị
-                                statusContent.textContent = 'Ready';
-                                statusContent.style.color = '#1f2937';
-                            }
-                            resetMEMSSensors();
-                        } else {
-                            // Status khác (không có hoặc unknown)
+                        // Reset MEMS sensors về "--" khi measurement completed
+                        resetMEMSSensors();
+                        
+                        // Reload last measurement info để hiển thị file mới nhất
+                        loadLastMeasurementInfo();
+                    } else {
+                        if (statusContent.textContent.includes('Đang đo:') || statusContent.textContent.includes('Đã hoàn thành')) {
                             statusContent.textContent = 'Ready';
                             statusContent.style.color = '#1f2937';
+                            
+                            // Reset MEMS sensors về "--" khi không có measurement
                             resetMEMSSensors();
                         }
-                    } else {
-                        // Không có measurement nào - hiển thị Ready
-                        statusContent.textContent = 'Ready';
-                        statusContent.style.color = '#1f2937';
-                        resetMEMSSensors();
                     }
                 }
             } catch (error) {
                 console.error('Error checking active measurement:', error);
-                // Trong trường hợp lỗi, vẫn đảm bảo button có thể được sử dụng
-                // (không disable khi có lỗi để tránh block user)
-                const startBtn = document.getElementById('startMeasurementBtn');
-                if (startBtn) {
-                    // Chỉ enable nếu chưa có measurement đang chạy (để an toàn)
-                    // Nếu có lỗi, user vẫn có thể thử start measurement
-                    startBtn.disabled = false;
-                    startBtn.style.opacity = '1';
-                    startBtn.style.cursor = 'pointer';
-                }
             }
         }
 
@@ -962,21 +871,12 @@
         }
 
 
-        // Cache để lưu giá trị ADC cuối cùng (để giữ lại khi nhận null)
-        let lastValidADCValues = [null, null, null, null, null, null, null, null];
-        // Timestamp của mỗi giá trị ADC (để kiểm tra 10 giây)
-        let lastValidADCTimestamps = [null, null, null, null, null, null, null, null];
-        
         // Display MEMS sensors cards - Hiển thị giá trị ADC thay vì voltage
         // Reset MEMS sensors về trạng thái "--" (chờ đo)
         function resetMEMSSensors() {
             const memsSensorNames = ['EtOH3', 'EtOH4', 'EtOH5', 'EtOH6', 'EtOH1', 'EtOH2', 'VOC1', 'VOC2'];
             const row = document.getElementById('memsSensorsRow');
             row.innerHTML = '';
-            
-            // Reset cache khi không đo
-            lastValidADCValues = [null, null, null, null, null, null, null, null];
-            lastValidADCTimestamps = [null, null, null, null, null, null, null, null];
             
             memsSensorNames.forEach((sensorName, index) => {
                 const col = document.createElement('div');
@@ -1036,46 +936,18 @@
                 }
             }
             
-            // QUAN TRỌNG: Cập nhật cache với giá trị mới (nếu có), giữ lại giá trị cũ nếu null
-            // YÊU CẦU: Giữ lại giá trị cũ trong 10 giây trước khi cập nhật
-            const now = Date.now();
-            const CACHE_DURATION_MS = 10 * 1000; // 10 giây
-            
-            for (let i = 0; i < 8; i++) {
-                if (adcValues && adcValues[i] !== null && adcValues[i] !== undefined) {
-                    // Có giá trị mới → cập nhật cache và timestamp
-                    lastValidADCValues[i] = adcValues[i];
-                    lastValidADCTimestamps[i] = now;
-                }
-                // Nếu null, giữ lại giá trị cũ trong cache (không cập nhật timestamp)
-            }
-            
             // Hiển thị các cảm biến MEMS với giá trị ADC
-            // Chỉ dùng giá trị cũ nếu còn trong 10 giây, nếu quá 10 giây thì hiển thị "--"
             memsSensorNames.forEach((sensorName, index) => {
-                let adcValue = null;
-                
-                // Ưu tiên giá trị mới
-                if (adcValues && adcValues[index] !== null && adcValues[index] !== undefined) {
-                    adcValue = adcValues[index];
-                } else if (lastValidADCValues[index] !== null && lastValidADCValues[index] !== undefined) {
-                    // Kiểm tra xem giá trị cũ còn trong 10 giây không
-                    const lastUpdateTime = lastValidADCTimestamps[index];
-                    if (lastUpdateTime && (now - lastUpdateTime) <= CACHE_DURATION_MS) {
-                        // Giá trị cũ còn trong 10 giây → dùng giá trị cũ
-                        adcValue = lastValidADCValues[index];
-                    } else {
-                        // Giá trị cũ đã quá 10 giây → không dùng (sẽ hiển thị "--")
-                        adcValue = null;
-                    }
-                }
+                const adcValue = adcValues && adcValues[index] !== null && adcValues[index] !== undefined 
+                    ? adcValues[index] 
+                    : null;
                 
                 // Validate: chỉ hiển thị nếu là số nguyên và có giá trị hợp lệ (không phải test data)
                 // Test data thường là 102, 202, 302... (pattern: index * 100 + 2)
                 const numValue = parseInt(adcValue);
                 const isTestData = numValue > 0 && numValue < 1000 && (numValue % 100 === 2 || numValue % 100 === 0);
                 
-                if (adcValue !== null && adcValue !== undefined && !isNaN(numValue) && !isTestData) {
+                if (adcValue !== null && !isNaN(numValue) && !isTestData) {
                     hasMEMSData = true;
                     const col = document.createElement('div');
                     col.className = 'col-md-3 col-sm-6';
@@ -1087,17 +959,8 @@
                         </div>
                     `;
                     row.appendChild(col);
-                } else {
-                    // Không có giá trị hợp lệ → hiển thị "--"
-                    const col = document.createElement('div');
-                    col.className = 'col-md-3 col-sm-6 mb-3';
-                    col.innerHTML = `
-                        <div class="metric-card">
-                            <div class="metric-label">${sensorName}</div>
-                            <div class="metric-value" style="font-size:1.8rem; color:#94a3b8;">--</div>
-                        </div>
-                    `;
-                    row.appendChild(col);
+                } else if (adcValue !== null) {
+                    console.warn(`⚠️ Skipping ${sensorName}: Invalid or test data value: ${adcValue}`);
                 }
             });
             
@@ -1342,37 +1205,8 @@
             const btn = document.getElementById('startMeasurementBtn');
             const statusContent = document.getElementById('statusContent');
             
-            // Kiểm tra lại xem có measurement đang chạy không trước khi start
-            // Đảm bảo button không bị enable lại bởi checkActiveMeasurement
-            try {
-                const activeCheck = await fetch('/api/devices/measurements/active', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const activeData = await activeCheck.json();
-                
-                if (activeData.result && activeData.result.active && activeData.result.measurement) {
-                    const measurement = activeData.result.measurement;
-                    // Chỉ block nếu measurement thực sự đang chạy (không phải completed/failed)
-                    if (measurement.status === 'started' || measurement.status === 'in_progress') {
-                        statusContent.textContent = `Đang có measurement đang chạy: ${measurement.file_name}. Vui lòng đợi hoàn thành.`;
-                        statusContent.style.color = '#dc2626';
-                        // Disable button và update UI
             btn.disabled = true;
-                        btn.style.opacity = '0.6';
-                        btn.style.cursor = 'not-allowed';
-                        return; // Không cho phép start mới
-                    }
-                }
-            } catch (activeCheckError) {
-                console.warn('⚠️ Could not check active measurement before start:', activeCheckError);
-                // Tiếp tục nếu không check được
-            }
-            
-            // Disable button ngay để tránh double-click
-            btn.disabled = true;
-            btn.style.opacity = '0.6';
-            btn.style.cursor = 'not-allowed';
-            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Starting...';
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Measuring...';
             statusContent.textContent = 'Starting measurement...';
             
             try {
@@ -1411,37 +1245,16 @@
                     // Check lại active measurement sau 1 giây để đảm bảo sync
                     setTimeout(checkActiveMeasurement, 1000);
                 } else {
-                    // Có lỗi từ backend
-                    const errorMessage = data.error?.message || data.result?.message || 'Failed to start measurement';
-                    statusContent.textContent = errorMessage;
+                    statusContent.textContent = data.error?.message || 'Failed to start measurement';
                     statusContent.style.color = '#dc3545';
-                    
-                    // Nếu có active measurement, hiển thị thông tin chi tiết
-                    if (data.result && data.result.active_measurement) {
-                        const active = data.result.active_measurement;
-                        statusContent.textContent = `Đang có measurement đang chạy: ${active.file_name} (${active.elapsed_minutes} phút). Vui lòng đợi hoàn thành.`;
-                        // Giữ button disabled
-                        btn.disabled = true;
-                        btn.style.opacity = '0.6';
-                        btn.style.cursor = 'not-allowed';
-                    } else {
-                        // Enable lại button nếu không có measurement đang chạy
-                        btn.disabled = false;
-                        btn.style.opacity = '1';
-                        btn.style.cursor = 'pointer';
-                    }
-                    btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
                 }
             } catch (error) {
                 statusContent.textContent = 'Error: ' + error.message;
                 statusContent.style.color = '#dc3545';
-                // Enable lại button nếu có lỗi
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-                btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
             } finally {
-                // Luôn check lại active measurement để sync UI
+                // Chỉ enable lại nút nếu không có measurement đang chạy
+                // Nếu có measurement đang chạy, nút sẽ bị disable bởi checkActiveMeasurement
+                btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
                 setTimeout(async () => {
                     await checkActiveMeasurement();
                 }, 500);
@@ -1800,26 +1613,11 @@
                 }
                 
                 if (data) {
-                    // QUAN TRỌNG: Kiểm tra timestamp - chỉ cập nhật nếu dữ liệu gần đây (trong 30 giây)
-                    // Tránh cập nhật với dữ liệu cũ khi ESP32 đã tắt
-                    const dataTimestamp = data.timestamp ? (typeof data.timestamp === 'number' ? data.timestamp : new Date(data.timestamp).getTime() / 1000) : null;
-                    const currentTime = Math.floor(Date.now() / 1000);
-                    const maxAge = 30; // 30 giây
-                    
-                    if (dataTimestamp && (currentTime - dataTimestamp) > maxAge) {
-                        // Dữ liệu quá cũ (> 30 giây) → không cập nhật, có thể ESP32 đã tắt
-                        logThrottle('old_sensor_data', () => 
-                            `⚠️ Sensor data quá cũ (${Math.round(currentTime - dataTimestamp)}s) - ESP32 có thể đã tắt, không cập nhật UI`
-                        );
-                        return; // Không cập nhật UI với dữ liệu cũ
-                    }
-                    
                     console.log('📊 Parsed data:', {
                         temperature: data.temperature,
                         humidity: data.humidity,
                         adc: data.adc,
-                        adc_count: data.adc ? data.adc.length : 0,
-                        age: dataTimestamp ? Math.round(currentTime - dataTimestamp) : 'unknown'
+                        adc_count: data.adc ? data.adc.length : 0
                     });
                     
                     // Cập nhật Temperature
@@ -1862,35 +1660,20 @@
                         
                         if (isMeasuring) {
                             // Đang đo: hiển thị MEMS sensors
-                            // QUAN TRỌNG: Chỉ cập nhật nếu có ít nhất 1 ADC value khác null
-                            // Nếu tất cả đều null, giữ lại giá trị cũ (không reset về "--")
-                            let hasValidADC = false;
-                            let adcArray = null;
-                            
                             if (data.adc && Array.isArray(data.adc)) {
-                                // Kiểm tra xem có ít nhất 1 giá trị khác null không
-                                hasValidADC = data.adc.some(value => value !== null && value !== undefined);
-                                adcArray = data.adc;
-                            } else if (data.adc_values && Array.isArray(data.adc_values)) {
-                                hasValidADC = data.adc_values.some(value => value !== null && value !== undefined);
-                                adcArray = data.adc_values;
-                            }
-                            
-                            if (hasValidADC && adcArray) {
-                                // Có ít nhất 1 ADC value hợp lệ → cập nhật
-                                const sensorDataForMEMS = adcArray.map((value, index) => ({
+                                const sensorDataForMEMS = data.adc.map((value, index) => ({
                                     data_type: `mems${index + 1}`,
                                     value: value,
                                     adc_value: value
                                 }));
                                 displayMEMSSensors(sensorDataForMEMS);
-                                console.log('✅ Updated MEMS sensors with valid ADC values');
-                            } else {
-                                // Tất cả ADC values đều null → giữ lại giá trị cũ (không reset)
-                                // Chỉ log để debug, không cập nhật UI
-                                logThrottle(`no_adc_keep_old_${currentDeviceId}`, () => 
-                                    `⚠️ All ADC values are null, keeping previous values displayed`
-                                );
+                            } else if (data.adc_values && Array.isArray(data.adc_values)) {
+                                const sensorDataForMEMS = data.adc_values.map((value, index) => ({
+                                    data_type: `mems${index + 1}`,
+                                    value: value,
+                                    adc_value: value
+                                }));
+                                displayMEMSSensors(sensorDataForMEMS);
                             }
                         } else {
                             // Không đang đo: reset MEMS về "--"

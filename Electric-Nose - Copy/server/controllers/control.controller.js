@@ -70,181 +70,27 @@ if (!mqttBrokerUrl.match(/:\d+$/)) {
   }
 }
 
-// Tạo client ID ổn định và unique (dùng hostname + process ID + timestamp)
-// Lưu ý: Nếu dùng cùng client ID với client khác, broker sẽ disconnect client cũ
-const stableClientId = process.env.MQTT_CLIENT_ID || 
-  `enose_backend_${os.hostname().replace(/[^a-zA-Z0-9]/g, '_')}_${process.pid}_${Date.now().toString(36)}`;
-  
-console.log('🔧 Generated MQTT Client ID:', stableClientId);
-
 console.log('🔧 MQTT Config:', {
   brokerUrl: mqttBrokerUrl,
   port: mqttPort,
-  username: process.env.MQTT_USERNAME || "test",
-  clientId: stableClientId
+  username: process.env.MQTT_USERNAME || "test"
 });
 
 const mqttClient = mqtt.connect(mqttBrokerUrl, {
   port: mqttPort,
   username: process.env.MQTT_USERNAME || "test",
   password: process.env.MQTT_PASSWORD || "testadmin",
-  clientId: stableClientId,
-  reconnectPeriod: 5000, // 5 giây để tránh spam reconnect
-  connectTimeout: 30 * 1000, // 30 giây timeout khi connect
-  keepalive: 60, // Tăng lên 60 giây (broker có thể có timeout dài hơn)
-  clean: true, // Clean session khi disconnect (tránh conflict)
-  qos: 1, // Quality of Service level 1 (at least once delivery)
-  protocolVersion: 4, // MQTT 3.1.1 (version 4)
-  rejectUnauthorized: false, // Nếu dùng TLS, cho phép self-signed certs
-  // Thêm các options để cải thiện stability
-  reschedulePings: true, // Tự động reschedule ping khi có traffic
-  incomingStore: null, // Không lưu incoming messages (tiết kiệm memory)
-  outgoingStore: null, // Không lưu outgoing messages (tiết kiệm memory)
-  will: {
-    topic: `electric-nose/backend/${stableClientId}/status`,
-    payload: JSON.stringify({ status: 'offline', timestamp: new Date().toISOString() }),
-    qos: 1,
-    retain: false
-  }
+  clientId: process.env.MQTT_CLIENT_ID || 'enose_' + Math.random().toString(16).substr(2, 8),
+  reconnectPeriod: 1000,
+  connectTimeout: 30 * 1000,
 });
 
-// MQTT Connection handlers - Đã được di chuyển xuống dưới để có thể dùng pingInterval
-
-mqttClient.on('error', (error) => {
-  const now = new Date().toISOString();
-  console.error(`❌ MQTT Client error at ${now}:`, error);
-  console.error('   Error code:', error.code);
-  console.error('   Error message:', error.message);
-  console.error('   Error type:', error.constructor.name);
-  if (error.stack) {
-    console.error('   Stack:', error.stack);
-  }
-  // Log thêm thông tin về connection state
-  console.error('   Client connected:', mqttClient.connected);
-  console.error('   Client disconnecting:', mqttClient.disconnecting);
-});
-
-mqttClient.on('close', () => {
-  const now = new Date().toISOString();
-  const connectionDuration = mqttClient.lastConnectTime 
-    ? Math.round((Date.now() - mqttClient.lastConnectTime) / 1000) 
-    : 'unknown';
-  console.log(`⚠️ MQTT Client disconnected at ${now}`);
-  console.log('   Connection duration:', connectionDuration, 'seconds');
-  console.log('   Client connected state:', mqttClient.connected);
-  console.log('   Client disconnecting state:', mqttClient.disconnecting);
-  console.log('   Client ID:', stableClientId);
-  console.log('   Broker URL:', mqttBrokerUrl);
-  console.log('   Keepalive setting:', mqttClient.options.keepalive, 'seconds');
-  console.log('   Possible reasons:');
-  console.log('     - Broker disconnected due to policy/rate limit');
-  console.log('     - Network connection lost');
-  console.log('     - Another client with same Client ID connected');
-  console.log('     - Keepalive timeout (broker may have shorter timeout than client)');
-  console.log('     - Broker restart or maintenance');
-  
-  // Clear ping interval khi disconnect
-  if (pingInterval) {
-    clearInterval(pingInterval);
-    pingInterval = null;
-  }
-  
-  // Log thêm thông tin để debug
-  if (connectionDuration < 300) {
-    // Nếu disconnect trong vòng 5 phút, có thể là vấn đề keepalive
-    console.warn('   ⚠️ Disconnected quickly - may be keepalive timeout issue');
-    console.warn('   💡 Suggestion: Check broker keepalive timeout settings');
-  }
-});
-
-mqttClient.on('reconnect', () => {
-  console.log('🔄 MQTT Client reconnecting...');
-  console.log('   Attempt number:', mqttClient.options.reconnectPeriod ? 'auto' : 'manual');
-});
-
-mqttClient.on('offline', () => {
-  const now = new Date().toISOString();
-  console.log(`📴 MQTT Client went offline at ${now}`);
-  console.log('   This usually means the client lost network connection');
-  // Clear ping interval khi offline
-  if (pingInterval) {
-    clearInterval(pingInterval);
-    pingInterval = null;
-  }
-});
-
-mqttClient.on('end', () => {
-  console.log('🔚 MQTT Client connection ended');
-  // Clear ping interval khi end
-  if (pingInterval) {
-    clearInterval(pingInterval);
-    pingInterval = null;
-  }
-});
-
-// Ping broker định kỳ để giữ kết nối (backup nếu keepalive không hoạt động)
-let pingInterval = null;
-mqttClient.on('connect', (connack) => {
-  // Lưu thời gian connect để tính duration
-  mqttClient.lastConnectTime = Date.now();
-  
+// MQTT Connection handlers
+mqttClient.on('connect', () => {
   console.log('✅ MQTT Client connected to broker:', mqttBrokerUrl);
-  console.log('   Connection return code:', connack.returnCode, connack.returnCode === 0 ? '(Success)' : '(Error)');
-  console.log('   Session present:', connack.sessionPresent);
-  
-  // Clear interval cũ nếu có
-  if (pingInterval) {
-    clearInterval(pingInterval);
-  }
-  
-  // Ping broker ngay sau khi connect để test kết nối
-  setTimeout(() => {
-    if (mqttClient.connected) {
-      mqttClient.publish(
-        `electric-nose/backend/${stableClientId}/ping`,
-        JSON.stringify({ timestamp: new Date().toISOString(), type: 'initial' }),
-        { qos: 0 },
-        (err) => {
-          if (err) {
-            console.warn('⚠️ Initial MQTT ping failed:', err.message);
-          } else {
-            console.log('✅ Initial ping sent successfully');
-          }
-        }
-      );
-    }
-  }, 1000); // 1 giây sau khi connect
-  
-  // Ping broker mỗi 15 giây (nhanh hơn keepalive 60s để đảm bảo kết nối)
-  // Giảm interval để ping thường xuyên hơn, tránh timeout
-  pingInterval = setInterval(() => {
-    if (mqttClient.connected) {
-      // Publish ping message để giữ kết nối
-      mqttClient.publish(
-        `electric-nose/backend/${stableClientId}/ping`,
-        JSON.stringify({ timestamp: new Date().toISOString(), type: 'heartbeat' }),
-        { qos: 0 },
-        (err) => {
-          if (err) {
-            console.warn('⚠️ MQTT ping failed:', err.message);
-            console.warn('   This may indicate connection issues');
-            // Nếu ping failed, có thể connection đã bị drop
-            // MQTT client sẽ tự động reconnect
-          }
-        }
-      );
-    } else {
-      console.warn('⚠️ Skipping ping - client not connected');
-      // Clear interval nếu client không connected
-      if (pingInterval) {
-        clearInterval(pingInterval);
-        pingInterval = null;
-      }
-    }
-  }, 15000); // 15 giây (nhanh hơn keepalive 60s để đảm bảo)
   
   // Subscribe để nhận sensor data từ ESP32
-  mqttClient.subscribe('electric-nose/device/+/sensor', { qos: 1 }, (err) => {
+  mqttClient.subscribe('electric-nose/device/+/sensor', (err) => {
     if (err) {
       console.error('❌ MQTT subscribe error (sensor):', err);
     } else {
@@ -253,7 +99,7 @@ mqttClient.on('connect', (connack) => {
   });
   
   // Subscribe để nhận status từ ESP32
-  mqttClient.subscribe('electric-nose/device/+/status', { qos: 1 }, (err) => {
+  mqttClient.subscribe('electric-nose/device/+/status', (err) => {
     if (err) {
       console.error('❌ MQTT subscribe error (status):', err);
     } else {
@@ -262,34 +108,25 @@ mqttClient.on('connect', (connack) => {
   });
   
   // Subscribe để nhận measurement data từ ESP32
-  mqttClient.subscribe('electric-nose/device/+/measurement/data', { qos: 1 }, (err) => {
+  mqttClient.subscribe('electric-nose/device/+/measurement/data', (err) => {
     if (err) {
       console.error('❌ MQTT subscribe error (measurement):', err);
     } else {
       console.log('✅ Subscribed to: electric-nose/device/+/measurement/data');
     }
   });
-  
-  // Publish online status
-  mqttClient.publish(
-    `electric-nose/backend/${stableClientId}/status`,
-    JSON.stringify({ status: 'online', timestamp: new Date().toISOString() }),
-    { qos: 1, retain: false },
-    (err) => {
-      if (err) {
-        console.warn('⚠️ Failed to publish online status:', err.message);
-        console.warn('   This may indicate permission issues or broker problems');
-      } else {
-        console.log('✅ Published online status successfully');
-      }
-    }
-  );
-  
-  // Log connection info để debug
-  console.log('   Client ID:', stableClientId);
-  console.log('   Broker URL:', mqttBrokerUrl);
-  console.log('   Keepalive:', mqttClient.options.keepalive, 'seconds');
-  console.log('   Clean session:', mqttClient.options.clean);
+});
+
+mqttClient.on('error', (error) => {
+  console.error('❌ MQTT Client error:', error);
+});
+
+mqttClient.on('close', () => {
+  console.log('⚠️ MQTT Client disconnected');
+});
+
+mqttClient.on('reconnect', () => {
+  console.log('🔄 MQTT Client reconnecting...');
 });
 
 // Nhận messages từ ESP32
@@ -375,123 +212,20 @@ async function handleSensorData(topic, data) {
       };
       
       // Map ADC values (nếu có)
-      // ESP32 có thể gửi adc array hoặc các field riêng lẻ
-      // Lưu ý: ESP32 có thể chỉ gửi temperature/humidity khi không đo, và gửi thêm ADC khi đang đo
-      if (data.adc && Array.isArray(data.adc) && data.adc.length > 0) {
-        // Có adc array
+      if (data.adc && Array.isArray(data.adc)) {
         data.adc.forEach((value, index) => {
-          if (value !== null && value !== undefined && index < 8) {
-            content[`ADC${index}`] = value;
-          }
+          content[`ADC${index}`] = value;
         });
-      } else if (data.adc0 !== undefined || data.adc1 !== undefined || data.ADC0 !== undefined || data.ADC1 !== undefined) {
-        // ESP32 gửi adc0-7 hoặc ADC0-7 riêng lẻ
-        for (let i = 0; i < 8; i++) {
-          const adcValue = data[`adc${i}`] !== undefined ? data[`adc${i}`] : 
-                          (data[`ADC${i}`] !== undefined ? data[`ADC${i}`] : null);
-          if (adcValue !== null && adcValue !== undefined) {
-            content[`ADC${i}`] = adcValue;
-          }
-        }
       } else {
         // Fallback: nếu có mems1-8
-        if (data.mems1 !== undefined && data.mems1 !== null) content.ADC0 = data.mems1;
-        if (data.mems2 !== undefined && data.mems2 !== null) content.ADC1 = data.mems2;
-        if (data.mems3 !== undefined && data.mems3 !== null) content.ADC2 = data.mems3;
-        if (data.mems4 !== undefined && data.mems4 !== null) content.ADC3 = data.mems4;
-        if (data.mems5 !== undefined && data.mems5 !== null) content.ADC4 = data.mems5;
-        if (data.mems6 !== undefined && data.mems6 !== null) content.ADC5 = data.mems6;
-        if (data.mems7 !== undefined && data.mems7 !== null) content.ADC6 = data.mems7;
-        if (data.mems8 !== undefined && data.mems8 !== null) content.ADC7 = data.mems8;
-      }
-      
-      // QUAN TRỌNG: Kiểm tra xem có measurement đang chạy không
-      // Nếu có measurement đang chạy nhưng ADC values đều là null → có thể ESP32 không thực sự đang đo
-      try {
-        // Tìm measurement đang chạy (started hoặc in_progress)
-        const activeMeasurement = await MeasurementData.findOne({
-          device_id: deviceId,
-          status: { $in: ['started', 'in_progress'] }
-        })
-        .sort({ started_at: -1 }) // Lấy measurement mới nhất
-        .lean();
-        
-        if (activeMeasurement) {
-          // Có measurement đang chạy - kiểm tra ADC values
-          // Kiểm tra xem có ít nhất 1 ADC value khác null/undefined không
-          const hasADCValues = (content.ADC0 !== null && content.ADC0 !== undefined) ||
-                              (content.ADC1 !== null && content.ADC1 !== undefined) ||
-                              (content.ADC2 !== null && content.ADC2 !== undefined) ||
-                              (content.ADC3 !== null && content.ADC3 !== undefined) ||
-                              (content.ADC4 !== null && content.ADC4 !== undefined) ||
-                              (content.ADC5 !== null && content.ADC5 !== undefined) ||
-                              (content.ADC6 !== null && content.ADC6 !== undefined) ||
-                              (content.ADC7 !== null && content.ADC7 !== undefined);
-          
-          const now = new Date();
-          const startedAt = new Date(activeMeasurement.started_at);
-          const elapsed = now - startedAt;
-          const adcCheckDuration = 2 * 60 * 1000; // 2 phút
-          
-          // Log để debug (mỗi 30 giây)
-          logThrottle(`adc_check_${deviceId}_${activeMeasurement._id}`, () => {
-            const adcStatus = hasADCValues ? 'HAS ADC' : 'NO ADC (all null)';
-            return `🔍 Measurement ${activeMeasurement.file_name}: ${adcStatus}, elapsed: ${Math.round(elapsed/1000)}s`;
-          }, 30000);
-          
-          if (!hasADCValues) {
-            // Đang đo nhưng không có ADC values - có thể ESP32 không thực sự đang đo
-            // Kiểm tra thời gian: nếu measurement đã chạy quá 2 phút mà vẫn không có ADC → đánh dấu failed
-            if (elapsed > adcCheckDuration) {
-              // Đã chạy quá 2 phút mà vẫn không có ADC values → đánh dấu failed
-              console.warn(`⚠️ Measurement ${activeMeasurement.file_name} đã chạy ${Math.round(elapsed/60000)} phút nhưng vẫn nhận ADC values = null liên tục`);
-              console.warn(`   ESP32 có thể không thực sự đang đo - marking as FAILED`);
-              console.warn(`   ADC values: ADC0=${content.ADC0}, ADC1=${content.ADC1}, ADC2=${content.ADC2}, ADC3=${content.ADC3}`);
-              
-              try {
-                const updateResult = await MeasurementData.updateOne(
-                  { _id: activeMeasurement._id },
-                  {
-                    $set: {
-                      status: 'failed',
-                      completed_at: new Date(),
-                      failure_reason: `No ADC values received after ${Math.round(elapsed/60000)} minutes - ESP32 may not be actually sampling`
-                    }
-                  }
-                );
-                
-                if (updateResult.modifiedCount > 0) {
-                  console.warn(`❌ Measurement ${activeMeasurement.file_name} marked as FAILED - no ADC values received`);
-                }
-              } catch (updateError) {
-                console.error('Error updating measurement status:', updateError);
-              }
-            } else {
-              // Chưa đến 2 phút, chỉ log warning
-              logThrottle(`no_adc_warning_${deviceId}`, () => 
-                `⚠️ Measurement ${activeMeasurement.file_name} đang chạy nhưng không có ADC values. Đã chạy ${Math.round(elapsed/1000)}s. Nếu tiếp tục > 2 phút sẽ đánh dấu failed.`
-              );
-            }
-          } else {
-            // Có ADC values - measurement đang chạy bình thường
-            // Cập nhật updatedAt để biết lần cuối nhận được ADC values
-            try {
-              await MeasurementData.updateOne(
-                { _id: activeMeasurement._id },
-                { $set: { updatedAt: new Date() } }
-              );
-            } catch (updateError) {
-              // Không critical
-            }
-          }
-        } else {
-          // Không có measurement đang chạy - đây là bình thường khi ESP32 chỉ gửi sensor data
-          // Không cần làm gì
-        }
-      } catch (measurementCheckError) {
-        // Không critical, chỉ log nếu có lỗi
-        console.warn('⚠️ Error checking active measurement in sensor data handler:', measurementCheckError.message);
-        console.warn('   Stack:', measurementCheckError.stack);
+        if (data.mems1 !== undefined) content.ADC0 = data.mems1;
+        if (data.mems2 !== undefined) content.ADC1 = data.mems2;
+        if (data.mems3 !== undefined) content.ADC2 = data.mems3;
+        if (data.mems4 !== undefined) content.ADC3 = data.mems4;
+        if (data.mems5 !== undefined) content.ADC4 = data.mems5;
+        if (data.mems6 !== undefined) content.ADC5 = data.mems6;
+        if (data.mems7 !== undefined) content.ADC6 = data.mems7;
+        if (data.mems8 !== undefined) content.ADC7 = data.mems8;
       }
       
       // Lưu vào collection 'sensor' chung của AirSENSE
@@ -692,60 +426,29 @@ async function handleDeviceStatus(topic, data) {
     // Khi thiết bị gửi status (thường là ngay sau khi khởi động lại),
     // nếu đang có measurement ở trạng thái 'started' hoặc 'in_progress'
     // thì coi như lần đo trước đó đã bị gián đoạn (mất điện / reset).
-    // Đánh dấu tất cả measurement đang chạy là 'failed' để cho phép start mới ngay.
+    // Đánh dấu tất cả measurement đang chạy là 'failed'.
     try {
-      // Lấy danh sách measurement đang chạy trước khi update
-      const activeMeasurements = await MeasurementData.find({
-        device_id: deviceId,
-        status: { $in: ['started', 'in_progress'] }
-      }).lean();
-      
-      if (activeMeasurements.length > 0) {
-        console.log(`🔄 Device ${deviceId} sent status - checking for interrupted measurements...`);
-        console.log(`   Found ${activeMeasurements.length} active measurement(s)`);
-        
-        // Đánh dấu tất cả measurement đang chạy là 'failed'
-        const interrupted = await MeasurementData.updateMany(
-          {
-            device_id: deviceId,
-            status: { $in: ['started', 'in_progress'] }
-          },
-          {
-            $set: {
-              status: 'failed',
-              completed_at: new Date(),
-              failure_reason: 'Device restarted or power loss detected'
-            }
+      const interrupted = await MeasurementData.updateMany(
+        {
+          device_id: deviceId,
+          status: { $in: ['started', 'in_progress'] }
+        },
+        {
+          $set: {
+            status: 'failed',
+            completed_at: new Date()
           }
-        );
-
-        const modified =
-          typeof interrupted.modifiedCount === 'number'
-            ? interrupted.modifiedCount
-            : interrupted.nModified || 0;
-
-        if (modified > 0) {
-          console.warn(
-            `⚠️ Marked ${modified} active measurement(s) as FAILED due to device restart (status from device ${deviceId})`
-          );
-          console.warn(
-            `   Measurement(s) can now be restarted immediately`
-          );
-          
-          // Log chi tiết các measurement bị đánh dấu failed
-          activeMeasurements.forEach(measurement => {
-            const duration = measurement.started_at 
-              ? Math.round((Date.now() - new Date(measurement.started_at).getTime()) / 1000)
-              : 0;
-            console.warn(
-              `   - ${measurement.file_name}: Failed after ${duration}s (started at ${measurement.started_at})`
-            );
-          });
         }
-      } else {
-        // Không có measurement đang chạy, có thể log để debug
-        logThrottle(`no_active_measurement_${deviceId}`, () => 
-          `✅ Device ${deviceId} status received - no active measurements to interrupt`
+      );
+
+      const modified =
+        typeof interrupted.modifiedCount === 'number'
+          ? interrupted.modifiedCount
+          : interrupted.nModified || 0;
+
+      if (modified > 0) {
+        console.warn(
+          `⚠️ Marked ${modified} active measurement(s) as FAILED due to device restart (status from device ${deviceId})`
         );
       }
     } catch (measurementError) {
@@ -817,38 +520,6 @@ async function handleMeasurementData(topic, data) {
           return;
         }
         
-        // QUAN TRỌNG: Kiểm tra xem có measurement đang chạy khác không
-        // Nếu có, đánh dấu failed trước khi tạo mới
-        try {
-          const existingActive = await MeasurementData.find({
-            device_id: deviceId,
-            status: { $in: ['started', 'in_progress'] },
-            file_name: { $ne: data.file_name } // Khác file_name
-          }).lean();
-          
-          if (existingActive.length > 0) {
-            console.warn(`⚠️ Found ${existingActive.length} existing active measurement(s) when creating new one from ${deviceId}`);
-            console.warn(`   Marking old measurements as failed before creating: ${data.file_name}`);
-            
-            await MeasurementData.updateMany(
-              {
-                device_id: deviceId,
-                status: { $in: ['started', 'in_progress'] },
-                file_name: { $ne: data.file_name }
-              },
-              {
-                $set: {
-                  status: 'failed',
-                  completed_at: new Date(),
-                  failure_reason: 'Replaced by new measurement from ESP32'
-                }
-              }
-            );
-          }
-        } catch (existingCheckError) {
-          console.warn('⚠️ Error checking existing active measurements:', existingCheckError.message);
-        }
-        
         // Tạo mới nếu chưa có
         measurement = new MeasurementData({
           device_id: deviceId,
@@ -863,28 +534,13 @@ async function handleMeasurementData(topic, data) {
         logThrottle(`mqtt_measurement_new_${deviceId}`, () => `✅ Created new measurement: ${data.file_name}`);
       } else if (measurement) {
         // Cập nhật measurement hiện tại
-        // QUAN TRỌNG: Chỉ cập nhật status nếu có trong data
-        // Không tự động giữ status cũ nếu ESP32 không gửi
-        if (data.status) {
-          measurement.status = data.status;
-        }
-        
-        // Chỉ cập nhật progress nếu có trong data
-        if (data.progress !== undefined) {
-          measurement.progress = data.progress;
-        }
-        
-        // Chỉ cập nhật samples_count nếu có trong data
-        if (data.samples_count !== undefined) {
-          measurement.samples_count = data.samples_count;
-        }
+        measurement.status = data.status || measurement.status;
+        measurement.progress = data.progress !== undefined ? data.progress : measurement.progress;
+        measurement.samples_count = data.samples_count !== undefined ? data.samples_count : measurement.samples_count;
         
         if (data.measurement_data) {
           measurement.measurement_data = data.measurement_data;
         }
-        
-        // QUAN TRỌNG: MongoDB tự động cập nhật updatedAt khi save (do timestamps: true)
-        // Không cần set thủ công, nhưng đảm bảo save để updatedAt được cập nhật
         
         if (data.status === 'completed' || data.status === 'failed') {
           measurement.completed_at = new Date();
@@ -896,24 +552,14 @@ async function handleMeasurementData(topic, data) {
           
           // Nếu measurement completed, chạy script Python xử lý dữ liệu
           if (data.status === 'completed') {
-            processMeasurementData(deviceId, data.file_name || measurement.file_name, measurement.started_at).catch(err => {
+            processMeasurementData(deviceId, data.file_name, measurement.started_at).catch(err => {
               console.error('❌ Error in processMeasurementData:', err);
             });
           }
-          
-          console.log(`✅ Measurement ${measurement.file_name} marked as ${data.status} from device ${deviceId}`);
         }
-      } else {
-        // Không tìm thấy measurement và không phải status 'started'
-        // Có thể ESP32 gửi dữ liệu cho measurement không tồn tại
-        console.warn(`⚠️ Measurement data from ${deviceId} for file ${data.file_name || 'unknown'} not found in database, and status is not 'started'. Skipping.`);
-        return;
       }
       
-      // Chỉ save nếu có measurement
-      if (measurement) {
-        await measurement.save();
-      }
+      await measurement.save();
       
       console.log(`📈 Measurement data saved from device ${deviceId}:`, {
         file_name: data.file_name,
@@ -1109,95 +755,6 @@ controlCtrl.startMeasurement = async function (req, res) {
         success: false,
         message: "Không tìm thấy thiết bị",
       });
-    }
-
-    const deviceIdForMongo = device.name || device.device_id.toString();
-    
-    // QUAN TRỌNG: Kiểm tra xem có measurement đang chạy không trước khi start mới
-    try {
-      const activeMeasurement = await MeasurementData.findOne({
-        device_id: deviceIdForMongo,
-        status: { $in: ['started', 'in_progress'] }
-      }).lean();
-      
-      if (activeMeasurement) {
-        // Kiểm tra thời gian: nếu đã quá 40 phút thì coi như failed
-        const now = new Date();
-        const startedAt = new Date(activeMeasurement.started_at);
-        const elapsed = now - startedAt;
-        const maxDuration = 40 * 60 * 1000; // 40 phút
-        
-        if (elapsed > maxDuration) {
-          // Measurement đã quá thời gian, đánh dấu failed
-          await MeasurementData.updateOne(
-            { _id: activeMeasurement._id },
-            {
-              $set: {
-                status: 'failed',
-                completed_at: new Date(),
-                failure_reason: 'Measurement timeout - replaced by new measurement'
-              }
-            }
-          );
-          console.warn(`⚠️ Measurement ${activeMeasurement.file_name} đã quá thời gian, đánh dấu failed và cho phép start mới`);
-        } else {
-          // Measurement đang chạy và chưa quá thời gian - KHÔNG cho phép start mới
-          return returnFalse(res, {
-            success: false,
-            message: `Đang có measurement đang chạy: ${activeMeasurement.file_name}. Vui lòng đợi measurement hoàn thành hoặc restart ESP32 để bắt đầu đo mới.`,
-            active_measurement: {
-              file_name: activeMeasurement.file_name,
-              started_at: activeMeasurement.started_at,
-              elapsed_minutes: Math.round(elapsed / 60000)
-            }
-          });
-        }
-      }
-    } catch (activeCheckError) {
-      console.warn('⚠️ Error checking active measurement:', activeCheckError.message);
-      // Tiếp tục nếu không kiểm tra được (có thể MongoDB chưa kết nối)
-    }
-    
-    // Kiểm tra và đánh dấu failed các measurement đang chạy quá lâu (có thể ESP32 đã restart nhưng chưa gửi status)
-    // Nếu measurement đã chạy quá 40 phút, coi như failed
-    try {
-      const now = new Date();
-      const staleThreshold = 40 * 60 * 1000; // 40 phút
-      
-      const staleMeasurements = await MeasurementData.find({
-        device_id: deviceIdForMongo,
-        status: { $in: ['started', 'in_progress'] },
-        started_at: { $lt: new Date(now.getTime() - staleThreshold) }
-      }).lean();
-      
-      if (staleMeasurements.length > 0) {
-        console.warn(`⚠️ Found ${staleMeasurements.length} stale measurement(s) (running > 40 minutes), marking as failed`);
-        
-        await MeasurementData.updateMany(
-          {
-            device_id: deviceIdForMongo,
-            status: { $in: ['started', 'in_progress'] },
-            started_at: { $lt: new Date(now.getTime() - staleThreshold) }
-          },
-          {
-            $set: {
-              status: 'failed',
-              completed_at: new Date(),
-              failure_reason: 'Measurement timeout - possibly device restarted without sending status'
-            }
-          }
-        );
-        
-        staleMeasurements.forEach(measurement => {
-          const duration = measurement.started_at 
-            ? Math.round((now.getTime() - new Date(measurement.started_at).getTime()) / 60000)
-            : 0;
-          console.warn(`   - ${measurement.file_name}: Failed after ${duration} minutes`);
-        });
-      }
-    } catch (staleCheckError) {
-      console.warn('⚠️ Error checking for stale measurements:', staleCheckError.message);
-      // Không block việc start measurement mới nếu có lỗi
     }
 
     const startedAt = new Date();
