@@ -1,0 +1,2541 @@
+<!DOCTYPE html>
+<html lang="vi">
+<% include ../Layout/header.ejs %>
+    <title>Dashboard - Electric-Nose</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Chart.js script - Commented out -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --danger: #f5576c;
+            --bg: #f5f7fa;
+        }
+        html {
+            background: #e0e7ff !important;
+        }
+        body {
+            /* Dùng một màu nền xanh nhạt đồng nhất cho toàn bộ khu vực thẻ */
+            background: #e0e7ff !important;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-attachment: fixed; /* Giữ background cố định khi scroll */
+        }
+        /* Đổi background của header thành màu trắng */
+        #header {
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Ẩn các ký tự thừa như --> */
+        body::before {
+            display: none !important;
+        }
+        /* Ẩn text thừa ở đầu trang */
+        html > body > *:first-child {
+            font-size: 0;
+        }
+        html > body > *:first-child::before {
+            content: '';
+            display: none;
+        }
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px; /* Giảm khoảng trống phía dưới */
+            margin-bottom: 20px; /* Giảm margin-bottom */
+            background: transparent !important; /* Đảm bảo container trong suốt để thấy background body */
+        }
+        /* Đảm bảo tất cả các wrapper không có background trắng */
+        body > * {
+            background: transparent !important;
+        }
+        /* Trừ các card cảm biến vẫn giữ màu trắng */
+        .mq-sensor-card,
+        .metric-card,
+        .info-item {
+            background: white !important;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(94, 136, 252, 0.15);
+        }
+        .card-header {
+            border-bottom: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #4c51bf;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .status-chip {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .chip-success { background: #e6fffa; color: #0f766e; }
+        .chip-danger { background: #fee2e2; color: #b91c1c; }
+        .chip-warning { background: #fef9c3; color: #854d0e; }
+        .wifi-setup-alert {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        .wifi-setup-alert h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .wifi-setup-alert p {
+            color: #78350f;
+            margin-bottom: 10px;
+        }
+        .wifi-setup-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .wifi-setup-link:hover {
+            color: white;
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        /* Modal WiFi Config */
+        .wifi-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s;
+        }
+        .wifi-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wifi-modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s;
+        }
+        .wifi-modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .wifi-modal-header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+        .wifi-modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .wifi-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        .wifi-modal-body {
+            padding: 0;
+            height: 600px;
+        }
+        .wifi-modal-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .metric-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            height: 100%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .metric-value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        .metric-label {
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .btn-measure {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--danger) 100%);
+            border: none;
+            color: white;
+            padding: 16px 30px;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            width: 100%;
+            box-shadow: 0 12px 30px rgba(245, 87, 108, 0.4);
+        }
+        .status-panel {
+            background: #fff1f2;
+            border-radius: 16px;
+            padding: 18px;
+            min-height: 120px;
+        }
+        .chart-card {
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(94, 136, 252, 0.15);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .info-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .info-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .info-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.2;
+        }
+        .file-card {
+            background: #eef2ff;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .filter-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(15, 23, 42, 0.05);
+        }
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+        .filter-item {
+            flex: 1;
+            min-width: 150px;
+        }
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .filter-item select,
+        .filter-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .btn-filter {
+            padding: 8px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .mems-sensors-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            background: transparent !important;
+        }
+        /* Đảm bảo tất cả các row và col không có background */
+        .row {
+            background: transparent !important;
+        }
+        .row > * {
+            background: transparent !important;
+        }
+        /* Trừ các card cảm biến */
+        .row > * > .mq-sensor-card,
+        .row > * > .metric-card,
+        .row > * > .info-item {
+            background: white !important;
+        }
+        .mems-sensors-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+        .mq-sensor-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .mq-sensor-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .mq-sensor-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .mq-sensor-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        .mq-sensor-unit {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <% include ../Layout/topbar.ejs %>
+    <div class="main-container" style="margin-top: 100px;">
+        <!-- WiFi Setup Alert (hiển thị khi ESP32 chưa kết nối WiFi) -->
+        <div id="wifiSetupAlert" class="wifi-setup-alert" style="display: none;">
+            <h4><i class="bi bi-exclamation-triangle-fill"></i> ESP32 chưa kết nối WiFi</h4>
+            <p>Thiết bị ESP32 đang ở chế độ AP mode và cần được cấu hình WiFi trước khi sử dụng.</p>
+            <p><strong>Bước 1:</strong> Kết nối WiFi <code>AirSENSE_SPARC_LAB_Config</code> (password: <code>12345678</code>)</p>
+            <p><strong>Bước 2:</strong> Nhấn nút bên dưới để tự động mở trang cấu hình WiFi:</p>
+            <button onclick="openWifiConfigModal()" class="wifi-setup-link" style="border: none; cursor: pointer;">
+                <i class="bi bi-wifi"></i> Cấu hình WiFi cho ESP32
+            </button>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #92400e;">
+                <i class="bi bi-info-circle"></i> Sau khi cấu hình WiFi, ESP32 sẽ tự động kết nối và trang này sẽ tự động cập nhật.
+            </p>
+        </div>
+
+        <!-- Modal WiFi Config -->
+        <div id="wifiConfigModal" class="wifi-modal">
+            <div class="wifi-modal-content">
+                <div class="wifi-modal-header">
+                    <h3><i class="bi bi-wifi"></i> Cấu hình WiFi cho ESP32</h3>
+                    <button class="wifi-modal-close" onclick="closeWifiConfigModal()">&times;</button>
+                </div>
+                <div class="wifi-modal-body">
+                    <iframe id="wifiConfigIframe" class="wifi-modal-iframe" src="http://192.168.4.1/wifi-config"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel">
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>Thiết bị</label>
+                    <select id="deviceSelect" class="form-select">
+                        <option value="">Tất cả thiết bị</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Từ ngày</label>
+                    <input type="datetime-local" id="fromTime" class="form-control">
+                </div>
+                <div class="filter-item">
+                    <label>Đến ngày</label>
+                    <input type="datetime-local" id="toTime" class="form-control">
+                </div>
+                <div class="filter-item">
+                    <label>&nbsp;</label>
+                    <button class="btn-filter" onclick="applyFilter()">
+                        <i class="bi bi-search"></i> Xem biểu đồ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-label">Temperature (°C)</div>
+                    <div class="metric-value"><span id="temperature">--</span>°C</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-label">Humidity (%)</div>
+                    <div class="metric-value"><span id="humidity">--</span>%</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-label">Wi-Fi Signal</div>
+                    <div class="metric-value" style="font-size:2.2rem;"><span id="wifiSignal">--</span> dBm</div>
+                    <div class="text-muted" id="wifiSSID">SSID: --</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card" style="display:flex;align-items:center;justify-content:center;">
+                    <div id="wifiChip" class="status-chip chip-danger">
+                        <i class="bi bi-wifi-off"></i> Disconnected
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+                <div class="card p-4">
+                    <button class="btn-measure mb-3" id="startMeasurementBtn">
+                        <i class="bi bi-play-circle"></i> Start measurement
+                    </button>
+                    <div class="status-panel">
+                        <div class="text-muted mb-2">Status</div>
+                        <div id="statusContent" style="font-size:1.2rem; font-weight:600;">Ready</div>
+                    </div>
+                    <div id="activeMeasurementAlert" class="alert alert-info mt-3" style="display:none;">
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Đang đo:</strong> <span id="activeMeasurementFileName"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="file-card h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div style="font-weight:600; color:#4338ca;">Last measurement file</div>
+                        <i class="bi bi-file-earmark-bar-graph" style="font-size:1.8rem; color:#4338ca;"></i>
+                    </div>
+                    <div id="lastFileName" style="font-size:1.2rem; font-weight:600; color:#1f2937;">--</div>
+                    <div class="text-muted mb-3" id="lastMeasurementTime">Last updated: --</div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-primary btn-sm" id="downloadFileBtn" style="display:none;">
+                            <i class="bi bi-download"></i> Download CSV
+                        </button>
+                        <a class="btn btn-outline-primary btn-sm" id="fileServerLink" href="#" target="_blank" style="display:none;">
+                            <i class="bi bi-link-45deg"></i> Truy cập File Server
+                        </a>
+                    </div>
+                    <div class="text-muted mt-2" style="font-size:0.85rem;" id="fileServerInfo">
+                        <i class="bi bi-info-circle"></i> <span id="fileServerText">Đang tải thông tin...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Temperature & Humidity Chart - Commented out -->
+        <!--
+        <div class="chart-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div style="font-size:1.1rem; font-weight:600;">Temperature & Humidity Timeline</div>
+                <div class="text-muted" style="font-size:0.9rem;">Dữ liệu từ MongoDB</div>
+            </div>
+            <canvas id="measurementChart" height="120"></canvas>
+        </div>
+        -->
+
+
+        <!-- MEMS Sensors Section -->
+        <div class="mems-sensors-section">
+            <div class="mems-sensors-title">
+                <i class="bi bi-cpu"></i> MEMS Sensors
+            </div>
+            <!-- Hiển thị sẵn 8 cảm biến, JS chỉ việc cập nhật giá trị -->
+            <div class="row g-3 mb-4" id="memsSensorsRow">
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="EtOH1">
+                        <div class="mq-sensor-label">EtOH1</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="EtOH2">
+                        <div class="mq-sensor-label">EtOH2</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="EtOH3">
+                        <div class="mq-sensor-label">EtOH3</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="EtOH4">
+                        <div class="mq-sensor-label">EtOH4</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="EtOH5">
+                        <div class="mq-sensor-label">EtOH5</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="EtOH6">
+                        <div class="mq-sensor-label">EtOH6</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="VOC1">
+                        <div class="mq-sensor-label">VOC1</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="mq-sensor-card" data-sensor="VOC2">
+                        <div class="mq-sensor-label">VOC2</div>
+                        <div class="mq-sensor-value">--</div>
+                        <div class="mq-sensor-unit">ADC</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEMS Sensors Charts - Commented out -->
+        <!--
+        <div class="chart-card mb-4" id="memsSensorsChartContainer" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div style="font-size:1.1rem; font-weight:600;">MEMS Sensors Timeline</div>
+                <div class="text-muted" style="font-size:0.9rem;">8 Cảm biến MEMS</div>
+            </div>
+            <canvas id="memsSensorsChart" height="120"></canvas>
+        </div>
+        -->
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-title">Total devices</div>
+                <div class="info-value" id="totalDevices">--</div>
+            </div>
+            <div class="info-item">
+                <div class="info-title">Devices online</div>
+                <div class="info-value text-success" id="onlineDevices">--</div>
+            </div>
+            <div class="info-item">
+                <div class="info-title">Devices offline</div>
+                <div class="info-value text-danger" id="offlineDevices">--</div>
+            </div>
+            <div class="info-item">
+                <div class="info-title">Recent commands (1h)</div>
+                <div class="info-value" id="recentControls">--</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function để throttle log (chỉ log mỗi interval giây)
+        const logThrottle = (() => {
+            const lastLogTimes = new Map();
+            const LOG_INTERVAL_MS = 10000; // 10 giây
+            
+            return (key, message, force = false) => {
+                const now = Date.now();
+                const lastTime = lastLogTimes.get(key) || 0;
+                const elapsed = now - lastTime;
+                
+                if (force || elapsed >= LOG_INTERVAL_MS) {
+                    lastLogTimes.set(key, now);
+                    if (typeof message === 'function') {
+                        console.log(message());
+                    } else {
+                        console.log(message);
+                    }
+                    return true;
+                }
+                return false;
+            };
+        })();
+        
+        // ========== TEST MODE: Comment lại phần check token để test không cần đăng nhập ==========
+        // Khi deploy lên server, uncomment lại phần này
+        // const token = localStorage.getItem('token_AIRSENSE') || localStorage.getItem('token');
+        // if (!token) {
+        //     window.location.href = '/login/user';
+        // }
+        
+        // Test mode: Dùng dummy token
+        const token = 'test_token';
+
+        // Chart variables - Commented out
+        // let measurementChart = null;
+        // let memsSensorsChart = null;
+        let allDevices = [];
+        let selectedDeviceId = '';
+        let fromTime = null;
+        let toTime = null;
+
+        // Load devices list
+        async function loadDevices() {
+            try {
+                const response = await fetch('/api/enose/devices', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.result) {
+                    allDevices = data.result;
+                    const select = document.getElementById('deviceSelect');
+                    select.innerHTML = '<option value="">Tất cả thiết bị</option>';
+                    
+                    data.result.forEach(device => {
+                        const option = document.createElement('option');
+                        option.value = device.device_id;
+                        option.textContent = device.name || device.device_id;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading devices:', error);
+            }
+        }
+
+        // Apply filter
+        function applyFilter() {
+            selectedDeviceId = document.getElementById('deviceSelect').value;
+            const fromTimeInput = document.getElementById('fromTime').value;
+            const toTimeInput = document.getElementById('toTime').value;
+            
+            fromTime = fromTimeInput ? new Date(fromTimeInput) : null;
+            toTime = toTimeInput ? new Date(toTimeInput) : null;
+            
+            loadMeasurementHistory();
+            loadMEMSSensorsData();
+        }
+
+        // Check active measurement và update UI
+        async function checkActiveMeasurement() {
+            try {
+                const activeRes = await fetch('/api/enose/devices/measurements/active', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!activeRes.ok) {
+                    console.error('Error fetching active measurement:', activeRes.status, activeRes.statusText);
+                    return;
+                }
+                
+                const activeData = await activeRes.json();
+                
+                const startBtn = document.getElementById('startMeasurementBtn');
+                const statusContent = document.getElementById('statusContent');
+                const activeAlert = document.getElementById('activeMeasurementAlert');
+                const activeFileName = document.getElementById('activeMeasurementFileName');
+                
+                // Kiểm tra xem có button không (tránh lỗi nếu chưa load)
+                if (!startBtn) {
+                    console.warn('⚠️ startMeasurementBtn not found');
+                    return;
+                }
+                
+                // QUAN TRỌNG: Kiểm tra activeData.result.active trước
+                // Nếu active = true → chắc chắn có measurement đang chạy → disable button
+                if (activeData.result && activeData.result.active === true && activeData.result.measurement) {
+                    // Có measurement đang chạy
+                    const measurement = activeData.result.measurement;
+                    
+                    // Kiểm tra nếu measurement đã completed hoặc failed
+                    if (measurement.status === 'completed' || measurement.status === 'failed') {
+                        // Measurement đã hoàn thành hoặc failed - enable button ngay
+                        startBtn.disabled = false;
+                        startBtn.style.opacity = '1';
+                        startBtn.style.cursor = 'pointer';
+                        
+                        // Ẩn alert "Đang đo"
+                        activeAlert.style.display = 'none';
+                        
+                        // Hiển thị thông báo
+                        if (measurement.status === 'completed') {
+                            let completionMessage = '✅ Đã hoàn thành';
+                            if (measurement.duration_ms) {
+                                const durationMinutes = Math.round(measurement.duration_ms / 60000);
+                                completionMessage += ` (${durationMinutes} phút)`;
+                            }
+                            statusContent.textContent = completionMessage;
+                            statusContent.style.color = '#16a34a'; // Green color
+                        } else if (measurement.status === 'failed') {
+                            statusContent.textContent = '⚠️ Đo bị gián đoạn - Có thể bắt đầu đo mới';
+                            statusContent.style.color = '#dc2626'; // Red color
+                        }
+                        
+                        // Reset MEMS sensors về "--" khi measurement completed/failed
+                        resetMEMSSensors();
+                        
+                        // Reload last measurement info để hiển thị file mới nhất
+                        loadLastMeasurementInfo();
+                    } else {
+                        // Kiểm tra thời gian: nếu đã quá 40 phút thì coi như failed (ESP32 có thể đã restart)
+                        const startedAt = new Date(measurement.started_at);
+                        const now = new Date();
+                        const elapsedMinutes = (now - startedAt) / 60000;
+                        
+                        if (elapsedMinutes > 40) {
+                            // Đã quá thời gian, coi như failed (có thể ESP32 đã restart)
+                            console.log(`⚠️ Measurement ${measurement.file_name} đã quá ${Math.round(elapsedMinutes)} phút, coi như failed`);
+                            startBtn.disabled = false;
+                            startBtn.style.opacity = '1';
+                            startBtn.style.cursor = 'pointer';
+                            activeAlert.style.display = 'none';
+                            statusContent.textContent = '⚠️ Đo bị gián đoạn (quá thời gian) - Có thể bắt đầu đo mới';
+                            statusContent.style.color = '#dc2626';
+                            resetMEMSSensors();
+                        } else {
+                            // Measurement đang chạy (status = 'started' hoặc 'in_progress')
+                            // QUAN TRỌNG: Luôn disable button khi đang đo
+                            startBtn.disabled = true;
+                            startBtn.style.opacity = '0.6';
+                            startBtn.style.cursor = 'not-allowed';
+                            
+                            // Hiển thị thông báo
+                            activeAlert.style.display = 'block';
+                            activeFileName.textContent = measurement.file_name || 'Unknown';
+                            statusContent.textContent = `Đang đo: ${measurement.file_name || 'Unknown'}`;
+                            statusContent.style.color = '#2563eb';
+                            
+                            // Log để debug (mỗi 10 giây)
+                            logThrottle('measurement_active', () => 
+                                `✅ Measurement đang chạy: ${measurement.file_name}, button đã được disable`
+                            );
+                        }
+                    }
+                } else {
+                    // Không có measurement đang chạy (active = false hoặc không có measurement)
+                    // QUAN TRỌNG: Kiểm tra ESP32 có online không trước khi enable button
+                    // Chỉ enable button khi ESP32 đang bật và có dữ liệu sensor
+                    try {
+                        const selectedDeviceId = document.getElementById('deviceSelect')?.value;
+                        if (selectedDeviceId) {
+                            // Check device online bằng cách lấy latest sensor data
+                            const sensorCheck = await fetch(`/api/enose/devices/${selectedDeviceId}/airsense/latest`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            const sensorData = await sensorCheck.json();
+                            
+                            if (sensorData.result && sensorData.result.success && sensorData.result.data) {
+                                const data = sensorData.result.data;
+                                const currentTime = Math.floor(Date.now() / 1000);
+                                const dataTimestamp = data.timestamp || 0;
+                                
+                                // QUAN TRỌNG: Validate timestamp - nếu là tương lai hoặc quá cũ, coi như offline
+                                const timestampDiff = Math.abs(currentTime - dataTimestamp);
+                                let ageSeconds = currentTime - dataTimestamp;
+                                
+                                // Nếu timestamp không hợp lệ (tương lai hoặc quá cũ > 1 giờ), coi như offline
+                                if (timestampDiff > 3600) {
+                                    ageSeconds = 999999; // Force offline
+                                }
+                                
+                                const maxAgeSeconds = 2 * 60; // 2 phút
+                                
+                                if (ageSeconds > maxAgeSeconds || ageSeconds < 0) {
+                                    // ESP32 không có sensor data mới trong 2 phút → chưa được khởi động hoặc đã tắt
+                                    startBtn.disabled = true;
+                                    startBtn.style.opacity = '0.6';
+                                    startBtn.style.cursor = 'not-allowed';
+                                    activeAlert.style.display = 'none';
+                                    statusContent.textContent = `⚠️ ESP32 chưa được khởi động. Không có dữ liệu sensor trong ${Math.round(ageSeconds/60)} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị.`;
+                                    statusContent.style.color = '#dc2626';
+                                    return; // Không enable button
+                                }
+                            } else {
+                                // Không có sensor data → ESP32 chưa được khởi động
+                                startBtn.disabled = true;
+                                startBtn.style.opacity = '0.6';
+                                startBtn.style.cursor = 'not-allowed';
+                                activeAlert.style.display = 'none';
+                                statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
+                                statusContent.style.color = '#dc2626';
+                                return; // Không enable button
+                            }
+                        }
+                    } catch (deviceCheckError) {
+                        console.warn('⚠️ Could not check device online status:', deviceCheckError);
+                        // Nếu không check được, vẫn enable button (fallback)
+                    }
+                    
+                    // ESP32 đang online → enable button và hiển thị "Ready"
+                    startBtn.disabled = false;
+                    startBtn.style.opacity = '1';
+                    startBtn.style.cursor = 'pointer';
+                    
+                    // Ẩn alert "Đang đo"
+                    activeAlert.style.display = 'none';
+                    
+                    // Hiển thị "Ready" nếu chưa có thông báo khác
+                    if (!statusContent.textContent.includes('ESP32') && !statusContent.textContent.includes('Đang đo') && !statusContent.textContent.includes('Đã hoàn thành')) {
+                        statusContent.textContent = 'Ready';
+                        statusContent.style.color = '#1f2937';
+                    }
+                    
+                    // Nếu có reason từ backend (timeout, device_offline, no_recent_data), không hiển thị measurement cũ
+                    if (activeData.result && activeData.result.reason) {
+                        // Có lý do đặc biệt (timeout, device offline, etc.) - không hiển thị measurement cũ
+                        if (activeData.result.reason === 'timeout_or_restart' || 
+                            activeData.result.reason === 'device_offline' || 
+                            activeData.result.reason === 'no_recent_data') {
+                            statusContent.textContent = 'Ready - Có thể bắt đầu đo mới';
+                            statusContent.style.color = '#1f2937';
+                            resetMEMSSensors();
+                            return; // Không cần xử lý thêm
+                        }
+                    }
+                    
+                    // Hiển thị thông báo completed/failed nếu có measurement (và không có reason đặc biệt)
+                    if (activeData.result && activeData.result.measurement) {
+                        const measurement = activeData.result.measurement;
+                        
+                        if (measurement.status === 'completed') {
+                            let completionMessage = '✅ Đã hoàn thành';
+                            if (measurement.duration_ms) {
+                                const durationMinutes = Math.round(measurement.duration_ms / 60000);
+                                completionMessage += ` (${durationMinutes} phút)`;
+                            }
+                            statusContent.textContent = completionMessage;
+                            statusContent.style.color = '#16a34a';
+                            
+                            // Reset MEMS sensors về "--" khi measurement completed
+                            resetMEMSSensors();
+                            
+                            // Reload last measurement info để hiển thị file mới nhất
+                            loadLastMeasurementInfo();
+                        } else if (measurement.status === 'failed') {
+                            // Chỉ hiển thị failed nếu là measurement gần đây (trong 1 giờ)
+                            const failedAt = measurement.completed_at ? new Date(measurement.completed_at) : null;
+                            if (failedAt && (Date.now() - failedAt.getTime()) < 60 * 60 * 1000) {
+                                // Failed trong 1 giờ gần đây
+                                statusContent.textContent = '⚠️ Đo bị gián đoạn - Có thể bắt đầu đo mới';
+                                statusContent.style.color = '#dc2626';
+                            } else {
+                                // Failed quá lâu, không hiển thị
+                                statusContent.textContent = 'Ready';
+                                statusContent.style.color = '#1f2937';
+                            }
+                            resetMEMSSensors();
+                        } else {
+                            // Status khác (không có hoặc unknown)
+                            statusContent.textContent = 'Ready';
+                            statusContent.style.color = '#1f2937';
+                            resetMEMSSensors();
+                        }
+                    } else {
+                        // Không có measurement nào - hiển thị Ready
+                        statusContent.textContent = 'Ready';
+                        statusContent.style.color = '#1f2937';
+                        resetMEMSSensors();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking active measurement:', error);
+                // Trong trường hợp lỗi, vẫn đảm bảo button có thể được sử dụng
+                // (không disable khi có lỗi để tránh block user)
+                const startBtn = document.getElementById('startMeasurementBtn');
+                if (startBtn) {
+                    // Chỉ enable nếu chưa có measurement đang chạy (để an toàn)
+                    // Nếu có lỗi, user vẫn có thể thử start measurement
+                    startBtn.disabled = false;
+                    startBtn.style.opacity = '1';
+                    startBtn.style.cursor = 'pointer';
+                }
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                if (!token) {
+                    console.error('❌ No token found!');
+                    return;
+                }
+                
+                console.log('🔄 Loading dashboard data...');
+                
+                // Check active measurement trước
+                await checkActiveMeasurement();
+                
+                // Load system status (giống Electric-Nose)
+                console.log('🔄 Fetching /api/enose/control/status...');
+                const statusRes = await fetch('/api/enose/control/status', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!statusRes.ok) {
+                    console.error('❌ Error fetching status:', statusRes.status, statusRes.statusText);
+                    const errorText = await statusRes.text();
+                    console.error('❌ Error response:', errorText);
+                    return;
+                }
+                
+                const statusData = await statusRes.json();
+                console.log('✅ Status data received:', statusData);
+                
+                if (!statusData || !statusData.result) {
+                    console.error('❌ Invalid status response:', statusData);
+                    return;
+                }
+                
+                let totalDevices = 0;
+                let onlineDevices = 0;
+                let offlineDevices = 0;
+                let wifiSignal = '--';
+                let wifiSSID = '--';
+                let wifiIP = null;
+                let wifiStatus = 'disconnected';
+                
+                if (statusData.result) {
+                    totalDevices = statusData.result.total_devices || 0;
+                    onlineDevices = statusData.result.online_devices || 0;
+                    offlineDevices = statusData.result.offline_devices || 0;
+                    wifiSignal = statusData.result.wifi_signal || '--';
+                    wifiSSID = statusData.result.wifi_ssid || '--';
+                    wifiIP = statusData.result.wifi_ip || null;
+                    wifiStatus = statusData.result.wifi_status || 'disconnected';
+                    window.currentWifiStatus = wifiStatus;
+                }
+                
+                // Update UI with calculated values
+                document.getElementById('totalDevices').textContent = totalDevices;
+                document.getElementById('onlineDevices').textContent = onlineDevices;
+                document.getElementById('offlineDevices').textContent = offlineDevices;
+                document.getElementById('recentControls').textContent = statusData.result?.recent_controls || '0';
+                
+                // Cập nhật chip WiFi (giống Electric-Nose)
+                const wifiChip = document.getElementById('wifiChip');
+                if (wifiChip) {
+                    if (wifiStatus === 'connected') {
+                        wifiChip.className = 'status-chip chip-success';
+                        wifiChip.innerHTML = '<i class="bi bi-wifi"></i> Connected';
+                    } else {
+                        wifiChip.className = 'status-chip chip-danger';
+                        wifiChip.innerHTML = '<i class="bi bi-wifi-off"></i> Disconnected';
+                    }
+                }
+                
+                // Xử lý WiFi alert (tương tự Electric-Nose)
+                if (wifiStatus === 'connected') {
+                    // WiFi đã kết nối - ẩn alert
+                    document.getElementById('wifiSetupAlert').style.display = 'none';
+                    if (typeof closeWifiConfigModal === 'function') {
+                        closeWifiConfigModal();
+                    }
+                    window.wifiModalOpened = false;
+                } else {
+                    // WiFi chưa kết nối - hiển thị alert
+                    if (onlineDevices === 0 || !wifiSSID || wifiSSID === '--') {
+                        document.getElementById('wifiSetupAlert').style.display = 'block';
+                        // Tự động mở modal WiFi config (chỉ mở 1 lần)
+                        if (!window.wifiModalOpened) {
+                            setTimeout(() => {
+                                if (typeof openWifiConfigModal === 'function') {
+                                    openWifiConfigModal();
+                                }
+                                window.wifiModalOpened = true;
+                            }, 2000); // Đợi 2 giây để user thấy alert trước
+                        }
+                    } else {
+                        document.getElementById('wifiSetupAlert').style.display = 'none';
+                        if (typeof closeWifiConfigModal === 'function') {
+                            closeWifiConfigModal();
+                        }
+                        window.wifiModalOpened = false;
+                    }
+                }
+                // QUAN TRỌNG: Chỉ hiển thị wifi signal nếu ESP32 đang online
+                // (wifi signal sẽ được ẩn bởi checkDeviceOnlineAndUpdateUI nếu ESP32 offline)
+                const wifiSignalEl = document.getElementById('wifiSignal');
+                if (wifiSignalEl && wifiSignal !== '--') {
+                    wifiSignalEl.textContent = wifiSignal;
+                }
+                document.getElementById('wifiSSID').textContent = 'SSID: ' + wifiSSID;
+
+                // Cập nhật link file server nếu có IP
+                const fileServerLink = document.getElementById('fileServerLink');
+                const fileServerInfo = document.getElementById('fileServerInfo');
+                const fileServerText = document.getElementById('fileServerText');
+                
+                if (wifiIP) {
+                    const fileServerUrl = `http://${wifiIP}`;
+                    if (fileServerLink) {
+                        fileServerLink.href = fileServerUrl;
+                        fileServerLink.style.display = 'inline-block';
+                    }
+                    if (fileServerText) {
+                        fileServerText.textContent = `File server: ${wifiIP}`;
+                    }
+                    if (fileServerInfo) {
+                        fileServerInfo.style.display = 'block';
+                    }
+                } else {
+                    if (fileServerLink) fileServerLink.style.display = 'none';
+                    if (fileServerText) fileServerText.textContent = 'Chưa có IP address (chưa kết nối WiFi)';
+                    if (fileServerInfo) fileServerInfo.style.display = 'block';
+                }
+
+                // Load latest sensor data từ E-Nose API
+                let deviceIdForSensor = null;
+                
+                // Load devices list để lấy device đầu tiên
+                try {
+                    const devicesRes = await fetch('/api/enose/devices', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const devicesData = await devicesRes.json();
+                    
+                    // Lấy device đầu tiên từ danh sách
+                    if (devicesData.result && devicesData.result.success && devicesData.result.devices && devicesData.result.devices.length > 0) {
+                        deviceIdForSensor = devicesData.result.devices[0].device_code || devicesData.result.devices[0].device_id;
+                    }
+                } catch (devicesError) {
+                    console.warn('⚠️ Could not load devices:', devicesError);
+                }
+                
+                // Nếu có selectedDeviceId, ưu tiên dùng nó
+                if (selectedDeviceId) {
+                    deviceIdForSensor = selectedDeviceId;
+                }
+                
+                // Load latest sensor data từ AirSENSE (ưu tiên) hoặc E-Nose API
+                if (deviceIdForSensor) {
+                    try {
+                        // Ưu tiên lấy từ AirSENSE collection (real-time hơn)
+                        let sensorRes = await fetch(`/api/enose/devices/${deviceIdForSensor}/airsense/latest`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        let sensorData = await sensorRes.json();
+                        
+                        // Nếu không có data từ AirSENSE, fallback sang E-Nose API
+                        if (!sensorData.result || !sensorData.result.success || !sensorData.result.data) {
+                            console.log('⚠️ No data from AirSENSE, trying E-Nose API...');
+                            sensorRes = await fetch(`/api/enose/devices/${deviceIdForSensor}/latest`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            sensorData = await sensorRes.json();
+                        }
+                        
+                        if (sensorData.result && sensorData.result.success && sensorData.result.data) {
+                            const data = sensorData.result.data;
+                            const currentTime = Math.floor(Date.now() / 1000);
+                            const dataTimestamp = data.timestamp || 0;
+                            
+                            // QUAN TRỌNG: Validate timestamp - nếu là tương lai hoặc quá cũ, coi như offline
+                            const timestampDiff = Math.abs(currentTime - dataTimestamp);
+                            let ageSeconds = currentTime - dataTimestamp;
+                            
+                            // Nếu timestamp không hợp lệ (tương lai hoặc quá cũ > 1 giờ), coi như offline
+                            if (timestampDiff > 3600) {
+                                ageSeconds = 999999; // Force offline
+                            }
+                            
+                            const maxAgeSeconds = 2 * 60; // 2 phút
+                            
+                            // Chỉ hiển thị dữ liệu nếu ESP32 đang online (có data mới trong 2 phút)
+                            if (ageSeconds <= maxAgeSeconds && ageSeconds >= 0) {
+                                // ESP32 đang online → hiển thị dữ liệu
+                                // Update Temperature và Humidity
+                                if (data.temperature !== undefined && data.temperature !== null) {
+                                    const tempEl = document.getElementById('temperature');
+                                    if (tempEl) tempEl.textContent = parseFloat(data.temperature).toFixed(1);
+                                }
+                                if (data.humidity !== undefined && data.humidity !== null) {
+                                    const humEl = document.getElementById('humidity');
+                                    if (humEl) humEl.textContent = parseFloat(data.humidity).toFixed(1);
+                                }
+                            } else {
+                                // ESP32 offline → ẩn dữ liệu
+                                const tempEl = document.getElementById('temperature');
+                                if (tempEl) tempEl.textContent = '--';
+                                const humEl = document.getElementById('humidity');
+                                if (humEl) humEl.textContent = '--';
+                            }
+                            
+                            // Load MEMS sensors - ưu tiên từ ADC array (AirSENSE format)
+                            const memsData = [];
+                            
+                            // Nếu có ADC array (từ AirSENSE)
+                            if (data.adc && Array.isArray(data.adc)) {
+                                data.adc.forEach((value, index) => {
+                                    if (value !== null && value !== undefined && index < 8) {
+                                        memsData[index] = {
+                                            data_type: `mems${index + 1}`,
+                                            value: value,
+                                            adc_value: value
+                                        };
+                                    }
+                                });
+                            }
+                            
+                            // Fallback: Tìm trong data object
+                            if (memsData.length === 0) {
+                                for (let i = 1; i <= 8; i++) {
+                                    const memsValue = data[`mems${i}`] || data[`MEMS${i}`] || null;
+                                    if (memsValue !== null && memsValue !== undefined) {
+                                        memsData.push({
+                                            data_type: `mems${i}`,
+                                            value: memsValue,
+                                            adc_value: memsValue
+                                        });
+                                    }
+                                }
+                            }
+                            
+                            // Nếu có ADC array trong content (từ AirSENSE common format)
+                            if (memsData.length === 0 && data.content && data.content.adc && Array.isArray(data.content.adc)) {
+                                data.content.adc.forEach((value, index) => {
+                                    if (value !== null && value !== undefined && index < 8) {
+                                        memsData[index] = {
+                                            data_type: `mems${index + 1}`,
+                                            value: value,
+                                            adc_value: value
+                                        };
+                                    }
+                                });
+                            }
+                            
+                            if (memsData.length > 0) {
+                                displayMEMSSensors(memsData);
+                                console.log('✅ Loaded MEMS sensors:', memsData);
+                            } else {
+                                console.warn('⚠️ No MEMS sensor data found');
+                                // Hiển thị empty state
+                                displayMEMSSensors([]);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error loading sensor data:', error);
+                        // Hiển thị empty state
+                        displayMEMSSensors([]);
+                    }
+                } else {
+                    console.warn('⚠️ No device found for sensor query');
+                    // Hiển thị empty state
+                    displayMEMSSensors([]);
+                }
+                
+                // Load measurement files
+                await loadMeasurementFiles();
+
+                await loadMeasurementHistory();
+                await loadLastMeasurementInfo();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        async function loadMeasurementHistory() {
+            try {
+                let url = '/api/devices/data/history?limit=100';
+                if (selectedDeviceId) {
+                    url += `&device_id=${selectedDeviceId}`;
+                }
+                if (fromTime && toTime) {
+                    url += `&start_time=${fromTime.toISOString()}&end_time=${toTime.toISOString()}`;
+                } else {
+                    // Mặc định lấy 100 điểm gần nhất
+                }
+                
+                const historyRes = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const historyData = await historyRes.json();
+                if (historyData.result && historyData.result.length > 0) {
+                    const labels = historyData.result.map(item => new Date(item.timestamp).toLocaleTimeString());
+                    const tempData = historyData.result.map(item => item.temperature);
+                    const humidityData = historyData.result.map(item => item.humidity);
+
+                    // renderChart(labels, tempData, humidityData); // Commented out
+                }
+            } catch (error) {
+                console.error('Error loading measurement history:', error);
+            }
+        }
+
+        // Load MEMS sensors data
+        async function loadMEMSSensorsData() {
+            try {
+                let url = '/api/devices/data/history?limit=100';
+                if (selectedDeviceId) {
+                    url += `&device_id=${selectedDeviceId}`;
+                }
+                if (fromTime && toTime) {
+                    url += `&start_time=${fromTime.toISOString()}&end_time=${toTime.toISOString()}`;
+                }
+                
+                const historyRes = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const historyData = await historyRes.json();
+                
+                if (historyData.result && historyData.result.length > 0) {
+                    // renderMEMSSensorsChart(historyData.result); // Commented out
+                }
+            } catch (error) {
+                console.error('Error loading MEMS sensors data:', error);
+            }
+        }
+
+
+        // Cache để lưu giá trị ADC cuối cùng (để giữ lại khi nhận null)
+        let lastValidADCValues = [null, null, null, null, null, null, null, null];
+        // Timestamp của mỗi giá trị ADC (để kiểm tra 10 giây)
+        let lastValidADCTimestamps = [null, null, null, null, null, null, null, null];
+        
+        // Display MEMS sensors cards - Hiển thị giá trị ADC thay vì voltage
+        // Reset MEMS sensors về trạng thái "--" (chờ đo)
+        function resetMEMSSensors() {
+            const memsSensorNames = ['EtOH3', 'EtOH4', 'EtOH5', 'EtOH6', 'EtOH1', 'EtOH2', 'VOC1', 'VOC2'];
+            const row = document.getElementById('memsSensorsRow');
+            row.innerHTML = '';
+            
+            // Reset cache khi không đo
+            lastValidADCValues = [null, null, null, null, null, null, null, null];
+            lastValidADCTimestamps = [null, null, null, null, null, null, null, null];
+            
+            memsSensorNames.forEach((sensorName, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-6 mb-3';
+                col.innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-label">${sensorName}</div>
+                        <div class="metric-value" style="font-size:1.8rem; color:#94a3b8;">--</div>
+                    </div>
+                `;
+                row.appendChild(col);
+            });
+            
+            console.log('🔄 MEMS sensors reset to "--" (waiting for measurement)');
+        }
+        
+        function displayMEMSSensors(sensorData) {
+            // Tên các cảm biến MEMS (tương ứng với ADC channels)
+            const memsSensorNames = ['EtOH3', 'EtOH4', 'EtOH5', 'EtOH6', 'EtOH1', 'EtOH2', 'VOC1', 'VOC2'];
+            const row = document.getElementById('memsSensorsRow');
+            row.innerHTML = '';
+            
+            let hasMEMSData = false;
+            
+            // Tìm dữ liệu ADC từ sensorData
+            // Có thể có trong các format: adc_values, ADC_Value, hoặc từ data_type riêng lẻ
+            let adcValues = null;
+            
+            // Thử tìm từ object có adc_values hoặc ADC_Value
+            const adcDataItem = sensorData.find(d => d.adc_values || d.ADC_Value || d.adc);
+            if (adcDataItem) {
+                adcValues = adcDataItem.adc_values || adcDataItem.ADC_Value || adcDataItem.adc;
+            }
+            
+            // Nếu không tìm thấy array, thử tìm từng sensor riêng lẻ với data_type là adc0, adc1, etc.
+            if (!adcValues || !Array.isArray(adcValues)) {
+                adcValues = [];
+                for (let i = 0; i < 8; i++) {
+                    const adcItem = sensorData.find(d => 
+                        d.data_type === `adc${i}` || 
+                        d.data_type === `ADC${i}` ||
+                        d.data_type === `mems${i + 1}` && d.adc_value !== undefined
+                    );
+                    if (adcItem) {
+                        adcValues[i] = adcItem.value || adcItem.adc_value || 0;
+                    } else {
+                        // Tìm từ mems sensors - ưu tiên adc_value, sau đó value
+                        const memsItem = sensorData.find(d => d.data_type === `mems${i + 1}`);
+                        if (memsItem) {
+                            // Ưu tiên adc_value, nếu không có thì dùng value (có thể là ADC hoặc voltage)
+                            adcValues[i] = memsItem.adc_value !== undefined ? memsItem.adc_value : 
+                                          (memsItem.value !== undefined ? memsItem.value : null);
+                        } else {
+                            adcValues[i] = null;
+                        }
+                    }
+                }
+            }
+            
+            // QUAN TRỌNG: Cập nhật cache với giá trị mới (nếu có), giữ lại giá trị cũ nếu null
+            // YÊU CẦU: Giữ lại giá trị cũ trong 10 giây trước khi cập nhật
+            const now = Date.now();
+            const CACHE_DURATION_MS = 10 * 1000; // 10 giây
+            
+            for (let i = 0; i < 8; i++) {
+                if (adcValues && adcValues[i] !== null && adcValues[i] !== undefined) {
+                    // Có giá trị mới → cập nhật cache và timestamp
+                    lastValidADCValues[i] = adcValues[i];
+                    lastValidADCTimestamps[i] = now;
+                }
+                // Nếu null, giữ lại giá trị cũ trong cache (không cập nhật timestamp)
+            }
+            
+            // Hiển thị các cảm biến MEMS với giá trị ADC
+            // Chỉ dùng giá trị cũ nếu còn trong 10 giây, nếu quá 10 giây thì hiển thị "--"
+            memsSensorNames.forEach((sensorName, index) => {
+                let adcValue = null;
+                
+                // Ưu tiên giá trị mới
+                if (adcValues && adcValues[index] !== null && adcValues[index] !== undefined) {
+                    adcValue = adcValues[index];
+                } else if (lastValidADCValues[index] !== null && lastValidADCValues[index] !== undefined) {
+                    // Kiểm tra xem giá trị cũ còn trong 10 giây không
+                    const lastUpdateTime = lastValidADCTimestamps[index];
+                    if (lastUpdateTime && (now - lastUpdateTime) <= CACHE_DURATION_MS) {
+                        // Giá trị cũ còn trong 10 giây → dùng giá trị cũ
+                        adcValue = lastValidADCValues[index];
+                    } else {
+                        // Giá trị cũ đã quá 10 giây → không dùng (sẽ hiển thị "--")
+                        adcValue = null;
+                    }
+                }
+                
+                // Validate: chỉ hiển thị nếu là số nguyên và có giá trị hợp lệ (không phải test data)
+                // Test data thường là 102, 202, 302... (pattern: index * 100 + 2)
+                const numValue = parseInt(adcValue);
+                const isTestData = numValue > 0 && numValue < 1000 && (numValue % 100 === 2 || numValue % 100 === 0);
+                
+                // Render card cho cảm biến (có giá trị hoặc không)
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-6';
+                
+                if (adcValue !== null && adcValue !== undefined && !isNaN(numValue) && !isTestData) {
+                    hasMEMSData = true;
+                    col.innerHTML = `
+                        <div class="mq-sensor-card">
+                            <div class="mq-sensor-label">${sensorName}</div>
+                            <div class="mq-sensor-value">${numValue}</div>
+                            <div class="mq-sensor-unit">ADC</div>
+                        </div>
+                    `;
+                } else {
+                    // Không có giá trị hợp lệ → hiển thị "--"
+                    col.innerHTML = `
+                        <div class="mq-sensor-card">
+                            <div class="mq-sensor-label">${sensorName}</div>
+                            <div class="mq-sensor-value" style="color: #cbd5e1;">--</div>
+                            <div class="mq-sensor-unit">ADC</div>
+                        </div>
+                    `;
+                }
+                row.appendChild(col);
+            });
+            
+            if (hasMEMSData) {
+                // document.getElementById('memsSensorsChartContainer').style.display = 'block'; // Commented out
+            }
+        }
+
+        // Render MEMS sensors chart - Commented out
+        /*
+        function renderMEMSSensorsChart(historyData) {
+            const ctx = document.getElementById('memsSensorsChart');
+            if (memsSensorsChart) {
+                memsSensorsChart.destroy();
+            }
+            
+            const memsSensors = ['mems1', 'mems2', 'mems3', 'mems4', 'mems5', 'mems6', 'mems7', 'mems8'];
+            const labels = historyData.map(item => new Date(item.timestamp).toLocaleTimeString());
+            const datasets = [];
+            
+            const colors = [
+                '#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6',
+                '#ec4899', '#06b6d4', '#84cc16', '#f97316'
+            ];
+            
+            memsSensors.forEach((sensor, index) => {
+                const data = historyData
+                    .filter(item => item[sensor] !== null && item[sensor] !== undefined)
+                    .map(item => item[sensor]);
+                
+                if (data.length > 0) {
+                    datasets.push({
+                        label: sensor.toUpperCase(),
+                        data: data,
+                        borderColor: colors[index % colors.length],
+                        backgroundColor: colors[index % colors.length] + '20',
+                        tension: 0.4,
+                        borderWidth: 2,
+                    });
+                }
+            });
+            
+            if (datasets.length > 0) {
+                memsSensorsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels.slice(-datasets[0].data.length),
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: {
+                                    color: '#475569'
+                                },
+                                grid: {
+                                    color: 'rgba(148,163,184,0.3)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#475569'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#1e293b'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        */
+
+        // renderChart function - Commented out
+        /*
+        function renderChart(labels, tempData, humidityData) {
+            const ctx = document.getElementById('measurementChart');
+            if (measurementChart) {
+                measurementChart.destroy();
+            }
+            measurementChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Temperature (°C)',
+                            data: tempData,
+                            borderColor: '#f43f5e',
+                            backgroundColor: 'rgba(244,63,94,0.1)',
+                            tension: 0.4,
+                            borderWidth: 3,
+                        },
+                        {
+                            label: 'Humidity (%)',
+                            data: humidityData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59,130,246,0.1)',
+                            tension: 0.4,
+                            borderWidth: 3,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                color: '#475569'
+                            },
+                            grid: {
+                                color: 'rgba(148,163,184,0.3)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#475569'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#1e293b'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        */
+
+        async function loadLastMeasurementInfo() {
+            try {
+                console.log('📁 Loading last measurement info...');
+                
+                // Ưu tiên lấy từ MongoDB
+                const response = await fetch('/api/enose/devices/measurements/files?limit=1', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) {
+                    console.error('❌ API Error:', response.status, response.statusText);
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('📁 API Response:', data);
+                
+                if (data.result && Array.isArray(data.result) && data.result.length > 0) {
+                    const lastMeasurement = data.result[0];
+                    const fileName = lastMeasurement.file_name || '--';
+                    
+                    console.log('✅ Found last measurement:', {
+                        file_name: fileName,
+                        started_at: lastMeasurement.started_at,
+                        status: lastMeasurement.status
+                    });
+                    
+                    document.getElementById('lastFileName').textContent = fileName;
+                    document.getElementById('lastMeasurementTime').textContent = 'Last updated: ' + (lastMeasurement.started_at ? new Date(lastMeasurement.started_at).toLocaleString('vi-VN') : '--');
+                    
+                    // Hiển thị nút download nếu có file
+                    const downloadBtn = document.getElementById('downloadFileBtn');
+                    if (fileName !== '--') {
+                        downloadBtn.style.display = 'block';
+                        downloadBtn.dataset.fileName = fileName;
+                        // Lưu start time nếu có
+                        if (lastMeasurement.started_at) {
+                            downloadBtn.dataset.startedAt = lastMeasurement.started_at;
+                        }
+                } else {
+                        downloadBtn.style.display = 'none';
+                    }
+                } else {
+                    console.warn('⚠️ No measurement files found, trying fallback...');
+                    
+                    // Fallback: Lấy từ control history
+                    try {
+                    const fallbackResponse = await fetch('/api/enose/control/measurement/last', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const fallbackData = await fallbackResponse.json();
+                        console.log('📁 Fallback response:', fallbackData);
+                        
+                        if (fallbackData.result && fallbackData.result.file_name) {
+                            document.getElementById('lastFileName').textContent = fallbackData.result.file_name;
+                            document.getElementById('lastMeasurementTime').textContent = 'Last updated: ' + (fallbackData.result.started_at ? new Date(fallbackData.result.started_at).toLocaleString('vi-VN') : '--');
+                        } else {
+                            console.warn('⚠️ No fallback data available');
+                            document.getElementById('lastFileName').textContent = '--';
+                            document.getElementById('lastMeasurementTime').textContent = 'Last updated: --';
+                        }
+                    } catch (fallbackError) {
+                        console.error('❌ Fallback error:', fallbackError);
+                        document.getElementById('lastFileName').textContent = '--';
+                        document.getElementById('lastMeasurementTime').textContent = 'Last updated: --';
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error loading last measurement:', error);
+                document.getElementById('lastFileName').textContent = '--';
+                document.getElementById('lastMeasurementTime').textContent = 'Last updated: --';
+            }
+        }
+        
+        async function loadMeasurementFiles() {
+            try {
+                const response = await fetch('/api/enose/devices/measurements/files?limit=5', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                // Có thể hiển thị danh sách files trong một modal hoặc dropdown
+                if (data.result && data.result.length > 0) {
+                    console.log('📁 Measurement files:', data.result);
+                    // Có thể cập nhật UI để hiển thị danh sách files nếu cần
+                }
+            } catch (error) {
+                console.error('Error loading measurement files:', error);
+            }
+        }
+
+        // Start measurement
+        function initStartMeasurementButton() {
+            const startBtn = document.getElementById('startMeasurementBtn');
+            if (!startBtn) {
+                console.error('❌ startMeasurementBtn not found!');
+                setTimeout(initStartMeasurementButton, 100); // Retry sau 100ms
+                return;
+            }
+            
+            // Remove existing listeners bằng cách clone
+            const newBtn = startBtn.cloneNode(true);
+            startBtn.parentNode.replaceChild(newBtn, startBtn);
+            
+            newBtn.addEventListener('click', async () => {
+            const btn = document.getElementById('startMeasurementBtn');
+            const statusContent = document.getElementById('statusContent');
+            
+            // Kiểm tra lại xem có measurement đang chạy không trước khi start
+            // Đảm bảo button không bị enable lại bởi checkActiveMeasurement
+            try {
+                const activeCheck = await fetch('/api/enose/devices/measurements/active', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const activeData = await activeCheck.json();
+                
+                if (activeData.result && activeData.result.active && activeData.result.measurement) {
+                    const measurement = activeData.result.measurement;
+                    // Chỉ block nếu measurement thực sự đang chạy (không phải completed/failed)
+                    if (measurement.status === 'started' || measurement.status === 'in_progress') {
+                        statusContent.textContent = `Đang có measurement đang chạy: ${measurement.file_name}. Vui lòng đợi hoàn thành.`;
+                        statusContent.style.color = '#dc2626';
+                        // Disable button và update UI
+            btn.disabled = true;
+                        btn.style.opacity = '0.6';
+                        btn.style.cursor = 'not-allowed';
+                        return; // Không cho phép start mới
+                    }
+                }
+            } catch (activeCheckError) {
+                console.warn('⚠️ Could not check active measurement before start:', activeCheckError);
+                // Tiếp tục nếu không check được
+            }
+            
+            // QUAN TRỌNG: Kiểm tra xem ESP32 có online không (có sensor data mới trong 2 phút)
+            // Chỉ cho phép start khi ESP32 đang bật và có dữ liệu gửi lên
+            try {
+                const selectedDeviceId = document.getElementById('deviceSelect')?.value;
+                if (selectedDeviceId) {
+                    const sensorCheck = await fetch(`/api/enose/devices/${selectedDeviceId}/airsense/latest`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const sensorData = await sensorCheck.json();
+                    
+                    if (sensorData.result && sensorData.result.success && sensorData.result.data) {
+                        const data = sensorData.result.data;
+                        const currentTime = Math.floor(Date.now() / 1000);
+                        const dataTimestamp = data.timestamp || 0;
+                        
+                        // QUAN TRỌNG: Validate timestamp - nếu là tương lai hoặc quá cũ, coi như offline
+                        const timestampDiff = Math.abs(currentTime - dataTimestamp);
+                        let ageSeconds = currentTime - dataTimestamp;
+                        
+                        // Nếu timestamp không hợp lệ (tương lai hoặc quá cũ > 1 giờ), coi như offline
+                        if (timestampDiff > 3600) {
+                            ageSeconds = 999999; // Force offline
+                        }
+                        
+                        const maxAgeSeconds = 2 * 60; // 2 phút
+                        
+                        if (ageSeconds > maxAgeSeconds || ageSeconds < 0) {
+                            // ESP32 không có sensor data mới trong 2 phút → chưa được khởi động hoặc đã tắt
+                            statusContent.textContent = `⚠️ ESP32 chưa được khởi động. Không có dữ liệu sensor trong ${Math.round(ageSeconds/60)} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị.`;
+                            statusContent.style.color = '#dc2626';
+                            btn.disabled = true;
+                            btn.style.opacity = '0.6';
+                            btn.style.cursor = 'not-allowed';
+                            btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
+                            return; // Không cho phép start
+                        }
+                    } else {
+                        // Không có sensor data → ESP32 chưa được khởi động
+                        statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
+                        statusContent.style.color = '#dc2626';
+                        btn.disabled = true;
+                        btn.style.opacity = '0.6';
+                        btn.style.cursor = 'not-allowed';
+                        btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
+                        return; // Không cho phép start
+                    }
+                }
+            } catch (deviceCheckError) {
+                console.warn('⚠️ Could not check device online status before start:', deviceCheckError);
+                // Nếu không check được, vẫn cho phép start (fallback)
+            }
+            
+            // Disable button ngay để tránh double-click
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Starting...';
+            statusContent.textContent = 'Starting measurement...';
+            
+            try {
+                const response = await fetch('/api/enose/control/measurement/start', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.result && data.result.success) {
+                    statusContent.textContent = `Measurement started: ${data.result.file_name}`;
+                    statusContent.style.color = '#16a34a';
+                    const fileName = data.result.file_name;
+                    document.getElementById('lastFileName').textContent = fileName;
+                    document.getElementById('lastMeasurementTime').textContent = 'Last updated: ' + new Date(data.result.started_at).toLocaleString();
+                    
+                    // Hiển thị nút download và lưu file name + start time
+                    const downloadBtn = document.getElementById('downloadFileBtn');
+                    downloadBtn.style.display = 'block';
+                    downloadBtn.dataset.fileName = fileName;
+                    downloadBtn.dataset.startedAt = data.result.started_at; // Lưu start time để fallback
+                    
+                    // Disable nút start và hiển thị thông báo đang đo
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.style.cursor = 'not-allowed';
+                    const activeAlert = document.getElementById('activeMeasurementAlert');
+                    const activeFileName = document.getElementById('activeMeasurementFileName');
+                    activeAlert.style.display = 'block';
+                    activeFileName.textContent = fileName;
+                    
+                    // Check lại active measurement sau 1 giây để đảm bảo sync
+                    setTimeout(checkActiveMeasurement, 1000);
+                } else {
+                    // Có lỗi từ backend
+                    const errorMessage = data.error?.message || data.result?.message || 'Failed to start measurement';
+                    
+                    // Kiểm tra xem có phải lỗi device offline không
+                    if (data.result && data.result.device_offline) {
+                        // ESP32 chưa được khởi động hoặc đã tắt
+                        if (data.result.no_sensor_data) {
+                            statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
+                        } else {
+                            const ageMinutes = data.result.last_sensor_data_age_seconds ? Math.round(data.result.last_sensor_data_age_seconds / 60) : 0;
+                            statusContent.textContent = `⚠️ ESP32 chưa được khởi động hoặc đã tắt. Không có dữ liệu sensor trong ${ageMinutes} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị trước khi bắt đầu đo.`;
+                        }
+                        statusContent.style.color = '#dc2626';
+                        // Giữ button disabled
+                        btn.disabled = true;
+                        btn.style.opacity = '0.6';
+                        btn.style.cursor = 'not-allowed';
+                    } else if (data.result && data.result.active_measurement) {
+                        // Nếu có active measurement, hiển thị thông tin chi tiết
+                        const active = data.result.active_measurement;
+                        statusContent.textContent = `Đang có measurement đang chạy: ${active.file_name} (${active.elapsed_minutes} phút). Vui lòng đợi hoàn thành.`;
+                        statusContent.style.color = '#dc3545';
+                        // Giữ button disabled
+                        btn.disabled = true;
+                        btn.style.opacity = '0.6';
+                        btn.style.cursor = 'not-allowed';
+                    } else {
+                        // Lỗi khác
+                        statusContent.textContent = errorMessage;
+                        statusContent.style.color = '#dc3545';
+                        // Enable lại button nếu không có measurement đang chạy
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                    }
+                    btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
+                }
+            } catch (error) {
+                statusContent.textContent = 'Error: ' + error.message;
+                statusContent.style.color = '#dc3545';
+                // Enable lại button nếu có lỗi
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.innerHTML = '<i class="bi bi-play-circle"></i> Start measurement';
+            } finally {
+                // Luôn check lại active measurement để sync UI
+                setTimeout(async () => {
+                    await checkActiveMeasurement();
+                }, 500);
+            }
+            });
+        }
+        
+        // Khởi tạo button khi DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                initStartMeasurementButton();
+            });
+        } else {
+            // DOM đã ready, gọi ngay
+            initStartMeasurementButton();
+        }
+        
+        // Download file button
+        document.getElementById('downloadFileBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('downloadFileBtn');
+            const fileName = btn.dataset.fileName;
+            
+            if (!fileName || fileName === '--') {
+                alert('No file available to download');
+                return;
+            }
+            
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Loading...';
+                
+                // Ưu tiên: Tải file trực tiếp từ ESP32 file server qua API proxy
+                // Đảm bảo file name có extension .csv
+                const fileNameWithExt = fileName.endsWith('.csv') ? fileName : `${fileName}.csv`;
+                
+                try {
+                    const fileUrl = `/api/enose/devices/files/download?file_name=${encodeURIComponent(fileNameWithExt)}`;
+                    console.log(`🔄 Downloading file from ESP32 via proxy: ${fileUrl}`);
+                    
+                    // Fetch file từ API proxy
+                    const fileResponse = await fetch(fileUrl, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    
+                    if (fileResponse.ok) {
+                        // Kiểm tra content type để đảm bảo là file CSV
+                        const contentType = fileResponse.headers.get('content-type');
+                        console.log(`✅ File downloaded successfully, content-type: ${contentType}`);
+                        
+                        // Tạo blob từ response
+                        const blob = await fileResponse.blob();
+                        
+                        // Tạo link download
+                        const link = document.createElement('a');
+                        const url = URL.createObjectURL(blob);
+                        link.href = url;
+                        link.download = fileNameWithExt;
+                        link.style.visibility = 'hidden';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        
+                        btn.innerHTML = '<i class="bi bi-download"></i> Download CSV';
+                        btn.disabled = false;
+                        console.log(`✅ File downloaded to local machine: ${fileNameWithExt}`);
+                        return; // Thành công, không cần fallback
+                    } else {
+                        // Thử parse error message
+                        let errorMessage = 'Unknown error';
+                        try {
+                            const errorData = await fileResponse.json();
+                            errorMessage = errorData.message || errorData.error || 'Unknown error';
+                        } catch (e) {
+                            errorMessage = `HTTP ${fileResponse.status}: ${fileResponse.statusText}`;
+                        }
+                        console.warn(`⚠️ Failed to download from ESP32 (HTTP ${fileResponse.status}):`, errorMessage);
+                        // Tiếp tục với fallback (tạo từ MongoDB)
+                    }
+                } catch (proxyError) {
+                    console.error('❌ Proxy download error:', proxyError);
+                    console.warn('⚠️ Falling back to MongoDB data generation');
+                    // Tiếp tục với fallback (tạo từ MongoDB)
+                }
+                
+                // Fallback: Tạo file từ MongoDB (sensor data) - cần lấy tất cả data của file này
+                // Tạm thời dùng API getSensorDataByTimeRange với thời gian từ khi file được tạo
+                // Hoặc có thể lấy từ measurement file detail để biết thời gian bắt đầu
+                const measurementDetailRes = await fetch(`/api/devices/measurements/files/${encodeURIComponent(fileName)}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!measurementDetailRes.ok) {
+                    throw new Error('Failed to fetch measurement details');
+                }
+                
+                const measurementDetail = await measurementDetailRes.json();
+                let startTime = measurementDetail.result?.started_at || measurementDetail.result?.created_at;
+                
+                // Fallback: nếu không có trong MongoDB, thử lấy từ dataset (đã lưu khi start)
+                if (!startTime && btn.dataset.startedAt) {
+                    startTime = btn.dataset.startedAt;
+                    console.log('⚠️ Using fallback start time from dataset');
+                }
+                
+                if (!startTime) {
+                    throw new Error('Could not determine measurement start time. Please wait for measurement to complete or refresh the page.');
+                }
+                
+                // Lấy sensor data từ thời điểm bắt đầu đến hiện tại (nếu đang đo) hoặc +40 phút (nếu đã xong)
+                const startDate = new Date(startTime);
+                const isActive = measurementDetail.result?.status === 'started' || measurementDetail.result?.status === 'in_progress';
+                const endDate = isActive 
+                    ? new Date() // Nếu đang đo, lấy đến hiện tại
+                    : (measurementDetail.result?.completed_at 
+                        ? new Date(measurementDetail.result.completed_at) 
+                        : new Date(startDate.getTime() + 40 * 60 * 1000)); // Fallback: +40 phút
+                
+                const sensorDataRes = await fetch(`/api/devices/data/time-range?start_time=${startDate.toISOString()}&end_time=${endDate.toISOString()}&limit=10000`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!sensorDataRes.ok) {
+                    throw new Error('Failed to fetch sensor data');
+                }
+                
+                const sensorData = await sensorDataRes.json();
+                
+                if (sensorData.result && sensorData.result.length > 0) {
+                    // Nhóm dữ liệu theo timestamp để tạo CSV rows
+                    const dataByTimestamp = {};
+                    
+                    sensorData.result.forEach(item => {
+                        const timestamp = item.created_at || item.timestamp;
+                        if (!dataByTimestamp[timestamp]) {
+                            dataByTimestamp[timestamp] = {
+                                timestamp: timestamp,
+                                temperature: '',
+                                humidity: '',
+                                adc: ['', '', '', '', '', '', '', '']
+                            };
+                        }
+                        
+                        if (item.data_type === 'temperature') {
+                            dataByTimestamp[timestamp].temperature = item.value || '';
+                        } else if (item.data_type === 'humidity') {
+                            dataByTimestamp[timestamp].humidity = item.value || '';
+                        } else if (item.data_type && item.data_type.startsWith('mems')) {
+                            const memsIndex = parseInt(item.data_type.replace('mems', '')) - 1;
+                            if (memsIndex >= 0 && memsIndex < 8) {
+                                // Ưu tiên adc_value, nếu không có thì dùng value
+                                dataByTimestamp[timestamp].adc[memsIndex] = item.adc_value !== undefined ? item.adc_value : (item.value || '');
+                            }
+                        }
+                    });
+                    
+                    // Nếu đang đo và chưa có nhiều data, thêm thông báo
+                    if (isActive && Object.keys(dataByTimestamp).length < 10) {
+                        console.log('⚠️ Measurement is still in progress, downloading partial data');
+                    }
+                    
+                    // Tạo CSV content
+                    let csvContent = 'TimeStamp,Temperature,Humidity,EtOH3,EtOH4,EtOH5,EtOH6,EtOH1,EtOH2,VOC1,VOC2\n';
+                    
+                    // Sort theo timestamp
+                    const sortedTimestamps = Object.keys(dataByTimestamp).sort();
+                    sortedTimestamps.forEach(ts => {
+                        const row = dataByTimestamp[ts];
+                        csvContent += `${row.timestamp},${row.temperature},${row.humidity},${row.adc.join(',')}\n`;
+                    });
+                    
+                    // Download file
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    btn.innerHTML = '<i class="bi bi-download"></i> Download CSV';
+                } else {
+                    // Không dùng alert để tránh chặn tương tác, chỉ log và hiển thị thông báo nhẹ nhàng
+                    console.warn('⚠️ No sensor data found for this measurement file:', fileName);
+                    // Hiển thị thông báo nhẹ nhàng bằng cách cập nhật status (nếu có)
+                    const statusContent = document.getElementById('statusContent');
+                    if (statusContent && !statusContent.textContent.includes('Đang đo')) {
+                        const originalText = statusContent.textContent;
+                        statusContent.textContent = '⚠️ Không có dữ liệu sensor cho file này';
+                        statusContent.style.color = '#f59e0b'; // Orange color
+                        // Tự động quay về trạng thái ban đầu sau 3 giây
+                        setTimeout(() => {
+                            statusContent.textContent = originalText;
+                            statusContent.style.color = '#16a34a'; // Green color
+                        }, 3000);
+                    }
+                    btn.innerHTML = '<i class="bi bi-download"></i> Download CSV';
+                }
+            } catch (error) {
+                console.error('Error downloading file:', error);
+                // Không dùng alert để tránh chặn tương tác, chỉ log và hiển thị thông báo nhẹ nhàng
+                const statusContent = document.getElementById('statusContent');
+                if (statusContent && !statusContent.textContent.includes('Đang đo')) {
+                    const originalText = statusContent.textContent;
+                    statusContent.textContent = '⚠️ Lỗi khi tải file: ' + error.message;
+                    statusContent.style.color = '#dc2626'; // Red color
+                    // Tự động quay về trạng thái ban đầu sau 3 giây
+                    setTimeout(() => {
+                        statusContent.textContent = originalText;
+                        statusContent.style.color = '#16a34a'; // Green color
+                    }, 3000);
+                }
+                btn.innerHTML = '<i class="bi bi-download"></i> Download CSV';
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // Format bytes
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Mở modal WiFi config
+        function openWifiConfigModal() {
+            const modal = document.getElementById('wifiConfigModal');
+            if (modal) {
+                modal.classList.add('show');
+                // Reload iframe để đảm bảo kết nối WebSocket mới
+                const iframe = document.getElementById('wifiConfigIframe');
+                if (iframe) {
+                    iframe.src = 'http://192.168.4.1/wifi-config';
+                }
+            }
+        }
+
+        // Đóng modal WiFi config
+        function closeWifiConfigModal() {
+            const modal = document.getElementById('wifiConfigModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Đóng modal khi click bên ngoài
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('wifiConfigModal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeWifiConfigModal();
+                    }
+                });
+            }
+        });
+
+        // Initial load - Đảm bảo DOM đã ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                loadDevices();
+                loadDashboardData();
+                // Check device online ngay khi load trang
+                setTimeout(checkDeviceOnlineAndUpdateUI, 1000);
+            });
+        } else {
+            loadDevices();
+            loadDashboardData();
+            // Check device online ngay khi load trang
+            setTimeout(checkDeviceOnlineAndUpdateUI, 1000);
+        }
+        
+        // Auto-refresh mỗi 5 giây để cập nhật dữ liệu real-time từ MongoDB
+        // (Status, storage, etc. - không cần realtime như sensor data)
+        setInterval(loadDashboardData, 5000);
+        
+        // Hàm kiểm tra ESP32 online và cập nhật UI (ẩn dữ liệu nếu offline)
+        async function checkDeviceOnlineAndUpdateUI() {
+            try {
+                const selectedDeviceId = document.getElementById('deviceSelect')?.value;
+                if (!selectedDeviceId) {
+                    // Nếu không có device được chọn, thử lấy device đầu tiên
+                    return;
+                }
+                
+                const statusContent = document.getElementById('statusContent');
+                const startBtn = document.getElementById('startMeasurementBtn');
+                const tempEl = document.getElementById('temperature');
+                const humEl = document.getElementById('humidity');
+                const wifiSignalEl = document.getElementById('wifiSignal');
+                
+                if (!statusContent || !startBtn || !tempEl || !humEl || !wifiSignalEl) {
+                    return; // DOM chưa ready
+                }
+                
+                // Check device online bằng cách lấy latest sensor data
+                const sensorCheck = await fetch(`/api/enose/devices/${selectedDeviceId}/airsense/latest`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const sensorData = await sensorCheck.json();
+                
+                const currentTime = Math.floor(Date.now() / 1000);
+                let isOnline = false;
+                let ageSeconds = 0;
+                
+                if (sensorData.result && sensorData.result.success && sensorData.result.data) {
+                    const data = sensorData.result.data;
+                    const dataTimestamp = data.timestamp || 0;
+                    
+                    // Validate timestamp - nếu là tương lai hoặc quá cũ, coi như offline
+                    const timestampDiff = Math.abs(currentTime - dataTimestamp);
+                    ageSeconds = currentTime - dataTimestamp;
+                    
+                    // Nếu timestamp không hợp lệ (tương lai hoặc quá cũ > 1 giờ), coi như offline
+                    if (timestampDiff > 3600) {
+                        ageSeconds = 999999; // Force offline
+                    }
+                    
+                    const maxAgeSeconds = 2 * 60; // 2 phút
+                    isOnline = (ageSeconds <= maxAgeSeconds && ageSeconds >= 0);
+                }
+                
+                // Cập nhật UI dựa trên trạng thái online/offline
+                if (!isOnline) {
+                    // ESP32 offline → ẩn dữ liệu và hiển thị thông báo
+                    tempEl.textContent = '--';
+                    humEl.textContent = '--';
+                    wifiSignalEl.textContent = '--';
+                    
+                    // Chỉ cập nhật status nếu không có measurement đang chạy
+                    if (!statusContent.textContent.includes('Đang đo') && !statusContent.textContent.includes('Đã hoàn thành')) {
+                        if (ageSeconds > 0 && ageSeconds < 999999) {
+                            statusContent.textContent = `⚠️ ESP32 chưa được khởi động. Không có dữ liệu sensor trong ${Math.round(ageSeconds/60)} phút gần đây.`;
+                        } else {
+                            statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor.';
+                        }
+                        statusContent.style.color = '#dc2626';
+                    }
+                    
+                    // Disable button nếu không có measurement đang chạy
+                    // (checkActiveMeasurement sẽ handle việc enable/disable khi có measurement)
+                    const activeRes = await fetch('/api/enose/devices/measurements/active', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const activeData = await activeRes.json();
+                    
+                    if (!activeData.result || !activeData.result.active) {
+                        startBtn.disabled = true;
+                        startBtn.style.opacity = '0.6';
+                        startBtn.style.cursor = 'not-allowed';
+                    }
+                }
+                // Nếu ESP32 online, dữ liệu sẽ được cập nhật bởi loadDashboardData() hoặc startAirSENSERefresh()
+                // Button sẽ được enable bởi checkActiveMeasurement() nếu không có measurement đang chạy
+            } catch (error) {
+                console.warn('⚠️ Could not check device online status:', error);
+                // Nếu không check được, không thay đổi UI (fallback)
+            }
+        }
+        
+        // Check active measurement và device online thường xuyên hơn (mỗi 2 giây) để cập nhật UI nhanh
+        setInterval(checkActiveMeasurement, 2000);
+        setInterval(checkDeviceOnlineAndUpdateUI, 2000); // Check device online và cập nhật UI
+        
+        // Refresh sensor data realtime sẽ được xử lý bởi startAirSENSERefresh() sau khi loadDeviceListFromAirSENSE() hoàn thành
+
+        // ========== FUNCTIONS ĐỌC TỪ COLLECTION 'sensor' CHUNG CỦA AIRSENSE ==========
+        
+        let currentDeviceId = null;
+        let airsenseDataInterval = null;
+
+        // Lấy danh sách devices từ collection 'sensor' (AirSENSE common collection)
+        async function loadDeviceListFromAirSENSE() {
+            try {
+                const response = await fetch('/api/enose/devices/airsense/devices', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await response.json();
+                
+                if (result.result && result.result.success && result.result.devices && result.result.devices.length > 0) {
+                    // Chọn device đầu tiên hoặc device được chọn
+                    currentDeviceId = result.result.devices[0].device_id;
+                    
+                    console.log('📱 Devices from AirSENSE collection:', result.result.devices);
+                    console.log('📱 Selected device:', currentDeviceId);
+                    
+                    // Cập nhật UI với danh sách devices (nếu có dropdown)
+                    const deviceSelect = document.getElementById('device-select');
+                    if (deviceSelect) {
+                        result.result.devices.forEach(device => {
+                            const option = document.createElement('option');
+                            option.value = device.device_id;
+                            option.textContent = `${device.device_id} (Last: ${device.last_seen ? new Date(device.last_seen).toLocaleString('vi-VN') : 'N/A'})`;
+                            deviceSelect.appendChild(option);
+                        });
+                        deviceSelect.value = currentDeviceId;
+                        
+                        // Thêm event listener để đổi device
+                        deviceSelect.addEventListener('change', (e) => {
+                            currentDeviceId = e.target.value;
+                            loadLatestSensorDataFromAirSENSE();
+                            loadMeasurementHistoryFromAirSENSE();
+                        });
+                    }
+                    
+                    // Bắt đầu load dữ liệu
+                    loadLatestSensorDataFromAirSENSE();
+                    loadMeasurementHistoryFromAirSENSE();
+                } else {
+                    console.warn('⚠️ Chưa có thiết bị nào có dữ liệu trong AirSENSE collection');
+                }
+            } catch (error) {
+                console.error('❌ Error loading device list from AirSENSE:', error);
+            }
+        }
+
+        // Lấy dữ liệu sensor mới nhất từ collection 'sensor' (AirSENSE common collection)
+        async function loadLatestSensorDataFromAirSENSE() {
+            if (!currentDeviceId) {
+                console.warn('⚠️ Chưa chọn device - currentDeviceId:', currentDeviceId);
+                // Thử load device list lại
+                await loadDeviceListFromAirSENSE();
+                if (!currentDeviceId) {
+                    console.warn('⚠️ Vẫn chưa có device sau khi load lại');
+                    return;
+                }
+            }
+            
+            console.log('📡 Loading sensor data for device:', currentDeviceId);
+            
+            try {
+                const response = await fetch(`/api/enose/devices/${currentDeviceId}/airsense/latest`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) {
+                    console.error('❌ API Error:', response.status, response.statusText);
+                    return;
+                }
+                
+                const result = await response.json();
+                
+                // Debug: log response để kiểm tra format
+                console.log('📡 API Response:', JSON.stringify(result, null, 2));
+                
+                // Kiểm tra cả 2 format: result.result.data và result.data
+                let data = null;
+                if (result.result && result.result.success && result.result.data) {
+                    data = result.result.data;
+                } else if (result.success && result.data) {
+                    data = result.data;
+                } else if (result.result && result.result.data) {
+                    // Format: { result: { data: {...} } }
+                    data = result.result.data;
+                } else if (result.data) {
+                    // Format: { data: {...} }
+                    data = result.data;
+                }
+                
+                if (data) {
+                    // QUAN TRỌNG: Kiểm tra timestamp - chỉ cập nhật nếu dữ liệu gần đây (trong 30 giây)
+                    // Tránh cập nhật với dữ liệu cũ khi ESP32 đã tắt
+                    const dataTimestamp = data.timestamp ? (typeof data.timestamp === 'number' ? data.timestamp : new Date(data.timestamp).getTime() / 1000) : null;
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const maxAge = 30; // 30 giây
+                    
+                    if (dataTimestamp && (currentTime - dataTimestamp) > maxAge) {
+                        // Dữ liệu quá cũ (> 30 giây) → không cập nhật, có thể ESP32 đã tắt
+                        logThrottle('old_sensor_data', () => 
+                            `⚠️ Sensor data quá cũ (${Math.round(currentTime - dataTimestamp)}s) - ESP32 có thể đã tắt, không cập nhật UI`
+                        );
+                        return; // Không cập nhật UI với dữ liệu cũ
+                    }
+                    
+                    console.log('📊 Parsed data:', {
+                        temperature: data.temperature,
+                        humidity: data.humidity,
+                        adc: data.adc,
+                        adc_count: data.adc ? data.adc.length : 0,
+                        age: dataTimestamp ? Math.round(currentTime - dataTimestamp) : 'unknown'
+                    });
+                    
+                    // Cập nhật Temperature
+                    const tempEl = document.getElementById('temperature');
+                    if (tempEl) {
+                        if (data.temperature !== null && data.temperature !== undefined && !isNaN(data.temperature)) {
+                            tempEl.textContent = parseFloat(data.temperature).toFixed(1);
+                            console.log('✅ Updated temperature:', parseFloat(data.temperature).toFixed(1));
+                        } else {
+                            tempEl.textContent = '--';
+                            console.warn('⚠️ Temperature is null/undefined/NaN:', data.temperature);
+                        }
+                    } else {
+                        console.error('❌ Temperature element not found');
+                    }
+                    
+                    // Cập nhật Humidity
+                    const humEl = document.getElementById('humidity');
+                    if (humEl) {
+                        if (data.humidity !== null && data.humidity !== undefined && !isNaN(data.humidity)) {
+                            humEl.textContent = parseFloat(data.humidity).toFixed(0);
+                            console.log('✅ Updated humidity:', parseFloat(data.humidity).toFixed(0));
+                        } else {
+                            humEl.textContent = '--';
+                            console.warn('⚠️ Humidity is null/undefined/NaN:', data.humidity);
+                        }
+                    } else {
+                        console.error('❌ Humidity element not found');
+                    }
+                    
+                    // Cập nhật MEMS sensors CHỈ KHI ĐANG ĐO (không cập nhật khi đã hoàn thành)
+                    // Kiểm tra xem có measurement đang chạy không
+                    try {
+                        const activeMeasurementRes = await fetch('/api/enose/devices/measurements/active', {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        const activeMeasurement = await activeMeasurementRes.json();
+                        
+                        const isMeasuring = activeMeasurement.result && activeMeasurement.result.active === true;
+                        
+                        // Debug log
+                        console.log('🔍 Measurement status check:', {
+                            isMeasuring: isMeasuring,
+                            activeMeasurementResult: activeMeasurement.result,
+                            hasAdc: !!(data.adc && Array.isArray(data.adc)),
+                            adcLength: data.adc ? data.adc.length : 0,
+                            adcValues: data.adc ? data.adc.slice(0, 3) : null // Log 3 giá trị đầu
+                        });
+                        
+                        if (isMeasuring) {
+                            // Đang đo: hiển thị MEMS sensors
+                            // QUAN TRỌNG: Chỉ cập nhật nếu có ít nhất 1 ADC value khác null
+                            // Nếu tất cả đều null, giữ lại giá trị cũ (không reset về "--")
+                            let hasValidADC = false;
+                            let adcArray = null;
+                            
+                            if (data.adc && Array.isArray(data.adc)) {
+                                // Kiểm tra xem có ít nhất 1 giá trị khác null không
+                                hasValidADC = data.adc.some(value => value !== null && value !== undefined);
+                                adcArray = data.adc;
+                                console.log('📊 Found ADC array:', {
+                                    length: adcArray.length,
+                                    hasValid: hasValidADC,
+                                    values: adcArray
+                                });
+                            } else if (data.adc_values && Array.isArray(data.adc_values)) {
+                                hasValidADC = data.adc_values.some(value => value !== null && value !== undefined);
+                                adcArray = data.adc_values;
+                                console.log('📊 Found ADC values array:', {
+                                    length: adcArray.length,
+                                    hasValid: hasValidADC,
+                                    values: adcArray
+                                });
+                            } else {
+                                console.warn('⚠️ No ADC array found in data:', {
+                                    hasAdc: !!data.adc,
+                                    hasAdcValues: !!data.adc_values,
+                                    dataKeys: Object.keys(data)
+                                });
+                            }
+                            
+                            if (hasValidADC && adcArray) {
+                                // Có ít nhất 1 ADC value hợp lệ → cập nhật
+                                const sensorDataForMEMS = adcArray.map((value, index) => ({
+                                    data_type: `mems${index + 1}`,
+                                    value: value,
+                                    adc_value: value
+                                }));
+                                displayMEMSSensors(sensorDataForMEMS);
+                                console.log('✅ Updated MEMS sensors with valid ADC values:', sensorDataForMEMS);
+                            } else {
+                                // Tất cả ADC values đều null → giữ lại giá trị cũ (không reset)
+                                // Chỉ log để debug, không cập nhật UI
+                                logThrottle(`no_adc_keep_old_${currentDeviceId}`, () => 
+                                    `⚠️ All ADC values are null, keeping previous values displayed. isMeasuring=${isMeasuring}, hasAdc=${!!data.adc}, adcArray=${adcArray}`
+                                );
+                            }
+                        } else {
+                            // Không đang đo: reset MEMS về "--"
+                            console.log('🔄 Not measuring, resetting MEMS sensors');
+                            resetMEMSSensors();
+                }
+            } catch (error) {
+                        console.warn('⚠️ Error checking active measurement for MEMS display:', error);
+                        // Nếu có lỗi, vẫn reset MEMS về "--" để an toàn
+                        resetMEMSSensors();
+                    }
+                    
+                    // Cập nhật timestamp
+                    const timeEl = document.getElementById('last-update-time');
+                    if (timeEl && data.timestamp_iso) {
+                        timeEl.textContent = 'Last update: ' + new Date(data.timestamp_iso).toLocaleString('vi-VN');
+                    }
+                    
+                    console.log('✅ Sensor data updated from AirSENSE:', data);
+                } else {
+                    console.warn('⚠️ Không có dữ liệu mới từ AirSENSE:', result.result?.message);
+                }
+            } catch (error) {
+                console.error('❌ Error loading latest sensor data from AirSENSE:', error);
+            }
+        }
+
+        // Lấy lịch sử đo từ collection 'sensor' (AirSENSE common collection)
+        async function loadMeasurementHistoryFromAirSENSE() {
+            if (!currentDeviceId) {
+                return;
+            }
+            
+            try {
+                const limit = 100; // Số điểm dữ liệu muốn lấy
+                const response = await fetch(`/api/devices/${currentDeviceId}/airsense/history?limit=${limit}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const result = await response.json();
+                
+                if (result.result && result.result.success && result.result.data && result.result.data.length > 0) {
+                    // Cập nhật chart với dữ liệu mới - Commented out
+                    // updateChartsFromAirSENSE(result.result.data);
+                }
+            } catch (error) {
+                console.error('❌ Error loading measurement history from AirSENSE:', error);
+            }
+        }
+
+        // Cập nhật charts với dữ liệu từ AirSENSE collection - Commented out
+        /*
+        function updateChartsFromAirSENSE(historyData) {
+            // Nếu bạn đang dùng Chart.js
+            if (typeof temperatureChart !== 'undefined' && temperatureChart) {
+                const labels = historyData.map(d => new Date(d.timestamp_iso).toLocaleTimeString('vi-VN'));
+                const temps = historyData.map(d => d.temperature);
+                const hums = historyData.map(d => d.humidity);
+                
+                temperatureChart.data.labels = labels;
+                if (temperatureChart.data.datasets[0]) {
+                    temperatureChart.data.datasets[0].data = temps;
+                }
+                if (temperatureChart.data.datasets[1]) {
+                    temperatureChart.data.datasets[1].data = hums;
+                }
+                temperatureChart.update('none'); // 'none' để không có animation
+            }
+            
+            // Cập nhật ADC chart nếu có
+            if (typeof adcChart !== 'undefined' && adcChart && historyData.length > 0) {
+                const lastData = historyData[historyData.length - 1];
+                
+                if (lastData.adc) {
+                    adcChart.data.labels = ['ADC0', 'ADC1', 'ADC2', 'ADC3', 'ADC4', 'ADC5', 'ADC6', 'ADC7'];
+                    if (adcChart.data.datasets[0]) {
+                        adcChart.data.datasets[0].data = lastData.adc;
+                    }
+                    adcChart.update('none');
+                }
+            }
+        }
+        */
+
+        // Auto-refresh dữ liệu từ AirSENSE collection
+        function startAirSENSERefresh() {
+            if (airsenseDataInterval) {
+                clearInterval(airsenseDataInterval);
+            }
+            
+            airsenseDataInterval = setInterval(() => {
+                loadLatestSensorDataFromAirSENSE();
+                // Có thể refresh history mỗi 30 giây
+                if (Math.random() < 0.2) { // 20% chance mỗi lần refresh
+                    loadMeasurementHistoryFromAirSENSE();
+                }
+            }, 5000); // 5 giây
+        }
+
+        // Khởi tạo khi trang load - Load từ AirSENSE collection
+        // Đảm bảo load device list trước, sau đó mới start refresh
+        loadDeviceListFromAirSENSE().then(() => {
+            // Sau khi có device list và currentDeviceId đã được set, start refresh sensor data
+            if (currentDeviceId) {
+                startAirSENSERefresh();
+            } else {
+                console.warn('⚠️ Không có device để load sensor data');
+            }
+        }).catch(error => {
+            console.error('❌ Error loading device list:', error);
+        });
+
+        // Cleanup khi trang unload
+        window.addEventListener('beforeunload', function() {
+            if (airsenseDataInterval) {
+                clearInterval(airsenseDataInterval);
+            }
+        });
+    </script>
+    <% include ../Layout/footer.ejs %>
+</body>
+</html>

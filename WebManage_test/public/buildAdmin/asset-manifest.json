@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c9a607cc.chunk.css",
+    "main.js": "/static/js/main.dfbbcafa.chunk.js",
+    "main.js.map": "/static/js/main.dfbbcafa.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.3f9585af.js",
+    "runtime-main.js.map": "/static/js/runtime-main.3f9585af.js.map",
+    "static/css/2.bbea7973.chunk.css": "/static/css/2.bbea7973.chunk.css",
+    "static/js/2.7dd83a63.chunk.js": "/static/js/2.7dd83a63.chunk.js",
+    "static/js/2.7dd83a63.chunk.js.map": "/static/js/2.7dd83a63.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.bbea7973.chunk.css.map": "/static/css/2.bbea7973.chunk.css.map",
+    "static/css/main.c9a607cc.chunk.css.map": "/static/css/main.c9a607cc.chunk.css.map",
+    "static/js/2.7dd83a63.chunk.js.LICENSE.txt": "/static/js/2.7dd83a63.chunk.js.LICENSE.txt",
+    "static/media/DecorLogin.121fbdd7.png": "/static/media/DecorLogin.121fbdd7.png",
+    "static/media/airsense.7e06beaa.jpg": "/static/media/airsense.7e06beaa.jpg",
+    "static/media/chat-icon.f032be1d.svg": "/static/media/chat-icon.f032be1d.svg",
+    "static/media/logo-no-bg.4d881dc9.svg": "/static/media/logo-no-bg.4d881dc9.svg",
+    "static/media/monster.33e905fe.png": "/static/media/monster.33e905fe.png",
+    "static/media/notification.aa8f8c40.mp3": "/static/media/notification.aa8f8c40.mp3"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3f9585af.js",
+    "static/css/2.bbea7973.chunk.css",
+    "static/js/2.7dd83a63.chunk.js",
+    "static/css/main.c9a607cc.chunk.css",
+    "static/js/main.dfbbcafa.chunk.js"
+  ]
+}

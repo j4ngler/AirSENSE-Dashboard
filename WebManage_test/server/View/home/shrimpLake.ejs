@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="zxx"> 
+<% include ../Layout/header.ejs %>
+<link href="/old/resource/airsense.vn/wp-content/themes/flatsome/map.css" rel="stylesheet">
+<body
+    class="home page-template page-template-page-home page-template-page-home-php page page-id-55 lightbox nav-dropdown-has-arrow">
+
+    <a class="skip-link screen-reader-text" href="#main">Skip to content</a>
+
+    <div id="wrapper">
+        <% include ../Layout/topbar.ejs %>
+        
+  
+              <main id="main" class="site-main" role="main">
+                    <div class="row" style="margin: 0px;">
+                        <div class="map col-lg-12">
+                            <div id="Map">
+                            </div>
+                        </div>
+              
+        
+        <main id="main-map" class="">
+            <div id="primary" class="content-area">
+                <main id="main" class="site-main" role="main">
+                    <div class="gap-element" style="display:block; height:auto; padding-top:31px" class="clearfix">
+                    </div>
+                    <div class="gap-element chart-title" style="display:block; height:auto; padding-top:31px" class="clearfix">
+                    </div>
+                    <div class="container section-title-container">
+                        <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
+                                style="font-size:100%;">Biểu đồ dữ liệu IoT đầm tôm</span><b></b></h3>
+                    </div><!-- .section-title -->
+                    <div class="row text-center" id="row-833095485">
+                        <div>
+                            <div class="select-station">
+                                <div class="pick">
+                                    <label> Danh sách trạm </label>  
+                                    <select id="selectTable" class="date-input" style="width: 200px;" ></select>
+                                </div>
+                                <div class="pick">
+                                    <label class="label-header">From</label> 
+                                    <input type="datetime-local" class="date-input" id="fromTime" >
+                                </div>
+                                <div class="pick"> 
+                                    <label class="label-header">To </label>
+                                    <input type="datetime-local" class="date-input" id="toTime">
+                                </div>
+                                <div class="pick"> 
+                                    <label class="label-header">&nbsp;</label>
+                                    <button id="view-chart" type="button" class="button-chart">Xem biểu đồ</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                      
+                        <div class="no-station">Vui lòng chọn trạm để xem biểu đồ</div>
+                        <div class="no-data">Không có dữ liệu</div>
+                        <div class="dashboard">
+                            <div class="PM2p5 block-chart">
+                                <canvas id="ecSensor_value" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+                            <div class="PM2p5 block-chart">
+                                <canvas id="phSensor_value" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+                            <div class="PM10 block-chart">
+                                <canvas id="doSensor_value" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+                        
+                            <div class="PM1 block-chart">
+                                <canvas id="temperature_value" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+                            <div class="Temperature block-chart">
+                                <canvas id="ecSensor_mv" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+                        
+                            <div class="Humidity block-chart">
+                                <canvas id="phSensor_mv" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+
+                            <div class="Humidity block-chart">
+                                <canvas id="doSensor_mv" style="width: 100%;height: 100%;"></canvas>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row custom-chart" id="row-2103991453">
+                        <div class="col small-12 large-12">
+                            <div class="col-inner">
+                                <div id="thupa_chart_PM"></div>
+                            </div>
+                        </div>
+
+                        <style scope="scope">
+
+                        </style>
+                    </div>
+                    <div class="row custom-chart" id="row-298376257">
+                        <div class="col medium-6 small-12 large-6">
+                            <div class="col-inner">
+                                <div id="thupa_chart_Humidityity"></div>
+                            </div>
+                        </div>
+                        <div class="col medium-6 small-12 large-6">
+                            <div class="col-inner">
+                                <div id="thupa_chart_temperature"></div>
+                            </div>
+                        </div>
+
+                        <style scope="scope">
+
+                        </style>
+                    </div>
+                    <div class="gap-element" style="display:block; height:auto; padding-top:20px" class="clearfix">
+                    </div>
+
+
+                    
+                    
+                    <div class="gap-element" style="display:block; height:auto; padding-top:20px" class="clearfix">
+                    </div>
+                    
+
+                    <div class="gap-element" style="display:block; height:auto; padding-top:20px" class="clearfix">
+                    </div>
+                    <div class="container section-title-container">
+                        <h3 class="section-title section-title-center"><b></b><span class="section-title-main"
+                                style="font-size:150%;">Đối tác</span><b></b></h3>
+                    </div><!-- .section-title -->
+
+                    <!-- Section Partner-->
+                    <div class="section-partner-container">
+                        <div class="row line-1">
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/US.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/alumi.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/Screen-Shot-2020-05-02-at-8.50.46-PM.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/Screen-Shot-2020-05-02-at-8.52.33-PM.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row line-2">
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/Hust.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/logo_set.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/SAMI.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row line-3">
+                            <div class="col-4 text-center my-auto">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/live_learn-1024x241.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/THX.png" alt="">
+                            </div>
+                            <div class="col-4 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/USAID_Horiz_Vietnamese_RGB_2-Color-1024x396.png" alt="">
+                            </div>
+                        </div>
+
+                        <div class="row line-4">
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/CENSTED.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/cpas.jpg" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/VEFFA-logo3.png" alt="">
+                            </div>
+                            <div class="col-3 my-auto text-center">
+                                <img class="img-fluid" src="old/resource/airsense.vn/wp-content/uploads/2020/05/aseanstem_240.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gap-element" style="display:block; height:auto; padding-top:40px" class="clearfix">
+                    </div>
+                </main>
+
+            </div>
+
+
+
+
+        </main>
+        <!-- #main -->
+
+        <% include ../Layout/footer.ejs %>
+
+    </div>
+
+
+    <script type="text/javascript">
+        window['ninja_table_instance_0'] = { "table_id": "64", "title": "Ch\u1ea5t l\u01b0\u1ee3ng kh\u00f4ng kh\u00ed", "columns": [{ "name": "gia_tr\u1ecb_aqi", "title": "Gi\u00e1 tr\u1ecb AQI", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_0", "ninja_clmn_nm_gia_tr\u1ecb_aqi"], "filterable": true, "sortable": false }, { "name": "danh_gia", "title": "\u0110\u00e1nh gi\u00e1", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_1", "ninja_clmn_nm_danh_gia"], "filterable": true, "sortable": false }, { "name": "anh_huong", "title": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_2", "ninja_clmn_nm_anh_huong"], "filterable": true, "sortable": false }, { "name": "mau_sac", "title": "M\u00e0u s\u1eafc", "breakpoints": "", "type": "html", "visible": true, "classes": ["ninja_column_3", "ninja_clmn_nm_mau_sac"], "filterable": true, "sortable": false }], "original_columns": [{ "name": "Gi\u00e1 tr\u1ecb AQI", "key": "gia_tr\u1ecb_aqi", "breakpoints": "", "data_type": "text", "dateFormat": "", "header_html_content": "", "enable_html_content": "false", "contentAlign": "", "textAlign": "" }, { "name": "\u0110\u00e1nh gi\u00e1", "key": "danh_gia", "breakpoints": "", "data_type": "text", "dateFormat": "", "header_html_content": "", "enable_html_content": "false", "contentAlign": "", "textAlign": "" }, { "name": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "key": "anh_huong", "breakpoints": "", "data_type": "textarea", "dateFormat": "", "header_html_content": "", "enable_html_content": "false" }, { "name": "M\u00e0u s\u1eafc", "key": "mau_sac", "breakpoints": "", "data_type": "html", "dateFormat": "", "header_html_content": "", "enable_html_content": "false" }], "settings": { "filtering": false, "togglePosition": "first", "paging": false, "pager": false, "page_sizes": ["10", "20", "50", "100"], "sorting": true, "default_sorting": "old_first", "defualt_filter": false, "defualt_filter_column": null, "expandFirst": false, "expandAll": false, "i18n": { "search_in": "Search in", "search": "Search", "no_result_text": "No Result Found" }, "shouldNotCache": "no", "skip_rows": 0, "limit_rows": 0, "use_parent_width": false, "info": "", "enable_html_cache": null, "html_caching_minutes": null, "has_formula": "no" }, "render_type": "ajax_table", "custom_css": { "ninja_column_0": [], "ninja_column_1": [], "ninja_column_2": [], "ninja_column_3": [] }, "instance_name": "ninja_table_instance_0", "table_version": "3.5.8", "provider": "default", "init_config": { "toggleColumn": "first", "cascade": true, "useParentWidth": false, "columns": [{ "name": "gia_tr\u1ecb_aqi", "title": "Gi\u00e1 tr\u1ecb AQI", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_0", "ninja_clmn_nm_gia_tr\u1ecb_aqi"], "filterable": true, "sortable": false }, { "name": "danh_gia", "title": "\u0110\u00e1nh gi\u00e1", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_1", "ninja_clmn_nm_danh_gia"], "filterable": true, "sortable": false }, { "name": "anh_huong", "title": "\u1ea2nh h\u01b0\u1edfng t\u1edbi s\u1ee9c kh\u1ecfe", "breakpoints": "", "type": "text", "visible": true, "classes": ["ninja_column_2", "ninja_clmn_nm_anh_huong"], "filterable": true, "sortable": false }, { "name": "mau_sac", "title": "M\u00e0u s\u1eafc", "breakpoints": "", "type": "html", "visible": true, "classes": ["ninja_column_3", "ninja_clmn_nm_mau_sac"], "filterable": true, "sortable": false }], "expandFirst": null, "expandAll": null, "empty": "No Result Found", "sorting": { "enabled": true }, "data_request_url": "http:\/\/airsense.vn\/wp-admin\/admin-ajax.php?action=wp_ajax_ninja_tables_public_action&table_id=64&target_action=get-all-data&default_sorting=old_first", "filtering": { "enabled": false, "delay": 1, "dropdownTitle": "Search in", "placeholder": "Search", "connectors": false, "ignoreCase": true }, "paging": { "enabled": false, "position": "right", "size": null, "container": "#footable_parent_64 .paging-ui-container", "countFormat": " " } } }           
+    </script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var wpcf7 = { "apiSettings": { "root": "http:\/\/airsense.vn\/wp-json\/contact-form-7\/v1", "namespace": "contact-form-7\/v1" }, "cached": "1" };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=5.1.5'></script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/inc/extensions/flatsome-live-search/flatsome-live-search.js?ver=3.5.3'></script>
+    <script type='text/javascript' src='/resource/airsense.vn/wp-includes/js/hoverIntent.min.js?ver=1.8.1'></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var flatsomeVars = { "ajaxurl": "http:\/\/airsense.vn\/wp-admin\/admin-ajax.php", "rtl": "", "sticky_height": "70" };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/assets/js/flatsome.js?ver=3.5.3'></script>
+    <script type='text/javascript' src='/resource/airsense.vn/wp-includes/js/wp-embed.min.js?ver=5.3.4'></script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/plugins/ninja-tables/public/libs/footable/js/footable.min.js?ver=3.1.5'></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var ninja_footables = { "ajax_url": "http:\/\/airsense.vn\/wp-admin\/admin-ajax.php", "tables": [], "ninja_version": "3.5.8", "i18n": { "search_in": "Search in", "search": "Search", "empty_text": "No Result Found" } };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/plugins/ninja-tables/assets/js/ninja-tables-footable.3.1.0.js?ver=3.5.8'></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var data = { "themeUrl": "http:\/\/airsense.vn\/wp-content\/themes\/flatsome" };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/assets/js/airsense.js?ver=1.1'></script>
+    <script type='text/javascript'>
+        /* <![CDATA[ */
+        var data = { "themeUrl": "http:\/\/airsense.vn\/wp-content\/themes\/flatsome" };
+/* ]]> */
+    </script>
+    <script type='text/javascript'
+        src='/resource/airsense.vn/wp-content/themes/flatsome/assets/js/google_chart.js?ver=1.1'></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script>
+
+        $("#fromTime").val(new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
+        $("#view-chart").click(function(){
+            var stringvalue=document.getElementById("selectTable").value;
+            if(stringvalue.length>1) {
+                gotoCheckData();
+            } 
+            else alert("Vui lòng chọn trạm để xem biểu đồ");
+                
+        });
+
+        $(document).click(function(event) {
+            //if you click on anything except the modal itself or the "open modal" link, close the modal
+            if (!$(event.target).closest("#popout, .detail-index-aqi").length ) {
+                $("body").find("#popout").animate({ right: -373 }, 'slow');
+            }
+        });
+        // var mname = localStorage.getItem("tocken_LVC");
+        var allInfoStation=null;
+        gotoCheckUserStorage();
+
+        // should display by some colors
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            // console.log('color', color);
+            color = '#3A0A6C';
+            return color;
+        }
+
+
+        function getConfig(arrayID,data,element,title,color) {
+
+            var itemDaraw=[];
+            for(var i=0;i<arrayID.length;i++){
+                let item=arrayID[i];
+                itemDaraw.push({
+                    label: data[item].nameStation,
+                    backgroundColor: color[i],
+                    borderColor: color[i],
+                    data: data[item].data,
+                    fill: false,
+                    showLine: true,
+                    borderWidth: 1,
+                });
+
+            }
+            var config = {
+                type: 'scatter',
+                data: {
+                    //labels: strtime,
+                    datasets: itemDaraw
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: title,
+                        position: 'top'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            distribution: 'linear',
+                            displayFormats: {
+                                quarter: 'MMM YYYY'
+                            }
+                        }],
+                        y: {
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: '%humi'
+                            },
+                        }
+                    },
+                    elements: {
+                        point:{
+                            radius: 0
+                        }
+                    },
+                    annotation: {
+                        annotations: [
+                            {
+                                drawTime: "afterDatasetsDraw",
+                                id: "up",
+                                type: "line",
+                                mode: "horizontal",
+                                scaleID: "y-axis-0",
+                                value: 20,
+                                borderColor: "red",
+                                borderWidth: 0,
+                                label: {
+                                    backgroundColor: "red",
+                                    content: "min",
+                                    enabled: false
+                                },
+                            },
+                            {
+                                drawTime: "afterDatasetsDraw",
+                                id: "low",
+                                type: "line",
+                                mode: "horizontal",
+                                scaleID: "y-axis-0",
+                                value: 10,
+                                borderColor: "blue",
+                                borderWidth: 0,
+                                label: {
+                                    backgroundColor: "red",
+                                    content: "max",
+                                    enabled: false
+                                },
+                            },
+                        ]
+                    }
+                },
+            };
+            return config;
+        }
+
+
+        var reset = 0;
+        function drawSensor(data){
+            $(".no-station").hide();
+            $(".no-data").hide();
+            $(".dashboard").show();
+            
+            let stationid = data.station;
+            var color=[];
+            if(data.data.length){
+                let arrayData={};
+                let arrayID=[];
+                let stationid = data.station;
+                for(let i=0; i<data.data.length; i++){
+                    let dataview=data.data[i];
+                    // let subTopic = dataview.topic.split('/');
+                    // console.log('.......hey Giang, notice that', stationid);
+                    if(arrayData[stationid]) { 
+                        // Covers 'undefined' as well
+                        arrayData[stationid].data.push(dataview);
+                    } 
+                    else {
+                        var  nameStation="";
+                        for(let j=0;j<allInfoStation.length;j++){
+                            // hey Giang, check name again later
+                            if(stationid==allInfoStation[j].station_id){
+                                nameStation=allInfoStation[j].title;
+                            }
+                        }
+                        color.push(getRandomColor());
+                        arrayID.push(stationid);
+                        arrayData[stationid]={nameStation:nameStation ,data:[]};
+                        arrayData[stationid].data.push(dataview);
+                    }   
+                }
+                // console.log('arrayData: ',arrayData);
+                // console.log('arrayID: ',arrayID);
+                drawSingleChart(arrayID,arrayData,'ecSensor_value', 'ecSensor_value',color);
+                drawSingleChart(arrayID,arrayData,'phSensor_value', 'phSensor_value',color);
+                drawSingleChart(arrayID,arrayData,'doSensor_value', 'doSensor_value',color);
+                drawSingleChart(arrayID,arrayData,'temperature_value', 'temperature_value',color);
+                drawSingleChart(arrayID,arrayData,'ecSensor_mv', 'ecSensor_mv',color);
+                drawSingleChart(arrayID,arrayData,'phSensor_mv', 'phSensor_mv',color);
+                drawSingleChart(arrayID,arrayData,'doSensor_mv', 'doSensor_mv',color);
+                reset = 1;
+            } 
+            else {
+                $(".no-data").show();
+                $(".dashboard").hide();
+                $(".no-station").hide();
+            }
+        }
+
+        function drawSingleChart(arrayID,data, title, property,color) {
+            var broad_data={};
+            for(var i=0;i<arrayID.length;i++){
+                let itemBroad=arrayID[i];
+                broad_data[itemBroad]={nameStation:data[itemBroad].nameStation ,data:[]};
+                for(let i=0; i<10; ++i) {
+                    broad_data[itemBroad].data.push()
+                }
+
+
+                broad_data[itemBroad].data = data[itemBroad].data.map(item => 
+                {
+                    if(item.content !== undefined && item.content[property] !== undefined)
+                    return data = {'x': new Date(item.time*1000), 'y': item.content[property]};
+                }
+                )
+            }
+
+            var config = getConfig(arrayID,broad_data,element,title,color);
+            var element = document.getElementById(property).getContext('2d');
+            // if(reset==1) {
+            //     window[property].data.datasets = config.data.datasets;
+            //     window[property].update();
+            // } 
+            // else 
+            window[property] = new Chart(element, config);
+            // console.log(window[property])
+            
+        }
+
+
+
+        function onSelectClick(){
+            if(stringvalue.length>1)
+                gotoCheckData();
+        }
+
+        loadAllContent();
+        function loadAllContent(){
+            var Link='/api/shrimp_lake/getMeasureStation';
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    success: function (loadcofig) {
+                        console.log(loadcofig);
+                        var showData='<option value="">None</option>';
+                        var groupID=[];
+                        var nameGroupID=[];
+                        allInfoStation=loadcofig.result;
+                        defaultStation = loadcofig.result.station_id;
+                        for(var k=0;k< allInfoStation.length;k++) {
+                            let v=allInfoStation[k];
+                            if(k===0) {
+                                showData+='<option selected value="'+v.station_id+'">'+v.title +'</option>';
+                            } else showData+='<option value="'+v.station_id+'">'+v.title +'</option>';
+                            
+                            // add group
+                            // if((v.id_group>0)&&(!groupID.includes(v.id_group)))
+                            // {
+                            //     groupID.push(v.id_group);
+                            //     nameGroupID.push(v.name_group);
+                            // }
+                            
+                        }
+
+                        for(var l=0;l< groupID.length;l++) {
+                            let dataChoice=groupID[l];
+                            var itemData="";
+                            for(var k=0;k< loadcofig.result.length;k++) {
+                                let v=loadcofig.result[k];
+                                if(v.id_group==dataChoice){
+                                    if(itemData.length>1) itemData+=","
+                                    itemData+=""+v.station_id+"";
+                                }   
+                            }
+                            showData+='<option value="'+itemData+'">'+nameGroupID[l] +'</option>';
+
+                        }
+                        $('#selectTable').html(showData);
+                        gotoCheckData();
+                        
+                    },
+                    error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+        }
+
+        function gotoCheckData(isShowLoader){  
+            console.log("go to check data");
+            var data=document.getElementById("selectTable").value;
+            var Link='/api/shrimp_lake/dataSensor';
+            var fromTime = new Date($('#fromTime').val());
+            var now = new Date().getTime()/1000;
+            if(fromTime==undefined || now-fromTime/1000>3*24*60*60) {
+                $("#fromTime").val(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toJSON().slice(0,19));
+            }
+            var toTime = new Date($('#toTime').val());
+            if(isNaN(fromTime.getFullYear())) {
+                fromTime = undefined;
+            } 
+            else fromTime = fromTime.getTime()/1000;
+            if(isNaN(toTime.getFullYear())) {
+                toTime = undefined;
+            } 
+            else toTime = toTime.getTime()/1000;
+            
+
+
+            
+            document.getElementsByClassName("dashboard")[0].style.display = "none";
+            $.ajax({    type: 'post',
+                        method: 'POST',
+                        url: Link,
+                        data: JSON.stringify( {stationID:data, fromTime: fromTime, toTime: toTime}), // body data type must match "Content-Type" header
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        dataType: 'json',
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Beard ' + localStorage.getItem('LVC_tocken'),
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                success: function (loadcofig) {
+
+
+                    console.log('time to recive..............', new Date());
+
+                    // hideLoader();
+                    document.getElementsByClassName("dashboard")[0].style.display = "block";
+                    console.log('loadcofig: ',loadcofig);
+                    drawSensor(loadcofig);
+                },
+                error: function (loadcofig) {
+                    hideLoader();
+                    console.log('error');
+                    console.log(loadcofig);
+                }
+            });
+        }
+
+
+        var threshold = [];
+        // getThreshold();
+        // function getThreshold() {
+        //     var Link='/api/social/getThreshold';
+        //     $.ajax({
+        //         type: 'get',
+        //         dataType: 'json',
+        //         url: Link,
+        //         data: {},
+        //         success: function (result) {
+        //             threshold = result;
+        //             console.log('threshold: ', threshold);
+        //         },
+        //         error: function (err) {
+        //             console.log('error: ',err);
+        //         }
+        //     });
+        // }  
+
+        var selectedMarker = null;
+        //map
+        var mapObj=null;
+        var defaultLocation=[21.0277644,105.83415979999995];
+        // var defaultLocation=[7.539758, 109.748761];
+        var Mapconfig={
+            attributionControl:true,
+            center: defaultLocation,
+            // zoom:10
+            zoom:7
+        }
+
+        var UrlIcon1="/training_library/img/core-img/Maker.png";
+
+        function createMaker(LoLa,station)
+        {
+            if(station.aqi==0) {
+                return;
+                // station.aqi = "n/a";
+            }
+
+            var IIcon=L.Icon.extend({
+                options:{
+                    iconSize:     [30, 60],
+                    shadowSize:   [50, 64],
+                    iconAnchor:   [22, 94],
+                    popupAnchor:  [-3, -76]
+                }
+            });
+            MakerObj={};
+            Options={};
+            var color = getColorByAQI(station.aqi);
+            html = '<div class="contain-icon"><div class="maker-icon '+color+'"></div>'+
+                        '<div class="detail-index-aqi">'+station.aqi+'</div></div>';
+
+            var marker=L.marker(LoLa,
+            {
+                icon: new L.DivIcon({
+                    className: 'div-icon',
+                    html: html
+                }),
+                stationId: station.station_id
+
+            },MakerObj).addTo(mapObj);
+        
+            var popup=L.popup(Options);
+            popup.setContent('<div class="maker-content">'+station.content+'</div>');
+            marker.bindPopup(popup);
+            marker.on('mouseover', function (e) {
+                this.openPopup();
+            });
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
+
+            marker.on('click', function (e) {
+                $('#popout').animate({ right: 0 }, 'medium');
+                $('.detail-venue').text(station.content);
+                $('#aqi-index').removeClass();
+                $('#aqi-index').addClass(color);
+                $('.index-aqi').text(station.aqi);
+                drawAqiChart(station.station_id,'aqi-chart', 'Chỉ số AQI');
+                drawRightBarChart(station.station_id,'temp-chart', 'Nhiệt độ', 'temperature');
+                drawRightBarChart(station.station_id,'humid-chart', 'Độ ẩm', 'humidity');
+                $('#selectTable').val(this.options.stationId);
+                
+                setTimeout(gotoCheckData(false),500);
+
+            });
+            return marker;
+        }
+
+        var tsMaker, hsMaker;
+        function initiateHstsMaker() {
+            var tsIcon = L.icon({
+                iconUrl: 'img/ts_icon_edit.png',
+                iconSize:[448, 358], // size of the icon
+            });
+            tsMaker=L.marker([9.849758,113.8],
+            {icon: tsIcon},{}).addTo(mapObj); 
+
+            var hsIcon = L.icon({
+                iconUrl: 'img/hs_icon_edit.png',
+                iconSize:[679, 275], // size of the icon
+            });
+            hsMaker=L.marker([16.198888,114.390375],
+            {icon: hsIcon},{}).addTo(mapObj); 
+
+            
+        }
+
+        function addIconToHSTS(zoom) {
+            console.log("zoom: ", zoom);
+            var width_ts = 448*4000000, height_ts=358*4000000;
+            var width_hs = 679*4000000, height_hs=275*4000000;
+            switch(zoom) {
+                case 0:
+                    width_ts = width_ts/500000000; height_ts=height_ts/500000000;
+                    width_hs = width_hs/500000000; height_hs=height_hs/500000000;
+                    break;
+                case 1:
+                    width_ts = width_ts/250000000; height_ts=height_ts/250000000;
+                    width_hs = width_hs/250000000; height_hs=height_hs/250000000;
+                    break;
+                case 2:
+                    width_ts = width_ts/150000000; height_ts=height_ts/150000000;
+                    width_hs = width_hs/150000000; height_hs=height_hs/150000000;
+                    break;
+                case 3:
+                    width_ts = width_ts/70000000; height_ts=height_ts/70000000;
+                    width_hs = width_hs/70000000; height_hs=height_hs/70000000;
+                    break;
+                case 4:
+                    width_ts = width_ts/35000000; height_ts=height_ts/35000000;
+                    width_hs = width_hs/35000000; height_hs=height_hs/35000000;
+                    break;
+                case 5:
+                    width_ts = width_ts/15000000; height_ts=height_ts/15000000;
+                    width_hs = width_hs/15000000; height_hs=height_hs/15000000;
+                    break;
+                case 6:
+                    width_ts = width_ts/8000000; height_ts=height_ts/8000000;
+                    width_hs = width_hs/8000000; height_hs=height_hs/8000000;
+                    break;
+                case 7:
+                    width_ts = width_ts/4000000; height_ts=height_ts/4000000;
+                    width_hs = width_hs/4000000; height_hs=height_hs/4000000;
+                    break;
+                case 8:
+                    width_ts = width_ts/2000000; height_ts=height_ts/2000000;
+                    width_hs = width_hs/2000000; height_hs=height_hs/2000000;
+                    break;
+                case 9:
+                    width_ts = width_ts/1000000; height_ts=height_ts/1000000;
+                    width_hs = width_hs/1000000; height_hs=height_hs/1000000;
+                    break;
+                case 10:
+                    width_ts = width_ts/500000; height_ts=height_ts/500000;
+                    width_hs = width_hs/500000; height_hs=height_hs/500000;
+                    break;
+                case 11:
+                    width_ts = width_ts/250000; height_ts=height_ts/250000;
+                    width_hs = width_hs/250000; height_hs=height_hs/250000;
+                    break;
+                case 12:
+                    width_ts = width_ts/150000; height_ts=height_ts/150000;
+                    width_hs = width_hs/150000; height_hs=height_hs/150000;
+                    break;
+                case 13:
+                    width_ts = width_ts/70000; height_ts=height_ts/70000;
+                    width_hs = width_hs/70000; height_hs=height_hs/70000;
+                    break;
+                case 14:
+                    width_ts = width_ts/35000; height_ts=height_ts/35000;
+                    width_hs = width_hs/35000; height_hs=height_hs/35000;
+                    break;
+                case 15:
+                    width_ts = width_ts/15000; height_ts=height_ts/15000;
+                    width_hs = width_hs/15000; height_hs=height_hs/15000;
+                    break;
+                case 16:
+                    width_ts = width_ts/8000; height_ts=height_ts/8000;
+                    width_hs = width_hs/8000; height_hs=height_hs/8000;
+                    break;
+                case 17:
+                    width_ts = width_ts/4000; height_ts=height_ts/4000;
+                    width_hs = width_hs/4000; height_hs=height_hs/4000;
+                    break;
+                case 18:
+                    width_ts = width_ts/2000; height_ts=height_ts/2000;
+                    width_hs = width_hs/2000; height_hs=height_hs/2000;
+                    break;
+                case 19:
+                    width_ts = width_ts/1000; height_ts=height_ts/1000;
+                    width_hs = width_hs/1000; height_hs=height_hs/1000;
+                    break;
+                case 20:
+                    width_ts = width_ts/500; height_ts=height_ts/500;
+                    width_hs = width_hs/500; height_hs=height_hs/500;
+                    break;
+            }
+            
+            var tsIcon = L.icon({
+                iconUrl: 'img/ts_icon_edit.png',
+                iconSize:[width_ts, height_ts], // size of the icon
+            });
+            tsMaker=L.marker([9.849758,113.8],
+            {icon: tsIcon},{}).addTo(mapObj);  
+
+            var hsIcon = L.icon({
+                iconUrl: 'img/hs_icon_edit.png',
+                iconSize:[width_hs, height_hs], // size of the icon
+            });
+            hsMaker=L.marker([16.198888,114.390375],
+            {icon: hsIcon},{}).addTo(mapObj);  
+        }
+
+        function showMaker() {
+            // showLoader();
+            var link = '/api/social/getCurrentAQI';
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: link,
+                data: {},
+                success: function (stations) {
+                   console.log('xuz',stations)
+                    stations.forEach(station => {
+                        var latlon = [station.lat, station.lon];
+                        createMaker(latlon,station);
+                    });
+                    hideLoader();
+                },
+                error: function (err) {
+                    hideLoader();
+                    console.log('error', err);
+                }
+            });
+        }
+
+        window.onload=function(){
+            mapObj=L.map('Map',Mapconfig);
+            var southWest = L.latLng(20, 104);
+            var northEast = L.latLng(22, 106);
+            bounds = L.latLngBounds(southWest, northEast);
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+                // bounds: bounds,
+            }).addTo(mapObj);
+
+            function onMoveEnd(event) {
+                let coordinate = this.getCenter();
+                let refresh = false;
+                if(coordinate.lat>22) {
+                    coordinate.lat = 21.99;
+                    refresh = true;
+                }
+                if(coordinate.lat<20.5) {
+                    coordinate.lat = 20.51;
+                    refresh = true;
+                }
+                if(coordinate.lng>106) {
+                    coordinate.lng = 105.99;
+                    refresh = true;
+                }
+                if(coordinate.lng<104) {
+                    coordinate.lat = 104.01;
+                    refresh = true;
+                }      
+                if(refresh) {
+                    this.setView([coordinate.lat,coordinate.lng]);  
+                }  
+            }
+
+            function zoomEnd(event) {
+                var zoom = this.getZoom();
+                mapObj.removeLayer(tsMaker);
+                mapObj.removeLayer(hsMaker);
+                addIconToHSTS(zoom); 
+                // if( zoom < 10) {
+                //     this.setZoom(10);
+                // }
+            }
+            mapObj.on('zoomend', zoomEnd);
+            // mapObj.on('moveend', onMoveEnd);
+
+            showMaker();
+
+            initiateHstsMaker();
+            
+        }
+
+        function showLoader() {
+            document.getElementById("loader-container").style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById("loader-container").style.display = 'none';
+        }
+
+        getLocation();
+         
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+                console.log('getLocation')
+            } else { 
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            if(mapObj!=null) {
+                gotoPosition(position)
+            } else {
+                setTimeout(() => {
+                    gotoPosition(position)
+                }, 1000);
+            }
+            
+        }
+
+        function gotoPosition(position) {
+            mapObj.setZoom(13);
+            mapObj.setView([position.coords.latitude,position.coords.longitude]);
+        }
+
+
+        function getColorByAQI(aqi) {
+            if(aqi==0) return "grey";
+            if(aqi<50) return "green";
+            if(aqi<100) return "yellow";
+            if(aqi<150) return "orange";
+            if(aqi<200) return "red";
+            if(aqi<300) return "purple";
+            return "brown";
+        }
+
+        $('.close').on('click', function (e) {
+            $('#popout').animate({ right: -373 }, 'slow');
+        });
+
+        function drawRightBarChart(stationId, property, title, field) {
+            var Link = '/api/social/getDataRecent';
+            $.ajax({
+                        type: 'post',
+                        method: 'POST',
+                        url: Link,
+                        data: JSON.stringify( { stationId: stationId}), // body data type must match "Content-Type" header
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        dataType: 'json',
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Beard ' + localStorage.getItem('LVC_tocken'),
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                success: function (result) {
+                    console.log('recent data: ', result);
+                    // const getData = result[result.length-1];
+                    // getData.map(item => {
+                    //     if (item.name == 'Temperature') {
+                    //         console.log(item);
+                    //         return;
+                    //     }
+                    // })
+
+
+                    if(field=='temperature') {
+                        $("#current-temp").text(Math.round(result[0][result[0].length -1].temperature));
+                    } 
+                    else $("#current-humid").text(Math.round(result[0][result[0].length -1].humidity));
+                    let datasets = [];
+                    let data = [];
+                    let getResult = result[0];
+                    getResult.map(item => data.push({x: new Date(item.time*1000),y:item[field]}));
+
+                    datasets.push({
+                        label: title,
+                        backgroundColor: 'red',
+                        borderColor: 'red',
+                        data: data,
+                        fill: false,
+                        showLine: true,
+                        borderWidth: 1,
+                    })
+                    console.log(datasets);
+                    let config = {
+                        type: 'line',
+                        data: {
+                            datasets: datasets
+                        },
+                        options: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        console.log(tooltipItem)
+                                        return tooltipItem.yLabel;
+                                    }
+                                },
+                            },
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: title,
+                                position: 'top'
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            hover: {
+                                mode: 'nearest',
+                                intersect: true
+                            },
+                            scales: {
+                                xAxes: [{
+                                    type: 'time',
+                                    time: {
+                                        time: {
+                                            unit: 'hour'
+                                        },
+                                        displayFormats: {
+                                            'hour': 'hA',
+                                        }
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    stacked: true,
+                                    ticks: {
+                                        min: 0,
+                                    }
+                                }]
+                            },
+                            elements: {
+                                point:{
+                                    radius: 0
+                                }
+                            },
+                        },
+                    };
+
+                    var element = document.getElementById(property).getContext('2d');
+                    window[property] = new Chart(element, config);
+                },
+                error: function (err) {
+                    console.log('error: ',err);
+                }
+            });
+        }
+        function drawAqiChart(stationId, property, title) {
+            var Link='/api/social/getAqiData';
+            $.ajax({
+                        type: 'post',
+                        method: 'POST',
+                        url: Link,
+                     //   body: JSON.stringify({type:dataView}), // body data type must match "Content-Type" header
+                        data: JSON.stringify( { stationId: stationId}), // body data type must match "Content-Type" header
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        redirect: 'follow', // manual, *follow, error
+                        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        dataType: 'json',
+                        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Beard ' + localStorage.getItem('LVC_tocken'),
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                success: function (result) {
+                    let datasets = [];
+                    console.log('aqi result',result)
+                    let data = [];
+                    result.map(item => data.push({x: new Date(item.time*1000),y:item.aqi}));
+                    console.log('aqi data: ', data);
+
+                    datasets.push({
+                        label: "AQI",
+                        backgroundColor: 'green',
+                        borderColor: 'green',
+                        data: data,
+                        fill: false,
+                        showLine: true,
+                        borderWidth: 1,
+                    })
+                    let config = {
+                        type: 'line',
+                        data: {
+                            datasets: datasets
+                        },
+                        options: {
+                            legend: {
+                                display: false,
+                            },
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        console.log(tooltipItem)
+                                        return tooltipItem.yLabel;
+                                    }
+                                },
+                            },
+                            responsive: true,
+                            title: {
+                                display: true,
+                                text: title,
+                                position: 'top'
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            hover: {
+                                mode: 'nearest',
+                                intersect: true
+                            },
+                            scales: {
+                                xAxes: [{
+                                    type: 'time',
+                                    time: {
+                                        time: {
+                                            unit: 'hour'
+                                        },
+                                        displayFormats: {
+                                            'hour': 'hA',
+                                        }
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    stacked: true,
+                                    ticks: {
+                                        min: 0,
+                                    }
+                                }]
+                            },
+                            elements: {
+                                point:{
+                                    radius: 0
+                                }
+                            },
+                        },
+                    };
+
+                    var element = document.getElementById(property).getContext('2d');
+                    window[property] = new Chart(element, config);
+                },
+                error: function (err) {
+                    console.log('error: ',err);
+                }
+            });
+        }
+        // stacked bar
+        $('.value').each(function() {
+            var text = $(this).text();
+            $(this).parent().css('width', "16.6%");
+        });
+        $('.block').tooltip();
+
+        $(".scroll-down").click(function() {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $(".chart-title").offset().top - 90
+            }, 500);
+        });
+       
+    </script>
+</body>
+
+</html>
+
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/
+
+
+Served from: airsense.vn @ 2020-08-22 02:50:21 by W3 Total Cache
+-->

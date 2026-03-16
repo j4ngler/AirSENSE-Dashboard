@@ -1,0 +1,18 @@
+<div class="side-menu" id="style-3sb-border">
+  <div class="side-menu-subjects">
+    <% sideMenu.subjects.forEach(function(subject){ %>
+    <div class="side-menu-subject ">
+      <div class="side-menu-subject-title"><%= subject.title %></div>
+      <div class="side-menu-items">
+        <% subject.items.forEach(function(item){ %>
+          <a
+            class="side-menu-item <% if (item.typePage===typePage) { %>current<% } %>"
+            href="..<%= item.route %>"
+            ><%= item.title %></a
+          >
+        <% }); %>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</div>

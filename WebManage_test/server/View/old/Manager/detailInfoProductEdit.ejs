@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" http-equiv="Content-Type" >
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Material Design Bootstrap</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="/old/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="/old/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="/old/css/style.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/old/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/old/css/main.css">
+
+
+  <script type="text/javascript" src="/old/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/old/js/main.js"></script>
+  <script type="text/javascript" src="/old/js/jquery-3.3.1.js"></script>
+  <link rel="stylesheet" type="text/css" href="/old/css/reset.css">
+
+	<link rel="stylesheet" type="text/css" href="/old/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="/old/js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="/old/js/main.js"></script>
+<style>
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content */
+		.modal-content {
+		  position: relative;
+		  background-color: #fefefe;
+		  margin: auto;
+		  padding: 0;
+		  border: 1px solid #888;
+		  width: 80%;
+		  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		  -webkit-animation-name: animatetop;
+		  -webkit-animation-duration: 0.4s;
+		  animation-name: animatetop;
+		  animation-duration: 0.4s
+		}
+
+		/* Add Animation */
+		@-webkit-keyframes animatetop {
+		  from {top:-300px; opacity:0} 
+		  to {top:0; opacity:1}
+		}
+
+		@keyframes animatetop {
+		  from {top:-300px; opacity:0}
+		  to {top:0; opacity:1}
+		}
+
+		/* The Close Button */
+		.close {
+		  color: white;
+		  float: right;
+		  font-size: 28px;
+		  font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+		  color: #000;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+
+		.modal-header {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+		.modal-body {padding: 2px 16px;}
+
+		.modal-footer {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+#feedback-page{
+    text-align:center;
+}
+
+#form-main{
+    width:100%;
+    float:left;
+    padding-top:0px;
+}
+
+#form-div {
+    background-color:rgba(72,72,72,0.4);
+    padding-left:35px;
+    padding-right:35px;
+    padding-top:35px;
+    padding-bottom:50px;
+    width: 450px;
+    float: left;
+    left: 50%;
+    position: absolute;
+  margin-top:30px;
+    margin-left: -260px;
+  border-radius: 7px;
+  
+}
+
+.montform .feedback-input {
+    color:#3c3c3c;
+    font-family: Helvetica, Arial, sans-serif;
+  font-weight:500;
+    font-size: 18px;
+    border-radius: 0;
+    line-height: 22px;
+    background-color: #fbfbfb;
+    padding: 13px 13px 13px 54px;
+    margin-bottom: 10px;
+    width:100%;
+    box-sizing: border-box;
+    border: 3px solid rgba(0,0,0,0);
+}
+/*Inputs styles*/
+.montform .feedback-input:focus{
+    background: #fff;
+    border: 3px solid #3498db;
+    color: #3498db;
+    outline: none;
+  padding: 13px 13px 13px 54px;
+}
+
+
+/* Icons ---------------------------------- */
+.montform  #name{
+    background-size: 30px 30px;
+    background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #name:focus{
+    background-size: 30px 30px;
+    background-position: 8px 5px;
+  background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #email{
+    background-size: 30px 30px;
+    background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #email:focus{
+    background-size: 30px 30px;
+  background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  #comment{
+    background-size: 30px 30px;
+    background-position: 11px 8px;
+    background-repeat: no-repeat;
+}
+
+.montform  textarea {
+    width: 100%;
+    height: 150px;
+    line-height: 150%;
+    resize:vertical;
+}
+
+.montform  input:hover, .montform  textarea:hover,
+.montform  input:focus, .montform  textarea:focus {
+    background-color:#e6e6e6;
+}
+
+.button-blue{
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+    float:left;
+    width: 100%;
+    border: #fbfbfb solid 4px;
+    cursor:pointer;
+    background-color: #3498db;
+    color:white;
+    font-size:24px;
+    padding-top:22px;
+    padding-bottom:22px;
+    transition: all 0.3s;
+  margin-top:-4px;
+  font-weight:700;
+}
+
+.button-blue:hover{
+    background-color: rgba(0,0,0,0);
+    color: #0493bd;
+}
+    
+.montform  .submit:hover {
+    color: #3498db;
+}
+    
+.ease {
+    width: 0px;
+    height: 74px;
+    background-color: #fbfbfb;
+    transition: .3s ease;
+}
+
+.submit:hover .ease{
+  width:100%;
+  background-color:white;
+}
+
+/*Styles for small screens*/
+
+@media  only screen and (max-width: 580px) {
+    #form-div{
+        left: 3%;
+        margin-right: 3%;
+        width: 88%;
+        margin-left: 0;
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+}
+
+</style>
+
+
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
+        <strong class="blue-text">MDB</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link waves-effect" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">About MDB</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
+              target="_blank">Free download</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link waves-effect" href="https://mdbootstrap.com/education/bootstrap/" target="_blank">Free
+              tutorials</a>
+          </li>
+        </ul>
+
+        <!-- Right -->
+        <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item" onclick="payTbeBill()" >
+            <a class="nav-link waves-effect">
+              <span class="badge red z-depth-1 mr-1"> 1 </span>
+              <i class="fas fa-shopping-cart"></i>
+              <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect" target="_blank">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="https://twitter.com/MDBootstrap" class="nav-link waves-effect" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="nav-link border border-light rounded waves-effect"
+              target="_blank">
+              <i class="fab fa-github mr-2"></i>MDB GitHub
+            </a>
+          </li>
+        </ul>
+
+      </div>
+
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+  <!--Main layout-->
+  <main class="mt-5 pt-4">
+    <div class="container dark-grey-text mt-5">
+
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4" id="edit_info" >
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Content-->
+          <div class="p-4">
+            <p class="lead">
+              <span class="mr-1">
+                <del>$200</del>
+              </span>
+              <span>$100</span>
+            </p>
+            <div id="detail_info" >
+            </div>
+            
+
+              <button class="btn btn-primary btn-md my-0 p" type="submit"  onclick="loaddingToEditAdd()" >thêm nội dung
+                <i class="fas fa-shopping-cart ml-1"></i>
+              </button>
+          </div>
+          <!--Content-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <hr>
+
+      <!--Grid row-->
+      <div class="row d-flex justify-content-center wow fadeIn">
+
+      	<div class="col-lg-4 col-md-12 mb-4">
+
+          <div class="col-lg-4 col-md-12 mb-4">
+
+          <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg" class="img-fluid" alt="">
+
+        </div>
+        <div class="col-lg-4 col-md-12 mb-4">
+        	<table>
+        		 <tr>
+                <td><input type="button" value="sửa" onclick="loaddingToEdit()" > </td>
+                <td> <input type="button" value="xóa" onclick="loaddingDelete()" >  </td>
+            	</tr>
+        	</table>
+
+        </div>
+
+        </div>
+        <!--Grid column-->
+        <div class="col-md-6 text-center">
+
+          <h4 class="my-4 h4">Additional information</h4>
+
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit modi sapiente illo soluta odit
+            voluptates,
+            quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in laborum.</p>
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <div id="myModal" class="modal">
+	  <!-- Modal content -->
+		  <div class="modal-content">
+		    <div class="modal-header">
+		      <h2  id="TitleModalMain" >Modal Header</h2>
+		       <span class="close">&times;</span>
+		    </div>
+		    <div class="modal-body" id="myModalMain" >
+		      	<p>Some text in the Modal Body</p>
+                <textarea name="message" class="feedback-input" id="comment" placeholder="Message"></textarea>
+                <p class="file">
+                     <input name="image" type="file" id="file" class="feedback-input">
+                </p>
+		    </div>
+		    <div class="modal-footer">
+		    	 <button type="submit" class="button-blue">SUBMIT</button>
+		    	  <button type="submit" class="button-blue">SUBMIT</button>
+		    </div>
+		  </div>
+
+		</div>
+
+    </div>
+
+    <script type="text/javascript">
+  		var dataJcon = "<%= data %>".toString();
+  		var Link='http://localhost:3000/report/'+dataJcon;
+  		var modal = document.getElementById("myModal");
+	  	var span = document.getElementsByClassName("close")[0];
+  		gotoCheckUser();
+  		span.onclick = function() {
+				  modal.style.display = "none";
+				}
+
+				// When the user clicks anywhere outside of the modal, close it
+				window.onclick = function(event) {
+				  if (event.target == modal) {
+				    modal.style.display = "none";
+				  }
+				}
+  		function gotoCheckUser() {
+  			console.log(Link);
+	  		$.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url: Link,
+                        data: { },
+                        success: function (loadcofig) {
+                            console.log(loadcofig);
+                            console.log('ssssssssssss');
+                            if(loadcofig.length!=2){
+                            //  alert("Xin vui lòng thử lại");
+                            }
+                            else
+                            {
+                             
+                             // alert("Bạn đã đăng xuât thành công");
+
+                            }
+                          
+                        },
+                         complete: function (loadcofig) {
+                           console.log('complete');
+                            console.log(loadcofig.responseText);
+                            //<img   src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/14.jpg" class="img-fluid" alt="">
+                            var dataAcess= JSON.parse(loadcofig.responseText);
+                            console.log(dataAcess[0].image);
+                            $("#edit_info").html('<img   src="'+ dataAcess[0].image+'" class="img-fluid" alt="">');
+                            var infoIntagram=' <p class="lead font-weight-bold">'
+                            	+dataAcess[0].name  +'</p> <br> <br> <p>' 
+                            	+dataAcess[0].detail  +'</p> ';
+                            $("#detail_info").html(infoIntagram);
+                           // loadDataToUser(loadcofig.responseText);
+                            console.log('end complete');
+                            
+                          },
+                          error: function (loadcofig) {
+                            console.log('error');
+                              console.log(loadcofig);
+                              console.log('end error');
+                          }
+                        });
+  		}
+  		function loaddingToEditAdd(){
+  			modal.style.display = "block";
+            $("#TitleModalMain").html('Vi du');
+  		}
+  		function loaddingToEdit(){
+  			modal.style.display = "block";
+            $("#TitleModalMain").html('Vi du');
+  		}
+
+  		function loaddingDelete(){
+  			modal.style.display = "block";
+            $("#TitleModalMain").html('Vi du');
+  		}
+
+  		
+
+
+  </script>
+  </main>
+  <!--Main layout-->
+
+  <!-- Initializations -->
+  
+</body>
+
+</html>

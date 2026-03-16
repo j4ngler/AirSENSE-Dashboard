@@ -1,0 +1,95 @@
+
+  <div class="site-branding-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="logo">
+                    <h1><a href="./sale"><img width="60px" height="60px"  src="/sparc_landing_page/images/sparc-lab-logo.png"></a></h1>
+                </div>
+            </div>
+            
+            <div class="col-sm-6">
+                <div style="float: right;font-size: 18px;margin-top: 40px;padding: 10px;position: relative;">
+                    user
+                </div>
+                <div class="shopping-item">
+                    <a href="/sale/cart">Thanh toán - <span class="cart-amunt" id="shopping_item_Cart">$100</span>
+                        <i class="fa fa-shopping-cart"></i> <span class="product-count" id="value_item_Cart" >5</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- End site branding area -->
+
+<div class="mainmenu-area">
+    <div class="container">
+        <div class="row">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div> 
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav" id="selectMenu" >
+                    <li class="active"><a href="/sale">Trang chủ</a></li>
+                    <li><a href="/sale/product?type=1">Link kiện</a></li>
+                    <li><a href="/sale/product?type=2">IC</a></li>
+                    <li><a href="/sale/product?type=3">Thiết bị</a></li>
+                    <li><a href="/about">Contact</a></li>
+                </ul>
+            </div>  
+        </div>
+    </div>
+</div> <!-- End mainmenu area -->
+
+
+<script type="text/javascript">
+    function onReload(){
+        var data = sessionStorage.getItem('cart');
+        var dataCart={name:"info",value:[]};
+        if(data!=null){
+            dataCart= JSON.parse(data);
+        }
+        console.log("onReload ........");
+        var costValue=0;
+        var numberProduct=dataCart.value.length;
+
+        for(var i=0;i<dataCart.value.length;i++){
+            let item =dataCart.value[i];
+            costValue += item.number* item.imageInfo.cost_detail;
+        }
+        $('#shopping_item_Cart').html(' $'+costValue);
+        $('#value_item_Cart').html(' $'+numberProduct);
+
+    }
+    setTimeout(() => {
+        onReload();
+    }, 2000);
+
+    
+    function addProductToCart(numberData,product_id,infoData,locatiom){
+                var infoDetailProduct = {product_id:product_id,number:1 ,imageInfo:"" };
+                 // Get saved data from sessionStorage
+                var data = sessionStorage.getItem('cart');
+                var dataCart={name:"info",value:[]};
+                if(data!=null){
+                    dataCart= JSON.parse(data);
+                }
+                infoDetailProduct.number= numberData;
+                infoDetailProduct.imageInfo=dataSaveInfo[infoData][locatiom];
+                var fillter =dataCart.value.filter(o=>o.imageInfo.image_id==infoDetailProduct.imageInfo.image_id);
+                if(fillter.length>0){
+                    // đơn hàng tồn tại
+                    return;
+                }
+                dataCart.value.push(infoDetailProduct);
+               
+               // Save data to sessionStorage
+                sessionStorage.setItem('cart', JSON.stringify(dataCart));
+                onReload();
+    }
+
+</script>

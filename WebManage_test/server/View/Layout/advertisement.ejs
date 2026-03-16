@@ -1,0 +1,80 @@
+<div class="ads" id="acess_ads">
+  <img
+    src="https://www.beeculture.com/wp-content/uploads/2014/04/sidebar-big-placeholder-ad.jpg"
+    alt="ads"
+  />
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- Homepage Leaderboard -->
+  <ins class="adsbygoogle"
+      style="display:inline-block;width:728px;height:90px"
+      data-ad-client="ca-pub-1234567890123456"
+      data-ad-slot="1234567890"></ins>
+ 
+</div>
+
+<script type="text/javascript">
+  var dataView = '<%= detail %>';
+  var htmlToview="";
+  console.log("dataView ................ads",dataView);
+  // document.getElementById("htmlToView").src = linkAcess;
+  var urlDetail= 'http://' + window.location.hostname +':' +window.location.port + '/';
+   function setFormToShow(stringValue){
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(stringValue,"text/xml");
+    var x = xmlDoc.getElementsByTagName('body')[0];
+    var y = x.childNodes[0];
+    document.getElementById("demo").innerHTML = y.nodeValue;
+    console.log("x.y.nodeValue.toString() ",x.y.nodeValue.toString());
+     return x.y.nodeValue.toString();
+   }
+
+   function getAllValueData(valueData){
+      for(var i=0;i<valueData.length;i++){
+        $.ajax({
+            type: 'GET',
+            enctype: 'multipart/form-data',
+            url: (urlDetail+valueData[i].filesave),
+            data: {},
+            processData: false, //prevent jQuery from automatically transforming the data into a query string
+            contentType: false,
+            cache: false,
+            success: (data) => {
+              console.log(data);
+              htmlToview+= '<div class="ads-detail-data">'+ data +'</div>';
+              console.log("acess_ads",htmlToview);
+              $('#acess_ads').html(htmlToview);
+            },
+            error: (e) => {
+              console.log(e.responseText);
+            },
+        });
+
+      }
+      
+   }
+
+   // để timout không ảnh hưởng load trang
+   setTimeout(() => {
+    $.ajax({
+        type: 'GET',
+        enctype: 'multipart/form-data',
+        url: '/api/document/get_advertisement',//+dataView,
+        data: {},
+        processData: false, //prevent jQuery from automatically transforming the data into a query string
+        contentType: false,
+        cache: false,
+        success: (data) => {
+        console.log(data);
+           var dataJson = JSON.parse(data);
+           getAllValueData(dataJson);
+          /// $('#htmlToView').html(textHtml); //.replaceAll("</p>","<br/>").replaceAll("<p>","<br/>")
+        },
+        error: (e) => {
+        console.log(e.responseText);
+        },
+    });
+   }, 1000);
+   
+
+</script>
+

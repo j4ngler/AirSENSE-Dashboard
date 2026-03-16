@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>Quản lý Trạm</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/old/training_library/img/core-img/favicon.ico">
+    <title>Line Chart</title>
+
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/old/training_library/style.css">
+    <script src="/old/training_library/js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="/old/training_library/js/bootstrap/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/old/training_library/js/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/old/javascripts/commonView.js"></script>
+    <!-- All Plugins js -->
+    <script src="/old/training_library/js/plugins/plugins.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <style>
+        #Map {
+			margin-top: 0px;
+            width: 100%;
+            height: 750px;
+        }
+        .map-popup-content {
+			width: 300px;
+          
+		}
+		
+		.map-popup-content .left {
+			float:left;
+			width: 100%;
+            height: 100%;
+		}
+		.map-popup-content .left img {
+			width:100%;
+			height:100px;
+			margin: 30% 20% 25px 0px;
+			border-radius:50px;
+		}
+	
+		.map-popup-content .right {
+			float:right;
+            
+			width: 100%;
+            size: 10;
+		}
+		
+		.clearfix {
+			clear:both;
+		}
+    </style>
+
+
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+
+    <!-- ##### Header Area Start ##### -->
+    <header class="header-area">
+
+        <!-- Navbar Area -->
+        <div class="mag-main-menu" id="sticker">
+            <div class="classy-nav-container breakpoint-off">
+                <!-- Menu -->
+                <nav class="classy-navbar justify-content-between" id="magNav">
+
+                    <!-- Nav brand -->
+                    <a href="#" class="nav-brand"><img src="/old/training_library/img/core-img/codexact.png" alt=""></a>
+
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    </div>
+
+                    <!-- Nav Content -->
+                    <div class="nav-content d-flex align-items-center">
+                        <div class="classy-menu">
+
+                            <!-- Close Button -->
+                            <div class="classycloseIcon">
+                                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            </div>
+
+                            <!-- Nav Start -->
+                            <div class="classynav">
+                                <ul>
+                                    <li class="active"><a href="../">Dashboard </a></li>
+                                    <li class="active"><a href="#">Bản đồ </a></li>
+                                    <li><a href="contact.html" id="managerAuthen" >Đăng nh</a></li>
+                                    <li><a href="" id="managerLogout" >Đăng xuất</a></li>
+                                </ul>
+                            </div>
+                            <!-- Nav End -->
+                        </div>
+
+                        <div class="top-meta-data d-flex align-items-center">
+                            <!-- Top Search Area -->
+                            <div class="top-search-area">
+                                <form action="index.html" method="post">
+                                    <input type="search" name="top-search" id="topSearch" placeholder="Search and hit enter...">
+                                    <button type="submit" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </form>
+                            </div>
+                            <!-- Submit Video -->
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <!-- ##### Header Area End ##### -->
+    <!-- ##### Mag Posts Area Start ##### -->
+
+      
+          
+            
+    <div id="Map" ></div>
+
+
+
+        <!-- >>>>>>>>>>>>>>>>>>>>
+         Post Right Sidebar Area
+        <<<<<<<<<<<<<<<<<<<<< -->
+     
+
+    <!-- ##### Mag Posts Area End ##### -->
+
+    <!-- ##### Footer Area Start ##### -->
+  
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- ##### All Javascript Script ##### -->
+    <!-- jQuery-2.2.4 js -->
+   
+    <!-- Active js -->
+    <script src="/old/training_library/js/active.js"></script>
+    <script>
+        const url = location.href;
+        const itemUrl = url.split('/');
+        const tokenAdmin = itemUrl[itemUrl.length-1];
+        var mname = tokenAdmin;
+        console.log("mname .................. mname",mname);
+        var mapObj=null;
+        var NewMarker=null;
+        var DefaulLocation=[21.0277644,105.83415979999995];
+        var zoomLevel=13;
+        var groupID=[];
+        var nameGroupID=[];
+        var dataStation = null;
+        var Mapconfig={
+            attributionControl:true,
+            center: DefaulLocation,
+            zoom:zoomLevel
+        }
+
+        var UrlIcon1="/training_library/img/core-img/Maker.png";
+
+        function createMaker(LoLa, Content, Options, MakerObj)
+        {
+            var IIcon=L.Icon.extend({
+                options:{
+                    iconSize:     [13, 20],
+                    shadowSize:   [50, 64],
+                    iconAnchor:   [22, 94],
+                    popupAnchor:  [-3, -76]
+                }
+            });
+            var redIcon=new IIcon({iconUrl:UrlIcon1});  
+            if (!MakerObj)
+            {
+                MakerObj={};
+            }
+            if (!Options)
+            {
+                Options={};
+            }
+            var NewNode=L.marker(LoLa,{icon:redIcon},MakerObj).addTo(mapObj);
+            //var NewNode=L.marker(LoLa,{icon:setIcon}).addTo(mapObj).bindPopup("Hi");
+            var popup=L.popup(Options);
+            popup.setContent(Content);
+            NewNode.bindPopup(popup);
+            return NewNode;
+        }
+
+        gotoCheckUserStorage();
+        function createcontent(data,station)
+        {
+            var content='';           
+            content+=`<div class='left'><img src='/training_library/img/core-img/codexact.png' /></div>`;
+            content+=`<div class='right'><b>Detailed Index:</div><div class='right'><b>Station : `;
+            content+=station.station_id +` - `+station.content+` - `+station.adress;
+            for(var k=data.result.length-1;k>0;k--)
+            {
+                let v=data.result[k];
+                if(v.station_id===station.station_id){
+                    content+=`</div><div class='right'><b>Date and Time:`;
+                    content=content+v.time +`</div>`;
+                    content=content+`<div class='right'><b>Vbatt: `+ v.vbat+ `mV</div>`;
+                    content=content+`<div class='right'><b>Board Temp: `+ v.broad_temp+ `oC</div>`;
+                    content=content+`<div class='right'><b>CH1_freq: `+v.ch1_freq+ `Hz</div>`;
+                    content=content+`<div class='right'><b>CH1_temp: `+v.ch1_temp+ `oC</div>`;
+                    content=content+`<div class='right'><b>CH2_freq: `+v.ch2_freq+ `Hz</div>`;
+                    content=content+`<div class='right'><b>CH2_temp: `+v.ch2_temp+ `oC</div>`;
+                    content=content+`<div class='right'><b>Flags: `+v.flag+ `</div>`;
+                    break;
+                }
+            }
+            content+=`<div class='clearfix'></div>`;
+            return content;    
+        }
+
+        function loadAllData(){
+                //var mname=localStorage.getItem("tocken_LVC");
+                var Link='/api/social/getdatalimit';
+                    $.ajax({
+                        type: 'post',
+                        method: 'POST',
+                    url: Link,
+                    data:JSON.stringify( {data:1000 }),
+                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: 'same-origin', // include, *same-origin, omit
+                    redirect: 'follow', // manual, *follow, error
+                    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                    dataType: 'json',
+                    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: 'same-origin', // include, *same-origin, omit
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Beard ' + mname,
+                        // 'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    success: function (loadcofig) {
+                        console.log("Show Data..........................................");
+                        console.log(loadcofig);
+                        
+                        for(var k=0;k< dataStation.length;k++) {
+                            let v= dataStation[k];
+                            groupID.push(v.id_group);
+                            nameGroupID.push(v.name_group);
+                            var text={"firstName":"John", "lastName":"Doe"};
+                            var checklola=[v.location_lat,v.location_long];
+                            var marker=createMaker(checklola,createcontent(loadcofig,v),{},NewMarker);
+                         
+                        }
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+               //return text;
+        }
+
+        window.onload=function()
+        {
+            
+            mapObj=L.map('Map',Mapconfig);
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(mapObj);
+            NewMarker={
+                        className: "map-popup-content",
+            } ;
+    
+
+            function loadAllContent(){
+                var Link='/api/social/getStation';
+                    $.ajax({
+                        type: 'get',
+                    dataType: 'json',
+                    url: Link,
+                    data: { },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+                    },
+                    success: function (loadcofig) {
+                        console.log("Show Data");
+                        console.log(loadcofig);
+                        dataStation= loadcofig.result;
+                        setTimeout(function(){ loadAllData(); }, 300);
+                        // loadAllData();
+                    },
+                      error: function (loadcofig) {
+                        console.log('error');
+                          console.log(loadcofig);
+                          console.log('end error');
+                      }
+                });
+               //return text;
+                    }
+                 var x=loadAllContent();
+                console.log(x);
+            };
+     
+    </script>
+
+</body>
+
+</html>

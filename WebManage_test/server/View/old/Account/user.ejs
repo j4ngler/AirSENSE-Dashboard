@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="pixelhint.com">
+	<meta name="description" content=""/>
+	<link rel="stylesheet" type="text/css" href="/old/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/old/css/dataTables.bootstrap.min.css">
+	<script type="text/javascript" src="/old/js/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="/old/js/main.js"></script>
+	<script type="text/javascript" src="/old/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="/old/js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript" src="/old/javascripts/commonView.js"></script>
+
+	<style>
+		/* The Modal (background) */
+		.modal {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 1; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		}
+
+		/* Modal Content */
+		.modal-content {
+		  position: relative;
+		  background-color: #fefefe;
+		  margin: auto;
+		  padding: 0;
+		  border: 1px solid #888;
+		  width: 80%;
+		  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		  -webkit-animation-name: animatetop;
+		  -webkit-animation-duration: 0.4s;
+		  animation-name: animatetop;
+		  animation-duration: 0.4s
+		}
+
+		/* Add Animation */
+		@-webkit-keyframes animatetop {
+		  from {top:-300px; opacity:0} 
+		  to {top:0; opacity:1}
+		}
+
+		@keyframes animatetop {
+		  from {top:-300px; opacity:0}
+		  to {top:0; opacity:1}
+		}
+
+		/* The Close Button */
+		.close {
+		  color: white;
+		  float: right;
+		  font-size: 28px;
+		  font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+		  color: #000;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+
+		.modal-header {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+		.modal-body {padding: 2px 16px;}
+
+		.modal-footer {
+		  padding: 2px 16px;
+		  background-color: #5cb85c;
+		  color: white;
+		}
+
+
+		* {box-sizing: border-box}
+
+		/* Set height of body and the document to 100% */
+		body, html {
+		  height: 100%;
+		  margin: 0;
+		  font-family: Arial;
+		}
+
+		/* Style tab links */
+		.tablink {
+		  background-color: #555;
+		  color: white;
+		  float: left;
+		  border: none;
+		  outline: none;
+		  cursor: pointer;
+		  padding: 14px 16px;
+		  font-size: 17px;
+		  width: 25%;
+		}
+
+		.tablink:hover {
+		  background-color: #777;
+		}
+
+		/* Style the tab content (and add height:100% for full page content) */
+		.tabcontent {
+		  display: none;
+		  padding: 100px 20px;
+		  height: 100%;
+		}			
+</style>
+
+</head>
+<body>
+	
+	<button class="tablink" onclick="openPage('Home', this, 'red')">Thông tin cá nhân</button>
+	<button class="tablink" onclick="openPage('News', this, 'green')" id="defaultOpen">Quản lý</button>
+	<button class="tablink" onclick="openPage('Contact', this, 'blue')">Thông báo</button>
+	<button class="tablink" onclick="openPage('About', this, 'orange')">Cài đặt</button>
+
+<div id="Home" class="tabcontent">
+  <h3>Thông tin cá nhân</h3>
+
+  <p>Home is where the heart is..</p>
+</div>
+
+<div id="News" class="tabcontent">
+  <h3>Quản lý</h3>
+  <p>Some news this fine day!</p> 
+  <a href="userReport" > báo cáo quản trị </a> <br/>
+  <a href="registerPage" > đăng bài </a>
+
+
+</div>
+
+<div id="Contact" class="tabcontent">
+  <h3>Thông báo</h3>
+  <p>Get in touch, or swing by for a cup of coffee.</p>
+</div>
+
+<div id="About" class="tabcontent">
+  <h3>Cài đặt</h3>
+  <p>Who we are and what we do.</p>
+</div>
+
+
+<script>
+function openPage(pageName,elmnt,color) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+
+	<div id="edit_info"></div>
+	<br>
+	<center>
+		<input type="button" onclick="loaddingUppdateUser()" value="sửa"> 
+		<input type="button" onclick="loaddingAddUser()" value="thêm mới">    
+		<input type="button" value="xóa" onclick="loaddingDeleteUser()" >   
+	</center>
+	
+	<br>
+	<p>San phẩm đang bán</p>
+	<br>
+	<table id="examplesalling" class="table table-striped table-bordered" style="width:100%">
+	 		<thead id="mytableThread" >
+	         </thead>
+	</table>
+	<br>
+	<p>San phẩm trong kho</p>
+	<br>
+	<table id="exampleContain" class="table table-striped table-bordered" style="width:100%">
+	 		<thead id="mytableThread" >
+	         </thead>
+	</table>
+	<br>
+	<p>San phẩm trả lại</p>
+	<br>
+	<table id="exampleComeBack" class="table table-striped table-bordered" style="width:100%">
+	 		<thead id="mytableThread" >
+	         </thead>
+	</table>
+	<br>
+	<p>Đơn hàng bị hủy</p>
+	<br>
+	<table id="exampleDestroy" class="table table-striped table-bordered" style="width:100%">
+	 		<thead id="mytableThread" >
+	         </thead>
+	</table>
+	<br>
+	<div id="myModal" class="modal">
+	  <!-- Modal content -->
+	  <div class="modal-content">
+	    <div class="modal-header">
+	      <h2  id="TitleModalMain" >Modal Header</h2>
+	       <span class="close">&times;</span>
+	    </div>
+	    <div class="modal-body" id="myModalMain" >
+	      <p>Some text in the Modal Body</p>
+	    </div>
+	    <div class="modal-footer">
+
+	    </div>
+	  </div>
+
+	</div>
+
+	  <script type="text/javascript">
+	  		//https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal2
+	  			var dataShowadd='';
+	  			var modal = document.getElementById("myModal");
+	  			var span = document.getElementsByClassName("close")[0];
+	  			 var dataCheck =[];
+	  			  var stringdata='<center>';
+				   gotoCheckUser();
+				checkUserData();
+				function checkUserData() {
+					var mname = localStorage.getItem("tocken_LVC");
+					$.ajax({
+						type: 'post',
+						dataType: 'json',
+						url: 'http://localhost:3000/userdetail',
+						data: {
+							data: "user" 
+						},
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('Authorization', 'Bearer '+mname);
+						},
+						success: function (loadcofig) {
+							console.log("loadcofig........................");
+							console.log(loadcofig);
+							if(loadcofig){
+								console.log("loadcofig........................okkkkkkkkkkkkkkkkk");
+								var userInfor="<p>"+loadcofig[0].fullname+"</p>"
+												+"<p>"+loadcofig[0].createat+"</p>"
+												+"<p>"+loadcofig[0].email+"</p>"
+												+"<p>"+loadcofig[0].name+"</p>"
+												+"<p>"+loadcofig[0].phoneNumber+"</p>"
+												+"<p><a href=\"/logout\"> Đăng xuất <a></p>";
+								$("#Home").html(userInfor); 
+							}
+							else
+							{
+								gotoCheckUserStorage();
+							 	window.location.href ="http://localhost:3000/login";
+							}
+						
+						},
+						complete: function (loadcofig) {
+							console.log("loadcofig........................");
+							console.log(loadcofig.responseText);
+						},
+						error: function (loadcofig) {
+							console.log("loadcofig...................errorerrorerror.....");
+							console.log(loadcofig);
+						}
+						});
+  				}
+				
+	  			function setupAddControl(data ){
+	  				var dataAcess= JSON.parse(data);
+	  				dataShowadd='';
+	  				$.each(dataAcess,function(index, value){
+		                console.log(index);
+		                console.log(value);
+		                dataShowadd +=dataShowadd+'<br>'+index+' <input type="text" id="'+index+'" value="'+value+'">';
+		            });
+	  			}
+               
+                function gotoCheckUser(){
+                    var showData= ' <tr role="row"><th >Item ID</th><th>Item </th><th>Item Price</th></tr>';
+                    var dataView= {id: 0, name: 1,action :0,price: 0};
+                    $('#mytableThread').html(showData);
+
+                    var dataToTable = []; 
+                    var dataAcces=[{data:"id"},{data:"name"},{data:"price"}];
+                    
+                    $('#examplesalling').DataTable({
+			              data: dataToTable,
+			              columns:dataAcces});
+
+                    $('#exampleContain').DataTable({
+			              data: dataToTable,
+			              columns:dataAcces});
+                    $('#exampleComeBack').DataTable({
+			              data: dataToTable,
+			              columns:dataAcces});
+                    $('#exampleDestroy').DataTable({
+			              data: dataToTable,
+			              columns:dataAcces});
+
+			        var table = $('#examplesalling').DataTable();
+			        var table = $('#exampleContain').DataTable();
+			        var table = $('#exampleComeBack').DataTable();
+			        var table = $('#exampleDestroy').DataTable();
+
+
+			        $('#exampleDestroy tbody').on( 'click', 'td',
+		                function ()
+		                {
+		                  var idx = table.cell( this ).index().row;
+		                  var data = table.row( idx ).data();
+		                  stringdata='<center>';
+		                  var i=0,j=0;
+		                  dataCheck =[];
+		                  $.each(data,function(index, value){
+		                    console.log(index);
+		                     console.log(dataCheck);
+		 					if(!dataCheck.includes(index)){
+		 						 console.log('addd');
+		                      	stringdata +=' <th>'+index+' </th><th><input type="text" id="'+index+'" value="'+value+'"></th></tr>\r\n ';
+		 					}
+		      				dataCheck.push(index);
+		      				 console.log(stringdata);
+		                    //if((i%2)==0) tringdata=stringdata+' <br> ' +i;
+		                  });
+		                   console.log(stringdata);
+		                  stringdata='<table style="width:100%">'+stringdata+' </table><br> <input type="button" value=" Thêm Thông Tin" />';
+		                  $("#myModalMain").html(stringdata);
+
+		            });
+
+                }
+
+                function loaddingUppdateUser(){
+                	 modal.style.display = "block";
+                	 $("#TitleModalMain").html('Vi du');
+                }
+                function loaddingAddUser(){
+                	 modal.style.display = "block";
+                	 $("#TitleModalMain").html('Vi du');
+                }
+                function loaddingDeleteUser(){
+                	 modal.style.display = "block";
+                	 $("#TitleModalMain").html('Vi du');
+                }
+
+                // When the user clicks on <span> (x), close the modal
+				span.onclick = function() {
+				  modal.style.display = "none";
+				}
+
+				// When the user clicks anywhere outside of the modal, close it
+				window.onclick = function(event) {
+				  if (event.target == modal) {
+				    modal.style.display = "none";
+				  }
+				}
+        </script>
+</body>
+</html>                                		                            
