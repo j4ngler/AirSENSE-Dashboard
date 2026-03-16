@@ -1,0 +1,17 @@
+
+
+.avatar {
+    float: left;
+    width: 25%;
+    height: 300px;
+}
+
+.information {
+    float: left;
+    width: 74%;
+    height: 300px;
+}
+
+.location {
+    margin-top: -20px;
+}

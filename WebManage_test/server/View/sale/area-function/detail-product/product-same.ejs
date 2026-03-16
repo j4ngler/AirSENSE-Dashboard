@@ -1,0 +1,39 @@
+<div class="col-lg-3 col-xs-0 co best-seller-group m-auto text-center" style="margin-top: 0px !important">
+
+    <div class="best-seller-item" id="ids_ads_home">
+    <!-----    <img src="/sale/img/imagePro.png" class="best-seller-item-image img-fluid" alt="" />
+      <div class="best-seller-item-info">
+        <div class="info-name">Airsense</div>
+        <div class="info-star">
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+          <i class="fa fa-star"></i>
+        </div>
+        <div class="info-price">
+          <span class="info-price-discount">200.000VND</span>
+          <span class="info-price-percent"><del>534.250VND</del><span class="text-discount">24% Off</span></span>
+        </div>
+      </div> ----->
+    </div>
+</div>
+
+<script type="text/javascript"> 
+          function getDataInfoAdvertisement(data){
+                  var infoData = "";
+                  for(var i=0;(i<1);i++){
+                      getInfoHtml(data[i].filesave,
+                                  (info)=>
+                                  {
+                                      infoData = infoData + '<div style="margin-top: 30px;">' +info + '</div>';
+                                      $("#ids_ads_home").html(infoData);
+                                  });
+                  }
+          }
+
+          
+         getInfoHtml("/api/customers/info_ads", (data) => {
+            getDataInfoAdvertisement(data.result); 
+        });
+</script>

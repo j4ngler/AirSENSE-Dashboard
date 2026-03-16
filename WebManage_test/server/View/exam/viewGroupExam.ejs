@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<% include ../Layout/header.ejs %>
+
+  <body class="defult-home">
+    <!-- Main content Start -->
+    <div class="main-content">
+      <!--Full width header Start-->
+      <div class="full-width-header home8-style4">
+        <!--Header Start-->
+        <% include ../Layout/topbar.ejs %>
+          <!--Header End-->
+      </div>
+      <!--Full width header End-->
+      <div class="main-page pt-100">
+        <div class="inner-content ">
+          <!-- About Section Start -->
+          <div class=" style9 md-pt-100">
+            <div class="container" style="padding-top: 100px">
+              <br />
+
+              <div class="content-wrapper">
+                <div class="blog-aside-wrapper">
+                  <div class="blog-aside">
+                    <h4 class="blog-aside__username">Đăng Trường</h4>
+                    <hr>
+                    <div class="blog-aside__action">
+                      <div class="blog-aside__like">
+                        <i class="blog-aside__like-icon blog-aside__like-icon--active  fal fa-heart"></i>
+                        <span class="blog-aside__like-quantity">69</span>
+                      </div>
+                      <div class="blog-aside__comment">
+                        <i class="blog-aside__comment-icon fal fa-comment"></i>
+                        <span class="blog-aside__comment-quantity">69</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <h1 class="blog-heading">[Cơ bản] Life cycle của Component trong Reactjs</h1>
+
+                <div class="blog-detail">
+                  <div class="blog-detail__user">
+                    <img src="/img/avatar5.png" alt="avatar" class="detail__avatar">
+                    <div class="blog-detail__info">
+                      <p class="blog-detail__name">Đăng Trường</p>
+                      <p class="blog-detail__time">
+                        3 ngày trước
+                        <span class="blog-detail__dot-icon">•</span>
+                        3 phút đọc
+                      </p>
+                    </div>
+                  </div>
+                  <div class="blog-detail__action">
+                    <div class="blog-detail__bookmark">
+                      <i class="blog-detail__icon-bookmark blog-detail__icon-bookmark--active fal fa-bookmark"></i>
+                    </div>
+                    <div class="blog-detail__ellipsis">
+                      <i class="blog-detail__icon-ellipsis fal fa-ellipsis-h"></i>
+                    </div>
+                    <div class="blog-detail__option">
+                      <ul class="blog-detail__option-list">
+                        <li class="blog-detail__option-item">
+                          <i class="blog-detail__option-icon fab fa-facebook"></i>
+                          <span class="blog-detail__option-description">Chia sẻ lên Facebook</span>
+                        </li>
+                        <li class="blog-detail__option-item">
+                          <i class="blog-detail__option-icon fab fa-twitter"></i>
+                          <span class="blog-detail__option-description">Chia sẻ lên Twitter</span>
+                        </li>
+                        <li class="blog-detail__option-item">
+                          <i class="blog-detail__option-icon fas fa-envelope"></i>
+                          <span class="blog-detail__option-description">Chia sẻ tới Email</span>
+                        </li>
+                        <li class="blog-detail__option-item">
+                          <i class="blog-detail__option-icon fas fa-link"></i>
+                          <span class="blog-detail__option-description">Sao chép liên kết</span>
+                        </li>
+                        <li class="blog-detail__option-item">
+                          <i class="blog-detail__option-icon fas fa-flag"></i>
+                          <span class="blog-detail__option-description">Báo cáo bài viết</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row blog-content" style="display: flex; flex-direction: column" id="htmlToView">
+
+                </div>
+
+                <br />
+                <div class="blog-bottom">
+                  <div class="blog-bottom__action">
+                    <div class="blog-bottom__like">
+                      <i class="blog-bottom__like-icon blog-bottom__like-icon--active fal fa-heart"></i>
+                      <span class="blog-bottom__like-quantity">69</span>
+                    </div>
+                    <div class="blog-bottom__comment">
+                      <i class="blog-bottom__comment-icon fal fa-comment"></i>
+                      <span class="blog-bottom__comment-quantity">69</span>
+                    </div>
+                  </div>
+
+                  <div class="blog-bottom__tag-wrapper">
+                    <a href="#" class="blog-bottom__tag-item">Front-end</a>
+                    <a href="#" class="blog-bottom__tag-item">Javascript</a>
+                  </div>
+
+                  <div class="post-with-same-author">
+                    <h3 class="post-with-same-author__heading">Bài đăng cùng tác giả</h3>
+                    <ul class="post-with-same-author__post-list">
+                      <li class="post-with-same-author__post-item">
+                        <a href="" class="post-with-same-author__post-link">[Cơ bản]Object trong Javascript Tổng
+                          quan lập trình Synchronous và Asynchronous</a>
+                      </li>
+                      <li class="post-with-same-author__post-item">
+                        <a href="" class="post-with-same-author__post-link">[Cơ bản]Object trong Javascript</a>
+                      </li>
+                      <li class="post-with-same-author__post-item">
+                        <a href="" class="post-with-same-author__post-link">[Cơ bản]Object trong Javascript</a>
+                      </li>
+                      <li class="post-with-same-author__post-item">
+                        <a href="" class="post-with-same-author__post-link">[Cơ bản]Object trong Javascript</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="modal">
+                  <div class="comment-container">
+                    <div class="comment-close">
+                      <i class="fal fa-times"></i>
+                    </div>
+                    <div class="comment-heading">
+                      <h4>10 Bình luận</h4>
+                    </div>
+                    <div class="my-comment-wrapper">
+                      <div class="my-comment">
+                        <img src="/img/avatar5.png" alt="" class="my-comment__my-avatar-img">
+                        <input class="my-comment__input" type="text" placeholder="Viết bình luận của bạn...">
+                      </div>
+                      <button class="my-comment__btn">BÌNH LUẬN</button>
+                    </div>
+                    <div class="comment-body">
+                      <ul class="comment-list">
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ Bài tổng hợp
+                              rất chi tiết. Cảm ơn bác đã chia sẻ Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia
+                              sẻ</span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                        <li class="comment-item">
+                          <img src="/img/avatar5.png" alt="" class="comment-avatar">
+                          <div class="comment-box">
+                            <h5 class="comment-author">Trung</h5>
+                            <span class="comment-content">Bài tổng hợp rất chi tiết. Cảm ơn bác đã chia sẻ </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- About Section End -->
+      </div>
+      <% include ../Layout/footer.ejs %>
+
+        <!-- Categories Section End -->
+    </div>
+    <!-- Main content End -->
+  </body>
+
+  <script type="text/javascript">
+
+    var dataView = '<%= detail %>';
+    var linkAcess =
+      'http://' + window.location.hostname + ':' + window.location.port + '/' +
+      dataView.replaceAll('+', '/');
+    console.log(linkAcess);
+    // document.getElementById("htmlToView").src = linkAcess;
+
+    $.ajax({
+      type: 'GET',
+      enctype: 'multipart/form-data',
+      url: linkAcess,
+      data: {},
+      processData: false, //prevent jQuery from automatically transforming the data into a query string
+      contentType: false,
+      cache: false,
+      success: (data) => {
+        console.log(data);
+        $('#htmlToView').html(data); //.replaceAll("</p>","<br/>").replaceAll("<p>","<br/>")
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
+      },
+      error: (e) => {
+        console.log(e.responseText);
+      },
+    });
+
+    // Bookmark
+    const bookmark = document.querySelector('.blog-detail__icon-bookmark');
+    bookmark.onclick = () =>
+      bookmark.classList.toggle('blog-detail__icon-bookmark--active');
+
+    // Like
+    const likeAside = document.querySelector('.blog-aside__like');
+    const likeBottom = document.querySelector('.blog-bottom__like');
+    const likeAsideIcon = document.querySelector('.blog-aside__like-icon');
+    const likeBottomIcon = document.querySelector('.blog-bottom__like-icon');
+
+    likeBottom.onclick = () => {
+      likeBottomIcon.classList.toggle('blog-bottom__like-icon--active');
+      likeAsideIcon.classList.toggle('blog-aside__like-icon--active');
+    };
+
+    likeAside.onclick = () => {
+      likeBottomIcon.classList.toggle('blog-bottom__like-icon--active');
+      likeAsideIcon.classList.toggle('blog-aside__like-icon--active');
+    };
+
+    // Option
+    const ellipsis = document.querySelector('.blog-detail__ellipsis');
+    const option = document.querySelector('.blog-detail__option');
+    const optionList = document.querySelector('.blog-detail__option-list');
+    const optionItems = document.querySelectorAll('.blog-detail__option-item');
+    const optionIcons = document.querySelectorAll('.blog-detail__option-icon');
+    const optionDescriptions = document.querySelectorAll('.blog-detail__option-description');
+    ellipsis.onclick = () => {
+      option.classList.add('blog-detail__option--show');
+    };
+
+    const check = function (eventTarget, optionElements) {
+      let i = 0;
+      optionElements.forEach(function (item) {
+        if (item != eventTarget) i++;
+      });
+      if (i == optionElements.length) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    window.onclick = (event) => {
+      if (
+        event.target != ellipsis &&
+        event.target.parentNode != ellipsis
+      ) {
+        option.classList.remove('blog-detail__option--show');
+      }
+    };
+
+    // Comment
+    const messageButtons = [document.querySelector('.blog-aside__comment'), document.querySelector('.blog-bottom__comment')];
+    const closeButton = document.querySelector('.comment-close');
+    const modal = document.querySelector('.modal');
+    const commentContainer = document.querySelector('.comment-container');
+
+    const showComment = () => {
+      Object.assign(commentContainer.style, {
+        transform: 'translateX(0%)',
+        opacity: '1',
+      });
+
+
+      modal.classList.add('modal--show')
+
+    };
+
+    messageButtons.forEach((messageButton) => {
+      messageButton.addEventListener('click', showComment);
+    });
+
+    // const closeComment = () => {
+
+    //   modal.classList.add('modal--show')
+    // };
+    // messageButtons.forEach((messageButton) => {
+    //   messageButton.addEventListener('click', showComment);
+    // });
+    const closeComment = () => {
+
+      if (document.body.offsetWidth >= 970) {
+        Object.assign(commentContainer.style, {
+          transform: 'translateX(200%)',
+          opacity: '0',
+        });
+      } else {
+        Object.assign(commentContainer.style, {
+          transform: 'translateY(-200%)',
+          opacity: '0',
+        });
+      }
+
+      setTimeout(function () {
+        modal.classList.remove('modal--show')
+      }, 200);
+    };
+
+
+    closeButton.onclick = () => closeComment();
+
+    modal.onclick = () => closeComment();
+
+    commentContainer.onclick = (event) => event.stopPropagation();
+
+    closeButton.onclick = () => closeComment();
+    modal.onclick = () => closeComment();
+    commentContainer.onclick = (event) => event.stopPropagation();
+  </script>
+
+</html>

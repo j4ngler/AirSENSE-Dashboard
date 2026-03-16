@@ -1,0 +1,138 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       <% include ../Layout/header.ejs %>
+<% include ../Layout/topBar.ejs %>
+<link type="text/css" href="tool_editor/sample/css/sample.css" rel="stylesheet" media="screen" />
+
+<style>
+    html {
+        background-color: white;
+    }
+</style>
+<div class="container">
+    <div class="form-blog">
+        <input type="hidden" id="id" value="<%= post.ID ? post.ID : '' %>">
+        <div class="form-group">
+            <label for="post-title">Tiêu đề</label>
+            <textarea class="form-control" rows="3" id="post-title"><%- post.post_title %></textarea>
+        </div>
+        <div class="form-group">
+            <label for="post-author">Tác giả</label>
+            <input type="text" class="form-control" id="post-author" value="<%= post.post_author %>">
+        </div>
+        <div class="form-group">
+            <label for="status">Trạng thái</label>
+            <select class="form-control" id="status">
+              <option>publish</option>
+              <option>draft</option>
+            </select>
+        </div>
+        <div class="document-editor">
+			<div class="toolbar-container"></div>
+			<div class="content-container">
+				<div id="editor">
+					<%- post.post_content %>
+				</div>
+			</div>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="save()">Lưu</button>
+        <button type="button" class="btn btn-secondary" onclick="cancel()">Huỷ</button>
+    </div>
+    
+</div>
+
+
+
+<script src="/tool_editor/ckeditor.js"></script>
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/12.3.1/classic/ckeditor.js"></script> -->
+<script>
+    var mname = localStorage.getItem("tocken_LVC");
+    class UploadAdapter {
+        constructor(loader) {
+            this.loader = loader;
+        }
+        upload() {
+
+            return this.loader.file
+        .then( file => new Promise( ( resolve, reject ) => {
+            const data = new FormData();
+                data.append('resume', file);
+
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "/uploadimage",
+                    data: data,
+                    processData: false, //prevent jQuery from automatically transforming the data into a query string
+                    contentType: false,
+                    cache: false,
+                    success: (data1) => {
+                        console.log(data1);
+                        if (data1.filename) {  
+                            resolve({
+                                default: '/image/' +data1.filename
+                            });
+                        } else {
+                            reject(false);
+                        }
+                        
+                    },
+                    error: (e) => {
+                        console.log(e.responseText);
+                    }
+                });
+        } ) );
+
+        }
+        abort() {
+        }
+    }
+
+    DecoupledEditor
+        .create( document.querySelector( '#editor' ), {
+            // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+        } )
+        .then( editor => {
+            const toolbarContainer = document.querySelector( '.toolbar-container' );
+
+            toolbarContainer.prepend( editor.ui.view.toolbar.element );
+
+            window.editor = editor;
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader)=>{
+                return new UploadAdapter(loader);
+            };
+        } )
+        .catch( err => {
+            console.error( err.stack );
+            console.log(err);
+        } );
+        
+    function save() {
+        var post = {};
+        post.ID = $('#id').val();
+        post.post_title = $('#post-title').val();
+        post.post_status = $('#status').val();
+        post.post_author = 1;
+        post.post_content = editor.getData();
+        var link = '/savePost';
+        console.log(post)
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: link,
+            data: post,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + mname);
+            },
+            success: function (result) {
+                alert("Lưu bài viết thành công");
+                window.location.href = "/manageBlog";
+            },
+            error: function (result) {
+                console.log('error');
+            }
+        });
+    }
+
+    function cancel() {
+        window.location.href = "/manageBlog";
+    }
+</script>

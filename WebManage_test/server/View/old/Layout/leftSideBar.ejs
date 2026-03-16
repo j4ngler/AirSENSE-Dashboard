@@ -1,0 +1,68 @@
+
+
+<!-- >>>>>>>>>>>>>>>>>>>>
+    Post Left Sidebar Area
+<<<<<<<<<<<<<<<<<<<<< -->
+<div class="post-sidebar-area left-sidebar mt-30 mb-30 bg-white box-shadow">
+    <!-- Sidebar Widget -->
+    <div class="single-sidebar-widget p-30">
+        <!-- Section Title -->
+        <!-- <div class="section-heading">
+            <h5> Cập nhật thông tin </h5>
+        </div> -->
+
+        <div class="section-heading custom-menu profile">
+            <a href="/profile" class="post-title">Profile</a>
+        </div>
+
+        <div class="section-heading custom-menu manage-user" id="manage-user" style="display: none;">
+            <a href="/addUser" class="post-title">Quản lí thành viên</a>
+        </div>
+        <div class="section-heading custom-menu manage-station" id="manager-station" style="display: none;">
+            <a href="/station" class="post-title">Quản lí trạm</a>
+        </div>
+        <!-- <div class="section-heading custom-menu">
+            <a href="/groupstation" class="post-title">Quản lí nhóm trạm</a>
+        </div> -->
+        <!-- <div class="section-heading custom-menu">
+            <a href="/setupstation" class="post-title">Cài đặt thông tin trạm</a>
+        </div> -->
+        <div class="section-heading custom-menu report-station" id="report-station" style="display: none;">
+            <a href="/reportstation" class="post-title">Báo cáo</a>
+        </div>
+        <!-- <div class="section-heading custom-menu">
+            <a href="/manifeststation" class="post-title">Cấp quyền truy cập</a>
+        </div> -->
+        <!-- <div class="section-heading custom-menu">
+            <a href="/abnormalIndex" class="post-title">Chỉ số bất thường</a>
+        </div> -->
+        <div class="section-heading custom-menu manage-blog" id="manage-blog" style="display: none;">
+            <a href="/manageBlog" class="post-title">Quản lí Blog</a>
+        </div>
+        <div class="section-heading custom-menu">
+            <a href="/logout" class="post-title">Đăng xuất</a>
+        </div>
+
+    </div>
+    <style>
+        .custom-menu {
+            margin: 0px 0px 2px 0px !important;
+        }
+    </style>
+    <!-- Sidebar Widget -->
+</div>
+
+<script>
+    checkUserAuthenSecsion()
+    gotoCheckUserStorage();
+    
+    var role = localStorage.getItem("role");
+    if(role=="manager" || role =="supporter") {
+        $('#report-station').show();
+        $('#manager-station').show();
+    }
+    if(role=="manager") {
+        $('#manage-user').show();
+        $('#manage-blog').show();
+    }
+</script>
