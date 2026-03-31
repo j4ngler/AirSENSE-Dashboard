@@ -1,0 +1,144 @@
+<header id="header" class="fixed-top">
+  <div class="container d-flex align-items-center justify-content-between">
+    <a href="/enose" class="d-flex align-items-center gap-2 text-decoration-none">
+      <span
+        style="
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: #fff;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+        "
+        >D</span
+      >
+      <div style="line-height: 1;">
+        <div style="font-weight: 800; color: #0f172a;">Dashboard</div>
+        <div style="font-size: 0.85rem; color: #64748b;">Electric-Nose</div>
+      </div>
+    </a>
+
+    <div class="d-flex align-items-center gap-2">
+      <a href="/enose" class="btn btn-light btn-sm" style="border-radius: 999px;">
+        <i class="bi bi-speedometer2"></i> Trang điều khiển
+      </a>
+
+      <div id="linktoLogin" href="#" class="appointment-btn scrollto" style="margin: 0;">
+        <span class="d-none d-md-inline" onclick="onLogin()">Đăng nhập</span>
+      </div>
+
+      <nav class="navbar p-0 m-0">
+        <ul class="m-0 p-0" style="list-style: none;">
+          <li class="dropdown">
+            <button type="button" class="btn btn-light btn-sm" id="userAccount" style="border-radius: 999px;"></button>
+            <ul>
+              <li><a href="/user_info">User Account</a></li>
+              <li><a href="#" onclick="userLogout()">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+<script>
+  $(function () {
+    $('[data-toggle="popover"]').popover();
+  });
+
+  function userLogout() {
+    localStorage.removeItem("token_AIRSENSE", "user_name", "user_email");
+    window.location.href = "/";
+  }
+
+  if (localStorage.token_AIRSENSE) {
+    document.getElementById("linktoLogin").style.visibility = "hidden";
+    document.getElementById("userAccount").style.visibility = "visible";
+    document.getElementById("userAccount").innerText = localStorage.user_name;
+  } else {
+    document.getElementById("userAccount").style.visibility = "hidden";
+    document.getElementById("linktoLogin").style.visibility = "visible";
+  }
+  function onLogin() {
+    Swal.fire({
+      title: "<strong>Tùy chọn đăng nhập</strong>",
+      icon: "info",
+      html:
+        `<button class="btn btn-success btn-lg" onclick="onLoginAdmin()">Admin</button> ` +
+        `<button  class="btn btn-primary btn-lg" onclick="onLoginCustomer()">Customer</button> ` +
+        `<button  class="btn btn-primary btn-lg" onclick="onLoginUser()">User</button> `,
+      showConfirmButton: false,
+      showCloseButton: true,
+      // showCancelButton: true,
+      // focusConfirm: false,
+      // confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+      // confirmButtonAriaLabel: "Thumbs up, great!",
+      // cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+      // cancelButtonAriaLabel: "Thumbs down",
+    });
+  }
+  function onLoginAdmin() {
+    window.location.href = "http://127.0.0.1/login/admin";
+  }
+  function onLoginCustomer() {
+    window.location.href = "http://127.0.0.1/login/customer";
+  }
+  function onLoginUser() {
+    window.location.href = "http://127.0.0.1/login/user";
+  }
+  function onReloadMenu() {
+    var data = localStorage.getItem("cart");
+    var dataCart = { name: "info", value: [] };
+    if (data != null) {
+      dataCart = JSON.parse(data);
+    }
+    console.log("onReload ........ dataCart", dataCart);
+    var costValue = 0;
+    var numberProduct = dataCart.value.length;
+
+    for (var i = 0; i < dataCart.value.length; i++) {
+      let item = dataCart.value[i];
+      costValue += item.number * item.imageInfo.cost_detail;
+    }
+    $("#shopping_item_Cart").html(" $" + costValue);
+    $("#value_item_Cart").html(numberProduct);
+    //shopping_logout_cart
+  }
+  setTimeout(() => {
+    if (typeof onReloadMenu === "function") onReloadMenu();
+  }, 0);
+
+  function addProductToCart(numberData, product_id, infoData, locatiom) {
+    var infoDetailProduct = {
+      product_id: product_id,
+      number: 1,
+      imageInfo: "",
+    };
+    // Get saved data from localStorage
+    var data = localStorage.getItem("cart");
+    var dataCart = { name: "info", value: [] };
+    if (data != null) {
+      dataCart = JSON.parse(data);
+    }
+    infoDetailProduct.number = numberData;
+    infoDetailProduct.imageInfo = dataSaveInfo[infoData][locatiom];
+    var fillter = dataCart.value.filter(
+      (o) => o.imageInfo.image_id == infoDetailProduct.imageInfo.image_id
+    );
+    if (fillter.length > 0) {
+      // đơn hàng tồn tại
+      return;
+    }
+    dataCart.value.push(infoDetailProduct);
+
+    // Save data to localStorage
+    localStorage.setItem("cart", JSON.stringify(dataCart));
+    onReload();
+  }
+</script>
+<!-- selectLoginMethod() -->
+

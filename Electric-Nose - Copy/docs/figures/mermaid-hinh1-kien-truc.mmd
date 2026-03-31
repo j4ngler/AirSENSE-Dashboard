@@ -1,0 +1,17 @@
+flowchart TB
+  subgraph client["Máy khách"]
+    Browser["Trình duyệt Chrome"]
+  end
+  subgraph server["Máy chủ ứng dụng"]
+    App["Ứng dụng web"]
+    View["Khuôn mẫu HTML phía máy chủ"]
+  end
+  subgraph data["Dữ liệu và điều khiển"]
+    API["Giao diện lập trình ứng dụng"]
+    Broker["MQTT / broker tin nhắn"]
+  end
+  Browser -->|HTTP| App
+  App --> View
+  View -->|HTML/CSS/JS| Browser
+  App --> API
+  App --> Broker

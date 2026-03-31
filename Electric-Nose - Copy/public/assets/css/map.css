@@ -1,0 +1,664 @@
+html, body {
+    height: 100%;
+    margin: 0px;
+}
+
+.dashboard {
+    height: 90%;
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    overflow: auto;
+    display: none;
+    clear: both;
+    margin-top: 30px;
+}
+
+#wrapper {
+    height: 100%;
+    margin: 56px 0 ;
+}
+
+.contain-map {
+    height: 90%;
+    width: 100%;
+    position: relative;
+}
+
+#Map {
+    height: 90%;
+}
+
+.scroll-down {
+    display: inline-block;
+    z-index: 1000;
+    position: absolute;
+    right: 20px;
+    bottom: 100px;
+}
+
+.no-data {
+    display: none;
+}
+
+.margin-block {
+    margin-bottom: 12px;
+}
+
+.block-chart {
+    border-radius: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+    height: 250px;
+    margin: 30px 0 !important;
+}
+
+
+
+.first-block {
+    height: 33%;
+    width: inherit;
+}
+
+.link-to-chart {
+    padding: 8px 10px;
+    outline: none;
+    background-color: #3498db;
+    color: #fff;
+    border: #ccc;
+}
+
+.PM2p5 {
+    /* height: 100%; */
+    /* width: 49%; */
+    width: 100%;
+    float: left;
+    background-color: white;
+    margin: 0px 0px 10px 0px;
+}
+
+.PM10 {
+    /* height: 100%; */
+    /* width: 49%; */
+    width: 100%;
+    float: right;
+    background-color: white;
+    margin: 0px 0px 10px 0px;
+}
+
+.PM1 {
+    /* height: 100%; */
+    /* width: 49%; */
+    width: 100%;
+    float: left;
+    background-color: white;
+    margin: 0px 0px 10px 0px;
+}
+
+.Temperature {
+    /* height: 100%; */
+    /* width: 49%; */
+    width: 100%;
+    float: right;
+    background-color: white;
+    margin: 0px 0px 10px 0px;
+}
+
+.Humidity {
+    /* height: 100%; */
+    /* width: 49%; */
+    width: 100%;
+    float: left;
+    background-color: white;
+    margin: 0px 0px 10px 0px;
+}
+
+.second-block {
+    clear: both;
+    height: 33%;
+}
+
+.third-block {
+    height: 33%;
+    width: 100%;
+}
+
+/* .select-station {
+    float: left;
+    width: 25%;
+} */
+
+.view-detail {
+    float: left;
+    width: 25%;
+}
+
+.pick {
+    width: 25%;
+    float: left;
+}
+
+.date-input {
+    height: 2.507em;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+.pick>label {
+    display: block;
+}
+
+.button-chart {
+    margin-left: 25px;
+    background: #27e450;
+    color: #fff;
+    border-radius: 50px;
+    padding: 8px 25px;
+    white-space: nowrap;
+    transition: 0.3s;
+    font-size: 14px;
+    display: inline-block;
+    border: none;
+    outline: none;
+}
+
+.button-chart:hover {
+    background: #166ab5;
+    color: #fff;
+}
+
+#loader-container {
+    position:fixed;
+    padding:0;
+    margin:0;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background:blue;
+    z-index: 100000;
+    display: none;
+    opacity: 0.4;
+    background-color: lightblue;
+}
+
+#Map {
+    width: 100%;
+    height: 100%;
+}
+
+.map {
+    height: 100%;
+    padding: 0px !important;
+}
+
+.real-detail {
+    background-color: lightgoldenrodyellow;
+}
+
+.detail-index {
+    display: block;
+    font-size: 24px;
+    line-height: 56px;
+}
+
+#header {
+    z-index: 10000;
+}
+.link {
+    height: 41px;
+    width: 41px;
+}
+
+.icon-style {
+    padding: 0px !important;
+}
+
+#loader {
+    padding: 6px;
+    box-sizing: border-box;
+    display: block;
+    clear: both;
+    background-color: lightblue;
+    height: 90%;
+}
+
+#loader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 100000;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.row-850150603 {
+    font-size: 16px;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+    from { bottom:-100px; opacity:0 } 
+    to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+    from{ bottom:-100px; opacity:0 } 
+    to{ bottom:0; opacity:1 }
+}
+
+
+.maker-icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.green {
+    background-color: #00E400;
+}
+
+.yellow {
+    background-color: #FFFF00;
+}
+
+.orange {
+    background-color: #FF7E00;
+}
+
+.red {
+    background-color: #FF0000;
+}
+
+.purple {
+    background-color: #8F3F97;
+}
+
+.brown {
+    background-color: #7E0023;
+}
+
+.grey {
+    background-color: lightgray;
+}
+
+.detail-index-aqi {
+    display: block;
+    width: 41px;
+    text-align: center;
+    font-size: 22px;
+    margin-top: -36px;
+    margin-left: 0px;
+}
+
+.contain-icon {
+    margin-left: -14px;
+}
+
+.maker-content {
+    margin-top: -12px;
+    font-size: 14px;
+    margin-bottom: -12px;
+}
+
+.leaflet-popup-close-button {
+    display: none; 
+ }
+
+ #popout {
+    position: fixed;
+    width: 372px;
+    background-color: #EDF5E1;
+    color: black;
+    top: 0px;
+    right: -372px;
+    transition: 500ms transform ease-in-out;
+    height: 100%;
+    z-index: 10000;
+    overflow: scroll;
+}
+
+.close {
+    cursor: pointer;
+    position: absolute;
+    top: 12px;
+    left: -6px;
+    padding: 8px 24px;
+    transform: translate(0%, -50%);
+    background-color: gainsboro;
+}
+
+.tilte-popout {
+    text-align: center;
+    font-size: 21px;
+}
+
+.top-section {
+    height: 30px;
+}
+
+.venue {
+    height: auto;
+    vertical-align: middle;
+    text-align: center;
+    margin-bottom:10px;
+}
+
+.detail-venue {
+    vertical-align: middle;
+    font-size: 17px;
+}
+
+.icon-venue {
+    vertical-align: middle;
+}
+
+.detail-index {
+    height:100px;
+}
+
+.detail-chart {
+	margin-top: -5px;
+}
+
+.col-6 {
+    float: left;
+    width: 49%;
+    height:100%;
+    padding:0px !important;
+}
+
+#aqi-index {
+    /* background-color:lightblue; */
+    /* border: 2px solid #73AD21; */
+    height:100%;
+    text-align:center;
+    border-radius:10px;
+}
+
+.temp-humid-index {
+    margin-left:5px;
+    height:48%;
+    background-color:#8EE4AF;
+    /* border: 2px solid #73AD21; */
+    border-radius:8px;
+    text-align:center;
+    font-size:18px;
+    vertical-align:middle;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-top: 5px;
+}
+.separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 3px solid #bbb;
+}
+.separator::before {
+    margin-right: .25em;
+}
+.separator::after {
+    margin-left: .25em;
+}
+
+
+/* stacked bar */
+.graphic {
+    margin-top: 10px;
+/* 	padding-left: 30px; */
+}
+.row {
+	margin-bottom: 1.5em;
+}
+@keyframes expand {
+	from {width: 0%;}
+	to {width: 100%;}
+}
+@media screen and (min-width: 768px) {
+	@keyframes expand {
+		from {width: 0%;}
+		to {width: calc(100% - 75px);}
+	}
+}
+.chart {
+	overflow: hidden;
+	width: 100% !important;
+	animation: expand 1.5s ease forwards;
+	height:15px;
+}
+.row + .row .chart {
+	animation-delay: .2s;
+}
+.row + .row + .row .chart {
+	animation-delay: .4s;
+}
+.block {
+	display: block;
+	height: 100px;
+	color: #fff;
+	font-size: .75em;
+	float: left;
+	/* background-color: #334D5C; */
+	position: relative;
+	overflow: hidden;
+	opacity: 1;
+	transition: opacity, .3s ease;
+	cursor: pointer;
+}
+/* .block:nth-of-type(2),
+.legend li:nth-of-type(2):before {
+	background-color: #45B29D;
+}
+.block:nth-of-type(3),
+.legend li:nth-of-type(3):before {
+	background-color: #EFC94C;
+}
+.block:nth-of-type(4),
+.legend li:nth-of-type(4):before {
+	background-color: #E27A3F;
+}
+.block:nth-of-type(5),
+.legend li:nth-of-type(5):before {
+	background-color: #DF5A49;
+}
+.block:nth-of-type(6),
+.legend li:nth-of-type(6):before {
+	background-color: #962D3E;
+} */
+.block:hover {
+	opacity: .65;
+}
+.value {
+	display: block;
+    text-align: center;
+    font-size: 10px;
+	/* line-height: 1em; */
+	/* position: absolute; */
+	/* top: 50%; */
+	/* left: 50%; */
+	/* transform: translate(-50%); */
+}
+.x-axis {
+    text-align: center;
+	padding: .5em 0 2em;
+}
+.y-axis {
+	height: 20px;
+    transform: translate(-32px,170px) rotate(270deg);
+    position: absolute;
+    left: 0;
+}
+.legend {
+    margin: 0 auto;
+    padding: 0;
+	font-size: .9em;
+}
+.legend li {
+    display: inline-block;
+    padding: .25em 1em;
+    line-height: 1em;
+}
+.legend li:before {
+    content: "";
+    margin-right: .5em;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+	background-color: #334D5C;
+}
+@media screen and (min-width: 768px) {
+	h6 {
+		padding: 0;
+		width: 75px;
+		float: left;
+		line-height: 100px;
+	}
+	.block {
+		font-size: 1em;
+	}
+	.legend {
+		width: 50%;
+	}
+}
+
+/*
+Theme Name: Flatsome
+Theme URI: http://flatsome.uxthemes.com/
+Author: UX-Themes
+Author URI: http://www.uxthemes.com/
+Description: Multi-Purpose Responsive WooCommerce Theme
+Version: 3.5.3
+Text Domain: flatsome
+License: http://themeforest.net/licenses
+License URI: http://themeforest.net/licenses
+*/
+
+
+/***************
+All custom CSS should be added to Flatsome > Advanced > Custom CSS,
+or in the style.css of a Child Theme.
+***************/
+
+/* Home page */
+#mapid {
+    z-index: 1 !important;
+}
+
+#main-map {
+    width: 85%;
+    margin: 0 auto;
+}
+
+#thupa_AQI {
+    margin-top: 10px;
+    background-color: yellow;
+    height: 80px;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    font-size: x-large;
+    font-weight: bolder;
+}
+
+.chart-title {
+    text-align: center;
+}
+
+.ninja_column_2.ninja_clmn_nm_anh_huong {
+    max-width: 400px;
+}
+
+.color {
+    text-align: center;
+    font-weight: 700;
+    padding: 10px 0;
+}
+
+.section-title-center {
+    text-align: center;
+}
+
+#thupa_xanh {
+    background: #00E400;
+    color: #fff;
+}
+
+#thupa_vang {
+    background: #FFFF00;
+    color: #cdcdcd;
+}
+
+#thupa_da_cam {
+    background: #FF7E00;
+    color: #fff;
+}
+
+#thupa_do {
+    background: #FF0000;
+    color: #fff;
+}
+
+#thupa_tim {
+    background: #8F3F97;
+    color: #fff;
+}
+
+#thupa_nau {
+    background: #7E0023;
+    color: #fff;
+}
+
+.loading-img {
+    text-align: center;
+    display: block;
+}
+
+.loading-img img {
+    width: 50px !important;
+}
+
+.d-none {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center !important
+}
+
+@media only screen and (max-width: 600px) {
+    #thupa_chart_PM {
+        min-height: unset !important;
+    }
+}

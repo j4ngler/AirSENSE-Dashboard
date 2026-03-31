@@ -1,0 +1,77 @@
+.activities {
+    width: 1080px;
+    height: 340px;
+    margin: 10rem auto;
+    background-color: rgba(128, 128, 128, 0.164);
+    border-radius: 1rem;
+    display: flex;
+    overflow: hidden;
+}
+
+.activities__image {
+    width: 510px;
+}
+
+.activities__content {
+    width: 540px;
+    padding-left: 3rem;
+    margin-left: 15px;
+}
+
+.activities__name {
+    color: #555555;
+    font-size: 17.5px;
+    font-weight: 700;
+    line-height: 21px;
+    margin: 18px 0 20.75px 189px;
+}
+
+.activities__desc1,
+.activities__desc2,
+.activities__desc3,
+.activities__desc4 {
+    font-size: 16px;
+    line-height: 28px;
+    font-weight: 400;
+    margin: 0 0 22.2px;
+    text-align: left;
+    animation: move 1.25s ease-out;
+}
+
+@keyframes move {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+
+
+
+.activities__desc1_copy,
+.activities__desc2_copy {
+    font-size: 16px;
+    line-height: 28px;
+    font-weight: 400;
+    margin: 0 0 22.2px;
+    text-align: left;
+    animation: moveCopy 1.25s ease-out;
+}
+
+@keyframes moveCopy {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+.about-map {
+    width: 1080px;
+    margin: 0 auto;
+    margin-bottom: 70px;
+}
+

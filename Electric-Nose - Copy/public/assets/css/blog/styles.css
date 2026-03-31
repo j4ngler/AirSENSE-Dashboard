@@ -1,0 +1,169 @@
+.carousel {
+  width: 100%;
+  margin-left: auto;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  color: #fff;
+  text-align: left;
+}
+
+@media (max-width: 800px) {
+  .carousel-caption {
+    width: 40%;
+    position: absolute;
+    top: 5%;
+    left: 15%;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    color: #fff;
+    text-align: left;
+    font-size: 0.8rem;
+  }
+
+  h5 {
+    font-size: 1rem;
+  }
+
+  .navbar-brand {
+    margin-right: -15rem;
+  }
+}
+
+.w-100 {
+  border-radius: 40px;
+}
+
+.carousel-control-prev {
+  border-radius: 40px;
+}
+
+.carousel-control-next {
+  border-radius: 40px;
+}
+
+.container-fluid {
+  padding: 7% 10% 0% 10% !important
+}
+
+#title .container-fluid {
+  padding: 1% 5%;
+  text-align: left;
+  background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.carousel-item {
+  height: 300px;
+}
+.carousel-item img {
+  height: 300px;
+}
+
+.sidenav {
+  height: 80%;
+  position: fixed;
+  z-index: 1;
+  bottom: 0;
+  left: 5%;
+  background-color: transparent;
+  overflow: hidden;
+  padding-bottom: 200px;
+}
+
+.sidenav a {
+  width: 72px;
+  height: 72px;
+  margin-top: 4px;
+  text-decoration: none;
+  border-radius: 16px;
+  color: #818181;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.sidenav a:hover {
+  color: #27e450;
+}
+
+.main {
+  margin-left: 160px; /* Same as the width of the sidenav */
+  font-size: 28px; /* Increased text to enable scrolling */
+  padding: 0 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-bottom: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
+}
+
+.content2 {
+  padding-top: 5%;
+}
+
+.heading1 {
+  display: flex;
+  align-items: baseline;
+}
+
+.heading1 a {
+  padding-left: 80%;
+}
+
+.card {
+  min-width: 270%;
+  border-radius: 20px;
+}
+
+.card-body {
+  height: 200px;
+}
+
+.card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 270px;
+}
+
+.btn-primary {
+  position: absolute;
+  bottom: 20px;
+  left: 180px;
+}
+
+.ItemBlog {
+  padding-top: 10%;
+}
+
+.card-text {
+  display: block; /* Fallback for non-webkit */
+  display: -webkit-box;
+  max-width: 270px;
+  height: 75px; /* Fallback for non-webkit */
+  font-size: 1rem;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: justify;
+}
+
+.heading-blog {
+  margin: 20px 0 0;
+}
+
+.footer-top {
+  margin-top: 20px;
+}

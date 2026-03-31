@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="520" viewBox="0 0 640 520" font-family="Segoe UI, Arial, sans-serif" font-size="13">
+  <title>S? ?? kh?i ch?c n?ng giao di?n dashboard</title>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="520" fill="#f8fafc"/>
+  <text x="320" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0f172a">H?nh 2. Ph?n v?ng ch?c n?ng ch?nh tr?n m?n h?nh gi?m s?t</text>
+  <rect x="20" y="48" width="600" height="44" rx="8" fill="url(#g)" opacity="0.9"/>
+  <text x="320" y="75" text-anchor="middle" fill="#fff" font-weight="600">?i?u h??ng to?n c?c (logo, t?i kho?n)</text>
+  <rect x="20" y="104" width="600" height="36" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="320" y="127" text-anchor="middle" fill="#78350f" font-size="12">C?nh b?o c?u h?nh m?ng (khi c? ?i?u ki?n k?ch ho?t)</text>
+  <rect x="20" y="150" width="600" height="48" rx="6" fill="#fff" stroke="#cbd5e1"/>
+  <text x="320" y="180" text-anchor="middle" fill="#475569">B? l?c thi?t b? v? kho?ng th?i gian</text>
+  <rect x="20" y="210" width="290" height="72" rx="8" fill="#fff" stroke="#94a3b8"/>
+  <rect x="330" y="210" width="290" height="72" rx="8" fill="#fff" stroke="#94a3b8"/>
+  <rect x="20" y="290" width="290" height="72" rx="8" fill="#fff" stroke="#94a3b8"/>
+  <rect x="330" y="290" width="290" height="72" rx="8" fill="#fff" stroke="#94a3b8"/>
+  <text x="165" y="245" text-anchor="middle" fill="#64748b" font-size="11">Ch? s? m?i tr??ng / t?n hi?u</text>
+  <text x="475" y="245" text-anchor="middle" fill="#64748b" font-size="11">Tr?ng th?i k?t n?i</text>
+  <text x="165" y="325" text-anchor="middle" fill="#64748b" font-size="11">?i?u khi?n phi?n ?o</text>
+  <text x="475" y="325" text-anchor="middle" fill="#64748b" font-size="11">T?p ?o g?n nh?t</text>
+  <rect x="20" y="378" width="600" height="56" rx="8" fill="#eef2ff" stroke="#818cf8"/>
+  <text x="320" y="405" text-anchor="middle" fill="#4338ca" font-weight="600">L??i c?m bi?n MEMS / ADC (l??i th?)</text>
+  <text x="320" y="422" text-anchor="middle" fill="#64748b" font-size="11">C? th? k?m bi?u ?? th?i gian khi b?t module ?? th?</text>
+  <rect x="20" y="444" width="600" height="56" rx="8" fill="#fff" stroke="#cbd5e1"/>
+  <text x="320" y="478" text-anchor="middle" fill="#475569">T?ng h?p thi?t b? (online / offline, l?nh g?n ??y)</text>
+</svg>

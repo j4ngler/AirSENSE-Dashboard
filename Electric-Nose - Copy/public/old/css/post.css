@@ -1,0 +1,16 @@
+.icon-navigate-pre {
+    float: left;
+    width: 10%;
+}
+
+.icon-navigate-next {
+    float: right;
+    width: 10%;
+}
+
+.link-navigate {
+    float: right;
+    width: 90%;
+    text-align: left;
+    padding-left: 10px;
+}

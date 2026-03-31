@@ -1,76 +1,40 @@
 <header id="header" class="fixed-top">
-  <div class="container d-flex align-items-center">
-    <img
-      src="/resource/airsense/wp-content/img/airsense.jpg"
-      class="logo me-auto"
-      href="index.html"
-      height="50"
-    />
+  <div class="container d-flex align-items-center justify-content-between">
+    <a href="/enose" class="d-flex align-items-center gap-2 text-decoration-none">
+      <span
+        style="
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: #fff;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+        "
+        >D</span
+      >
+      <div style="line-height: 1;">
+        <div style="font-weight: 800; color: #0f172a;">Dashboard</div>
+        <div style="font-size: 0.85rem; color: #64748b;">Electric-Nose</div>
+      </div>
+    </a>
 
-    <!-- Uncomment below if you prefer to use an image logo -->
-    <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-    <!-- Uncomment below if you prefer to use an image logo -->
-    <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-    <nav id="navbar" class="navbar order-last order-lg-0">
-      <ul>
-        <li><a class="nav-link scrollto" href="/">Trang chủ</a></li>
-        <li class="dropdown">
-          <a href="#"
-            ><span>Trạm quan trắc</span> <i class="bi bi-chevron-down"></i
-          ></a>
-          <ul>
-            <li><a href="/map">Dữ liệu trạm</a></li>
-            <li><a href="/report_station">Export dữ liệu</a></li>
-            <li><a href="/faq">F.A.Q</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#"
-            ><span>Tin tức</span> <i class="bi bi-chevron-down"></i
-          ></a>
-          <ul>
-            <li><a href="/blog/environment">Khoa học</a></li>
-            <li><a href="/blog/environment">Môi trường</a></li>
-            <li><a href="#">STEM</a></li>
-            <li><a href="#">Hoạt động</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="/product"><span>Sản phẩm</span></a>
-        </li>
-        <li class="dropdown">
-          <a href="/product"><span>Các dự án</span></a>
-        </li>
-        <li class="dropdown">
-          <a href="/about"><span>Về chúng tôi</span></a>
-        </li>
-        <li class="dropdown">
-          <a href="/enose"><span>Electric-Nose</span></a>
-        </li>
-      </ul>
-      <i class="bi bi-list mobile-nav-toggle"></i>
-    </nav>
-    <div class="header-item-cart">
-      <a href="/sale/cart">
-        <i class="fa fa-shopping-cart icon-shopping-cart"> </i>
-        <span class="product-count" id="value_item_Cart">0</span>
+    <div class="d-flex align-items-center gap-2">
+      <a href="/enose" class="btn btn-light btn-sm" style="border-radius: 999px;">
+        <i class="bi bi-speedometer2"></i> Trang điều khiển
       </a>
-    </div>
-    <div id="linktoLogin" href="#" class="appointment-btn scrollto">
-      <span class="d-none d-md-inline" onclick="onLogin()">Đăng nhập</span>
-    </div>
 
-    <div>
-      <nav id="navbar" class="navbar order-last order-lg-0">
-        <ul>
+      <div id="linktoLogin" href="#" class="appointment-btn scrollto" style="margin: 0;">
+        <span class="d-none d-md-inline" onclick="onLogin()">Đăng nhập</span>
+      </div>
+
+      <nav class="navbar p-0 m-0">
+        <ul class="m-0 p-0" style="list-style: none;">
           <li class="dropdown">
-            <button
-              type="button"
-              class="btn btn-light"
-              id="userAccount"
-            ></button>
+            <button type="button" class="btn btn-light btn-sm" id="userAccount" style="border-radius: 999px;"></button>
             <ul>
               <li><a href="/user_info">User Account</a></li>
               <li><a href="#" onclick="userLogout()">Logout</a></li>
@@ -145,7 +109,7 @@
     //shopping_logout_cart
   }
   setTimeout(() => {
-    onReloadMenu();
+    if (typeof onReloadMenu === "function") onReloadMenu();
   }, 0);
 
   function addProductToCart(numberData, product_id, infoData, locatiom) {

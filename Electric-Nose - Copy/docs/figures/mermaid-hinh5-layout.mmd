@@ -1,0 +1,7 @@
+flowchart TB
+  L["Layout chung: meta viewport thư viện chung"] --> P["Partial điều hướng"]
+  L --> F["Partial chân trang"]
+  P --> D["Trang dashboard"]
+  F --> D
+  D --> S["Style theo token dự án"]
+  D --> J["Mã tương tác trang"]

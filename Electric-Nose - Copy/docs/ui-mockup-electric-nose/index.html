@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minh họa UI — Electric-Nose Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a href="#" class="brand" id="brandLink">
+          <span class="brand-mark">D</span>
+          <div>
+            <div class="brand-text-title">Dashboard</div>
+            <div class="brand-text-sub">Electric-Nose</div>
+          </div>
+        </a>
+        <div class="topbar-actions">
+          <button type="button" class="btn-pill" id="btnDashboard">
+            <span>⏱</span> Trang điều khiển
+          </button>
+          <button type="button" class="btn-pill" id="btnLoginDemo">Đăng nhập (demo)</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <div id="wifiSetupAlert" class="wifi-setup-alert">
+        <h4>⚠ ESP32 chưa kết nối WiFi</h4>
+        <p>Thiết bị đang ở chế độ AP mode. Kết nối WiFi cấu hình rồi thử lại.</p>
+        <button type="button" class="wifi-setup-link">📶 Cấu hình WiFi (minh họa)</button>
+      </div>
+
+      <section class="filter-panel" aria-label="Bộ lọc">
+        <div class="filter-row">
+          <div class="filter-item">
+            <label for="deviceSelect">Thiết bị</label>
+            <select id="deviceSelect" class="form-select">
+              <option value="">Tất cả thiết bị</option>
+              <option value="1">E-Nose Lab #1</option>
+              <option value="2">E-Nose Lab #2</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label for="fromTime">Từ ngày</label>
+            <input type="datetime-local" id="fromTime" class="form-control" />
+          </div>
+          <div class="filter-item">
+            <label for="toTime">Đến ngày</label>
+            <input type="datetime-local" id="toTime" class="form-control" />
+          </div>
+          <div class="filter-item" style="flex: 0 0 auto">
+            <label>&nbsp;</label>
+            <button type="button" class="btn-filter" id="btnApplyFilter">🔍 Xem biểu đồ</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="row">
+        <div class="col-md-3">
+          <div class="metric-card">
+            <div class="metric-label">Temperature (°C)</div>
+            <div class="metric-value"><span id="temperature">24.5</span>°C</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="metric-card">
+            <div class="metric-label">Humidity (%)</div>
+            <div class="metric-value"><span id="humidity">58</span>%</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="metric-card">
+            <div class="metric-label">Wi-Fi Signal</div>
+            <div class="metric-value" style="font-size: 1.75rem"><span id="wifiSignal">-42</span> dBm</div>
+            <div class="text-muted" style="font-size: 0.85rem; color: var(--text-muted)">SSID: Lab_IoT</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="metric-card" style="display: flex; align-items: center; justify-content: center; min-height: 120px">
+            <div id="wifiChip" class="status-chip chip-success">📶 Connected</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <button type="button" class="btn-measure" id="startMeasurementBtn">
+              <span class="bi-placeholder">▶</span> Start measurement
+            </button>
+            <div class="status-panel">
+              <div class="text-muted">Status</div>
+              <div id="statusContent" style="font-size: 1.2rem; font-weight: 600">Ready</div>
+            </div>
+            <div id="activeMeasurementAlert" class="alert-info">
+              <strong>Đang đo:</strong> <span id="activeMeasurementFileName">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="file-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px">
+              <span class="file-title">Last measurement file</span>
+              <span style="font-size: 1.5rem">📊</span>
+            </div>
+            <div style="font-size: 1.15rem; font-weight: 600; color: #1f2937">session_20250331_001.csv</div>
+            <div class="text-muted" style="margin: 8px 0; font-size: 0.9rem; color: var(--text-muted)">Last updated: demo</div>
+            <div class="btn-row">
+              <button type="button" class="btn-sm btn-primary">⬇ Download CSV</button>
+              <button type="button" class="btn-sm btn-outline">🔗 File Server</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="mems-sensors-title">🧩 MEMS Sensors</h2>
+      <div class="row" id="memsSensorsRow">
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">EtOH1</div><div class="mq-sensor-value">1420</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">EtOH2</div><div class="mq-sensor-value">1388</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">EtOH3</div><div class="mq-sensor-value">1512</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">EtOH4</div><div class="mq-sensor-value">1290</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">EtOH5</div><div class="mq-sensor-value">1476</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">EtOH6</div><div class="mq-sensor-value">1333</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">VOC1</div><div class="mq-sensor-value">1602</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="mq-sensor-card"><div class="mq-sensor-label">VOC2</div><div class="mq-sensor-value">1444</div><div class="mq-sensor-unit">ADC</div></div>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-title">Total devices</div>
+          <div class="info-value">3</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">Devices online</div>
+          <div class="info-value text-success">2</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">Devices offline</div>
+          <div class="info-value text-danger">1</div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">Recent commands (1h)</div>
+          <div class="info-value">5</div>
+        </div>
+      </div>
+    </main>
+
+    <div class="demo-bar" role="region" aria-label="Thanh demo">
+      <span>Minh họa tĩnh — mở file index.html trong Chrome</span>
+      <button type="button" id="demoToggleWifi">Bật/tắt cảnh báo WiFi</button>
+    </div>
+    <div id="demoToast" class="demo-toast" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+    <style>
+      .demo-toast {
+        position: fixed;
+        bottom: 64px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background: #1e293b;
+        color: #f8fafc;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s, transform 0.25s;
+        z-index: 1001;
+        max-width: 90vw;
+        text-align: center;
+      }
+      .demo-toast.is-visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      .text-muted {
+        color: var(--text-muted);
+      }
+      .bi-placeholder {
+        margin-right: 4px;
+      }
+    </style>
+    <script>
+      document.getElementById("brandLink")?.addEventListener("click", (e) => {
+        e.preventDefault();
+      });
+      document.getElementById("btnDashboard")?.addEventListener("click", () => {
+        document.getElementById("demoToast").textContent = "Đã ở trang điều khiển (demo)";
+        document.getElementById("demoToast").classList.add("is-visible");
+        setTimeout(() => document.getElementById("demoToast").classList.remove("is-visible"), 1500);
+      });
+      document.getElementById("btnLoginDemo")?.addEventListener("click", () => {
+        alert("Demo: tại app thật sẽ mở SweetAlert2 chọn Admin / Customer / User.");
+      });
+    </script>
+  </body>
+</html>
