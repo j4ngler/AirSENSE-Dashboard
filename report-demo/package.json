@@ -1,0 +1,24 @@
+{
+  "name": "airsense-report-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone report demo UI for Electric-Nose",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "export:docx": "node scripts/export-report-docx.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "knex": "^3.1.0",
+    "mongoose": "^8.19.2",
+    "morgan": "^1.10.1",
+    "mqtt": "^5.14.1",
+    "mysql": "^2.18.1",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "docx": "^9.5.1"
+  }
+}

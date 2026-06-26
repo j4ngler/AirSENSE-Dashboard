@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MOBILE_APP_TONG_QUAN</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #111827;
+      --muted: #4b5563;
+      --line: #d8dee9;
+      --soft: #f8fafc;
+      --accent: #0f766e;
+      --code: #0f172a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #eef2f7;
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.62;
+    }
+    main {
+      width: min(1080px, calc(100% - 32px));
+      margin: 32px auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+    }
+    h1, h2, h3, h4 { line-height: 1.25; margin: 1.6em 0 0.6em; }
+    h1 { margin-top: 0; font-size: 2rem; color: #0f172a; }
+    h2 { border-top: 1px solid var(--line); padding-top: 1.1em; font-size: 1.45rem; color: var(--accent); }
+    h3 { font-size: 1.15rem; color: #1f2937; }
+    p, li { font-size: 1rem; }
+    p { margin: 0.7em 0; }
+    ul, ol { padding-left: 1.45rem; }
+    code {
+      background: #eef2f7;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      color: var(--code);
+      font-family: Consolas, "Courier New", monospace;
+      padding: 0.08rem 0.28rem;
+    }
+    pre {
+      overflow: auto;
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    pre code {
+      background: transparent;
+      border: 0;
+      color: inherit;
+      padding: 0;
+    }
+    .table-wrap { overflow-x: auto; margin: 1rem 0 1.3rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+    th {
+      background: var(--soft);
+      color: #0f172a;
+      text-align: left;
+    }
+    tr:nth-child(even) td { background: #fbfdff; }
+    @media print {
+      body { background: #fff; }
+      main { width: 100%; margin: 0; border: 0; box-shadow: none; }
+    }
+    @media (max-width: 680px) {
+      main { width: 100%; margin: 0; border-radius: 0; padding: 22px; }
+      h1 { font-size: 1.55rem; }
+      h2 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+<h1>BÁO CÁO TỔNG QUAN MOBILE APP - AIRSENSE</h1>
+<h2>1. Thông tin chung</h2>
+<ul>
+<li><strong>Tên module:</strong> AirSENSE Mobile (<code>mobile-app</code>)</li>
+<li><strong>Loại ứng dụng:</strong> Ứng dụng di động đa nền tảng phát triển bằng Expo / React Native</li>
+<li><strong>Mục tiêu:</strong> Cung cấp giao diện mobile để theo dõi dữ liệu Electric-Nose, điều khiển thiết bị và quản lý cấu hình kênh cảm biến khi không dùng dashboard web.</li>
+<li><strong>Phạm vi:</strong> Mobile client kết nối tới backend <code>report-demo</code> qua REST API, lưu cấu hình cục bộ bằng <code>expo-secure-store</code>, hỗ trợ xác thực người dùng và một kết nối MQTT WebSocket sau đăng nhập.</li>
+<li><strong>Nền tảng chạy:</strong> Expo Go trên Android/iOS; có thể mở rộng sang development build nếu sau này cần native module ngoài Expo Go.</li>
+</ul>
+<h2>2. Mục tiêu và vai trò trong hệ thống</h2>
+<p>Mobile app đóng vai trò là lớp giao diện vận hành trên điện thoại cho hệ thống AirSENSE. Thay vì người dùng phải mở dashboard web trên máy tính, ứng dụng cho phép:</p>
+<ul>
+<li>Xem nhanh nhiệt độ, độ ẩm, Wi-Fi, trạng thái đo và 8 kênh ADC.</li>
+<li>Chọn thiết bị đang vận hành.</li>
+<li>Bắt đầu / dừng phiên đo.</li>
+<li>Bật / tắt heating và air pump.</li>
+<li>Xem biểu đồ lịch sử 24 giờ và bảng lịch sử mẫu đo.</li>
+<li>Quản lý CRUD cấu hình kênh cảm biến trong bảng SQL <code>enose_sensor_channels</code>.</li>
+<li>Cấu hình URL server, API key và chu kỳ refresh trực tiếp trên app.</li>
+</ul>
+<p>Ứng dụng không thay thế backend. Toàn bộ dữ liệu chính vẫn đi qua REST API của <code>report-demo</code>; mobile app là client đọc dữ liệu đã được backend chuẩn hóa từ SQL, MongoDB và MQTT bridge.</p>
+<h2>3. Công nghệ sử dụng</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Nhóm</th><th>Công nghệ / thư viện</th><th>Vai trò</th></tr></thead>
+<tbody>
+<tr><td>Framework</td><td>Expo <code>~54.0.0</code>, React Native <code>0.81.5</code>, React <code>19.1.0</code></td><td>Nền tảng xây dựng app mobile</td></tr>
+<tr><td>Điều hướng</td><td><code>expo-router</code>, <code>@react-navigation/bottom-tabs</code></td><td>Stack đăng nhập / đăng ký và 5 tab chính</td></tr>
+<tr><td>Data fetching</td><td><code>@tanstack/react-query</code></td><td>Polling, cache, mutation và refetch dữ liệu</td></tr>
+<tr><td>Lưu cục bộ</td><td><code>expo-secure-store</code></td><td>Lưu server URL, API key, refresh interval, selected device, auth token</td></tr>
+<tr><td>Biểu đồ</td><td><code>react-native-svg</code></td><td>Vẽ line chart trong Expo Go</td></tr>
+<tr><td>MQTT</td><td><code>mqtt</code> qua WebSocket</td><td>Kết nối sau đăng nhập, subscribe topic theo <code>deviceId</code></td></tr>
+<tr><td>Ngôn ngữ</td><td>TypeScript strict mode</td><td>Kiểm soát kiểu dữ liệu và giảm lỗi runtime</td></tr>
+</tbody>
+</table></div>
+<h2>4. Kiến trúc tổng quan</h2>
+<pre><code class="language-mermaid">flowchart LR
+  APP[AirSENSE Mobile&lt;br/&gt;Expo / React Native]
+  SETTINGS[SecureStore&lt;br/&gt;settings + token]
+  API[Backend report-demo&lt;br/&gt;Express REST API]
+  SQL[(SQL&lt;br/&gt;devices + channels + control history)]
+  MONGO[(MongoDB&lt;br/&gt;sensor + status + measurements)]
+  MQTT[(MQTT Broker)]
+  ESP[ESP32 Electric-Nose]
+
+  APP &lt;--&gt; SETTINGS
+  APP &lt;--&gt;|HTTP JSON| API
+  APP -.-&gt;|MQTT WebSocket sau login| MQTT
+  API &lt;--&gt; SQL
+  API &lt;--&gt; MONGO
+  API &lt;--&gt; MQTT
+  MQTT &lt;--&gt; ESP</code></pre>
+<h3>4.1 Luồng đọc dữ liệu</h3>
+<ol>
+<li>ESP32 publish dữ liệu sensor/status/measurement lên MQTT broker.</li>
+<li>Backend <code>mqttBridge</code> nhận message, parse payload và lưu vào MongoDB/SQL.</li>
+<li>Mobile app gọi REST API theo chu kỳ <code>refreshMs</code>.</li>
+<li>React Query cache dữ liệu và tự cập nhật các màn hình Dashboard, Charts, History, Devices.</li>
+</ol>
+<h3>4.2 Luồng điều khiển</h3>
+<ol>
+<li>Người dùng bấm Start/Stop hoặc bật Heating/Air pump trên mobile.</li>
+<li>App gọi REST API tương ứng.</li>
+<li>Backend ghi lịch sử điều khiển và publish lệnh MQTT xuống thiết bị.</li>
+<li>App refetch trạng thái để đồng bộ UI với dữ liệu backend.</li>
+</ol>
+<h2>5. Cấu trúc thư mục chính</h2>
+<pre><code class="language-text">mobile-app/
+  src/
+    app/
+      _layout.tsx
+      login.tsx
+      register.tsx
+      (tabs)/
+        index.tsx
+        charts.tsx
+        history.tsx
+        devices.tsx
+        settings.tsx
+    components/
+      AppNavigator.tsx
+      line-chart.tsx
+      ui.tsx
+    providers/
+      auth-provider.tsx
+      settings-provider.tsx
+    lib/
+      api.ts
+      mqtt.ts
+      sensor.ts
+      format.ts
+      types.ts
+    constants/
+      airsense.ts
+  assets/
+  app.json
+  package.json
+  tsconfig.json</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th>File / thư mục</th><th>Vai trò</th></tr></thead>
+<tbody>
+<tr><td><code>src/app/_layout.tsx</code></td><td>Bọc app bằng <code>SettingsProvider</code>, <code>AuthProvider</code>, <code>QueryClientProvider</code> và navigator chính</td></tr>
+<tr><td><code>src/components/AppNavigator.tsx</code></td><td>Chọn stack đăng nhập/đăng ký hoặc stack tab chính dựa trên trạng thái login</td></tr>
+<tr><td><code>src/providers/settings-provider.tsx</code></td><td>Lưu và suy luận <code>effectiveBaseUrl</code>, API key, refresh interval, selected device</td></tr>
+<tr><td><code>src/providers/auth-provider.tsx</code></td><td>Đăng nhập, đăng ký, đăng xuất, lưu token, khởi tạo/ngắt MQTT</td></tr>
+<tr><td><code>src/lib/api.ts</code></td><td>Lớp client gọi REST API, map dữ liệu backend sang type mobile</td></tr>
+<tr><td><code>src/lib/sensor.ts</code></td><td>Chuẩn hóa cách đọc Temperature, Humidity, <code>adc[]</code>, <code>ADC0..7</code> và timestamp</td></tr>
+<tr><td><code>src/lib/mqtt.ts</code></td><td>Kết nối MQTT WebSocket, subscribe/publish và reconnect</td></tr>
+<tr><td><code>src/app/(tabs)/index.tsx</code></td><td>Dashboard realtime và điều khiển thiết bị</td></tr>
+<tr><td><code>src/app/(tabs)/charts.tsx</code></td><td>Biểu đồ 24 giờ cho môi trường và 8 kênh ADC</td></tr>
+<tr><td><code>src/app/(tabs)/history.tsx</code></td><td>Bảng 120 mẫu sensor gần nhất</td></tr>
+<tr><td><code>src/app/(tabs)/devices.tsx</code></td><td>CRUD cấu hình kênh cảm biến SQL</td></tr>
+<tr><td><code>src/app/(tabs)/settings.tsx</code></td><td>Cấu hình URL server, API key, refresh interval, test connection, logout</td></tr>
+</tbody>
+</table></div>
+<h2>6. Các màn hình và chức năng</h2>
+<h3>6.1 Đăng nhập và đăng ký</h3>
+<p>App có hai màn hình xác thực:</p>
+<ul>
+<li><code>login.tsx</code>: nhập username/password, gọi <code>POST /api/auth/login</code>, lưu <code>authToken</code> và <code>authDeviceId</code> vào SecureStore.</li>
+<li><code>register.tsx</code>: kiểm tra dữ liệu đầu vào, gọi <code>POST /api/auth/register</code>, sau đó tự đăng nhập.</li>
+</ul>
+<p>Sau khi có token, <code>AuthProvider</code> gọi <code>initMqtt(token, deviceId)</code> để tạo kết nối MQTT WebSocket. Các request REST sau đó tự gắn header:</p>
+<ul>
+<li><code>Authorization: Bearer &lt;token&gt;</code></li>
+<li><code>X-API-Key: &lt;apiKey&gt;</code> nếu người dùng cấu hình API key.</li>
+</ul>
+<h3>6.2 Dashboard</h3>
+<p>Màn hình Dashboard là màn hình vận hành chính, gồm:</p>
+<ul>
+<li>Chọn thiết bị từ danh sách <code>GET /api/enose/devices</code>.</li>
+<li>KPI realtime: Temperature, Humidity, Wi-Fi RSSI.</li>
+<li>Điều khiển Start measurement và Stop measurement.</li>
+<li>Công tắc Heating và Air pump.</li>
+<li>Lưới 8 kênh ADC: EtOH1-6, VOC1-2.</li>
+<li>Tóm tắt trạng thái điều khiển: tổng thiết bị, online, offline, số lệnh gần đây.</li>
+<li>Trạng thái phiên đo hiện tại: tên file, status, số mẫu, thời điểm bắt đầu.</li>
+</ul>
+<p>Các công tắc Heating/Air pump dùng cơ chế optimistic trong tối đa 25 giây để UI phản hồi ngay, sau đó refetch trạng thái từ server.</p>
+<h3>6.3 Charts</h3>
+<p>Màn hình Charts lấy dữ liệu lịch sử 24 giờ gần nhất:</p>
+<ul>
+<li>Gọi <code>GET /api/enose/devices/:id/history?from=&lt;iso&gt;&amp;limit=120</code>.</li>
+<li>Vẽ biểu đồ Temperature/Humidity.</li>
+<li>Vẽ biểu đồ 8 kênh ADC từ cùng payload Mongo.</li>
+<li>Dùng <code>react-native-svg</code>, phù hợp Expo Go, không cần native chart module.</li>
+</ul>
+<h3>6.4 History</h3>
+<p>Màn hình History hiển thị 120 mẫu sensor mới nhất:</p>
+<ul>
+<li>Thời gian mẫu đo.</li>
+<li>Temperature.</li>
+<li>Humidity.</li>
+<li>Tóm tắt ADC theo dạng min / avg / max.</li>
+</ul>
+<p>Cách hiển thị này phù hợp mobile vì không đưa đủ 8 giá trị ADC vào một hàng quá hẹp.</p>
+<h3>6.5 Devices / Sensor Channels</h3>
+<p>Màn hình Devices tập trung vào CRUD bảng SQL <code>enose_sensor_channels</code>:</p>
+<ul>
+<li>Đọc danh sách kênh theo thiết bị.</li>
+<li>Thêm kênh mới với <code>channel_index</code>, <code>label</code>, <code>unit</code>, <code>sort_order</code>.</li>
+<li>Sửa kênh bằng modal.</li>
+<li>Xóa mềm kênh qua endpoint delete.</li>
+</ul>
+<p>Nếu backend cũ chưa có endpoint <code>sensor-channels</code>, app có fallback 8 kênh mặc định: EtOH1-6 và VOC1-2.</p>
+<h3>6.6 Settings</h3>
+<p>Màn hình Settings quản lý cấu hình kết nối:</p>
+<ul>
+<li>Server URL, ví dụ <code>http://192.168.x.x:3010</code>.</li>
+<li>API key nếu backend bật <code>APP_API_KEY</code>.</li>
+<li>Refresh interval, tối thiểu 2000 ms.</li>
+<li>Test connection qua <code>GET /api/health</code> và <code>GET /config.json</code>.</li>
+<li>Hiển thị <code>effectiveBaseUrl</code> đang được app sử dụng.</li>
+<li>Đăng xuất và xóa token khỏi SecureStore.</li>
+</ul>
+<p>Nếu người dùng chưa nhập server URL, app ưu tiên:</p>
+<ol>
+<li><code>EXPO_PUBLIC_API_BASE_URL</code></li>
+<li>Host IP suy luận từ Expo Go</li>
+<li>URL lưu trong Settings nếu đã có</li>
+</ol>
+<h2>7. Phần Data trong mobile app</h2>
+<h3>7.1 Nguồn dữ liệu</h3>
+<p>Mobile app không lưu dữ liệu đo chính trong máy người dùng. Dữ liệu nghiệp vụ được lấy từ backend <code>report-demo</code>, trong đó backend tổng hợp từ ba nguồn:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Nguồn</th><th>Dữ liệu</th><th>Mobile app sử dụng ở đâu</th></tr></thead>
+<tbody>
+<tr><td>SQL</td><td>Danh sách thiết bị, cấu hình kênh cảm biến, lịch sử điều khiển</td><td>Device picker, Devices tab, nhãn 8 kênh ADC</td></tr>
+<tr><td>MongoDB</td><td>Sensor realtime, status thiết bị, measurement session</td><td>Dashboard, Charts, History, Measurement state</td></tr>
+<tr><td>MQTT Broker</td><td>Dữ liệu ESP32 và lệnh điều khiển thiết bị</td><td>Backend xử lý chính; mobile có kết nối MQTT sau login để mở rộng realtime</td></tr>
+</tbody>
+</table></div>
+<p>Vì mobile lấy dữ liệu qua REST API, app tránh kết nối trực tiếp vào SQL/MongoDB. Cách này phù hợp hơn cho bảo mật, dễ triển khai trên điện thoại và giữ backend là nơi chuẩn hóa dữ liệu.</p>
+<h3>7.2 Kiểu dữ liệu chính trong app</h3>
+<p>Các type chính nằm trong <code>src/lib/types.ts</code> và được map ở <code>src/lib/api.ts</code>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Type</th><th>Ý nghĩa</th></tr></thead>
+<tbody>
+<tr><td><code>Device</code></td><td>Thiết bị AirSENSE đọc từ SQL, gồm <code>deviceCode</code>, <code>deviceId</code>, <code>status</code>, <code>lastSeen</code></td></tr>
+<tr><td><code>SensorDoc</code></td><td>Một bản ghi sensor từ MongoDB, chứa <code>content</code>, <code>time</code>, <code>createdAt</code>, <code>updatedAt</code></td></tr>
+<tr><td><code>DeviceStatus</code></td><td>Trạng thái thiết bị: Wi-Fi, heating, air pump, storage, last seen</td></tr>
+<tr><td><code>Measurement</code></td><td>Phiên đo: tên file, trạng thái, số mẫu, thời điểm bắt đầu/kết thúc</td></tr>
+<tr><td><code>Channel</code></td><td>Cấu hình kênh cảm biến SQL: <code>channelIndex</code>, <code>label</code>, <code>unit</code>, <code>sortOrder</code></td></tr>
+<tr><td><code>PersistedSettings</code></td><td>Cấu hình lưu cục bộ: <code>baseUrl</code>, <code>apiKey</code>, <code>refreshMs</code>, <code>selectedDevice</code></td></tr>
+</tbody>
+</table></div>
+<h3>7.3 Chuẩn hóa dữ liệu sensor</h3>
+<p>Payload sensor từ firmware/backend có thể không cố định hoàn toàn, nên app có lớp chuẩn hóa trong <code>src/lib/sensor.ts</code>:</p>
+<ul>
+<li>Đọc nhiệt độ theo cả <code>Temperature</code> và <code>temperature</code>.</li>
+<li>Đọc độ ẩm theo cả <code>Humidity</code> và <code>humidity</code>.</li>
+<li>Đọc ADC theo nhiều dạng: <code>adc[]</code>, <code>ADC0..ADC7</code>, <code>adc0..adc7</code>.</li>
+<li>Đọc kênh theo nhãn SQL như <code>EtOH1</code>, <code>EtOH2</code>, <code>VOC1</code>, <code>VOC2</code>.</li>
+<li>Chuẩn hóa timestamp từ <code>time</code>, <code>createdAt</code> hoặc <code>updatedAt</code>.</li>
+<li>Tóm tắt ADC trong History bằng min / avg / max để phù hợp màn hình điện thoại.</li>
+</ul>
+<p>Nhờ lớp này, UI không phải xử lý trực tiếp nhiều biến thể payload. Khi firmware hoặc backend thay đổi tên trường nhỏ, chỉ cần cập nhật <code>sensor.ts</code> thay vì sửa từng màn hình.</p>
+<h3>7.4 Data fetching và cache</h3>
+<p>Mobile app dùng TanStack Query để quản lý dữ liệu:</p>
+<ul>
+<li><code>useQuery</code> cho dữ liệu đơn như devices, history, channels.</li>
+<li><code>useQueries</code> ở Dashboard để tải song song latest, status, active measurement và control summary.</li>
+<li><code>useMutation</code> cho các thao tác ghi như start, stop, heating, air pump, create/update/delete channel.</li>
+<li><code>refetchInterval: settings.refreshMs</code> để polling tự động theo cấu hình người dùng.</li>
+<li><code>queryKey</code> có chứa <code>effectiveBaseUrl</code>, <code>apiKey</code>, <code>selectedDevice</code> để tránh dùng cache sai server hoặc sai thiết bị.</li>
+</ul>
+<h3>7.5 Dữ liệu lưu cục bộ</h3>
+<p>App chỉ lưu các dữ liệu cấu hình và phiên đăng nhập trong <code>expo-secure-store</code>:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Nội dung</th></tr></thead>
+<tbody>
+<tr><td><code>airsense-mobile-settings</code></td><td>Server URL, API key, refresh interval, selected device</td></tr>
+<tr><td><code>authToken</code></td><td>Token sau đăng nhập</td></tr>
+<tr><td><code>authDeviceId</code></td><td>Device/user id trả về từ backend</td></tr>
+</tbody>
+</table></div>
+<p>Không lưu trực tiếp dữ liệu sensor dài hạn trên mobile. Điều này giúp giảm rủi ro lệch dữ liệu giữa điện thoại và server, đồng thời tránh tăng dung lượng app khi hệ thống đo liên tục.</p>
+<h3>7.6 Luồng dữ liệu theo màn hình</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Màn hình</th><th>Dữ liệu đọc</th><th>Dữ liệu ghi</th></tr></thead>
+<tbody>
+<tr><td>Login/Register</td><td>Không đọc sensor; gọi API auth</td><td>Ghi token/deviceId vào SecureStore</td></tr>
+<tr><td>Dashboard</td><td>Devices, latest sensor, status, active measurement, control summary</td><td>Start/Stop, Heating, Air pump, selected device</td></tr>
+<tr><td>Charts</td><td>History 24h, tối đa 120 mẫu</td><td>Không ghi dữ liệu nghiệp vụ</td></tr>
+<tr><td>History</td><td>120 mẫu sensor gần nhất</td><td>Không ghi dữ liệu nghiệp vụ</td></tr>
+<tr><td>Devices</td><td>Danh sách sensor channels</td><td>Create/Update/Delete channel</td></tr>
+<tr><td>Settings</td><td>Health, config, settings local</td><td>Server URL, API key, refresh interval, logout</td></tr>
+</tbody>
+</table></div>
+<h2>8. Middleware và lớp trung gian</h2>
+<p>Trong phạm vi mobile app, &quot;middleware&quot; được hiểu là các lớp nằm giữa UI và backend, giúp xử lý cấu hình, xác thực, request, cache và điều hướng. Ngoài ra, backend <code>report-demo</code> vẫn có middleware Express và MQTT bridge để phục vụ dữ liệu cho mobile.</p>
+<h3>8.1 Middleware phía mobile</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Lớp</th><th>File</th><th>Vai trò</th></tr></thead>
+<tbody>
+<tr><td>Settings provider</td><td><code>src/providers/settings-provider.tsx</code></td><td>Tải/lưu cấu hình, suy luận <code>effectiveBaseUrl</code>, đảm bảo refresh interval tối thiểu</td></tr>
+<tr><td>Auth provider</td><td><code>src/providers/auth-provider.tsx</code></td><td>Quản lý login/register/logout, lưu token, khởi tạo/ngắt MQTT</td></tr>
+<tr><td>API wrapper</td><td><code>src/lib/api.ts</code></td><td>Chuẩn hóa URL, gắn header, parse JSON, bóc <code>result</code>, chuyển lỗi thành <code>ApiError</code></td></tr>
+<tr><td>React Query</td><td><code>@tanstack/react-query</code></td><td>Cache, polling, retry, mutation, refetch sau thao tác ghi</td></tr>
+<tr><td>App navigator</td><td><code>src/components/AppNavigator.tsx</code></td><td>Chặn người dùng chưa login vào tab chính</td></tr>
+<tr><td>Sensor parser</td><td><code>src/lib/sensor.ts</code></td><td>Middleware dữ liệu giữa payload backend và UI hiển thị</td></tr>
+</tbody>
+</table></div>
+<h3>8.2 Luồng request qua middleware mobile</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+  participant UI as Screen UI
+  participant RQ as React Query
+  participant API as api.ts request()
+  participant SS as SecureStore
+  participant BE as report-demo Backend
+
+  UI-&gt;&gt;RQ: useQuery / useMutation
+  RQ-&gt;&gt;API: gọi hàm fetch/start/update
+  API-&gt;&gt;SS: đọc authToken nếu có
+  API-&gt;&gt;API: gắn Content-Type, X-API-Key, Authorization
+  API-&gt;&gt;BE: HTTP request
+  BE--&gt;&gt;API: JSON response
+  API-&gt;&gt;API: parse JSON, bóc result, map type
+  API--&gt;&gt;RQ: data hoặc ApiError
+  RQ--&gt;&gt;UI: render loading/error/data</code></pre>
+<h3>8.3 Xác thực và bảo vệ luồng màn hình</h3>
+<p><code>AuthProvider</code> là lớp trung gian quan trọng:</p>
+<ul>
+<li>Khi mở app, provider đọc <code>authToken</code> và <code>authDeviceId</code> từ SecureStore.</li>
+<li>Nếu có token, app coi người dùng đã đăng nhập và hiển thị tab chính.</li>
+<li>Nếu chưa có token, <code>AppNavigator</code> chỉ hiển thị Login/Register.</li>
+<li>Khi login thành công, token được lưu và request REST sau đó tự gắn <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+<li>Khi logout, app ngắt MQTT, xóa token và quay lại luồng xác thực.</li>
+</ul>
+<p>Cách này giúp từng màn hình chức năng không cần tự kiểm tra token, tránh lặp logic xác thực trong Dashboard, Charts, History hoặc Devices.</p>
+<h3>8.4 Middleware request và xử lý lỗi</h3>
+<p>Hàm <code>request()</code> trong <code>src/lib/api.ts</code> đóng vai trò giống middleware cho toàn bộ API call:</p>
+<ul>
+<li>Chuẩn hóa <code>baseUrl</code>, tránh lỗi thừa/thiếu dấu <code>/</code>.</li>
+<li>Tự thêm <code>Content-Type: application/json</code> khi có body.</li>
+<li>Tự thêm <code>X-API-Key</code> nếu người dùng cấu hình.</li>
+<li>Tự đọc <code>authToken</code> và thêm <code>Authorization</code>.</li>
+<li>Bắt lỗi mạng và chuyển thành thông báo dễ hiểu.</li>
+<li>Kiểm tra JSON response hợp lệ.</li>
+<li>Nếu backend trả dữ liệu trong object <code>result</code>, app tự bóc ra để tương thích nhiều kiểu response.</li>
+</ul>
+<p>Phần <code>userMessageFromError()</code> tiếp tục chuyển lỗi kỹ thuật thành câu dễ hiểu cho UI, ví dụ sai URL server, mất mạng, thiết bị không tồn tại hoặc endpoint 404.</p>
+<h3>8.5 Middleware phía backend liên quan tới mobile</h3>
+<p>Mobile app phụ thuộc vào một số lớp trung gian ở backend:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Backend middleware / service</th><th>Vai trò với mobile app</th></tr></thead>
+<tbody>
+<tr><td><code>express.json()</code></td><td>Parse body JSON cho login, register, heating, air pump, CRUD channel</td></tr>
+<tr><td>Static/config route</td><td>Cung cấp <code>/config.json</code> để mobile kiểm tra cấu hình công khai</td></tr>
+<tr><td>API router <code>/api/enose</code></td><td>Chuẩn hóa REST API cho thiết bị, sensor, measurement và channel</td></tr>
+<tr><td>MQTT bridge</td><td>Nhận message từ ESP32, lưu Mongo/SQL để mobile đọc qua REST</td></tr>
+<tr><td>DB layer</td><td>Kết nối SQL/MongoDB, giữ mobile không cần truy cập DB trực tiếp</td></tr>
+<tr><td>Auth middleware nếu bật</td><td>Kiểm tra Bearer token hoặc API key trước khi cho thao tác điều khiển</td></tr>
+</tbody>
+</table></div>
+<h3>8.6 Lý do cần các lớp middleware này</h3>
+<ul>
+<li>UI mobile gọn hơn vì không chứa logic parse token, normalize URL, parse sensor payload ở từng màn hình.</li>
+<li>Backend vẫn là lớp bảo vệ dữ liệu và thiết bị, tránh để app mobile kết nối trực tiếp SQL/MongoDB/MQTT broker nội bộ.</li>
+<li>Dễ thay đổi contract: nếu backend đổi wrapper response hoặc firmware đổi tên trường ADC, chỉ cần sửa <code>api.ts</code> hoặc <code>sensor.ts</code>.</li>
+<li>Dễ mở rộng bảo mật: có thể thêm refresh token, role, permission hoặc kiểm tra API key mà không cần viết lại toàn bộ UI.</li>
+</ul>
+<h2>9. API backend đang sử dụng</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Chức năng</th><th>Endpoint</th></tr></thead>
+<tbody>
+<tr><td>Cấu hình công khai</td><td><code>GET /config.json</code></td></tr>
+<tr><td>Kiểm tra sức khỏe hệ thống</td><td><code>GET /api/health</code></td></tr>
+<tr><td>Đăng nhập</td><td><code>POST /api/auth/login</code></td></tr>
+<tr><td>Đăng ký</td><td><code>POST /api/auth/register</code></td></tr>
+<tr><td>Danh sách thiết bị</td><td><code>GET /api/enose/devices</code></td></tr>
+<tr><td>Dữ liệu sensor mới nhất</td><td><code>GET /api/enose/devices/:id/latest</code></td></tr>
+<tr><td>Trạng thái thiết bị</td><td><code>GET /api/enose/devices/:id/status</code></td></tr>
+<tr><td>Lịch sử sensor</td><td><code>GET /api/enose/devices/:id/history</code></td></tr>
+<tr><td>Danh sách phiên đo</td><td><code>GET /api/enose/devices/:id/measurements</code></td></tr>
+<tr><td>Phiên đo đang chạy</td><td><code>GET /api/enose/devices/measurements/active</code></td></tr>
+<tr><td>Tổng quan điều khiển</td><td><code>GET /api/enose/control/status</code></td></tr>
+<tr><td>Start đo</td><td><code>POST /api/enose/control/measurement/start</code></td></tr>
+<tr><td>Stop đo</td><td><code>POST /api/enose/control/measurement/stop</code></td></tr>
+<tr><td>Heating</td><td><code>POST /api/enose/devices/:id/heating</code></td></tr>
+<tr><td>Air pump</td><td><code>POST /api/enose/devices/:id/air-pump</code></td></tr>
+<tr><td>Đọc kênh cảm biến</td><td><code>GET /api/enose/devices/:id/sensor-channels</code></td></tr>
+<tr><td>Tạo kênh cảm biến</td><td><code>POST /api/enose/devices/:id/sensor-channels</code></td></tr>
+<tr><td>Sửa kênh cảm biến</td><td><code>PATCH /api/enose/sensor-channels/:channelId</code></td></tr>
+<tr><td>Xóa mềm kênh cảm biến</td><td><code>POST /api/enose/sensor-channels/:channelId/delete</code></td></tr>
+</tbody>
+</table></div>
+<h2>10. Luồng demo đề xuất</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Bước</th><th>Màn hình</th><th>Thao tác</th><th>Kết quả cần trình bày</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Settings</td><td>Nhập Server URL, bấm Test connection</td><td>App báo trạng thái Mongo/PG/MQTT và cấu hình API</td></tr>
+<tr><td>2</td><td>Login</td><td>Đăng nhập tài khoản demo</td><td>App vào màn hình tab chính</td></tr>
+<tr><td>3</td><td>Dashboard</td><td>Chọn thiết bị</td><td>KPI và trạng thái thiết bị hiển thị</td></tr>
+<tr><td>4</td><td>Dashboard</td><td>Bấm Start measurement</td><td>Backend tạo phiên đo, app cập nhật measurement state</td></tr>
+<tr><td>5</td><td>Dashboard</td><td>Bật Heating/Air pump</td><td>Công tắc đổi trạng thái, server nhận lệnh</td></tr>
+<tr><td>6</td><td>Charts</td><td>Mở tab biểu đồ</td><td>Hiển thị xu hướng Temperature/Humidity và 8 ADC</td></tr>
+<tr><td>7</td><td>History</td><td>Mở tab lịch sử</td><td>Bảng 120 mẫu gần nhất, ADC được tóm tắt</td></tr>
+<tr><td>8</td><td>Devices</td><td>Thêm/sửa/xóa một kênh cảm biến</td><td>Chứng minh CRUD trên SQL</td></tr>
+<tr><td>9</td><td>Dashboard</td><td>Bấm Stop measurement</td><td>Kết thúc phiên đo, trạng thái được refetch</td></tr>
+<tr><td>10</td><td>Settings</td><td>Logout</td><td>Token bị xóa, quay về luồng xác thực</td></tr>
+</tbody>
+</table></div>
+<h2>11. Kết quả đã đạt được</h2>
+<ul>
+<li>App Expo chạy được trên điện thoại qua Expo Go.</li>
+<li>Có phân luồng xác thực: chưa login thì vào Login/Register, đã login thì vào tab chính.</li>
+<li>Lưu được cấu hình quan trọng bằng SecureStore.</li>
+<li>Tự suy luận URL backend trong môi trường Expo Go, đồng thời cho phép nhập URL thủ công.</li>
+<li>Có 5 tab chức năng tương đương dashboard web: Dashboard, Charts, History, Devices, Settings.</li>
+<li>Tích hợp React Query để polling và refetch dữ liệu có kiểm soát.</li>
+<li>Đọc được dữ liệu sensor theo nhiều dạng payload: <code>Temperature</code>, <code>temperature</code>, <code>Humidity</code>, <code>humidity</code>, <code>adc[]</code>, <code>ADC0..7</code>, <code>adc0..7</code>.</li>
+<li>Có CRUD kênh cảm biến để đáp ứng yêu cầu thao tác CSDL.</li>
+<li>Có kết nối MQTT WebSocket sau đăng nhập, chuẩn bị cho các chức năng realtime mở rộng.</li>
+</ul>
+<h2>12. Hạn chế hiện tại</h2>
+<ul>
+<li>App vẫn phụ thuộc backend <code>report-demo</code>; nếu backend thiếu endpoint <code>api/auth/<em></code> hoặc <code>control/measurement/</em></code> thì chức năng đăng nhập/start/stop sẽ lỗi.</li>
+<li>MQTT trong mobile hiện mới khởi tạo kết nối và subscribe topic theo <code>deviceId</code>; phần hiển thị realtime chính vẫn dựa vào REST polling.</li>
+<li>URL MQTT mặc định là <code>ws://localhost:8083/mqtt</code>, không phù hợp khi chạy trên điện thoại thật nếu chưa cấu hình <code>EXPO_PUBLIC_MQTT_BROKER_URL</code>.</li>
+<li>Một số chuỗi tiếng Việt trong mã nguồn đang có dấu hiệu lỗi mã hóa khi đọc bằng PowerShell, nên cần chuẩn hóa UTF-8 để tránh hiển thị sai trong app hoặc báo cáo.</li>
+<li>Chưa có test tự động cho màn hình và API client.</li>
+<li>Chưa có cơ chế role/permission chi tiết cho từng thao tác điều khiển.</li>
+</ul>
+<h2>13. Đề xuất hoàn thiện</h2>
+<h3>Ngắn hạn</h3>
+<ul>
+<li>Đồng bộ lại contract backend cho <code>api/auth/login</code>, <code>api/auth/register</code>, <code>api/enose/control/measurement/start</code>, <code>api/enose/control/measurement/stop</code>.</li>
+<li>Chuẩn hóa toàn bộ file TypeScript/Markdown sang UTF-8.</li>
+<li>Cấu hình rõ <code>EXPO_PUBLIC_API_BASE_URL</code> và <code>EXPO_PUBLIC_MQTT_BROKER_URL</code> trong tài liệu chạy demo.</li>
+<li>Kiểm thử lại trên điện thoại thật cùng mạng LAN với backend.</li>
+</ul>
+<h3>Trung hạn</h3>
+<ul>
+<li>Dùng MQTT/WebSocket hoặc SSE để đẩy dữ liệu realtime thay vì chỉ polling REST.</li>
+<li>Thêm trạng thái kết nối MQTT vào UI.</li>
+<li>Thêm toast/thông báo rõ ràng cho lỗi mạng, lỗi token hết hạn, lỗi thiết bị offline.</li>
+<li>Bổ sung test cho <code>sensor.ts</code>, <code>api.ts</code> và các flow Start/Stop/CRUD.</li>
+</ul>
+<h3>Dài hạn</h3>
+<ul>
+<li>Đóng gói bằng Expo development build hoặc EAS Build.</li>
+<li>Bổ sung phân quyền người dùng: viewer/operator/admin.</li>
+<li>Thêm export CSV/PDF trên mobile.</li>
+<li>Thêm cảnh báo ngưỡng sensor và push notification.</li>
+</ul>
+<h2>14. Kết luận</h2>
+<p><code>mobile-app</code> đã đạt vai trò của một client vận hành mobile cho hệ thống AirSENSE. Ứng dụng có đầy đủ các phần quan trọng: xác thực, cấu hình kết nối, dashboard realtime qua polling, biểu đồ, lịch sử, điều khiển thiết bị và CRUD kênh cảm biến. So với dashboard web, mobile app phù hợp hơn cho thao tác nhanh tại hiện trường, đặc biệt khi kỹ thuật viên cần kiểm tra thiết bị ESP32, xem dữ liệu sensor và gửi lệnh điều khiển trực tiếp từ điện thoại.</p>
+<p>Phần cần ưu tiên hoàn thiện là đồng bộ contract backend cho xác thực/start-stop, chuẩn hóa mã hóa tiếng Việt và nâng cấp luồng realtime từ polling sang push-based để app phản hồi nhanh và đúng trạng thái thiết bị hơn.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,8 @@
+node_modules/
+mobile-app/.expo/
+.env
+handoff-exports/*.sql
+handoff-exports/*.gz
+handoff-exports/*.dump
+handoff-exports/mongo-archive/
+*.log

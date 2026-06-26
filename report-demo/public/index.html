@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AirSENSE — Electric-Nose</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="sidebar-drawer-open">
+  <header class="topbar">
+    <div class="topbar-inner topbar-inner--app">
+      <div class="topbar-leading">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary sidebar-toggle"
+          id="sidebarNavToggle"
+          aria-controls="appSidebar"
+          aria-expanded="true"
+          title="Menu điều hướng"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+        <div class="brand-block">
+          <div class="brand-title">AirSENSE</div>
+          <div class="brand-sub">Electric-Nose</div>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <button type="button" class="btn btn-sm btn-outline-secondary theme-toggle" id="themeToggle" title="Giao diện tối / sáng" aria-pressed="false">
+          <i class="bi bi-moon-stars"></i>
+        </button>
+        <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">Standalone</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="appSidebar" aria-label="Menu chính">
+      <nav class="sidebar-nav">
+        <button type="button" class="sidebar-link active" data-view="dashboard" title="Dashboard" aria-label="Dashboard">
+          <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+        </button>
+        <button type="button" class="sidebar-link" data-view="devices" title="Quản lý thiết bị" aria-label="Quản lý thiết bị">
+          <i class="bi bi-cpu"></i><span>Quản lý thiết bị</span>
+        </button>
+        <button type="button" class="sidebar-link" data-view="charts" title="Biểu đồ" aria-label="Biểu đồ">
+          <i class="bi bi-graph-up-arrow"></i><span>Biểu đồ</span>
+        </button>
+        <button type="button" class="sidebar-link" data-view="history" title="Lịch sử" aria-label="Lịch sử">
+          <i class="bi bi-clock-history"></i><span>Lịch sử</span>
+        </button>
+        <button type="button" class="sidebar-link" data-view="settings" title="Cài đặt" aria-label="Cài đặt">
+          <i class="bi bi-gear"></i><span>Cài đặt</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main-shell">
+      <div class="main-inner">
+        <div class="page-heading">
+          <h1 class="page-title" id="pageTitle">Dashboard</h1>
+          <p class="page-sub text-muted mb-0" id="pageSubtitle">Giám sát realtime và điều khiển thiết bị</p>
+        </div>
+
+        <div id="appBanner" class="app-banner app-banner--hidden" role="status" aria-live="polite"></div>
+
+        <!-- Điều khiển kỹ thuật ẩn: JS vẫn cần id deviceSelect / fromTime / toTime -->
+        <div id="appEngineInputs" class="d-none" aria-hidden="true">
+          <select id="deviceSelect"></select>
+          <input type="datetime-local" id="fromTime" />
+          <input type="datetime-local" id="toTime" />
+        </div>
+
+        <!-- Dashboard -->
+        <section id="view-dashboard" class="view-pane view-pane--active">
+          <div class="header-bar d-none d-md-flex">
+            <div class="logo-wrap">
+              <div class="logo logo--section"><i class="bi bi-activity"></i> Tổng quan</div>
+              <div class="logo-subtitle logo-subtitle--section">KPI, điều khiển và cảm biến theo cấu hình kênh</div>
+            </div>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-3">
+              <div class="metric-card">
+                <div class="metric-label"><i class="bi bi-thermometer-half"></i> Temperature</div>
+                <div class="metric-value metric-value--temp"><span id="temperature">--</span><span class="unit-deg-c" title="Độ C">℃</span></div>
+                <svg id="tempSpark" class="sparkline" viewBox="0 0 120 28" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="metric-card">
+                <div class="metric-label"><i class="bi bi-droplet-half"></i> Humidity</div>
+                <div class="metric-value metric-value--hum"><span id="humidity">--</span><span class="unit-suffix">%</span></div>
+                <svg id="humSpark" class="sparkline" viewBox="0 0 120 28" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="metric-card">
+                <div class="metric-label"><i class="bi bi-reception-4"></i> Wi-Fi</div>
+                <div class="metric-value metric-wifi"><span id="wifiSignal">--</span><span class="unit-suffix"> dBm</span></div>
+                <div class="text-muted small" id="wifiSSID">SSID: --</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="metric-card center-card">
+                <div class="device-info-box">
+                  <div class="metric-label mb-1">Thiết bị</div>
+                  <div id="selectedDeviceText" class="device-name">--</div>
+                  <div id="wifiChip" class="status-chip chip-danger mt-2"><i class="bi bi-wifi-off"></i> Mất kết nối</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+              <div class="card-block">
+                <div class="mb-3 measure-btn-row">
+                  <button type="button" class="btn-measure" id="startMeasureBtn"><i class="bi bi-play-circle"></i> Start measurement</button>
+                  <button type="button" class="btn-stop-measure" id="stopMeasureBtn"><i class="bi bi-stop-circle"></i> Stop</button>
+                </div>
+                <div class="status-panel">
+                  <div class="text-muted mb-2">Trạng thái</div>
+                  <div id="statusContent">Ready</div>
+                </div>
+                <div id="activeMeasurementAlert" class="alert alert-info mt-3" style="display:none;">
+                  <i class="bi bi-info-circle"></i>
+                  <strong>Đang đo:</strong> <span id="activeMeasurementFileName"></span>
+                </div>
+                <div class="switch-grid mt-3">
+                  <div class="switch-card">
+                    <div class="switch-label">Heating</div>
+                    <div class="form-check form-switch m-0">
+                      <input class="form-check-input" type="checkbox" id="heatingSwitch" />
+                    </div>
+                  </div>
+                  <div class="switch-card">
+                    <div class="switch-label">Air Pump</div>
+                    <div class="form-check form-switch m-0">
+                      <input class="form-check-input" type="checkbox" id="airPumpSwitch" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="file-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="section-title">File đo mới nhất</div>
+                  <i class="bi bi-folder2-open section-icon"></i>
+                </div>
+                <p class="small text-muted mb-2" id="measurementLatestSummary">—</p>
+                <div class="small text-muted mb-2 file-server-ip-row">
+                  <i class="bi bi-info-circle" aria-hidden="true"></i>
+                  <span>File server:</span>
+                  <a id="currentEspIpLink" class="file-server-ip-link file-server-ip-link--inactive" href="#">--</a>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                  <button type="button" class="btn btn-primary btn-sm d-none" id="downloadFileBtn">
+                    <i class="bi bi-download"></i> Tải file CSV mới nhất
+                  </button>
+                  <a class="btn btn-outline-primary btn-sm d-none" id="fileServerLink" href="#" target="_blank" rel="noopener noreferrer">
+                    <i class="bi bi-link-45deg"></i> File server
+                  </a>
+                </div>
+                <div class="text-muted mt-2 helper-text" id="fileServerInfo">
+                  <i class="bi bi-info-circle"></i> <span id="fileServerText">Đang tải…</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mems-sensors-section">
+            <div class="mems-sensors-title mems-sensors-title--major">Cảm biến (theo cấu hình kênh)</div>
+            <div id="sensorChannelsGrid" class="row g-3"></div>
+          </div>
+
+          <div class="row g-3 mt-2">
+            <div class="col-6 col-md-3"><div class="metric-card stat-card"><div class="metric-label">Tổng thiết bị</div><div class="metric-value stat-value"><span id="totalDevices">--</span></div></div></div>
+            <div class="col-6 col-md-3"><div class="metric-card stat-card"><div class="metric-label">Online</div><div class="metric-value stat-value text-online"><span id="onlineDevices">--</span></div></div></div>
+            <div class="col-6 col-md-3"><div class="metric-card stat-card"><div class="metric-label">Offline</div><div class="metric-value stat-value text-offline"><span id="offlineDevices">--</span></div></div></div>
+            <div class="col-6 col-md-3"><div class="metric-card stat-card"><div class="metric-label">Lệnh 1h</div><div class="metric-value stat-value"><span id="recentCommands">--</span></div></div></div>
+          </div>
+        </section>
+
+        <!-- Quản lý thiết bị / kênh -->
+        <section id="view-devices" class="view-pane">
+          <div class="card-block mb-3">
+            <div class="section-title mb-2">CRUD kênh cảm biến (SQL)</div>
+            <p class="text-muted small mb-3">
+              Mỗi dòng = một kênh ADC trên firmware (ADC0…ADC31). Thêm / sửa / xóa theo PCB thực tế (một ESP32).
+              <span class="d-none d-md-inline">Khởi tạo bảng SQL: xem <strong>README</strong> (PostgreSQL).</span>
+            </p>
+            <div class="table-responsive mb-3">
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Kênh</th>
+                    <th>Nhãn</th>
+                    <th>Đơn vị</th>
+                    <th>Thứ tự</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="sensorChannelCrudBody"></tbody>
+              </table>
+            </div>
+            <div class="row g-2 align-items-end">
+              <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Kênh (0–31)</label>
+                <input type="number" id="newChIndex" class="form-control form-control-sm" min="0" max="31" value="0" />
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label small mb-1">Nhãn</label>
+                <input type="text" id="newChLabel" class="form-control form-control-sm" placeholder="VD: MQ-3" />
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Đơn vị</label>
+                <input type="text" id="newChUnit" class="form-control form-control-sm" value="ADC" />
+              </div>
+              <div class="col-6 col-md-2">
+                <label class="form-label small mb-1">Thứ tự</label>
+                <input type="number" id="newChSort" class="form-control form-control-sm" value="0" />
+              </div>
+              <div class="col-12 col-md-3">
+                <button type="button" class="btn btn-primary btn-sm" id="addSensorChannelBtn">Thêm kênh</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Biểu đồ -->
+        <section id="view-charts" class="view-pane">
+          <div class="card-block mb-3">
+            <div class="section-title mb-2">Biểu đồ nhiệt độ & độ ẩm theo thời gian</div>
+            <p class="text-muted small">Hiển thị <strong>24 giờ gần nhất</strong> (cập nhật theo chu kỳ làm mới dữ liệu).</p>
+            <div class="chart-wrap chart-wrap--large">
+              <canvas id="sensorTrendChart"></canvas>
+            </div>
+          </div>
+          <div class="card-block mb-3">
+            <div class="section-title mb-2">Biểu đồ 8 kênh ADC (cảm biến MEMS)</div>
+            <p class="text-muted small">
+              Cùng cửa sổ <strong>24 giờ</strong> — tám đường trên một biểu đồ: <strong>EtOH1 → EtOH6, VOC1, VOC2</strong> (theo mảng <code>adc</code> trên MQTT).
+            </p>
+            <div class="chart-wrap chart-wrap--large">
+              <canvas id="adcTrendChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lịch sử -->
+        <section id="view-history" class="view-pane">
+          <div class="card-block mb-3">
+            <div class="section-title mb-2">Lịch sử điểm đo (Mongo)</div>
+            <p class="text-muted small">Các bản ghi sensor trong <strong>24 giờ gần nhất</strong> (bấm <strong>Tải lại bảng</strong> để làm mới).</p>
+            <div class="table-responsive">
+              <table class="table table-sm table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th>Thời gian</th>
+                    <th>°C</th>
+                    <th>%RH</th>
+                    <th>ADC (tóm tắt)</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="historyReloadBtn"><i class="bi bi-arrow-clockwise"></i> Tải lại bảng</button>
+          </div>
+        </section>
+
+        <!-- Cài đặt -->
+        <section id="view-settings" class="view-pane">
+          <div class="card-block mb-3">
+            <div class="section-title mb-2">Cài đặt &amp; cấu hình</div>
+            <p class="text-muted small">
+              Thông số kết nối (DB, MQTT, …) lấy từ file <code>.env</code> phía server. Dưới đây là các giá trị công khai qua <code>/config.json</code>.
+            </p>
+            <pre class="settings-pre" id="settingsInfo">Đang tải…</pre>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer-note">
+    <div><strong>SPARC Laboratory</strong> — ĐHBK Hà Nội</div>
+    <div>airsensevietnam@gmail.com</div>
+  </footer>
+
+  <script src="./report.js"></script>
+</body>
+</html>
