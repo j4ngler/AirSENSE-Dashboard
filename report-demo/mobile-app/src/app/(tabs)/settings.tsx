@@ -1,6 +1,5 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Text } from 'react-native';
-import { useRouter } from 'expo-router';
 
 import { ActionButton, EmptyState, Field, InlineError, Page, Section } from '@/components/ui';
 import { fetchAppConfig, fetchHealth, userMessageFromError } from '@/lib/api';
@@ -8,7 +7,6 @@ import { useAppSettings } from '@/providers/settings-provider';
 import { useAuth } from '@/providers/auth-provider';
 
 export default function SettingsScreen() {
-  const router = useRouter();
   const { effectiveBaseUrl, isReady, settings, updateSettings } = useAppSettings();
   const { logout, deviceId } = useAuth();
   const [draft, setDraft] = useState({
@@ -113,17 +111,16 @@ export default function SettingsScreen() {
         </Text>
       </Section>
 
-      <Section subtitle={deviceId ? `Logged in as: ${deviceId}` : 'Not logged in'} title="Account">
+      <Section subtitle={deviceId ? `Đang đăng nhập: ${deviceId}` : 'Chưa đăng nhập'} title="Tài khoản">
         <ActionButton
           danger
           disabled={loggingOut}
-          label={loggingOut ? 'Logging out...' : 'Logout'}
+          label={loggingOut ? 'Đang đăng xuất...' : 'Đăng xuất'}
           onPress={async () => {
             setLoggingOut(true);
             setErrorMessage(null);
             try {
               await logout();
-              router.replace('/login');
             } catch (error) {
               setErrorMessage(userMessageFromError(error));
             } finally {

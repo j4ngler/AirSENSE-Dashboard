@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -23,14 +23,14 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!username.trim() || !password) {
-      Alert.alert('Thieu thong tin', 'Vui long nhap ten dang nhap va mat khau.');
+      Alert.alert('Thiếu thông tin', 'Vui lòng nhập tên đăng nhập và mật khẩu.');
       return;
     }
     try {
       setLoading(true);
       await login(username.trim(), password);
     } catch (e: unknown) {
-      Alert.alert('Dang nhap that bai', e instanceof Error ? e.message : 'Khong the dang nhap.');
+      Alert.alert('Đăng nhập thất bại', e instanceof Error ? e.message : 'Không thể đăng nhập.');
     } finally {
       setLoading(false);
     }
@@ -41,38 +41,38 @@ export default function LoginScreen() {
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text style={styles.logo}>AirSENSE</Text>
-          <Text style={styles.subtitle}>Dang nhap de xem du lieu thiet bi</Text>
+          <Text style={styles.subtitle}>Đăng nhập để xem dữ liệu thiết bị</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.title}>Dang nhap</Text>
-          <Text style={styles.label}>Ten dang nhap</Text>
+          <Text style={styles.title}>Đăng nhập</Text>
+          <Text style={styles.label}>Tên đăng nhập</Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
             onChangeText={setUsername}
-            placeholder="Nhap ten dang nhap"
+            placeholder="Nhập tên đăng nhập"
             style={styles.input}
             value={username}
           />
 
-          <Text style={styles.label}>Mat khau</Text>
+          <Text style={styles.label}>Mật khẩu</Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={setPassword}
             onSubmitEditing={handleLogin}
-            placeholder="Nhap mat khau"
+            placeholder="Nhập mật khẩu"
             secureTextEntry
             style={styles.input}
             value={password}
           />
 
           <Pressable disabled={loading} onPress={handleLogin} style={[styles.primaryButton, loading && styles.disabled]}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryText}>Dang nhap</Text>}
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryText}>Đăng nhập</Text>}
           </Pressable>
 
           <Pressable onPress={() => router.push('/register')} style={styles.secondaryButton}>
-            <Text style={styles.secondaryText}>Tao tai khoan moi</Text>
+            <Text style={styles.secondaryText}>Tạo tài khoản mới</Text>
           </Pressable>
         </View>
       </ScrollView>

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -24,20 +24,20 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!username.trim() || !password || !confirmPassword) {
-      Alert.alert('Thieu thong tin', 'Vui long nhap day du ten dang nhap, mat khau va xac nhan.');
+      Alert.alert('Thiếu thông tin', 'Vui lòng nhập đầy đủ tên đăng nhập, mật khẩu và xác nhận.');
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert('Mat khau khong khop', 'Mat khau va xac nhan phai giong nhau.');
+      Alert.alert('Mật khẩu không khớp', 'Mật khẩu và xác nhận phải giống nhau.');
       return;
     }
     try {
       setLoading(true);
       await register(username.trim(), password, confirmPassword);
-      Alert.alert('Dang ky thanh cong', 'Hay dang nhap bang tai khoan vua tao.');
+      Alert.alert('Đăng ký thành công', 'Hãy đăng nhập bằng tài khoản vừa tạo.');
       router.replace('/login');
     } catch (e: unknown) {
-      Alert.alert('Dang ky that bai', e instanceof Error ? e.message : 'Khong the tao tai khoan.');
+      Alert.alert('Đăng ký thất bại', e instanceof Error ? e.message : 'Không thể tạo tài khoản.');
     } finally {
       setLoading(false);
     }
@@ -48,48 +48,48 @@ export default function RegisterScreen() {
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text style={styles.logo}>AirSENSE</Text>
-          <Text style={styles.subtitle}>Tao tai khoan cuc bo tren ung dung</Text>
+          <Text style={styles.subtitle}>Tạo tài khoản cục bộ trên ứng dụng</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.title}>Dang ky</Text>
-          <Text style={styles.label}>Ten dang nhap</Text>
+          <Text style={styles.title}>Đăng ký</Text>
+          <Text style={styles.label}>Tên đăng nhập</Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
             onChangeText={setUsername}
-            placeholder="Nhap ten dang nhap"
+            placeholder="Nhập tên đăng nhập"
             style={styles.input}
             value={username}
           />
 
-          <Text style={styles.label}>Mat khau</Text>
+          <Text style={styles.label}>Mật khẩu</Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={setPassword}
-            placeholder="Nhap mat khau"
+            placeholder="Nhập mật khẩu"
             secureTextEntry
             style={styles.input}
             value={password}
           />
 
-          <Text style={styles.label}>Xac nhan mat khau</Text>
+          <Text style={styles.label}>Xác nhận mật khẩu</Text>
           <TextInput
             autoCapitalize="none"
             onChangeText={setConfirmPassword}
             onSubmitEditing={handleRegister}
-            placeholder="Nhap lai mat khau"
+            placeholder="Nhập lại mật khẩu"
             secureTextEntry
             style={[styles.input, confirmPassword && password !== confirmPassword ? styles.inputError : null]}
             value={confirmPassword}
           />
 
           <Pressable disabled={loading} onPress={handleRegister} style={[styles.primaryButton, loading && styles.disabled]}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryText}>Tao tai khoan</Text>}
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryText}>Tạo tài khoản</Text>}
           </Pressable>
 
           <Pressable onPress={() => router.replace('/login')} style={styles.secondaryButton}>
-            <Text style={styles.secondaryText}>Quay lai dang nhap</Text>
+            <Text style={styles.secondaryText}>Quay lại đăng nhập</Text>
           </Pressable>
         </View>
       </ScrollView>

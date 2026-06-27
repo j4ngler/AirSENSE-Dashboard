@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { Stack } from 'expo-router';
 
@@ -17,18 +17,15 @@ export function AppNavigator() {
     );
   }
 
-  if (!isLoggedIn) {
-    return (
-      <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
+  return (
+    <Stack initialRouteName="login" screenOptions={{ headerShown: false, animation: 'fade' }}>
+      <Stack.Protected guard={!isLoggedIn}>
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
-      </Stack>
-    );
-  }
-
-  return (
-    <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
-      <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
+      <Stack.Protected guard={isLoggedIn}>
+        <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
     </Stack>
   );
 }

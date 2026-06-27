@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { disconnectMqtt } from '@/lib/mqtt';
 
@@ -41,43 +41,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const isLoggedIn = !!token && !!deviceId;
 
+  useEffect(() => {
+    // Phiên đăng nhập chỉ tồn tại trong lần chạy hiện tại; tài khoản đăng ký vẫn được lưu.
+    void Promise.all([SecureStore.deleteItemAsync(AUTH_TOKEN_KEY), SecureStore.deleteItemAsync(AUTH_DEVICE_KEY)]);
+  }, []);
 
   const login = async (username: string, password: string) => {
     const normalizedUsername = username.trim();
     if (!normalizedUsername || !password) {
-      throw new Error('Vui long nhap ten dang nhap va mat khau.');
+      throw new Error('Vui lòng nhập tên đăng nhập và mật khẩu.');
     }
 
     const users = await readUsers();
     const foundUser = users.find((user) => user.username.toLowerCase() === normalizedUsername.toLowerCase());
     if (!foundUser || foundUser.password !== password) {
-      throw new Error('Ten dang nhap hoac mat khau khong dung.');
+      throw new Error('Tên đăng nhập hoặc mật khẩu không đúng.');
     }
 
     const authToken = `local-${normalizedUsername}-${Date.now()}`;
-    await SecureStore.setItemAsync(AUTH_TOKEN_KEY, authToken);
-    await SecureStore.setItemAsync(AUTH_DEVICE_KEY, normalizedUsername);
     setToken(authToken);
     setDeviceId(normalizedUsername);
   };
 
   const register = async (username: string, password: string, confirmPassword: string) => {
     const normalizedUsername = username.trim();
-    if (!normalizedUsername) throw new Error('Vui long nhap ten dang nhap.');
-    if (!password) throw new Error('Vui long nhap mat khau.');
-    if (password !== confirmPassword) throw new Error('Mat khau xac nhan khong khop.');
+    if (!normalizedUsername) throw new Error('Vui lòng nhập tên đăng nhập.');
+    if (!password) throw new Error('Vui lòng nhập mật khẩu.');
+    if (password !== confirmPassword) throw new Error('Mật khẩu xác nhận không khớp.');
 
     const users = await readUsers();
     const existed = users.some((user) => user.username.toLowerCase() === normalizedUsername.toLowerCase());
-    if (existed) throw new Error('Ten dang nhap da ton tai.');
+    if (existed) throw new Error('Tên đăng nhập đã tồn tại.');
 
     await writeUsers([...users, { password, username: normalizedUsername }]);
   };
 
   const logout = async () => {
     disconnectMqtt();
-    await SecureStore.deleteItemAsync(AUTH_TOKEN_KEY);
-    await SecureStore.deleteItemAsync(AUTH_DEVICE_KEY);
+    await Promise.all([SecureStore.deleteItemAsync(AUTH_TOKEN_KEY), SecureStore.deleteItemAsync(AUTH_DEVICE_KEY)]);
     setToken(null);
     setDeviceId(null);
   };
