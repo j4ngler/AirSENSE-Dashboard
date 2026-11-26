@@ -48,6 +48,8 @@ const EnoseDeviceStatusSchema = new mongoose.Schema({
   peltier: {
     online: Boolean,
     enabled: Boolean,
+    mode: { type: String, enum: ['auto', 'off', 'manual'] },
+    output_on: Boolean,
     measured_temp_c: Number,
     target_temp_c: Number,
     measured_humidity_pct: Number,

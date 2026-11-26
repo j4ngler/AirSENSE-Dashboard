@@ -157,6 +157,8 @@ async function handleDeviceStatus(topic, data) {
       peltier: {
         online: typeof peltier?.online === 'boolean' ? peltier.online : undefined,
         enabled: typeof peltier?.enabled === 'boolean' ? peltier.enabled : undefined,
+        mode: ['auto', 'off', 'manual'].includes(peltier?.mode) ? peltier.mode : undefined,
+        output_on: typeof peltier?.output_on === 'boolean' ? peltier.output_on : undefined,
         measured_temp_c: Number.isFinite(peltier?.measured_temp_c) ? peltier.measured_temp_c : undefined,
         target_temp_c: Number.isFinite(peltier?.target_temp_c) ? peltier.target_temp_c : undefined,
         measured_humidity_pct: Number.isFinite(peltier?.measured_humidity_pct) ? peltier.measured_humidity_pct : undefined,

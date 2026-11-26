@@ -107,20 +107,34 @@
             border-radius: 22px;
             background: linear-gradient(125deg, #fcf5ff, #ece9ff 72%, #f2e2ff);
         }
-        .environment-panel h2 { color: #211454; }
-        .environment-panel .metric-card { padding: 18px; }
-        .environment-panel .metric-value { font-size: clamp(1.6rem, 2.5vw, 2.5rem); }
-        .environment-grid {
+        .environment-panel h2,
+        .environment-panel h3 { color: #211454; }
+        .environment-panel .metric-card { padding: clamp(16px, 2vw, 24px); }
+        .environment-panel .metric-value { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+        .environment-grid,
+        .environment-pair {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 195px), 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
         }
         .environment-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
-        .environment-actions .btn { flex: 1 0 auto; }
+        .environment-actions .btn {
+            flex: 1 1 8rem;
+            min-height: 44px;
+        }
+        .environment-panel input { min-height: 44px; }
+        .environment-panel output {
+            display: block;
+            margin-bottom: 12px;
+        }
+        #environmentFeedback:empty { display: none; }
+        @media (max-width: 767px) {
+            .environment-grid { grid-template-columns: 1fr; }
+        }
         .metric-card {
             background: white;
             border-radius: 20px;
@@ -351,19 +365,19 @@
         <div class="row g-4 mb-4">
             <div class="col-md-3">
                 <div class="metric-card">
-                    <div class="metric-label">Temperature (°C)</div>
+                    <div class="metric-label">Nhiệt độ buồng E-Nose (°C)</div>
                     <div class="metric-value"><span id="temperature">--</span>°C</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="metric-card">
-                    <div class="metric-label">Humidity (%)</div>
+                    <div class="metric-label">Độ ẩm buồng E-Nose (%RH)</div>
                     <div class="metric-value"><span id="humidity">--</span>%</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="metric-card">
-                    <div class="metric-label">Wi-Fi Signal</div>
+                    <div class="metric-label">Tín hiệu Wi-Fi</div>
                     <div class="metric-value" style="font-size:2.2rem;"><span id="wifiSignal">--</span> dBm</div>
                     <div class="text-muted" id="wifiSSID">SSID: --</div>
                 </div>
@@ -382,41 +396,58 @@
             <h2 class="h4 fw-bold mb-3" id="environmentTitle"><i class="bi bi-snow2 me-2" aria-hidden="true"></i>Điều khiển Peltier</h2>
             <div class="environment-grid">
                 <div class="metric-card">
-                    <div class="metric-label">Nhiệt độ và độ ẩm hiện tại</div>
-                    <div class="metric-value" id="peltierMeasuredTemp">--</div>
-                    <div class="metric-value" id="peltierMeasuredHumidity">--</div>
+                    <h3 class="h5 fw-semibold mb-3">Thông số buồng ổn ẩm Peltier</h3>
+                    <div class="environment-pair">
+                        <div>
+                            <div>Nhiệt độ</div>
+                            <div class="metric-value" id="peltierMeasuredTemp">--</div>
+                        </div>
+                        <div>
+                            <div>Độ ẩm</div>
+                            <div class="metric-value" id="peltierMeasuredHumidity" aria-describedby="sht35HumidityNotice">--</div>
+                        </div>
+                    </div>
                 </div>
                 <form id="peltierTargetsForm" class="metric-card">
-                    <div class="metric-label">Giá trị đặt</div>
-                    <div class="text-muted small mb-2" id="peltierConfirmedTargets">Chưa có xác nhận từ thiết bị</div>
-                    <label class="form-label small mb-1" for="peltierTempInput">Nhiệt độ (°C)</label>
-                    <input class="form-control form-control-sm mb-2" id="peltierTempInput" type="number" min="0" max="100" step="0.1" required>
-                    <label class="form-label small mb-1" for="peltierHumidityInput">Độ ẩm (%RH)</label>
-                    <input class="form-control form-control-sm mb-2" id="peltierHumidityInput" type="number" min="0" max="100" step="0.1" required>
-                    <button class="btn btn-primary btn-sm w-100" type="submit">Áp dụng</button>
+                    <h3 class="h5 fw-semibold mb-2">Cài đặt nhiệt độ và độ ẩm</h3>
+                    <output class="text-muted" id="peltierConfirmedTargets">Chưa có xác nhận từ thiết bị</output>
+                    <div class="environment-pair mb-3">
+                        <div>
+                            <label class="form-label mb-1" for="peltierTempInput">Nhiệt độ đặt (°C)</label>
+                            <input class="form-control" id="peltierTempInput" type="number" min="0" max="100" step="0.1" required>
+                        </div>
+                        <div>
+                            <label class="form-label mb-1" for="peltierHumidityInput">Độ ẩm đặt (%RH)</label>
+                            <input class="form-control" id="peltierHumidityInput" type="number" min="0" max="100" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="environment-actions">
+                        <button class="btn btn-primary" type="submit">Áp dụng</button>
+                    </div>
                 </form>
                 <div class="metric-card">
-                    <div class="metric-label">Trạng thái Peltier</div>
-                    <div class="metric-value" id="peltierEnabled">Chưa rõ</div>
-                    <div class="text-muted small" id="peltierConnection">Chưa có dữ liệu</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label mb-3">Bật/tắt Peltier</div>
+                    <h3 class="h5 fw-semibold mb-2">Điều khiển Peltier</h3>
+                    <p class="text-muted mb-2" id="peltierConnection">Chưa có dữ liệu</p>
+                    <div class="environment-pair mb-3">
+                        <div>Chế độ <strong class="d-block" id="peltierMode">Chưa rõ</strong></div>
+                        <div>Đầu ra <strong class="d-block" id="peltierOutput">Chưa rõ</strong></div>
+                    </div>
                     <div class="environment-actions">
-                        <button type="button" class="btn btn-success btn-sm" data-enose-command="peltier_power" data-on="true">Bật</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-enose-command="peltier_power" data-on="false">Tắt</button>
+                        <button type="button" class="btn btn-success" data-enose-command="peltier_power" data-on="true">Cho phép hoạt động</button>
+                        <button type="button" class="btn btn-outline-secondary" data-enose-command="peltier_power" data-on="false">Tắt Peltier</button>
                     </div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">SHT35 · Tự sấy</div>
-                    <div class="text-muted small mb-3" id="sht35HeaterStatus">Chưa rõ</div>
+                    <h3 class="h5 fw-semibold mb-2">Bộ sấy SHT35</h3>
+                    <p class="fw-semibold mb-3" id="sht35HeaterStatus">Chưa rõ</p>
+                    <p class="alert alert-warning mb-3" id="sht35HumidityNotice" role="status" hidden>Đang sấy. Không dùng số đo RH này để điều khiển.</p>
                     <div class="environment-actions">
-                        <button type="button" class="btn btn-danger btn-sm" data-enose-command="sht35_heater" data-on="true">Bật</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-enose-command="sht35_heater" data-on="false">Tắt</button>
+                        <button type="button" class="btn btn-danger" data-enose-command="sht35_heater" data-on="true">Bật sấy</button>
+                        <button type="button" class="btn btn-outline-secondary" data-enose-command="sht35_heater" data-on="false">Tắt sấy</button>
                     </div>
                 </div>
             </div>
-            <p class="small mt-3 mb-0" id="environmentFeedback" role="status"></p>
+            <p class="mt-3 mb-0" id="environmentFeedback" role="status"></p>
         </section>
 
         <div class="row g-4 mb-4">
@@ -683,7 +714,13 @@
             const temperatureText = value => Number.isFinite(value) ? `${value.toFixed(1)} °C` : '--';
 
             document.getElementById('peltierConnection').textContent = booleanText(peltier?.online, 'Đã kết nối', 'Mất kết nối', 'Chưa có dữ liệu');
-            document.getElementById('peltierEnabled').textContent = booleanText(peltier?.enabled, 'Bật', 'Tắt');
+            const moduleAvailable = peltier?.online !== false;
+            const modes = { auto: 'Tự động', off: 'Tắt', manual: 'Thủ công' };
+            document.getElementById('peltierMode').textContent = moduleAvailable ? (modes[peltier?.mode] || 'Chưa rõ') : 'Chưa rõ';
+            document.getElementById('peltierOutput').textContent = booleanText(
+                moduleAvailable ? peltier?.output_on : undefined,
+                'Đang cấp điện', 'Ngừng cấp điện'
+            );
             document.getElementById('peltierMeasuredTemp').textContent = temperatureText(peltier?.measured_temp_c);
             const humidityText = value => Number.isFinite(value) ? value.toFixed(1) + ' %RH' : '--';
             document.getElementById('peltierMeasuredHumidity').textContent = humidityText(peltier?.measured_humidity_pct);
@@ -691,7 +728,10 @@
             const targetHumidity = humidityText(peltier?.target_humidity_pct);
             document.getElementById('peltierConfirmedTargets').textContent = targetTemp === '--' && targetHumidity === '--'
                 ? 'Chưa có xác nhận từ thiết bị' : targetTemp + ' · ' + targetHumidity;
-            document.getElementById('sht35HeaterStatus').textContent = booleanText(current?.sht35_heater_enabled, 'Đang sấy', 'Tắt');
+            const heaterEnabled = current?.sht35_heater_enabled;
+            document.getElementById('sht35HeaterStatus').textContent = booleanText(heaterEnabled, 'Đang sấy', 'Đang tắt');
+            document.getElementById('sht35HumidityNotice').hidden = heaterEnabled !== true;
+            document.getElementById('peltierMeasuredHumidity').classList.toggle('text-muted', heaterEnabled === true);
         }
 
         const environmentForm = document.getElementById('peltierTargetsForm');
