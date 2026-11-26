@@ -182,6 +182,7 @@ exports.getSystemStatus = async (req, res) => {
       wifi_ssid: wifiSSID,
       wifi_signal: wifiSignal,
       wifi_ip: wifiIP,
+      mqtt_connected: mqttClient.connected,
       storage: storage,
       timestamp: new Date().toISOString(),
     });

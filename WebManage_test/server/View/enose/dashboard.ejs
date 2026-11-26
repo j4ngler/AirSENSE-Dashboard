@@ -345,7 +345,7 @@
 
         <details class="mb-3">
             <summary>Cấu hình Wi-Fi cho ESP Root</summary>
-            <p class="mt-2 mb-0">Bật Wi-Fi trên màn hình ESP Root, rồi dùng ESPTouch SmartConfig trên điện thoại đang kết nối mạng Wi-Fi 2,4 GHz để gửi cấu hình cho thiết bị.</p>
+            <p class="mt-2 mb-0">ESP Root tự thử mạng đã lưu. Để đổi mạng, chọn Change Wi-Fi trên ESP Root rồi gửi cấu hình bằng ESPTouch từ điện thoại đang dùng Wi-Fi 2,4 GHz.</p>
         </details>
 
         <div class="row g-4 mb-4">
@@ -369,10 +369,11 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="metric-card" style="display:flex;align-items:center;justify-content:center;">
-                    <div id="wifiChip" class="status-chip chip-danger">
+                <div class="metric-card d-flex flex-column align-items-center justify-content-center">
+                    <div id="wifiChip" class="status-chip chip-warning">
                         Chưa nhận trạng thái Wi-Fi
                     </div>
+                    <div id="mqttConnectionStatus" class="small text-muted mt-2" role="status"></div>
                 </div>
             </div>
         </div>
@@ -670,13 +671,13 @@
             if (request !== moduleStatusRequest) return;
 
             const timestamp = entry => Date.parse(entry?.last_seen || entry?.timestamp || '') || 0;
-            const fresh = entry => {
+            const fresh = (entry, maxAge = 120000) => {
                 const age = Date.now() - timestamp(entry);
-                return age >= 0 && age <= 120000;
+                return age >= 0 && age <= maxAge;
             };
             const current = fresh(status) && status.status !== 'offline' ? status : null;
             const latestWifi = timestamp(wifi) > timestamp(status) ? wifi : status;
-            updateWifiStatus(latestWifi, fresh(latestWifi) ? latestWifi : null);
+            updateWifiStatus(latestWifi, fresh(latestWifi, 30000) ? latestWifi : null);
             const peltier = current?.peltier;
             const booleanText = (value, yes, no, unknown = 'Chưa rõ') => typeof value === 'boolean' ? (value ? yes : no) : unknown;
             const temperatureText = value => Number.isFinite(value) ? `${value.toFixed(1)} °C` : '--';
@@ -1057,6 +1058,8 @@
                     console.error('❌ Invalid status response:', statusData);
                     return;
                 }
+                document.getElementById('mqttConnectionStatus').textContent =
+                    statusData.result.mqtt_connected === false ? 'Backend mất kết nối MQTT' : '';
                 
                 const totalDevices = statusData.result.total_devices || 0;
                 const onlineDevices = statusData.result.online_devices || 0;
