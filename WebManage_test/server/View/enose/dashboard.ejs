@@ -106,9 +106,17 @@
             border: 1px solid #ad86fb;
             border-radius: 22px;
             background: linear-gradient(125deg, #fcf5ff, #ece9ff 72%, #f2e2ff);
+            font-size: 1rem;
+            line-height: 1.5;
         }
         .environment-panel h2,
         .environment-panel h3 { color: #211454; }
+        .environment-panel h3 {
+            font-family: inherit;
+            font-size: 1.125rem;
+            font-weight: 650;
+            line-height: 1.35;
+        }
         .environment-panel .metric-card { padding: clamp(16px, 2vw, 24px); }
         .environment-panel .metric-value { font-size: clamp(1.8rem, 3vw, 2.6rem); }
         .environment-grid,
@@ -122,11 +130,43 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .environment-actions .btn {
+        .environment-panel .btn {
+            --control-bg: #4f55bd;
             flex: 1 1 8rem;
-            min-height: 44px;
+            min-height: 46px;
+            padding: 9px 16px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background: var(--control-bg);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            letter-spacing: normal;
+            text-transform: none;
         }
-        .environment-panel input { min-height: 44px; }
+        .environment-panel .environment-actions .btn-success { --control-bg: #11734e; }
+        .environment-panel .environment-actions .btn-danger { --control-bg: #b52f59; }
+        .environment-panel .environment-actions .btn-outline-secondary {
+            --control-bg: #f6f5ff;
+            border-color: #d4d1e9;
+            color: #39346b;
+        }
+        .environment-panel .environment-actions .btn:hover:not(:disabled) {
+            filter: brightness(.94);
+        }
+        .environment-panel .form-control {
+            min-height: 46px;
+            padding: 9px 12px;
+            border: 1px solid #d4d1e9;
+            border-radius: 14px;
+            font: inherit;
+        }
+        .environment-panel .form-control:focus-visible,
+        .environment-panel .environment-actions .btn:focus-visible {
+            outline: 2px solid #4f55bd;
+            outline-offset: 3px;
+            box-shadow: none;
+        }
         .environment-panel output {
             display: block;
             margin-bottom: 12px;
