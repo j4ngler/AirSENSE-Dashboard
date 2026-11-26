@@ -28,6 +28,7 @@ const EnoseDeviceStatusSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  wifi_only: Boolean,
   storage: {
     total: {
       type: Number,
@@ -43,6 +44,15 @@ const EnoseDeviceStatusSchema = new mongoose.Schema({
     }
   },
   // Trạng thái các thiết bị
+  sht35_heater_enabled: Boolean,
+  peltier: {
+    online: Boolean,
+    enabled: Boolean,
+    measured_temp_c: Number,
+    target_temp_c: Number,
+    measured_humidity_pct: Number,
+    target_humidity_pct: Number
+  },
   heating_enabled: {
     type: Boolean,
     default: false

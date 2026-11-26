@@ -93,106 +93,6 @@
         .chip-success { background: #e6fffa; color: #0f766e; }
         .chip-danger { background: #fee2e2; color: #b91c1c; }
         .chip-warning { background: #fef9c3; color: #854d0e; }
-        .wifi-setup-alert {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 2px solid #f59e0b;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-        .wifi-setup-alert h4 {
-            color: #92400e;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .wifi-setup-alert p {
-            color: #78350f;
-            margin-bottom: 10px;
-        }
-        .wifi-setup-link {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .wifi-setup-link:hover {
-            color: white;
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-        }
-        /* Modal WiFi Config */
-        .wifi-modal {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            animation: fadeIn 0.3s;
-        }
-        .wifi-modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .wifi-modal-content {
-            background: white;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.3s;
-        }
-        .wifi-modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .wifi-modal-header h3 {
-            margin: 0;
-            font-weight: 700;
-        }
-        .wifi-modal-close {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        .wifi-modal-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-        .wifi-modal-body {
-            padding: 0;
-            height: 600px;
-        }
-        .wifi-modal-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -201,6 +101,26 @@
             from { transform: translateY(50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        .environment-panel {
+            padding: clamp(16px, 2vw, 26px);
+            border: 1px solid #ad86fb;
+            border-radius: 22px;
+            background: linear-gradient(125deg, #fcf5ff, #ece9ff 72%, #f2e2ff);
+        }
+        .environment-panel h2 { color: #211454; }
+        .environment-panel .metric-card { padding: 18px; }
+        .environment-panel .metric-value { font-size: clamp(1.6rem, 2.5vw, 2.5rem); }
+        .environment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 195px), 1fr));
+            gap: 14px;
+        }
+        .environment-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .environment-actions .btn { flex: 1 0 auto; }
         .metric-card {
             background: white;
             border-radius: 20px;
@@ -395,32 +315,7 @@
 <body>
     <% include ../Layout/topbar.ejs %>
     <div class="main-container" style="margin-top: 100px;">
-        <!-- WiFi Setup Alert (hiển thị khi ESP32 chưa kết nối WiFi) -->
-        <div id="wifiSetupAlert" class="wifi-setup-alert" style="display: none;">
-            <h4><i class="bi bi-exclamation-triangle-fill"></i> ESP32 chưa kết nối WiFi</h4>
-            <p>Thiết bị ESP32 đang ở chế độ AP mode và cần được cấu hình WiFi trước khi sử dụng.</p>
-            <p><strong>Bước 1:</strong> Kết nối WiFi <code>AirSENSE_SPARC_LAB_Config</code> (password: <code>12345678</code>)</p>
-            <p><strong>Bước 2:</strong> Nhấn nút bên dưới để tự động mở trang cấu hình WiFi:</p>
-            <button onclick="openWifiConfigModal()" class="wifi-setup-link" style="border: none; cursor: pointer;">
-                <i class="bi bi-wifi"></i> Cấu hình WiFi cho ESP32
-            </button>
-            <p style="margin-top: 15px; font-size: 0.9rem; color: #92400e;">
-                <i class="bi bi-info-circle"></i> Sau khi cấu hình WiFi, ESP32 sẽ tự động kết nối và trang này sẽ tự động cập nhật.
-            </p>
-        </div>
 
-        <!-- Modal WiFi Config -->
-        <div id="wifiConfigModal" class="wifi-modal">
-            <div class="wifi-modal-content">
-                <div class="wifi-modal-header">
-                    <h3><i class="bi bi-wifi"></i> Cấu hình WiFi cho ESP32</h3>
-                    <button class="wifi-modal-close" onclick="closeWifiConfigModal()">&times;</button>
-                </div>
-                <div class="wifi-modal-body">
-                    <iframe id="wifiConfigIframe" class="wifi-modal-iframe" src="http://192.168.4.1/wifi-config"></iframe>
-                </div>
-            </div>
-        </div>
 
         <!-- Filter Panel -->
         <div class="filter-panel">
@@ -448,6 +343,11 @@
             </div>
         </div>
 
+        <details class="mb-3">
+            <summary>Cấu hình Wi-Fi cho ESP Root</summary>
+            <p class="mt-2 mb-0">Bật Wi-Fi trên màn hình ESP Root, rồi dùng ESPTouch SmartConfig trên điện thoại đang kết nối mạng Wi-Fi 2,4 GHz để gửi cấu hình cho thiết bị.</p>
+        </details>
+
         <div class="row g-4 mb-4">
             <div class="col-md-3">
                 <div class="metric-card">
@@ -471,11 +371,52 @@
             <div class="col-md-3">
                 <div class="metric-card" style="display:flex;align-items:center;justify-content:center;">
                     <div id="wifiChip" class="status-chip chip-danger">
-                        <i class="bi bi-wifi-off"></i> Disconnected
+                        Chưa nhận trạng thái Wi-Fi
                     </div>
                 </div>
             </div>
         </div>
+
+        <section class="environment-panel mb-4" aria-labelledby="environmentTitle">
+            <h2 class="h4 fw-bold mb-3" id="environmentTitle"><i class="bi bi-snow2 me-2" aria-hidden="true"></i>Điều khiển Peltier</h2>
+            <div class="environment-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Nhiệt độ và độ ẩm hiện tại</div>
+                    <div class="metric-value" id="peltierMeasuredTemp">--</div>
+                    <div class="metric-value" id="peltierMeasuredHumidity">--</div>
+                </div>
+                <form id="peltierTargetsForm" class="metric-card">
+                    <div class="metric-label">Giá trị đặt</div>
+                    <div class="text-muted small mb-2" id="peltierConfirmedTargets">Chưa có xác nhận từ thiết bị</div>
+                    <label class="form-label small mb-1" for="peltierTempInput">Nhiệt độ (°C)</label>
+                    <input class="form-control form-control-sm mb-2" id="peltierTempInput" type="number" min="0" max="100" step="0.1" required>
+                    <label class="form-label small mb-1" for="peltierHumidityInput">Độ ẩm (%RH)</label>
+                    <input class="form-control form-control-sm mb-2" id="peltierHumidityInput" type="number" min="0" max="100" step="0.1" required>
+                    <button class="btn btn-primary btn-sm w-100" type="submit">Áp dụng</button>
+                </form>
+                <div class="metric-card">
+                    <div class="metric-label">Trạng thái Peltier</div>
+                    <div class="metric-value" id="peltierEnabled">Chưa rõ</div>
+                    <div class="text-muted small" id="peltierConnection">Chưa có dữ liệu</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label mb-3">Bật/tắt Peltier</div>
+                    <div class="environment-actions">
+                        <button type="button" class="btn btn-success btn-sm" data-enose-command="peltier_power" data-on="true">Bật</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-enose-command="peltier_power" data-on="false">Tắt</button>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">SHT35 · Tự sấy</div>
+                    <div class="text-muted small mb-3" id="sht35HeaterStatus">Chưa rõ</div>
+                    <div class="environment-actions">
+                        <button type="button" class="btn btn-danger btn-sm" data-enose-command="sht35_heater" data-on="true">Bật</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-enose-command="sht35_heater" data-on="false">Tắt</button>
+                    </div>
+                </div>
+            </div>
+            <p class="small mt-3 mb-0" id="environmentFeedback" role="status"></p>
+        </section>
 
         <div class="row g-4 mb-4">
             <div class="col-lg-6">
@@ -703,6 +644,122 @@
             
             loadMeasurementHistory();
             loadMEMSSensorsData();
+            loadDashboardData();
+        }
+
+        let moduleStatusRequest = 0;
+
+        async function loadModuleStatus(deviceId) {
+            const request = ++moduleStatusRequest;
+            let status;
+            let wifi;
+            if (deviceId) {
+                try {
+                    const response = await fetch(`/api/enose/devices/${encodeURIComponent(deviceId)}/status`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        const payload = await response.json();
+                        status = payload.result?.data;
+                        wifi = payload.result?.wifi;
+                    }
+                } catch (error) {
+                    console.warn('Could not load module status:', error);
+                }
+            }
+            if (request !== moduleStatusRequest) return;
+
+            const timestamp = entry => Date.parse(entry?.last_seen || entry?.timestamp || '') || 0;
+            const fresh = entry => {
+                const age = Date.now() - timestamp(entry);
+                return age >= 0 && age <= 120000;
+            };
+            const current = fresh(status) && status.status !== 'offline' ? status : null;
+            const latestWifi = timestamp(wifi) > timestamp(status) ? wifi : status;
+            updateWifiStatus(latestWifi, fresh(latestWifi) ? latestWifi : null);
+            const peltier = current?.peltier;
+            const booleanText = (value, yes, no, unknown = 'Chưa rõ') => typeof value === 'boolean' ? (value ? yes : no) : unknown;
+            const temperatureText = value => Number.isFinite(value) ? `${value.toFixed(1)} °C` : '--';
+
+            document.getElementById('peltierConnection').textContent = booleanText(peltier?.online, 'Đã kết nối', 'Mất kết nối', 'Chưa có dữ liệu');
+            document.getElementById('peltierEnabled').textContent = booleanText(peltier?.enabled, 'Bật', 'Tắt');
+            document.getElementById('peltierMeasuredTemp').textContent = temperatureText(peltier?.measured_temp_c);
+            const humidityText = value => Number.isFinite(value) ? value.toFixed(1) + ' %RH' : '--';
+            document.getElementById('peltierMeasuredHumidity').textContent = humidityText(peltier?.measured_humidity_pct);
+            const targetTemp = temperatureText(peltier?.target_temp_c);
+            const targetHumidity = humidityText(peltier?.target_humidity_pct);
+            document.getElementById('peltierConfirmedTargets').textContent = targetTemp === '--' && targetHumidity === '--'
+                ? 'Chưa có xác nhận từ thiết bị' : targetTemp + ' · ' + targetHumidity;
+            document.getElementById('sht35HeaterStatus').textContent = booleanText(current?.sht35_heater_enabled, 'Đang sấy', 'Tắt');
+        }
+
+        const environmentForm = document.getElementById('peltierTargetsForm');
+        const environmentButtons = [...document.querySelectorAll('[data-enose-command], #peltierTargetsForm button')];
+        const environmentFeedback = document.getElementById('environmentFeedback');
+
+        async function sendEnvironmentCommand(body) {
+            const deviceId = document.getElementById('deviceSelect').value;
+            if (!deviceId) {
+                environmentFeedback.textContent = 'Chọn một thiết bị trước khi gửi lệnh.';
+                return;
+            }
+            if (environmentButtons.some(button => button.disabled)) return;
+            environmentButtons.forEach(button => { button.disabled = true; });
+            environmentFeedback.textContent = 'Đang gửi lệnh…';
+            try {
+                const response = await fetch(`/api/enose/devices/${encodeURIComponent(deviceId)}/environment-control`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const payload = await response.json();
+                environmentFeedback.textContent = response.ok && payload.result?.success
+                    ? `Đã gửi qua MQTT cho ${deviceId}. Chờ thiết bị báo trạng thái.`
+                    : (typeof payload.message === 'string' ? payload.message : 'Không gửi được lệnh.');
+            } catch (error) {
+                environmentFeedback.textContent = 'Không xác nhận được việc gửi lệnh. Kiểm tra kết nối với backend.';
+            } finally {
+                environmentButtons.forEach(button => { button.disabled = false; });
+            }
+        }
+
+        environmentForm.addEventListener('submit', event => {
+            event.preventDefault();
+            sendEnvironmentCommand({
+                command: 'peltier_targets',
+                target_temp_c: document.getElementById('peltierTempInput').valueAsNumber,
+                target_humidity_pct: document.getElementById('peltierHumidityInput').valueAsNumber
+            });
+        });
+
+        environmentButtons.filter(button => button.dataset.enoseCommand).forEach(button => {
+            button.addEventListener('click', () => sendEnvironmentCommand({
+                command: button.dataset.enoseCommand,
+                on: button.dataset.on === 'true'
+            }));
+        });
+
+        function updateWifiStatus(status, current) {
+            const connected = current?.wifi_status === 'connected';
+            const disconnected = current?.wifi_status === 'disconnected';
+            const chip = document.getElementById('wifiChip');
+            chip.className = 'status-chip ' + (connected ? 'chip-success' : status ? 'chip-danger' : 'chip-warning');
+            chip.textContent = connected ? 'Đã kết nối Wi-Fi'
+                : disconnected ? 'Wi-Fi mất kết nối'
+                : status ? 'Mất liên lạc với Root' : 'Chưa nhận trạng thái Wi-Fi';
+            document.getElementById('wifiSignal').textContent = connected && Number.isFinite(current.wifi_signal)
+                ? current.wifi_signal : '--';
+            document.getElementById('wifiSSID').textContent = 'SSID: ' + (connected && current.wifi_ssid ? current.wifi_ssid : '--');
+
+            const ip = connected && current.wifi_ip;
+            const validIp = typeof ip === 'string' && /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)
+                && ip.split('.').every(part => Number(part) <= 255);
+            const link = document.getElementById('fileServerLink');
+            link.style.display = validIp ? 'inline-block' : 'none';
+            if (validIp) link.href = 'http://' + ip;
+            else link.removeAttribute('href');
+            document.getElementById('fileServerText').textContent = validIp ? 'File server: ' + ip : 'Chưa có địa chỉ IP từ Root';
+            document.getElementById('fileServerInfo').style.display = 'block';
         }
 
         // Check active measurement và update UI
@@ -835,7 +892,7 @@
                                     startBtn.style.opacity = '0.6';
                                     startBtn.style.cursor = 'not-allowed';
                                     activeAlert.style.display = 'none';
-                                    statusContent.textContent = `⚠️ ESP32 chưa được khởi động. Không có dữ liệu sensor trong ${Math.round(ageSeconds/60)} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị.`;
+                                    statusContent.textContent = `⚠️ Không có dữ liệu cảm biến trong ${Math.round(ageSeconds/60)} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị.`;
                                     statusContent.style.color = '#dc2626';
                                     return; // Không enable button
                                 }
@@ -845,7 +902,7 @@
                                 startBtn.style.opacity = '0.6';
                                 startBtn.style.cursor = 'not-allowed';
                                 activeAlert.style.display = 'none';
-                                statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
+                                statusContent.textContent = '⚠️ Chưa nhận được dữ liệu cảm biến. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
                                 statusContent.style.color = '#dc2626';
                                 return; // Không enable button
                             }
@@ -951,6 +1008,30 @@
                 
                 console.log('🔄 Loading dashboard data...');
                 
+                // Load latest sensor data từ E-Nose API
+                let deviceIdForSensor = null;
+
+                // Load devices list để lấy device đầu tiên
+                try {
+                    const devicesRes = await fetch('/api/enose/devices', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const devicesData = await devicesRes.json();
+
+                    // Lấy device đầu tiên từ danh sách
+                    if (devicesData.result && devicesData.result.success && devicesData.result.devices && devicesData.result.devices.length > 0) {
+                        deviceIdForSensor = devicesData.result.devices[0].device_code || devicesData.result.devices[0].device_id;
+                    }
+                } catch (devicesError) {
+                    console.warn('⚠️ Could not load devices:', devicesError);
+                }
+
+                // Nếu có selectedDeviceId, ưu tiên dùng nó
+                if (selectedDeviceId) {
+                    deviceIdForSensor = selectedDeviceId;
+                }
+                loadModuleStatus(deviceIdForSensor);
+
                 // Check active measurement trước
                 await checkActiveMeasurement();
                 
@@ -977,125 +1058,15 @@
                     return;
                 }
                 
-                let totalDevices = 0;
-                let onlineDevices = 0;
-                let offlineDevices = 0;
-                let wifiSignal = '--';
-                let wifiSSID = '--';
-                let wifiIP = null;
-                let wifiStatus = 'disconnected';
-                
-                if (statusData.result) {
-                    totalDevices = statusData.result.total_devices || 0;
-                    onlineDevices = statusData.result.online_devices || 0;
-                    offlineDevices = statusData.result.offline_devices || 0;
-                    wifiSignal = statusData.result.wifi_signal || '--';
-                    wifiSSID = statusData.result.wifi_ssid || '--';
-                    wifiIP = statusData.result.wifi_ip || null;
-                    wifiStatus = statusData.result.wifi_status || 'disconnected';
-                    window.currentWifiStatus = wifiStatus;
-                }
-                
+                const totalDevices = statusData.result.total_devices || 0;
+                const onlineDevices = statusData.result.online_devices || 0;
+                const offlineDevices = statusData.result.offline_devices || 0;
+
                 // Update UI with calculated values
                 document.getElementById('totalDevices').textContent = totalDevices;
                 document.getElementById('onlineDevices').textContent = onlineDevices;
                 document.getElementById('offlineDevices').textContent = offlineDevices;
                 document.getElementById('recentControls').textContent = statusData.result?.recent_controls || '0';
-                
-                // Cập nhật chip WiFi (giống Electric-Nose)
-                const wifiChip = document.getElementById('wifiChip');
-                if (wifiChip) {
-                    if (wifiStatus === 'connected') {
-                        wifiChip.className = 'status-chip chip-success';
-                        wifiChip.innerHTML = '<i class="bi bi-wifi"></i> Connected';
-                    } else {
-                        wifiChip.className = 'status-chip chip-danger';
-                        wifiChip.innerHTML = '<i class="bi bi-wifi-off"></i> Disconnected';
-                    }
-                }
-                
-                // Xử lý WiFi alert (tương tự Electric-Nose)
-                if (wifiStatus === 'connected') {
-                    // WiFi đã kết nối - ẩn alert
-                    document.getElementById('wifiSetupAlert').style.display = 'none';
-                    if (typeof closeWifiConfigModal === 'function') {
-                        closeWifiConfigModal();
-                    }
-                    window.wifiModalOpened = false;
-                } else {
-                    // WiFi chưa kết nối - hiển thị alert
-                    if (onlineDevices === 0 || !wifiSSID || wifiSSID === '--') {
-                        document.getElementById('wifiSetupAlert').style.display = 'block';
-                        // Tự động mở modal WiFi config (chỉ mở 1 lần)
-                        if (!window.wifiModalOpened) {
-                            setTimeout(() => {
-                                if (typeof openWifiConfigModal === 'function') {
-                                    openWifiConfigModal();
-                                }
-                                window.wifiModalOpened = true;
-                            }, 2000); // Đợi 2 giây để user thấy alert trước
-                        }
-                    } else {
-                        document.getElementById('wifiSetupAlert').style.display = 'none';
-                        if (typeof closeWifiConfigModal === 'function') {
-                            closeWifiConfigModal();
-                        }
-                        window.wifiModalOpened = false;
-                    }
-                }
-                // QUAN TRỌNG: Chỉ hiển thị wifi signal nếu ESP32 đang online
-                // (wifi signal sẽ được ẩn bởi checkDeviceOnlineAndUpdateUI nếu ESP32 offline)
-                const wifiSignalEl = document.getElementById('wifiSignal');
-                if (wifiSignalEl && wifiSignal !== '--') {
-                    wifiSignalEl.textContent = wifiSignal;
-                }
-                document.getElementById('wifiSSID').textContent = 'SSID: ' + wifiSSID;
-
-                // Cập nhật link file server nếu có IP
-                const fileServerLink = document.getElementById('fileServerLink');
-                const fileServerInfo = document.getElementById('fileServerInfo');
-                const fileServerText = document.getElementById('fileServerText');
-                
-                if (wifiIP) {
-                    const fileServerUrl = `http://${wifiIP}`;
-                    if (fileServerLink) {
-                        fileServerLink.href = fileServerUrl;
-                        fileServerLink.style.display = 'inline-block';
-                    }
-                    if (fileServerText) {
-                        fileServerText.textContent = `File server: ${wifiIP}`;
-                    }
-                    if (fileServerInfo) {
-                        fileServerInfo.style.display = 'block';
-                    }
-                } else {
-                    if (fileServerLink) fileServerLink.style.display = 'none';
-                    if (fileServerText) fileServerText.textContent = 'Chưa có IP address (chưa kết nối WiFi)';
-                    if (fileServerInfo) fileServerInfo.style.display = 'block';
-                }
-
-                // Load latest sensor data từ E-Nose API
-                let deviceIdForSensor = null;
-                
-                // Load devices list để lấy device đầu tiên
-                try {
-                    const devicesRes = await fetch('/api/enose/devices', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    const devicesData = await devicesRes.json();
-                    
-                    // Lấy device đầu tiên từ danh sách
-                    if (devicesData.result && devicesData.result.success && devicesData.result.devices && devicesData.result.devices.length > 0) {
-                        deviceIdForSensor = devicesData.result.devices[0].device_code || devicesData.result.devices[0].device_id;
-                    }
-                } catch (devicesError) {
-                    console.warn('⚠️ Could not load devices:', devicesError);
-                }
-                
-                // Nếu có selectedDeviceId, ưu tiên dùng nó
-                if (selectedDeviceId) {
-                    deviceIdForSensor = selectedDeviceId;
-                }
                 
                 // Load latest sensor data từ AirSENSE (ưu tiên) hoặc E-Nose API
                 if (deviceIdForSensor) {
@@ -1723,7 +1694,7 @@
                         
                         if (ageSeconds > maxAgeSeconds || ageSeconds < 0) {
                             // ESP32 không có sensor data mới trong 2 phút → chưa được khởi động hoặc đã tắt
-                            statusContent.textContent = `⚠️ ESP32 chưa được khởi động. Không có dữ liệu sensor trong ${Math.round(ageSeconds/60)} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị.`;
+                            statusContent.textContent = `⚠️ Không có dữ liệu cảm biến trong ${Math.round(ageSeconds/60)} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị.`;
                             statusContent.style.color = '#dc2626';
                             btn.disabled = true;
                             btn.style.opacity = '0.6';
@@ -1733,7 +1704,7 @@
                         }
                     } else {
                         // Không có sensor data → ESP32 chưa được khởi động
-                        statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
+                        statusContent.textContent = '⚠️ Chưa nhận được dữ liệu cảm biến. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
                         statusContent.style.color = '#dc2626';
                         btn.disabled = true;
                         btn.style.opacity = '0.6';
@@ -1797,7 +1768,7 @@
                     if (data.result && data.result.device_offline) {
                         // ESP32 chưa được khởi động hoặc đã tắt
                         if (data.result.no_sensor_data) {
-                            statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
+                            statusContent.textContent = '⚠️ Chưa nhận được dữ liệu cảm biến. Vui lòng kiểm tra thiết bị có đang hoạt động và kết nối MQTT không.';
                         } else {
                             const ageMinutes = data.result.last_sensor_data_age_seconds ? Math.round(data.result.last_sensor_data_age_seconds / 60) : 0;
                             statusContent.textContent = `⚠️ ESP32 chưa được khởi động hoặc đã tắt. Không có dữ liệu sensor trong ${ageMinutes} phút gần đây. Vui lòng kiểm tra và khởi động thiết bị trước khi bắt đầu đo.`;
@@ -2066,39 +2037,6 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        // Mở modal WiFi config
-        function openWifiConfigModal() {
-            const modal = document.getElementById('wifiConfigModal');
-            if (modal) {
-                modal.classList.add('show');
-                // Reload iframe để đảm bảo kết nối WebSocket mới
-                const iframe = document.getElementById('wifiConfigIframe');
-                if (iframe) {
-                    iframe.src = 'http://192.168.4.1/wifi-config';
-                }
-            }
-        }
-
-        // Đóng modal WiFi config
-        function closeWifiConfigModal() {
-            const modal = document.getElementById('wifiConfigModal');
-            if (modal) {
-                modal.classList.remove('show');
-            }
-        }
-
-        // Đóng modal khi click bên ngoài
-        document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('wifiConfigModal');
-            if (modal) {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        closeWifiConfigModal();
-                    }
-                });
-            }
-        });
-
         // Initial load - Đảm bảo DOM đã ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
@@ -2131,9 +2069,8 @@
                 const startBtn = document.getElementById('startMeasurementBtn');
                 const tempEl = document.getElementById('temperature');
                 const humEl = document.getElementById('humidity');
-                const wifiSignalEl = document.getElementById('wifiSignal');
                 
-                if (!statusContent || !startBtn || !tempEl || !humEl || !wifiSignalEl) {
+                if (!statusContent || !startBtn || !tempEl || !humEl) {
                     return; // DOM chưa ready
                 }
                 
@@ -2169,14 +2106,13 @@
                     // ESP32 offline → ẩn dữ liệu và hiển thị thông báo
                     tempEl.textContent = '--';
                     humEl.textContent = '--';
-                    wifiSignalEl.textContent = '--';
                     
                     // Chỉ cập nhật status nếu không có measurement đang chạy
                     if (!statusContent.textContent.includes('Đang đo') && !statusContent.textContent.includes('Đã hoàn thành')) {
                         if (ageSeconds > 0 && ageSeconds < 999999) {
-                            statusContent.textContent = `⚠️ ESP32 chưa được khởi động. Không có dữ liệu sensor trong ${Math.round(ageSeconds/60)} phút gần đây.`;
+                            statusContent.textContent = `⚠️ Không có dữ liệu cảm biến trong ${Math.round(ageSeconds/60)} phút gần đây.`;
                         } else {
-                            statusContent.textContent = '⚠️ ESP32 chưa được khởi động. Thiết bị chưa gửi dữ liệu sensor.';
+                            statusContent.textContent = '⚠️ Chưa nhận được dữ liệu cảm biến.';
                         }
                         statusContent.style.color = '#dc2626';
                     }

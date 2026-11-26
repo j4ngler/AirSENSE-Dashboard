@@ -143,11 +143,18 @@ exports.getStatus = async (req, res) => {
       .first();
     if (!device) return returnNotFound(res, { message: 'device not found' });
 
-    const status = await safeMongo(() =>
-      EnoseDeviceStatus.findOne({ device_id: device.device_code }).sort({ timestamp: -1 }).lean()
-    );
+    const [status, wifi] = await Promise.all([
+      safeMongo(() => EnoseDeviceStatus.findOne({
+        device_id: device.device_code,
+        wifi_only: { $ne: true }
+      }).sort({ timestamp: -1 }).lean()),
+      safeMongo(() => EnoseDeviceStatus.findOne({
+        device_id: device.device_code,
+        wifi_only: true
+      }).sort({ last_seen: -1 }).lean())
+    ]);
 
-    return returnOK(res, { success: true, data: status || null });
+    return returnOK(res, { success: true, data: status || wifi || null, wifi: wifi || null });
   } catch (err) {
     console.error('getStatus error:', err);
     return returnFalse(res, 'error');

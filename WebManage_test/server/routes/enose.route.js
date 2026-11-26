@@ -26,6 +26,7 @@ router.get('/devices/files/download', enoseDeviceCtrl.downloadFileFromESP32);
 router.post('/devices/:id/start', enoseControlCtrl.startMeasurement);
 router.post('/devices/:id/heating', enoseControlCtrl.setHeating);
 router.post('/devices/:id/air-pump', enoseControlCtrl.setAirPump);
+router.post('/devices/:id/environment-control', enoseControlCtrl.controlEnvironment);
 
 // Control routes (không cần device_id)
 router.get('/control/status', enoseControlCtrl.getSystemStatus);

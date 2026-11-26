@@ -54,6 +54,60 @@ mqttClient.on('error', (err) => {
 const publishCommand = (deviceCode, payload) =>
   mqttClient.publish(`electric-nose/device/${deviceCode}/control`, JSON.stringify(payload));
 
+exports.controlEnvironment = async (req, res) => {
+  const { command, on, target_temp_c, target_humidity_pct } = req.body || {};
+  let payload;
+  if (command === 'peltier_targets' &&
+      Number.isFinite(target_temp_c) && target_temp_c >= 0 && target_temp_c <= 100 &&
+      Number.isFinite(target_humidity_pct) && target_humidity_pct >= 0 && target_humidity_pct <= 100) {
+    payload = { command, target_temp_c, target_humidity_pct };
+  } else if ((command === 'peltier_power' || command === 'sht35_heater') && typeof on === 'boolean') {
+    payload = { command, on };
+  } else {
+    return res.status(400).json({ message: 'Thông số điều khiển không hợp lệ.' });
+  }
+
+  try {
+    const device = await knex('enose_devices')
+      .where({ device_code: req.params.id, delete_flag: 0 })
+      .first();
+    if (!device) return returnNotFound(res, { message: 'Không tìm thấy thiết bị.' });
+    if (!mqttClient.connected) {
+      return res.status(503).json({ message: 'Backend chưa kết nối MQTT.' });
+    }
+
+    const ts = Date.now();
+    const message = JSON.stringify({ ...payload, ts, expires_at: ts + 10000 });
+    const [historyId] = await knex('enose_control_history').insert({
+      device_id: device.device_id,
+      user_id: req.currentUser?.user_id || null,
+      command,
+      value: message,
+      status: 'pending',
+      created_at: new Date(ts),
+    });
+
+    try {
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('MQTT publish timeout')), 5000);
+        mqttClient.publish(`electric-nose/device/${device.device_code}/control`, message, { qos: 0 }, error => {
+          clearTimeout(timeout);
+          if (error) reject(error);
+          else resolve();
+        });
+      });
+    } catch (error) {
+      await knex('enose_control_history').where({ id: historyId }).update({ status: 'failed' });
+      return res.status(503).json({ message: 'Chưa xác nhận gửi được lệnh MQTT.' });
+    }
+    await knex('enose_control_history').where({ id: historyId }).update({ status: 'sent' });
+    return returnOK(res, { success: true });
+  } catch (error) {
+    console.error('controlEnvironment:', error.message);
+    return res.status(500).json({ message: 'Không thể xử lý lệnh điều khiển.' });
+  }
+};
+
 // GET /api/enose/control/status
 exports.getSystemStatus = async (req, res) => {
   try {
@@ -94,18 +148,24 @@ exports.getSystemStatus = async (req, res) => {
         wifiSignal = latestDeviceStatus.wifi_signal || 0;
         wifiIP = latestDeviceStatus.wifi_ip || null;
         
-        if (latestDeviceStatus.storage) {
+        const storageStatus = latestDeviceStatus.wifi_only
+          ? await safeMongo(() => EnoseDeviceStatus.findOne({
+            device_id: latestDeviceStatus.device_id,
+            wifi_only: { $ne: true }
+          }).sort({ last_seen: -1 }).lean())
+          : latestDeviceStatus;
+        if (storageStatus?.storage) {
           storage = {
-            total: latestDeviceStatus.storage.total || 0,
-            used: latestDeviceStatus.storage.used || 0,
-            free: latestDeviceStatus.storage.free || 0
+            total: storageStatus.storage.total || 0,
+            used: storageStatus.storage.used || 0,
+            free: storageStatus.storage.free || 0
           };
-        } else if (latestDeviceStatus.storage_total || latestDeviceStatus.storage_used) {
+        } else if (storageStatus?.storage_total || storageStatus?.storage_used) {
           // Backward compatibility: nếu có storage_total/storage_used cũ
           storage = {
-            total: latestDeviceStatus.storage_total || 0,
-            used: latestDeviceStatus.storage_used || 0,
-            free: (latestDeviceStatus.storage_total || 0) - (latestDeviceStatus.storage_used || 0)
+            total: storageStatus.storage_total || 0,
+            used: storageStatus.storage_used || 0,
+            free: (storageStatus.storage_total || 0) - (storageStatus.storage_used || 0)
           };
         }
       }

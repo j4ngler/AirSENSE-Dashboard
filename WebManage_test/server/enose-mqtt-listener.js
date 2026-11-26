@@ -138,6 +138,7 @@ async function handleDeviceStatus(topic, data) {
 
   // Save to MongoDB device_status collection
   try {
+    const peltier = data.peltier;
     const deviceStatus = new EnoseDeviceStatus({
       device_id: deviceId,
       status: data.status || 'online',
@@ -151,12 +152,38 @@ async function handleDeviceStatus(topic, data) {
         free: data.storage?.free || 0,
       },
       heating_enabled: data.heating_enabled || false,
+      sht35_heater_enabled: typeof data.sht35_heater_enabled === 'boolean'
+        ? data.sht35_heater_enabled : undefined,
+      peltier: {
+        online: typeof peltier?.online === 'boolean' ? peltier.online : undefined,
+        enabled: typeof peltier?.enabled === 'boolean' ? peltier.enabled : undefined,
+        measured_temp_c: Number.isFinite(peltier?.measured_temp_c) ? peltier.measured_temp_c : undefined,
+        target_temp_c: Number.isFinite(peltier?.target_temp_c) ? peltier.target_temp_c : undefined,
+        measured_humidity_pct: Number.isFinite(peltier?.measured_humidity_pct) ? peltier.measured_humidity_pct : undefined,
+        target_humidity_pct: Number.isFinite(peltier?.target_humidity_pct) ? peltier.target_humidity_pct : undefined,
+      },
       air_pump_enabled: data.air_pump_enabled || false,
       wifi_enabled: data.wifi_enabled !== undefined ? data.wifi_enabled : true,
       last_seen: new Date(),
     });
 
-    await deviceStatus.save();
+    if (data.wifi_only === true) {
+      await EnoseDeviceStatus.updateOne(
+        { device_id: deviceId, wifi_only: true },
+        { $set: {
+          status: deviceStatus.status,
+          wifi_ssid: deviceStatus.wifi_ssid,
+          wifi_signal: deviceStatus.wifi_signal,
+          wifi_status: deviceStatus.wifi_status,
+          wifi_ip: deviceStatus.wifi_ip,
+          last_seen: deviceStatus.last_seen,
+          timestamp: deviceStatus.timestamp,
+        } },
+        { upsert: true, runValidators: true }
+      );
+    } else {
+      await deviceStatus.save();
+    }
   } catch (mongoError) {
     console.warn('[E-Nose MQTT] MongoDB not available, skip saving device status:', mongoError.message);
   }
