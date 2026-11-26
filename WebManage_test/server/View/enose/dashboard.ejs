@@ -537,16 +537,24 @@
             </div>
         </div>
 
-        <!-- Temperature & Humidity Chart - Commented out -->
-        <!--
-        <div class="chart-card mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div style="font-size:1.1rem; font-weight:600;">Temperature & Humidity Timeline</div>
-                <div class="text-muted" style="font-size:0.9rem;">Dữ liệu từ MongoDB</div>
-            </div>
-            <canvas id="measurementChart" height="120"></canvas>
-        </div>
-        -->
+        <section class="chart-card mb-4" id="sensorSummary" hidden aria-labelledby="sensorSummaryTitle">
+            <h2 class="h5" id="sensorSummaryTitle">Lịch sử tổng hợp</h2>
+            <label for="summaryMetric" class="form-label">Chỉ số</label>
+            <select class="form-select mb-3" id="summaryMetric">
+                <option value="Temperature">Nhiệt độ (°C)</option>
+                <option value="Humidity">Độ ẩm (%RH)</option>
+                <option value="ADC0">ADC0</option>
+                <option value="ADC1">ADC1</option>
+                <option value="ADC2">ADC2</option>
+                <option value="ADC3">ADC3</option>
+                <option value="ADC4">ADC4</option>
+                <option value="ADC5">ADC5</option>
+                <option value="ADC6">ADC6</option>
+                <option value="ADC7">ADC7</option>
+            </select>
+            <p class="text-muted mb-2" id="summaryFeedback" role="status"></p>
+            <canvas id="sensorSummaryChart" height="90" hidden></canvas>
+        </section>
 
 
         <!-- MEMS Sensors Section -->
@@ -722,9 +730,72 @@
             fromTime = fromTimeInput ? new Date(fromTimeInput) : null;
             toTime = toTimeInput ? new Date(toTimeInput) : null;
             
-            loadMeasurementHistory();
-            loadMEMSSensorsData();
+            loadSensorSummary();
             loadDashboardData();
+        }
+
+        let sensorSummaryChart;
+        let sensorSummaryRequest = 0;
+        document.getElementById('summaryMetric').addEventListener('change', loadSensorSummary);
+
+        async function loadSensorSummary() {
+            const request = ++sensorSummaryRequest;
+            const panel = document.getElementById('sensorSummary');
+            const feedback = document.getElementById('summaryFeedback');
+            const canvas = document.getElementById('sensorSummaryChart');
+            panel.hidden = false;
+            canvas.hidden = true;
+            if (!selectedDeviceId) {
+                feedback.textContent = 'Chọn một thiết bị để xem lịch sử.';
+                return;
+            }
+            const end = toTime || new Date();
+            const start = fromTime || new Date(end.getTime() - 86400000);
+            if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || start >= end ||
+                end - start > 365 * 86400000) {
+                feedback.textContent = 'Chọn khoảng thời gian hợp lệ, tối đa 365 ngày.';
+                return;
+            }
+            feedback.textContent = 'Đang tải lịch sử…';
+            const params = new URLSearchParams({
+                from: start.toISOString(),
+                to: end.toISOString(),
+                metric: document.getElementById('summaryMetric').value
+            });
+            try {
+                const response = await fetch(`/api/enose/devices/${encodeURIComponent(selectedDeviceId)}/summary?${params}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Summary request failed');
+                const { result } = await response.json();
+                if (request !== sensorSummaryRequest) return;
+                if (!result.rows.length) {
+                    feedback.textContent = 'Chưa có dữ liệu tổng hợp trong khoảng này.';
+                    return;
+                }
+                if (sensorSummaryChart) sensorSummaryChart.destroy();
+                canvas.hidden = false;
+                sensorSummaryChart = new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: result.rows.map(row => new Date(row.time * 1000).toLocaleString('vi-VN')),
+                        datasets: [
+                            ['min', 'Thấp nhất', '#16816e'],
+                            ['avg', 'Trung bình', '#5156bd'],
+                            ['max', 'Cao nhất', '#be496a']
+                        ].map(([key, label, borderColor]) => ({
+                            label, borderColor, fill: false, pointRadius: 0,
+                            data: result.rows.map(row => row[key])
+                        }))
+                    }
+                });
+                feedback.textContent = `Mỗi điểm tổng hợp ${result.step_seconds / 60} phút.`;
+            } catch (error) {
+                if (request === sensorSummaryRequest) {
+                    canvas.hidden = true;
+                    feedback.textContent = 'Chưa tải được biểu đồ tổng hợp.';
+                }
+            }
         }
 
         let moduleStatusRequest = 0;

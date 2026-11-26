@@ -308,7 +308,12 @@ async function handleSensorData(topic, data) {
       const sensorRecord = new DataSensor({
         topic: topic, // electric-nose/device/{device_id}/sensor
         time: timeValue, // Unix timestamp (seconds)
-        content: content
+        content: content,
+        enose_rollup_pending: true,
+        enose_retention: data.retention_class === 'monitoring' && !data.session_id && !data.file_name
+          ? 'monitoring' : 'preserve',
+        enose_heater_active: typeof data.sht35_heater_enabled === 'boolean'
+          ? data.sht35_heater_enabled : undefined,
       });
       
       await sensorRecord.save();

@@ -3,6 +3,7 @@ const router = express.Router();
 const authenticate = require('../middlewares/authenticate.js');
 const enoseDeviceCtrl = require('../controllers/enose-device.controller.js');
 const enoseControlCtrl = require('../controllers/enose-control.controller.js');
+const retention = require('../enose-retention.js');
 
 // All endpoints require auth token of WebManage (authenticate middleware)
 router.use(authenticate);
@@ -10,6 +11,22 @@ router.use(authenticate);
 router.get('/devices', enoseDeviceCtrl.listDevices);
 router.get('/devices/:id/latest', enoseDeviceCtrl.getLatestSensor);
 router.get('/devices/:id/history', enoseDeviceCtrl.getHistory);
+router.get('/devices/:id/summary', async (req, res) => {
+  const { id } = req.params;
+  const { from, to, metric = 'Temperature' } = req.query;
+  const start = Date.parse(from) / 1000;
+  const end = Date.parse(to) / 1000;
+  if (!/^[^/]+$/.test(id) || !retention.metrics.includes(metric) || !Number.isFinite(start) ||
+      !Number.isFinite(end) || start >= end || end - start > retention.summaryDays * 86400) {
+    return res.status(400).json({ message: 'Chọn chỉ số và khoảng thời gian hợp lệ, tối đa 365 ngày.' });
+  }
+  try {
+    return res.json({ result: await retention.history(id, metric, start, end) });
+  } catch (error) {
+    console.error('[E-Nose summary]', error.message);
+    return res.status(503).json({ message: 'Chưa lấy được dữ liệu tổng hợp.' });
+  }
+});
 router.get('/devices/:id/status', enoseDeviceCtrl.getStatus);
 router.get('/devices/:id/measurements', enoseDeviceCtrl.getMeasurementFiles);
 router.get('/devices/measurements/active', enoseDeviceCtrl.getActiveMeasurement);

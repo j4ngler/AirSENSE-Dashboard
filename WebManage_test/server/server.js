@@ -6,6 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const mongoConfig = require('./config/mongoConfig.js');
 const { password } = require('./config/mongoConfig.js');
+const retention = require('./enose-retention.js');
 //const swagger = require('./config/swagger.js');
 
 // Swagger API documentation
@@ -20,6 +21,7 @@ const { password } = require('./config/mongoConfig.js');
 mongoose.set('strictQuery', false);
 mongoose.connect(mongoConfig.dbConfig, {user: mongoConfig.username, pass:password}).then(() => {
     console.log("Successfully connected to the database");
+    retention.start();
 }).catch(err => {
   console.log(mongoConfig.dbConfig)
   console.log(mongoConfig.username,mongoConfig.password)
