@@ -53,7 +53,11 @@ const EnoseDeviceStatusSchema = new mongoose.Schema({
     measured_temp_c: Number,
     target_temp_c: Number,
     measured_humidity_pct: Number,
-    target_humidity_pct: Number
+    target_humidity_pct: Number,
+    temp_min_c: Number,
+    temp_max_c: Number,
+    humidity_min_pct: Number,
+    humidity_max_pct: Number
   },
   heating_enabled: {
     type: Boolean,

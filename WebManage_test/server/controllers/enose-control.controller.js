@@ -55,12 +55,15 @@ const publishCommand = (deviceCode, payload) =>
   mqttClient.publish(`electric-nose/device/${deviceCode}/control`, JSON.stringify(payload));
 
 exports.controlEnvironment = async (req, res) => {
-  const { command, on, target_temp_c, target_humidity_pct } = req.body || {};
+  const { command, on, temp_min_c, temp_max_c, humidity_min_pct, humidity_max_pct } = req.body || {};
   let payload;
-  if (command === 'peltier_targets' &&
-      Number.isFinite(target_temp_c) && target_temp_c >= 0 && target_temp_c <= 100 &&
-      Number.isFinite(target_humidity_pct) && target_humidity_pct >= 0 && target_humidity_pct <= 100) {
-    payload = { command, target_temp_c, target_humidity_pct };
+  if (command === 'peltier_targets') {
+    const validRange = (min, max) => Number.isFinite(min) && Number.isFinite(max)
+      && min >= 0 && max <= 100 && min < max;
+    if (!validRange(temp_min_c, temp_max_c) || !validRange(humidity_min_pct, humidity_max_pct)) {
+      return res.status(400).json({ message: 'Mỗi khoảng phải nằm trong 0–100 và ngưỡng thấp phải nhỏ hơn ngưỡng cao.' });
+    }
+    payload = { command, temp_min_c, temp_max_c, humidity_min_pct, humidity_max_pct };
   } else if ((command === 'peltier_power' || command === 'sht35_heater') && typeof on === 'boolean') {
     payload = { command, on };
   } else {
