@@ -4,6 +4,7 @@ const authenticate = require('../middlewares/authenticate.js');
 const enoseDeviceCtrl = require('../controllers/enose-device.controller.js');
 const enoseControlCtrl = require('../controllers/enose-control.controller.js');
 const retention = require('../enose-retention.js');
+const peltierLimits = require('../controllers/enose-peltier-limits.controller.js');
 
 // All endpoints require auth token of WebManage (authenticate middleware)
 router.use(authenticate);
@@ -28,6 +29,7 @@ router.get('/devices/:id/summary', async (req, res) => {
   }
 });
 router.get('/devices/:id/status', enoseDeviceCtrl.getStatus);
+router.route('/devices/:id/peltier-limits').get(peltierLimits).post(peltierLimits);
 router.get('/devices/:id/measurements', enoseDeviceCtrl.getMeasurementFiles);
 router.get('/devices/measurements/active', enoseDeviceCtrl.getActiveMeasurement);
 router.get('/devices/measurements/files', enoseDeviceCtrl.getAllMeasurementFiles);

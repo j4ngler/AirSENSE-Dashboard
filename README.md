@@ -1,5 +1,18 @@
 # AirSENSE-Vietnam
 
+## Cài ngưỡng Peltier từ tab E-Nose
+
+Trong `WebManage_test/.env`, ánh xạ mã `enose_devices.device_code` sang IP LAN
+của ESP Root chạy firmware Mesh. Ví dụ:
+
+```dotenv
+ENOSE_ROOT_IPS={"ENOSE_001":"192.168.1.42"}
+```
+
+Máy chạy AirSENSE cần truy cập được IP đó qua HTTP cổng 80. Chọn thiết bị
+trong tab **E-Nose** để đọc ngưỡng, chỉnh bốn giá trị rồi bấm **Lưu ngưỡng**.
+Dashboard chỉ xác nhận áp dụng khi đúng yêu cầu đã được bo Peltier lưu.
+
 ## Lưu trữ dữ liệu E-Nose
 
 Khi `WebManage_test` kết nối MongoDB, bộ tổng hợp lưu min, max, trung bình và số

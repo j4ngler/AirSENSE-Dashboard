@@ -454,11 +454,11 @@
                     <div class="environment-pair mb-3">
                         <div>
                             <label class="form-label mb-1" for="peltierTempMin">Nhiệt độ thấp (°C)</label>
-                            <input class="form-control" id="peltierTempMin" type="number" min="0" max="100" step="0.1" required>
+                            <input class="form-control" id="peltierTempMin" type="number" min="-40" max="125" step="0.1" required>
                         </div>
                         <div>
                             <label class="form-label mb-1" for="peltierTempMax">Nhiệt độ cao (°C)</label>
-                            <input class="form-control" id="peltierTempMax" type="number" min="0" max="100" step="0.1" required>
+                            <input class="form-control" id="peltierTempMax" type="number" min="-40" max="125" step="0.1" required>
                         </div>
                         <div>
                             <label class="form-label mb-1" for="peltierHumidityMin">Độ ẩm thấp (%RH)</label>
@@ -470,8 +470,10 @@
                         </div>
                     </div>
                     <div class="environment-actions">
-                        <button class="btn btn-primary" type="submit">Áp dụng khoảng</button>
+                        <button class="btn btn-primary" type="submit">Lưu ngưỡng</button>
+                        <button class="btn btn-outline-secondary" id="peltierReadLimits" type="button">Dùng giá trị trên bo</button>
                     </div>
+                    <p class="mt-2 mb-0" id="peltierLimitsFeedback" role="status"></p>
                 </form>
                 <div class="metric-card">
                     <h3 class="h5 fw-semibold mb-2">Điều khiển Peltier</h3>
@@ -704,14 +706,15 @@
                 });
                 const data = await response.json();
                 
-                if (data.result) {
-                    allDevices = data.result;
+                if (Array.isArray(data.result?.devices)) {
+                    allDevices = data.result.devices;
                     const select = document.getElementById('deviceSelect');
                     select.innerHTML = '<option value="">Tất cả thiết bị</option>';
                     
-                    data.result.forEach(device => {
+                    allDevices.forEach(device => {
                         const option = document.createElement('option');
                         option.value = device.device_id;
+                        option.dataset.deviceCode = device.device_code;
                         option.textContent = device.name || device.device_id;
                         select.appendChild(option);
                     });
@@ -745,7 +748,8 @@
             const canvas = document.getElementById('sensorSummaryChart');
             panel.hidden = false;
             canvas.hidden = true;
-            if (!selectedDeviceId) {
+            const deviceCode = selectedLimitsDevice();
+            if (!deviceCode) {
                 feedback.textContent = 'Chọn một thiết bị để xem lịch sử.';
                 return;
             }
@@ -763,7 +767,7 @@
                 metric: document.getElementById('summaryMetric').value
             });
             try {
-                const response = await fetch(`/api/enose/devices/${encodeURIComponent(selectedDeviceId)}/summary?${params}`, {
+                const response = await fetch(`/api/enose/devices/${encodeURIComponent(deviceCode)}/summary?${params}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (!response.ok) throw new Error('Summary request failed');
@@ -843,14 +847,6 @@
             document.getElementById('peltierMeasuredTemp').textContent = temperatureText(peltier?.measured_temp_c);
             const humidityText = value => Number.isFinite(value) ? value.toFixed(1) + ' %RH' : '--';
             document.getElementById('peltierMeasuredHumidity').textContent = humidityText(peltier?.measured_humidity_pct);
-            const rangeText = (min, max, unit) => Number.isFinite(min) && Number.isFinite(max) && min < max
-                ? `${min.toFixed(1)}–${max.toFixed(1)} ${unit}` : null;
-            const confirmedRanges = [
-                rangeText(peltier?.temp_min_c, peltier?.temp_max_c, '°C'),
-                rangeText(peltier?.humidity_min_pct, peltier?.humidity_max_pct, '%RH')
-            ].filter(Boolean);
-            document.getElementById('peltierConfirmedTargets').textContent = confirmedRanges.length
-                ? confirmedRanges.join(' · ') : 'Thiết bị chưa xác nhận khoảng cài đặt';
             const heaterEnabled = current?.sht35_heater_enabled;
             document.getElementById('sht35HeaterStatus').textContent = booleanText(heaterEnabled, 'Đang sấy', 'Đang tắt');
             document.getElementById('sht35HumidityNotice').hidden = heaterEnabled !== true;
@@ -858,11 +854,11 @@
         }
 
         const environmentForm = document.getElementById('peltierTargetsForm');
-        const environmentButtons = [...document.querySelectorAll('[data-enose-command], #peltierTargetsForm button')];
+        const environmentButtons = [...document.querySelectorAll('[data-enose-command]')];
         const environmentFeedback = document.getElementById('environmentFeedback');
 
         async function sendEnvironmentCommand(body) {
-            const deviceId = document.getElementById('deviceSelect').value;
+            const deviceId = selectedLimitsDevice();
             if (!deviceId) {
                 environmentFeedback.textContent = 'Chọn một thiết bị trước khi gửi lệnh.';
                 return;
@@ -887,20 +883,117 @@
             }
         }
 
-        environmentForm.addEventListener('submit', event => {
-            event.preventDefault();
-            const range = {
-                command: 'peltier_targets',
-                temp_min_c: document.getElementById('peltierTempMin').valueAsNumber,
-                temp_max_c: document.getElementById('peltierTempMax').valueAsNumber,
-                humidity_min_pct: document.getElementById('peltierHumidityMin').valueAsNumber,
-                humidity_max_pct: document.getElementById('peltierHumidityMax').valueAsNumber
-            };
-            if (range.temp_min_c >= range.temp_max_c || range.humidity_min_pct >= range.humidity_max_pct) {
-                environmentFeedback.textContent = 'Ngưỡng thấp phải nhỏ hơn ngưỡng cao ở cả hai khoảng.';
+        const limitsDevice = document.getElementById('deviceSelect');
+        const limitsFeedback = document.getElementById('peltierLimitsFeedback');
+        const confirmedLimits = document.getElementById('peltierConfirmedTargets');
+        const limitsFields = {
+            temperatureLow: document.getElementById('peltierTempMin'),
+            temperatureHigh: document.getElementById('peltierTempMax'),
+            humidityLow: document.getElementById('peltierHumidityMin'),
+            humidityHigh: document.getElementById('peltierHumidityMax')
+        };
+        let limitsOperation = 0;
+        const selectedLimitsDevice = () => limitsDevice.selectedOptions[0]?.dataset.deviceCode;
+
+        async function requestPeltierLimits(deviceId, values) {
+            const response = await fetch(`/api/enose/devices/${encodeURIComponent(deviceId)}/peltier-limits`, {
+                cache: 'no-store',
+                method: values ? 'POST' : 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    ...(values ? { 'Content-Type': 'application/json', 'X-AirSENSE-Peltier': '1' } : {})
+                },
+                body: values ? JSON.stringify(values) : undefined
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Không đọc được phản hồi từ Root.');
+            return data;
+        }
+
+        function showPeltierLimits(limits, fillInputs = false) {
+            const { temperatureLow, temperatureHigh, humidityLow, humidityHigh } = limits;
+            confirmedLimits.textContent = `Đang áp dụng trên bo: ${temperatureLow}–${temperatureHigh} °C · ${humidityLow}–${humidityHigh} %RH`;
+            if (fillInputs)
+                Object.entries(limitsFields).forEach(([key, input]) => { input.value = limits[key]; });
+        }
+
+        function setLimitsBusy(busy) {
+            [...environmentForm.elements].forEach(control => { control.disabled = busy; });
+        }
+
+        async function loadPeltierLimits() {
+            const deviceId = selectedLimitsDevice();
+            const operation = ++limitsOperation;
+            if (!deviceId) {
+                limitsFeedback.textContent = 'Chọn một thiết bị để đọc ngưỡng.';
+                setLimitsBusy(false);
                 return;
             }
-            sendEnvironmentCommand(range);
+            setLimitsBusy(true);
+            limitsFeedback.textContent = 'Đang đọc ngưỡng từ Root…';
+            try {
+                const status = await requestPeltierLimits(deviceId);
+                if (operation !== limitsOperation) return;
+                if (!status.online || !status.limits)
+                    throw new Error('Root chưa nhận được ngưỡng từ bo Peltier.');
+                showPeltierLimits(status.limits, true);
+                limitsFeedback.textContent = '';
+            } catch (error) {
+                if (operation === limitsOperation) limitsFeedback.textContent = error.message;
+            } finally {
+                if (operation === limitsOperation) setLimitsBusy(false);
+            }
+        }
+
+        limitsDevice.addEventListener('change', () => {
+            environmentForm.reset();
+            confirmedLimits.textContent = 'Thiết bị chưa xác nhận khoảng cài đặt';
+            loadPeltierLimits();
+        });
+        document.getElementById('peltierReadLimits').addEventListener('click', loadPeltierLimits);
+        environmentForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const deviceId = selectedLimitsDevice();
+            if (!deviceId) {
+                limitsFeedback.textContent = 'Chọn một thiết bị trước khi lưu ngưỡng.';
+                return;
+            }
+            const values = Object.fromEntries(Object.entries(limitsFields).map(([key, input]) => [key, input.valueAsNumber]));
+            if (values.temperatureLow >= values.temperatureHigh || values.humidityLow >= values.humidityHigh) {
+                limitsFeedback.textContent = 'Ngưỡng thấp phải nhỏ hơn ngưỡng cao ở cả hai khoảng.';
+                return;
+            }
+            const operation = ++limitsOperation;
+            setLimitsBusy(true);
+            limitsFeedback.textContent = 'Đang gửi ngưỡng tới Root…';
+            try {
+                const { requestId } = await requestPeltierLimits(deviceId, values);
+                if (operation !== limitsOperation) return;
+                limitsFeedback.textContent = 'Đang chờ bo Peltier xác nhận lưu…';
+                const deadline = Date.now() + 13000;
+                while (Date.now() < deadline) {
+                    await new Promise(resolve => setTimeout(resolve, 750));
+                    if (operation !== limitsOperation) return;
+                    const status = await requestPeltierLimits(deviceId);
+                    if (operation !== limitsOperation) return;
+                    if (status.requestId !== requestId) {
+                        throw new Error('Không còn theo dõi được yêu cầu. Đọc lại ngưỡng trên bo.');
+                    }
+                    if (status.result === 0 || status.result === 1) continue;
+                    if (status.result === 3) throw new Error('Bo Peltier từ chối khoảng ngưỡng.');
+                    if (status.result === 4) throw new Error('Bo Peltier không lưu được cấu hình vào NVS.');
+                    if (status.result !== 2 || !status.online || !status.limits ||
+                        Object.keys(values).some(key => status.limits[key] !== values[key])) break;
+                    showPeltierLimits(status.limits, true);
+                    limitsFeedback.textContent = 'Đã áp dụng và lưu trên bo Peltier.';
+                    return;
+                }
+                throw new Error('Chưa xác nhận được việc lưu. Đọc lại ngưỡng trên bo trước khi gửi lại.');
+            } catch (error) {
+                if (operation === limitsOperation) limitsFeedback.textContent = error.message;
+            } finally {
+                if (operation === limitsOperation) setLimitsBusy(false);
+            }
         });
 
         environmentButtons.filter(button => button.dataset.enoseCommand).forEach(button => {
